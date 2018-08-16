@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Sl20">
+
+    <typeAlias  alias="ord010SearchVO" type = "nfm.com.ord.service.Ord010SearchVO"/>
+    <typeAlias  alias="ord020SearchVO" type = "nfm.com.ord.service.Ord020SearchVO"/>
+    <typeAlias  alias="ismcum030VOOrd" type = "nfm.com.ord.service.Ismcum030VO"/>
+    <typeAlias  alias="ismodo010VO" type = "nfm.com.ord.service.Ismodo010VO"/>
+    <typeAlias  alias="ismodo020VO" type = "nfm.com.ord.service.Ismodo020VO"/>
+    <typeAlias  alias="ismodm010VO" type = "nfm.com.ord.service.Ismodm010VO"/>
+
+	<!-- 주문수집 목록 select cnt -->
+    <select id="ord010DAO.selectListTotCnt" parameterClass="ord010SearchVO" resultClass="int">
+	select count(1) totcnt
+      from ismcum030 a
+     where 1 = 1
+        <isNotEmpty prepend="AND" property="search_key1">
+           a.shopmallname LIKE '%' #search_key1# '%'
+        </isNotEmpty>
+    </select>
+    
+    <!-- 주문수집 목록 select -->
+    <select id="ord010DAO.selectList" parameterClass="ord010SearchVO" resultClass="ismcum030VOOrd">
+	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
+	      (select count(distinct uploaddate) from ismodl010 where uploaddate >= SUBDATE(NOW(), INTERVAL 24 HOUR) and cum030id = a.cum030id) as uploadCnt,
+	      (select max(uploaddate) from ismodl010 where cum030id = a.cum030id) as lastUploadDate
+      from ismcum030 a, ismcum010 b
+     where a.cum010id = b.cum010id
+       and a.useyn = 'Y'
+       and b.useyn = 'Y'
+		<isNotEmpty prepend="AND" property="search_key1">
+           a.shopmallname LIKE '%' #search_key1# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="search_filename">
+           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M'
+        </isNotEmpty>
+     order by $orderbyclause$
+     limit #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+    
+    <select id="ord010DAO.selectManualDataDetail" parameterClass="String" resultClass="ismodo010VO">
+	select a.cum030id, a.additem, a.isassign, a.orderfield
+      from ismodo010 a
+     where a.cum030id = #cum030id#
+    </select>
+    
+    <select id="ord010DAO.selectApiDataDetail" parameterClass="String" resultClass="ismodo020VO">
+	select a.cum030id, a.apiurl, a.apicontext, a.apiversion
+      from ismodo020 a
+     where a.cum030id = #cum030id#
+    </select>
+    
+    <insert id="ord010DAO.insertApiDetailData" parameterClass="ismodo020VO">
+	insert into ismodo020 (cum030id, apiurl, apicontext, apiversion) values (#cum030id#, #apiurl#, #apicontext#, #apiversion#)
+    </insert>
+    
+    <update id="ord010DAO.updateApiDetailData" parameterClass="ismodo020VO">
+	update ismodo020
+       set apiurl = #apiurl#, apicontext = #apicontext#, apiversion = #apiversion#
+     where cum030id = #cum030id#
+    </update>
+    
+    <delete id="ord010DAO.deleteManualDetailData" parameterClass="String">
+	delete from ismodo010
+     where cum030id = #cum030id#
+    </delete>
+    
+    <insert id="ord010DAO.insertManualDetailData" parameterClass="ismodo010VO">
+	insert into ismodo010 (cum030id, additem, isassign, orderfield) values (#cum030id#, #additem#, #isassign#, #orderfield#)
+    </insert>
+    
+    <insert id="ord010DAO.insertOrderMainData" parameterClass="ismodm010VO">
+	insert into ismodm010 (
+		orderno,        orderdate,         cum010id,      cum030id,       byc010id,       orderuser,          orderusercontact,
+		rcvuser,	    rcvusercontact,	   orderitemid,   orderitemopt,   orderitemqty,   orderitembyprice,
+		postno,	        address,           dlvmemo,       dlvbyprice,     dlvno,              dlvco,
+		dlvstatus,      processdate,       accountcum,    accountbuy,     status,         cstype,             uploadfilename,
+		uploadviewkey,  claimstatus,       claimreason,   retstatus,      retqty,         retprice,
+		orderitemname,
+		orderitemprice,
+		dlvprice,
+		rcvusercontacthp, rcvuseremail
+		) values (
+		#orderno#,      #orderdate#,       #cum010id#,    #cum030id#,     #byc010id#,     #orderuser#,        #orderusercontact#,
+		#rcvuser#,      #rcvusercontact#,  #orderitemid#, #orderitemopt#, #orderitemqty#, #orderitembyprice#,
+		#postno#,       #address#,         #dlvmemo#,     #dlvbyprice#,   #dlvno#,            #dlvco#,
+		#dlvstatus#,    #processdate#,     #accountcum#,  #accountbuy#,   #status#,       #cstype#,           #uploadfilename#,
+		#uploadviewkey#,#claimstatus#,     #claimreason#, #retstatus#,    #retqty#,       #retprice#,
+		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.orderitemid = #orderitemid#), #orderitemname#),''),
+		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.orderitemid = #orderitemid#), #orderitemprice#),''),
+		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.orderitemid = #orderitemid#), #dlvprice#),''),
+		#rcvusercontacthp#, #rcvuseremail#
+		)
+    </insert>
+
+    <insert id="ord010DAO.insertOrderLogData" parameterClass="java.util.List">
+	insert into ismodl010 (cum010id, cum030id, uploaddate, uploadviewkey) values 
+    <iterate conjunction=",">
+		(#[].cum010id#, #[].cum030id#, #[].uploaddate#, #[].uploadviewkey#)
+	</iterate>
+    </insert>
+
+	<!-- 주문 목록 select cnt -->
+    <select id="ord020DAO.selectListTotCnt" parameterClass="ord020SearchVO" resultClass="int">
+	select count(1) totcnt
+      from ismodm010 a
+           left outer join ismprd010 d on a.orderitemid = d.orderitemid
+           left outer join ismbyc010 e on d.byc010id = e.byc010id
+           left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
+           
+           left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
+           left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
+           
+           ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
+           LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
+     where a.cum010id = b.cum010id
+       and a.cum030id = g.cum030id
+       and b.cotype1 = c.CODE
+       and c.CODE_ID = 'ISM020'
+       and b.cotype2 = h.CODE
+       and h.CODE_ID in ('ISM031','ISM032')
+       and b.cotype3 = i.CODE
+       and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044')
+		<isNotEmpty prepend="AND" property="search_key1">
+           a.uploadviewkey LIKE '%' #search_key1# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="odm010id" compareValue="0">
+        	a.odm010id = #odm010id#
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
+        	<isEqual property="search_status" compareValue="TEMP">
+        	a.status = ''
+        	</isEqual>
+        	<isNotEqual property="search_status" compareValue="TEMP">
+        	a.status = #search_status#
+        	</isNotEqual>
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_cstype" compareValue="0">
+        	a.cstype = #search_cstype#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+		<![CDATA[
+        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        ]]>
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+		<![CDATA[
+        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        ]]>
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
+        	b.cotype1 = #dtSearch_cumType1#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_bycNm">
+        	e.bycname LIKE '%' #dtSearch_bycNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_cumNm">
+        	b.coname LIKE '%' #dtSearch_cumNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvNo">
+        	a.dlvno LIKE '%' #dtSearch_dlvNo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvCo">
+        	a.dlvco LIKE '%' #dtSearch_dlvCo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderno">
+        	a.orderno LIKE '%' #dtSearch_orderno# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
+        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
+        	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvUser">
+        	a.rcvuser LIKE '%' #dtSearch_rcvUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvuserContact">
+        	a.rcvusercontact LIKE '%' #dtSearch_rcvuserContact# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderUser">
+        	a.orderuser LIKE '%' #dtSearch_orderUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_all">
+        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(a.orderitemid,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="poSearch_pristock" compareValue="0">
+        	d.pristock = #poSearch_pristock# and IFNULL(d.itemgubun,'1') in ('2')
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="poSearch_byc010id" compareValue="0">
+        	d.byc010id = #poSearch_byc010id# and IFNULL(d.itemgubun,'1') in ('1','3')
+        </isNotEqual>
+    </select>
+    
+    <!-- 주문 목록 select -->
+    <select id="ord020DAO.selectList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
+	select a.odm010id,         a.orderno,       DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY) , '%Y-%m-%d') as orderdate,
+           a.cum010id,         a.cum030id,      a.byc010id,       a.orderuser,
+           a.orderusercontact, a.rcvuser,       a.rcvusercontact, a.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitembyprice,
+           a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
+           a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
+           a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
+           IFNULL(IF(IFNULL(a.orderitemname,'') = '', d.itemname, a.orderitemname),'') as orderitemname,
+           IFNULL(IF(IFNULL(a.orderitemprice,'') = '', d.itemprice, a.orderitemprice),'') as orderitemprice,
+           IFNULL(IF(IFNULL(a.dlvprice,'') = '', d.itemdlvprice, a.dlvprice),'') as dlvprice,
+           a.rcvusercontacthp, a.rcvuseremail,
+           b.coname,
+           c.code_nm,
+           IFNULL(d.itemname,'') as itemname, IFNULL(d.itemprice,'0') as itemprice, IFNULL(d.itembuyprice,'0') as itembuyprice,
+           IFNULL(d.itemdlvprice,'0') as itemdlvprice, IFNULL(d.itembuydlvprice,'0') as itembuydlvprice,
+           IFNULL(e.bycname,'') as bycname,
+           f.CODE_NM as ststusNm,
+           g.shopmallname,
+           h.code_nm as cotype2nm,
+           i.code_nm as cotype3nm,
+           IFNULL(j.code_nm,'') as claimstatusnm,
+           IFNULL(k.code_nm,'') as claimreasonnm,
+           IFNULL(l.code_nm,'') as retstatusnm
+      from ismodm010 a
+           left outer join ismprd010 d on a.orderitemid = d.orderitemid
+           left outer join ismbyc010 e on d.byc010id = e.byc010id
+           left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
+           
+           left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
+           left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
+           
+           ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
+           LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
+     where a.cum010id = b.cum010id
+       and a.cum030id = g.cum030id
+       and b.cotype1 = c.CODE
+       and c.CODE_ID = 'ISM020'
+       and b.cotype2 = h.CODE
+       and h.CODE_ID in ('ISM031','ISM032')
+       and b.cotype3 = i.CODE
+       and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044')
+		<isNotEmpty prepend="AND" property="search_key1">
+           a.uploadviewkey LIKE '%' #search_key1# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="odm010id" compareValue="0">
+        	a.odm010id = #odm010id#
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
+        	<isEqual property="search_status" compareValue="TEMP">
+        	a.status = ''
+        	</isEqual>
+        	<isNotEqual property="search_status" compareValue="TEMP">
+        	a.status = #search_status#
+        	</isNotEqual>
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_cstype" compareValue="0">
+        	a.cstype = #search_cstype#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+		<![CDATA[
+        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        ]]>
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+		<![CDATA[
+        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        ]]>
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
+        	b.cotype1 = #dtSearch_cumType1#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_bycNm">
+        	e.bycname LIKE '%' #dtSearch_bycNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_cumNm">
+        	b.coname LIKE '%' #dtSearch_cumNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvNo">
+        	a.dlvno LIKE '%' #dtSearch_dlvNo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvCo">
+        	a.dlvco LIKE '%' #dtSearch_dlvCo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderno">
+        	a.orderno LIKE '%' #dtSearch_orderno# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
+        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
+        	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvUser">
+        	a.rcvuser LIKE '%' #dtSearch_rcvUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvuserContact">
+        	a.rcvusercontact LIKE '%' #dtSearch_rcvuserContact# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderUser">
+        	a.orderuser LIKE '%' #dtSearch_orderUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_all">
+        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(a.orderitemid,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="poSearch_pristock" compareValue="0">
+        	d.pristock = #poSearch_pristock# and IFNULL(d.itemgubun,'1') in ('2')
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="poSearch_byc010id" compareValue="0">
+        	d.byc010id = #poSearch_byc010id# and IFNULL(d.itemgubun,'1') in ('1','3')
+        </isNotEqual>
+     order by b.coname, a.orderno, a.orderitemid
+     limit #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+    
+    <update id="ord020DAO.ord020SelectChgOrderStatus" parameterClass="java.util.HashMap">
+	update ismodm010
+       set processdate = now()
+		<isNotEmpty prepend="," property="selectoptionval">
+           status = #selectoptionval#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountcumval">
+           accountcum = #selectaccountcumval#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountbuyval">
+           accountbuy = #selectaccountbuyval#
+        </isNotEmpty>
+     where odm010id in
+		<iterate  property="chgodm010ids" open="(" close=")" conjunction=",">
+        #chgodm010ids[]#
+    	</iterate>
+    </update>
+    
+    <delete id="ord020DAO.ord020SelectDel" parameterClass="java.util.HashMap">
+	delete from ismodm010
+     where odm010id in
+		<iterate  property="chgodm010ids" open="(" close=")" conjunction=",">
+        #chgodm010ids[]#
+    	</iterate>
+    </delete>
+
+    <update id="ord020DAO.updateOrderDetailData" parameterClass="ismodm010VO">
+	update ismodm010
+       set odm010id = odm010id
+		<isNotEmpty prepend="," property="dlvprice">
+           dlvprice = #dlvprice#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="dlvno">
+           dlvno = #dlvno#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="dlvmemo">
+           dlvmemo = #dlvmemo#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="orderitemname">
+           orderitemname = #orderitemname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="address">
+           address = #address#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="orderitemopt">
+           orderitemopt = #orderitemopt#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="dlvco">
+           dlvco = #dlvco#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="rcvuser">
+           rcvuser = #rcvuser#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="rcvusercontact">
+           rcvusercontact = #rcvusercontact#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="orderitemprice">
+           orderitemprice = #orderitemprice#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="orderuser">
+           orderuser = #orderuser#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="orderusercontact">
+           orderusercontact = #orderusercontact#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="accountcum">
+           accountcum = #accountcum#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="accountbuy">
+           accountbuy = #accountbuy#
+        </isNotEmpty>
+        <isNotEqual prepend="," property="cstype" compareValue="0">
+        	cstype = #cstype#
+        </isNotEqual>
+		<isNotEmpty prepend="," property="claimstatus">
+           claimstatus = #claimstatus#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="claimreason">
+           claimreason = #claimreason#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="retstatus">
+           retstatus = #retstatus#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="retqty">
+           retqty = #retqty#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="retprice">
+           retprice = #retprice#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="status">
+           status = #status#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="rcvusercontacthp">
+           rcvusercontacthp = #rcvusercontacthp#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="rcvuseremail">
+           rcvuseremail = #rcvuseremail#
+        </isNotEmpty>
+     where odm010id = #odm010id#
+    </update>
+</sqlMap>

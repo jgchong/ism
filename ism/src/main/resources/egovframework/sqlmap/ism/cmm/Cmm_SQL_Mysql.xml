@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Sl20">
+
+    <typeAlias  alias="ismcmm010VO" type = "nfm.com.cmm.service.IsmCmm010VO"/>
+    <typeAlias  alias="ismcmm020VO" type = "nfm.com.cmm.service.IsmCmm020VO"/>
+
+    <!-- 메모 목록 select -->
+    <select id="cmm010DAO.selectListMemo" parameterClass="ismcmm010VO" resultClass="ismcmm010VO">
+	select a.cmm010id, a.buss_key, a.buss_type, a.memotext, a.createdt, a.createuserid, b.USER_NM as createusername, b.USERPHOTOSRC as userphotosrc
+      from ismcmm010 a, LETTNEMPLYRINFO b
+     where a.createuserid = b.EMPLYR_ID
+       and a.buss_key = #buss_key#
+       and a.buss_type = #buss_type#
+     order by a.createdt desc
+    </select>
+
+    <!-- 메모 등록 -->
+    <insert id="cmm010DAO.insertMemo" parameterClass="ismcmm010VO">
+    insert into ismcmm010 (buss_key, buss_type, memotext, createdt, createuserid)
+                   values (#buss_key#, #buss_type#, #memotext#, now(), #createuserid#)
+    </insert>
+
+    <!-- 첨부파일 등록 -->
+    <insert id="cmm020DAO.insertCmm020" parameterClass="ismcmm020VO">
+    insert into ismcmm020 (orgfilename,   savefilename)
+                   values (#orgfilename#, #savefilename#)
+  		<selectKey keyProperty="cmm020id" resultClass="int">
+    		SELECT  LAST_INSERT_ID()
+  		</selectKey>
+    </insert>
+</sqlMap>

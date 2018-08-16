@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ISM">
+
+    <typeAlias  alias="byc010SearchVO" type = "nfm.com.byc.service.Byc010SearchVO"/>
+    <typeAlias  alias="ismbyc010VO" type = "nfm.com.byc.service.Ismbyc010VO"/>
+    <typeAlias  alias="ismbyc020VO" type = "nfm.com.byc.service.Ismbyc020VO"/>
+    <typeAlias  alias="ismbyc030VO" type = "nfm.com.byc.service.Ismbyc030VO"/>
+
+    <!-- 매입처 목록 select -->
+    <select id="byc010DAO.selectByc010List" parameterClass="byc010SearchVO" resultClass="ismbyc010VO">
+	select a.byc010id, a.bycname, a.byctype, a.cogubun, a.cono, a.lawcono, a.coaddr, IFNULL(a.cobustype,'') as cobustype,
+		   IFNULL(a.account,'') as account, IFNULL(a.accountno,'') as accountno,
+           a.useyn, a.purchaseform, a.attachname, IFNULL(a.byccode,'') as byccode, a.uploadgubun,
+           case a.byctype
+	           when '1' then '제조사'
+	           when '2' then '벤더'
+	           else ''
+           end as byctypenm,
+           case a.cogubun
+	           when '1' then '법인'
+	           when '2' then '개인'
+	           when '3' then '기타'
+	           else ''
+           end as cogubunnm,
+           c.orgfilename, c.savefilename
+      from ismbyc010 a left outer join ismcmm020 c on a.cmm020id = c.cmm020id
+     where 1 = 1
+		<isNotEqual prepend="AND" property="byc010id" compareValue="0">
+           a.byc010id = #byc010id#
+        </isNotEqual>
+     order by $orderbyclause$
+    </select>
+    
+    <!-- 매입처 담당자 목록 select -->
+    <select id="byc010DAO.selectByc020List" parameterClass="byc010SearchVO" resultClass="ismbyc020VO">
+	select byc020id, byc010id, bycusername, bycusertel, bycuseremail, bycmemo
+      from ismbyc020
+     where byc010id = #byc010id#
+    </select>
+    
+    <!-- 매입처 admin 목록 select -->
+    <select id="byc010DAO.selectByc030List" parameterClass="byc010SearchVO" resultClass="ismbyc030VO">
+	select byc030id, byc010id, bycurl, bycuid, bycpwd
+      from ismbyc030
+     where byc010id = #byc010id#
+    </select>
+    
+    <insert id="byc010DAO.insertByc010" parameterClass="ismbyc010VO">
+    insert into ismbyc010 (bycname,    byctype,     cogubun,   cono,           lawcono,      coaddr,    cobustype,
+                           account,    accountno,   useyn,     purchaseform,   attachname,   byccode,   uploadgubun,
+                           cmm020id)
+                   values (#bycname#,  #byctype#,   #cogubun#, #cono#,         #lawcono#,    #coaddr#,  #cobustype#,
+                           #account#,  #accountno#, #useyn#,   #purchaseform#, #attachname#, #byccode#, #uploadgubun#,
+                           #cmm020id#)
+  		<selectKey keyProperty="byc010id" resultClass="int">
+    		SELECT  LAST_INSERT_ID()
+  		</selectKey>
+    </insert>
+    
+    <insert id="byc010DAO.insertByc020" parameterClass="ismbyc020VO">
+    insert into ismbyc020 (byc010id,   bycusername,   bycusertel,   bycuseremail,   bycmemo)
+                   values (#byc010id#, #bycusername#, #bycusertel#, #bycuseremail#, #bycmemo#)
+    </insert>
+
+    <insert id="byc010DAO.insertByc030" parameterClass="ismbyc030VO">
+    insert into ismbyc030 (byc010id,   bycurl,   bycuid,   bycpwd)
+                   values (#byc010id#, #bycurl#, #bycuid#, #bycpwd#)
+    </insert>
+    
+    <delete id="byc010DAO.deleteByc020" parameterClass="ismbyc010VO">
+	delete from ismbyc020
+     where byc010id = #byc010id#
+    </delete>
+    
+    <delete id="byc010DAO.deleteByc030" parameterClass="ismbyc010VO">
+	delete from ismbyc030
+     where byc010id = #byc010id#
+    </delete>
+    
+    <update id="byc010DAO.updateByc010" parameterClass="ismbyc010VO">
+	update ismbyc010
+       set byc010id = byc010id
+		<isNotEmpty prepend="," property="bycname">
+           bycname = #bycname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="byctype">
+           byctype = #byctype#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cogubun">
+           cogubun = #cogubun#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cono">
+           cono = #cono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="lawcono">
+           lawcono = #lawcono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="coaddr">
+           coaddr = #coaddr#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cobustype">
+           cobustype = #cobustype#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="account">
+           account = #account#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="accountno">
+           accountno = #accountno#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="useyn">
+           useyn = #useyn#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="attachname">
+           attachname = #attachname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="byccode">
+           byccode = #byccode#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="uploadgubun">
+           uploadgubun = #uploadgubun#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cmm020id">
+           cmm020id = #cmm020id#
+        </isNotEmpty>
+     where byc010id = #byc010id#
+    </update>
+</sqlMap>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ISM">
+
+    <typeAlias  alias="whs010SearchVO" type = "nfm.com.whs.service.Whs010SearchVO"/>
+    <typeAlias  alias="ismwhs020VO" type = "nfm.com.whs.service.Ismwhs020VO"/>
+
+    <!-- 창고 담당자 목록 select -->
+    <select id="whs010DAO.selectWhs020List" parameterClass="whs010SearchVO" resultClass="ismwhs020VO">
+	select whs020id, whs010id, whsusername, whsusertel, whsuseremail, whsmemo
+      from ismwhs020
+     where whs010id = #whs010id#
+    </select>
+</sqlMap>

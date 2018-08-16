@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ISM">
+
+    <typeAlias  alias="cum010SearchVO" type = "nfm.com.cum.service.Cum010SearchVO"/>
+    <typeAlias  alias="ismcum010VO" type = "nfm.com.cum.service.Ismcum010VO"/>
+    <typeAlias  alias="ismcum020VO" type = "nfm.com.cum.service.Ismcum020VO"/>
+    <typeAlias  alias="ismcum030VO" type = "nfm.com.cum.service.Ismcum030VO"/>
+
+	<!-- 매출처 목록 select cnt -->
+    <select id="cum010DAO.selectListTotCnt" parameterClass="cum010SearchVO" resultClass="int">
+	select count(1) totcnt
+      from ismcum010 a, ismcum030 b
+     where a.cum010id = b.cum010id
+		<isNotEqual prepend="AND" property="cum010id" compareValue="0">
+           a.cum010id = #cum010id#
+        </isNotEqual>
+    </select>
+    
+    <!-- 매출처 목록 select -->
+    <select id="cum010DAO.selectList" parameterClass="cum010SearchVO" resultClass="ismcum010VO">
+	select a.cum010id,    a.cono,     a.lawcono,      a.coname,  a.cotype1,    a.cotype2, a.cotype3,
+           a.cogubun,     a.coaddr,   a.cobustype,    a.account, a.accountamt, a.useyn,   a.attachname,
+           a.account2,
+           case a.cogubun
+	           when '1' then '법인'
+	           when '2' then '개인'
+	           when '3' then '기타'
+	           else ''
+           end as cogubunnm,
+           b.cum030id,    b.cum010id, b.shopmallname, b.shopurl, b.shopuid,    b.shoppwd, b.uploadtype,								
+           b.uploadgubun, b.useyn as shopuseyn,
+           (select CODE_NM from LETTCCMMNDETAILCODE where CODE_ID = 'ISM020' and CODE = a.cotype1) as cotype1nm,
+           (select CODE_NM from LETTCCMMNDETAILCODE where CODE_ID in ('ISM031','ISM032') and CODE = a.cotype2) as cotype2nm,
+           (select CODE_NM from LETTCCMMNDETAILCODE where CODE_ID in ('ISM041','ISM042','ISM043','ISM044') and CODE = a.cotype3) as cotype3nm,
+           c.orgfilename, c.savefilename
+      from ismcum010 a left outer join ismcmm020 c on a.cmm020id = c.cmm020id, ismcum030 b
+     where a.cum010id = b.cum010id
+		<isNotEqual prepend="AND" property="cum010id" compareValue="0">
+           a.cum010id = #cum010id#
+        </isNotEqual>
+     order by $orderbyclause$
+     limit #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+    
+    <!-- 매출처 담당자 목록 select -->
+    <select id="cum010DAO.selectCum020List" parameterClass="cum010SearchVO" resultClass="ismcum020VO">
+	select cum020id, cum010id, cumusername, cumusertel, cumuseremail, cummemo
+      from ismcum020
+     where cum010id = #cum010id#
+    </select>
+    
+    <!-- 매출처 쇼핑몰 목록 select -->
+    <select id="cum010DAO.selectCum030List" parameterClass="cum010SearchVO" resultClass="ismcum030VO">
+	select cum030id, cum010id, shopmallname, shopurl, shopuid, shoppwd, uploadtype, uploadgubun, useyn
+      from ismcum030
+     where cum010id = #cum010id#
+    </select>
+    
+    <insert id="cum010DAO.insertCum010" parameterClass="ismcum010VO">
+    insert into ismcum010 (cono,      lawcono,     coname,    cotype1,      cotype2,   cotype3,      cogubun,
+                           coaddr,    cobustype,   account,   accountamt,   useyn,     attachname,   account2,
+                           cmm020id)
+                   values (#cono#,    #lawcono#,   #coname#,  #cotype1#,    #cotype2#, #cotype3#,    #cogubun#,
+                           #coaddr#,  #cobustype#, #account#, #accountamt#, #useyn#,   #attachname#, #account2#,
+                           #cmm020id#)
+  		<selectKey keyProperty="cum010id" resultClass="String">
+    		SELECT  LAST_INSERT_ID()
+  		</selectKey>
+    </insert>
+
+    <insert id="cum010DAO.insertCum020" parameterClass="ismcum020VO">
+    insert into ismcum020 (cum010id,   cumusername,   cumusertel,   cumuseremail,   cummemo)
+                   values (#cum010id#, #cumusername#, #cumusertel#, #cumuseremail#, #cummemo#)
+    </insert>
+
+    <insert id="cum010DAO.insertCum030" parameterClass="ismcum030VO">
+    insert into ismcum030 (cum010id,   shopmallname,   shopurl,   shopuid,   shoppwd,   uploadtype,   uploadgubun,   useyn)
+                   values (#cum010id#, #shopmallname#, #shopurl#, #shopuid#, #shoppwd#, #uploadtype#, #uploadgubun#, #useyn#)
+    </insert>
+    
+    <update id="cum010DAO.updateCum010" parameterClass="ismcum010VO">
+	update ismcum010
+       set cum010id = cum010id
+		<isNotEmpty prepend="," property="cono">
+           cono = #cono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="lawcono">
+           lawcono = #lawcono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="coname">
+           coname = #coname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cotype1">
+           cotype1 = #cotype1#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cotype2">
+           cotype2 = #cotype2#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cotype3">
+           cotype3 = #cotype3#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cogubun">
+           cogubun = #cogubun#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="coaddr">
+           coaddr = #coaddr#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cobustype">
+           cobustype = #cobustype#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="account">
+           account = #account#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="accountamt">
+           accountamt = #accountamt#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="useyn">
+           useyn = #useyn#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="attachname">
+           attachname = #attachname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="account2">
+           account2 = #account2#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cmm020id">
+           cmm020id = #cmm020id#
+        </isNotEmpty>
+     where cum010id = #cum010id#
+    </update>
+    
+    <delete id="cum010DAO.deleteCum020" parameterClass="ismcum010VO">
+	delete from ismcum020
+     where cum010id = #cum010id#
+    </delete>
+    
+    <delete id="cum010DAO.deleteCum030" parameterClass="ismcum010VO">
+	delete from ismcum030
+     where cum010id = #cum010id#
+    </delete>
+</sqlMap>

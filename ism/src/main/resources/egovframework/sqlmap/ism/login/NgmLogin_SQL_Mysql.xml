@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ism">
+    
+    <typeAlias  alias="loginVO" type = "egovframework.com.cmm.LoginVO"/>
+    
+    <select id="nfmLoginDAO.getArrowIP" parameterClass="String" resultClass="int">
+		select  count(*) totcnt
+		  from  ismipc010 a
+		 where  a.firstip = SUBSTRING_INDEX(#userIp#,'.',1)
+           and  a.secondip = SUBSTRING_INDEX(SUBSTRING_INDEX(#userIp#,'.',2),'.',-1)
+           and  a.thirdip  = SUBSTRING_INDEX(SUBSTRING_INDEX(#userIp#,'.',-2),'.',1)
+           and  SUBSTRING_INDEX(#userIp#,'.',-1) between a.forthip_fr and a.forthip_to
+    </select>
+    
+    <select id="nfmLoginDAO.getUserEmail" parameterClass="loginVO" resultClass="String">
+		select  email_adres
+		  from  LETTNEMPLYRINFO a
+		 where  a.EMPLYR_ID =  #id#
+		   and  a.PASSWORD = #password#
+		 limit 1
+    </select>
+</sqlMap>
