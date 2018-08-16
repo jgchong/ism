@@ -5,10 +5,10 @@
 
  	<!-- 메일 보내기 -->
 	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
-		<property name="host" value="smtp.aaa.com" />
+		<property name="host" value="mw-002.cafe24.com" />
 		<property name="port" value="587" />
-		<property name="username" value="ism" />
-		<property name="password" value="1234" />
+		<property name="username" value="admin@labnfm.tech" />
+		<property name="password" value="*ism0701" />
 
 
 		<!-- email 요청시는 SMTP -->

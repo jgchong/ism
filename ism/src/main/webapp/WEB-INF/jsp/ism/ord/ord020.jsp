@@ -99,6 +99,7 @@ form.searchArea .searchMore li select {
 				<div class="contents">
 					<h2 class="pageTit">주문현황</h2>
 					<form id="form1" name="form1" method="post" action="/ism/ord/ord020.do" class="searchArea">
+		        		<input name="pageIndex" type="hidden" value="<c:out value='${ord020SearchVO.pageIndex}'/>"/>
 					
 						<input type="text" class="it datepicker" title="" value="${ord020SearchVO.dtSearch_frOrderDt}" id="dtSearch_frOrderDt" name="dtSearch_frOrderDt" placeHolder="시작주문일자"/>
 						<input type="text" class="it datepicker" title="" value="${ord020SearchVO.dtSearch_toOrderDt}" id="dtSearch_toOrderDt" name="dtSearch_toOrderDt" placeHolder="종료주문일자"/>
@@ -162,7 +163,7 @@ form.searchArea .searchMore li select {
 						</script>
 						<input type="hidden" id="search_status" name="search_status" value="${ord020SearchVO.search_status}" />
 						<input type="hidden" id="search_cstype" name="search_cstype" value="${ord020SearchVO.search_cstype}" />
-						<input type="hidden" id="search_isdetail" name="search_isdetail" value="0" /><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
+						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" /><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
 					</form>
 
 					<ul class="tbTab">
@@ -349,6 +350,13 @@ $(document).ready(function() {
         document.form1.submit();
 	});
 });
+
+
+function fnLinkPage(pageNo){
+    document.form1.pageIndex.value = pageNo;
+    document.form1.action = "<c:url value='/ism/ord/ord020.do'/>";
+    document.form1.submit();
+}
 
 //목록 주문번호 클릭시 상세 주문 내용 레이어 팝업 오픈
 function orderDetailView(odm010id) {
