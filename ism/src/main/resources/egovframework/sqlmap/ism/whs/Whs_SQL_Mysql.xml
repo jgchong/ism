@@ -4,7 +4,32 @@
 <sqlMap namespace="ISM">
 
     <typeAlias  alias="whs010SearchVO" type = "nfm.com.whs.service.Whs010SearchVO"/>
+    <typeAlias  alias="ismwhs010VO" type = "nfm.com.whs.service.Ismwhs010VO"/>
     <typeAlias  alias="ismwhs020VO" type = "nfm.com.whs.service.Ismwhs020VO"/>
+    <typeAlias  alias="ismwhs030VO" type = "nfm.com.whs.service.Ismwhs030VO"/>
+
+    <!-- 창고 목록 select -->
+    <select id="whs010DAO.selectWhs010List" parameterClass="whs010SearchVO" resultClass="ismwhs010VO">
+	select a.whs010id, a.whsgubun, a.whsname, a.whscotype, a.whscono, a.whslawcono, a.whsadress, a.whsbustype, a.accontdate, a.cmm020id,
+           case a.whsgubun
+	           when '1' then '자사창고'
+	           when '2' then '외부창고'
+	           else ''
+           end as whsgubunnm,
+           case a.whscotype
+	           when '1' then '법인'
+	           when '2' then '개인'
+	           when '3' then '기타'
+	           else ''
+           end as whscotypenm,
+           c.orgfilename, c.savefilename
+      from ismwhs010 a left outer join ismcmm020 c on a.cmm020id = c.cmm020id
+     where 1 = 1
+		<isNotEqual prepend="AND" property="whs010id" compareValue="0">
+           a.whs010id = #whs010id#
+        </isNotEqual>
+     order by whsname
+    </select>
 
     <!-- 창고 담당자 목록 select -->
     <select id="whs010DAO.selectWhs020List" parameterClass="whs010SearchVO" resultClass="ismwhs020VO">
@@ -12,4 +37,75 @@
       from ismwhs020
      where whs010id = #whs010id#
     </select>
+    
+    <!-- 창고 admin 목록 select -->
+    <select id="whs010DAO.selectWhs030List" parameterClass="whs010SearchVO" resultClass="ismwhs030VO">
+	select whs030id, whs010id, whsurl, whsuid, whspwd
+      from ismwhs030
+     where whs010id = #whs010id#
+    </select>
+    
+    <!-- 창고 메인 정보 저장 -->
+    <insert id="whs010DAO.insertWhs010" parameterClass="ismwhs010VO">
+    insert into ismwhs010 (whsgubun,     whsname,   whscotype,   whscono,   whslawcono,   whsadress,   whsbustype,
+						   accontdate,   cmm020id)
+                   values (#whsgubun#,   #whsname#, #whscotype#, #whscono#, #whslawcono#, #whsadress#, #whsbustype#,
+						   #accontdate#, #cmm020id#)
+  		<selectKey keyProperty="whs010id" resultClass="int">
+    		SELECT  LAST_INSERT_ID()
+  		</selectKey>
+    </insert>
+    
+    <insert id="whs010DAO.insertWhs020" parameterClass="ismwhs020VO">
+    insert into ismwhs020 (whs010id,   whsusername,   whsusertel,   whsuseremail,   whsmemo)
+                   values (#whs010id#, #whsusername#, #whsusertel#, #whsuseremail#, #whsmemo#)
+    </insert>
+
+    <insert id="whs010DAO.insertWhs030" parameterClass="ismwhs030VO">
+    insert into ismwhs030 (whs010id,   whsurl,   whsuid,   whspwd)
+                   values (#whs010id#, #whsurl#, #whsuid#, #whspwd#)
+    </insert>
+    
+    <delete id="whs010DAO.deleteWhs020" parameterClass="ismwhs010VO">
+	delete from ismwhs020
+     where whs010id = #whs010id#
+    </delete>
+    
+    <delete id="whs010DAO.deleteWhs030" parameterClass="ismwhs010VO">
+	delete from ismwhs030
+     where whs010id = #whs010id#
+    </delete>
+    
+    <update id="whs010DAO.updateWhs010" parameterClass="ismwhs010VO">
+	update ismwhs010
+       set whs010id = whs010id
+		<isNotEmpty prepend="," property="whsgubun">
+           whsgubun = #whsgubun#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whsname">
+           whsname = #whsname#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whscotype">
+           whscotype = #whscotype#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whscono">
+           whscono = #whscono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whslawcono">
+           whslawcono = #whslawcono#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whsadress">
+           whsadress = #whsadress#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="whsbustype">
+           whsbustype = #whsbustype#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="accontdate">
+           accontdate = #accontdate#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="cmm020id">
+           cmm020id = #cmm020id#
+        </isNotEmpty>
+     where whs010id = #whs010id#
+    </update>
 </sqlMap>

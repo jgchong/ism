@@ -87,9 +87,9 @@
 		#postno#,       #address#,         #dlvmemo#,     #dlvbyprice#,   #dlvno#,            #dlvco#,
 		#dlvstatus#,    #processdate#,     #accountcum#,  #accountbuy#,   #status#,       #cstype#,           #uploadfilename#,
 		#uploadviewkey#,#claimstatus#,     #claimreason#, #retstatus#,    #retqty#,       #retprice#,
-		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.orderitemid = #orderitemid#), #orderitemname#),''),
-		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.orderitemid = #orderitemid#), #orderitemprice#),''),
-		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.orderitemid = #orderitemid#), #dlvprice#),''),
+		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.itemcode = #orderitemid#), #orderitemname#),''),
+		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
+		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
 		#rcvusercontacthp#, #rcvuseremail#
 		)
     </insert>
@@ -105,7 +105,7 @@
     <select id="ord020DAO.selectListTotCnt" parameterClass="ord020SearchVO" resultClass="int">
 	select count(1) totcnt
       from ismodm010 a
-           left outer join ismprd010 d on a.orderitemid = d.orderitemid
+           left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
            
@@ -219,7 +219,7 @@
            IFNULL(k.code_nm,'') as claimreasonnm,
            IFNULL(l.code_nm,'') as retstatusnm
       from ismodm010 a
-           left outer join ismprd010 d on a.orderitemid = d.orderitemid
+           left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
            

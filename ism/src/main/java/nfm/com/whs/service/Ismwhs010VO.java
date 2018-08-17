@@ -19,8 +19,12 @@ public class Ismwhs010VO implements Serializable {
 	private String whslawcono = "";
 	private String whsadress = "";
 	private String whsbustype = "";
-	private int accontdate = 0;
+	private String accontdate = "";
 	private int cmm020id = 0;
+	private String whsgubunnm = "";
+	private String whscotypenm = "";
+	private String orgfilename = "";
+	private String savefilename = "";
 
 	public int getWhs010id() {
 		return whs010id;
@@ -86,11 +90,11 @@ public class Ismwhs010VO implements Serializable {
 		this.whsbustype = whsbustype;
 	}
 
-	public int getAccontdate() {
+	public String getAccontdate() {
 		return accontdate;
 	}
 
-	public void setAccontdate(int accontdate) {
+	public void setAccontdate(String accontdate) {
 		this.accontdate = accontdate;
 	}
 
@@ -100,6 +104,38 @@ public class Ismwhs010VO implements Serializable {
 
 	public void setCmm020id(int cmm020id) {
 		this.cmm020id = cmm020id;
+	}
+
+	public String getWhsgubunnm() {
+		return whsgubunnm;
+	}
+
+	public void setWhsgubunnm(String whsgubunnm) {
+		this.whsgubunnm = whsgubunnm;
+	}
+
+	public String getWhscotypenm() {
+		return whscotypenm;
+	}
+
+	public void setWhscotypenm(String whscotypenm) {
+		this.whscotypenm = whscotypenm;
+	}
+
+	public String getOrgfilename() {
+		return orgfilename;
+	}
+
+	public void setOrgfilename(String orgfilename) {
+		this.orgfilename = orgfilename;
+	}
+
+	public String getSavefilename() {
+		return savefilename;
+	}
+
+	public void setSavefilename(String savefilename) {
+		this.savefilename = savefilename;
 	}
 
 	/**
