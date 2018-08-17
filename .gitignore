@@ -1,2 +1,5 @@
 .idea/
+.classpath
+.project
+.settings/
 ism/src/main/resources/egovframework/egovProps/globals.properties
