@@ -9,4 +9,5 @@ public interface Prd010Service {
 	public Object selectList(Prd010SearchVO prd010SearchVO) throws Exception;
 	public int selectListTotCnt(Prd010SearchVO prd010SearchVO) throws Exception;
 	public void updateItemWhs(Integer itemId, Integer whsId) throws Exception;
+	public String selectAll() throws Exception;
 }

@@ -162,8 +162,7 @@ public class EgovLoginController {
 	 */
 	@RequestMapping(value = "/uat/uia/actionMain.do")
 	public String actionMain(ModelMap model, HttpServletRequest request) throws Exception {
-
-        String clientIp1 = nfmLoginService.getRemoteIP(request); //jgc add id:ipv1 접속자 ip 가져오기
+        String clientIp1 = "127.0.0.1"; //jgc add id:ipv1 접속자 ip 가져오기
 		System.out.println("jgc1===>"+clientIp1); //jgc add id:ipv1 접속자 ip 가져오기
 		request.getSession().setAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기
 		model.addAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기

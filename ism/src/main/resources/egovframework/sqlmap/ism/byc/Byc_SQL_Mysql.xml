@@ -7,6 +7,13 @@
     <typeAlias  alias="ismbyc010VO" type = "nfm.com.byc.service.Ismbyc010VO"/>
     <typeAlias  alias="ismbyc020VO" type = "nfm.com.byc.service.Ismbyc020VO"/>
     <typeAlias  alias="ismbyc030VO" type = "nfm.com.byc.service.Ismbyc030VO"/>
+    <!-- 모든 목록 select -->
+    <select id="ismbyc010DAO.selectAll" resultClass="ismbyc010VO">
+        select
+        *
+        from ismbyc010
+        order by byc010id desc
+    </select>
 
     <!-- 매입처 목록 select -->
     <select id="byc010DAO.selectByc010List" parameterClass="byc010SearchVO" resultClass="ismbyc010VO">

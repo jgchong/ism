@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
@@ -84,19 +85,13 @@ public class Prd010Controller {
         model.addAttribute("bycList", prd010Service.selectBycAll());
         model.addAttribute("whsList", prd010Service.selectWhsAll());
 
+        // id있으면 수정, 없으면 입력
+        // 등록 및 수정을 여는 기준으로 결정하기. (id가 있는경우 등록으로 열면 무조건 초기화하기.) (id가 없는경우 그대로 열기)
 
-        //id 있으면 수정, 없으면 운영상품 단품등록록
-       //form을 통해 단품등록, 수정 만들기(수정의 경우 form을 수정할 상품id 전달, 통해 전달, 수정용 상품id가 있으면 해당 id로 셋팅해서 열어주기) 단품구분은 삭제하고, 해당 자리에 상품구분을 드랍다운으로 적용. 메모기능 추가하기.
-        //매입사코드 입력시, like구문으로 조회하기 - 코드생성하기
-        //결합상품 겸용으로 사용하기 (itemCode)
 
-        //운영상품 결합 등록 http://jqueryui.com/autocomplete/#custom-data 검색어자동완성 참고 (availableTags에 상품명 전체 저장) 자동완성 통해서 추가하면 추가가 됨. 최대 5개짜지 추가가 되도록 설정. 히든에 코드가 추가되도록 설정.
-        //받은 개수만큼 초과 안되도록 설정. 생성을 하면 결합상품이 생성되고, 해당 코드의 상품들은 결합상태가 되어짐.
-        //결합상품 수정을 누를경우 추가가 됨.
+        //나와있는 모든 액셀데이터 출력하기
 
-        //나와있는 모든 액셀데이터 출력하기. (단품들만) <살짝 하지말기>
-
-        // 일괄등록 기능은 단품만 적용하기.
+        // 일괄등록 기능은 단품만 적용하기
 
         // 선택 삭제 기능 구현
 
@@ -121,18 +116,34 @@ public class Prd010Controller {
         return "/ism/prd/prd010";
     }
 
+    /**
+     * 모든 상품 조회
+     */
+    @ResponseBody
+    @RequestMapping(value = "/ism/cum/prd010selectAll.do", produces = "application/json; charset=utf8")
+    public String cum010SelectDetail(ModelMap model) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+        String test = prd010Service.selectAll();
+        return test;
+    }
+
 
 
     private void prd010SearchVOInit(@ModelAttribute("prd010SearchVO") Prd010SearchVO prd010SearchVO) throws Exception {
         /** 조회 기준 날짜, 다른 검색파라미터 초기화 */
         if (StringUtils.isBlank(prd010SearchVO.getDtSearch_frCreateDt())) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Calendar calender = Calendar.getInstance();
             calender.add(Calendar.DATE, -30);
             prd010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         }
         if (StringUtils.isBlank (prd010SearchVO.getDtSearch_toCreateDt())) {
-            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Calendar calender = Calendar.getInstance();
             prd010SearchVO.setDtSearch_toCreateDt(formatter.format(calender.getTime()));
         }

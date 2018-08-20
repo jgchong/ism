@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Sl20">
+
+    <typeAlias alias="prd010SearchVO" type="nfm.com.prd.service.Prd010SearchVO"/>
+    <typeAlias alias="prd010VO" type="nfm.com.prd.service.Prd010VO"/>
+    <!-- 모든 목록 select -->
+    <select id="prd010DAO.selectAll" resultClass="Prd010VO">
+        select
+        *
+        from ismprd010
+        where itemcrosstype = 'S'
+        order by orderitemid desc
+    </select>
+
+    <!-- 상품 목록 select cnt -->
+    <select id="prd010DAO.selectListTotCnt" parameterClass="prd010SearchVO" resultClass="int">
+    select count(1) totcnt
+        from ismprd010 p
+        left outer join ismbyc010 b on p.byc010id = b.byc010id
+        left outer join ismwhs010 w on p.pristock = w.whs010id
+        where
+        p.itemcrosstype in ('S', 'P')
+        <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
+            <![CDATA[
+        	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dtSearch_toCreateDt">
+            <![CDATA[
+        	IF(p.createdate = '', curdate(), p.createdate) <= #dtSearch_toCreateDt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcat1">
+            p.itemcat1 = #dfSearch_itemcat1#
+        </isNotEmpty>
+    </select>
+
+    <!-- 상품 목록 select -->
+    <select id="prd010DAO.selectList" parameterClass="prd010SearchVO" resultClass="prd010VO">
+        select
+        p.orderitemid,
+        p.itemcat1,
+        p.itemname,
+        p.byc010id,
+        p.itemcrosstype,
+        p.itemopt,
+        p.itemea,
+        p.itemprice,
+        p.itembuyprice,
+        p.taxtype,
+        p.itemdlvprice,
+        p.itembuydlvprice,
+        p.itemgubun,
+        p.createdate,
+        p.byccode,
+        p.itemcode,
+        p.pristock,
+        p.itemsize,
+        p.cartonqty,
+        p.palletqty,
+        p.crossitemcode,
+        b.bycname,
+        w.whsname
+        from ismprd010 p
+        left outer join ismbyc010 b on p.byc010id = b.byc010id
+        left outer join ismwhs010 w on p.pristock = w.whs010id
+        where
+        p.itemcrosstype in ('S', 'P')
+        <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
+            <![CDATA[
+        	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dtSearch_toCreateDt">
+            <![CDATA[
+        	IF(p.createdate = '', curdate(), p.createdate) <= #dtSearch_toCreateDt#
+        ]]>
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcat1">
+            p.itemcat1 = #dfSearch_itemcat1#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcrosstype">
+            p.itemcrosstype = #dfSearch_itemcrosstype#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemgubun">
+            p.itemgubun = #dfSearch_itemgubun#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_bycname">
+            b.bycname LIKE '%' #dfSearch_bycname# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcode">
+            p.itemcode LIKE '%' #dfSearch_itemcode# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemname">
+            p.itemname LIKE '%' #dfSearch_itemname# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemopt">
+            p.itemopt LIKE '%' #dfSearch_itemopt# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_whsname">
+            w.whsname LIKE '%' #dfSearch_whsname# '%'
+        </isNotEmpty>
+        order by p.orderitemid desc
+        limit #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+
+    <!-- 상품 목록 select -->
+    <select id="prd010DAO.selectFusionList" parameterClass="String" resultClass="prd010VO">
+        select
+        p.orderitemid,
+        p.itemcat1,
+        p.itemname,
+        p.byc010id,
+        p.itemcrosstype,
+        p.itemopt,
+        p.itemea,
+        p.itemprice,
+        p.itembuyprice,
+        p.taxtype,
+        p.itemdlvprice,
+        p.itembuydlvprice,
+        p.itemgubun,
+        p.createdate,
+        p.byccode,
+        p.itemcode,
+        p.pristock,
+        p.itemsize,
+        p.cartonqty,
+        p.palletqty,
+        p.crossitemcode,
+        b.bycname,
+        w.whsname
+        from ismprd010 p
+        left outer join ismbyc010 b on p.byc010id = b.byc010id
+        left outer join ismwhs010 w on p.pristock = w.whs010id
+        where
+        p.itemcrosstype in ('F')
+        and p.crossitemcode = #itemcode#
+    </select>
+
+    <update id="prd010DAO.updateItemWhs" parameterClass="java.util.HashMap">
+        update ismprd010
+        set pristock = #whsId#
+        where orderitemid = #itemId#
+    </update>
+
+</sqlMap>

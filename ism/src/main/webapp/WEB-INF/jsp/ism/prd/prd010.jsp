@@ -13,8 +13,9 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="/css/custom/base.css" type="text/css" rel="stylesheet"/>
     <link href="/css/custom/layout.css" type="text/css" rel="stylesheet"/>
     <link href="/css/custom/common.css" type="text/css" rel="stylesheet"/>
@@ -119,8 +120,7 @@
                     <a href="javascript:;">정렬</a>
                     <a href="javascript:;" class="moreSearchBt">상세검색</a>
                     <ul style="margin-top: 10px; margin-bottom:10px;">
-                        <a href="javascript:;" class="layerBt" name="product" style="margin-top: 30px;">운영상품 단품등록</a>
-                        <a href="javascript:;" class="layerBt" name="product" style="margin-top: 30px;">운영상품 결합등록</a>
+                        <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
                         <a href="#" style="margin-top: 30px;">운영상품 일괄 업로드</a>
                         <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">운영상품 엑셀 저장</a>
                     </ul>
@@ -233,7 +233,7 @@
                                 <td><c:out value="${result.bycname}"/></td>
                                 <td><c:out value="${result.itemcode}"/></td>
                                 <td>
-                                    <a href="javascript:openSingleItemDetail('${result.itemcode}');"><c:out value="${result.itemname}"/></a>
+                                    <a href="javascript:" onclick="openSingleItemDetail('${result.itemcode}');"><c:out value="${result.itemname}"/></a>
                                 </td>
                                 <td><c:out value="${result.itemopt}"/></td>
                                 <td><c:out value="${result.itemea}"/></td>
@@ -266,141 +266,176 @@
     </div>
 </div>
 
-<form id="form2" name="form1" method="post" action="/ism/prd/prd010Detail.do">
-    <input type="hidden" id="dfDetail_itemname" name="dfDetail_itemname" value="${prd010DetailVO.dfDetail_itemname}"/>
-    <input type="hidden" id="dfDetail_orderitemid" name="dfDetail_orderitemid" value="${prd010DetailVO.dfDetail_orderitemid}"/>
-    <!-- 주문현황관리 -->
-    <div class="layerCont product">
-        <div class="inner">
-            <p class="layerTit">운영상품 단품 등록 및 수정</p>
-            <div class="layerContents">
-                <div class="layerTb">
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="15%"/>
-                            <col width="35%"/>
-                            <col width="15%"/>
-                            <col width="35%"/>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th scope="row">상품카테고리</th>
-                            <td colspan="3">
-                                <select name="" title="" class="three">
-                                    <option value="" selected="selected">대분류</option>
-                                    <option value=""></option>
-                                </select>
-                                <select name="" title="" class="three">
-                                    <option value="" selected="selected">중분류</option>
-                                    <option value=""></option>
-                                </select>
-                                <select name="" title="" class="three">
-                                    <option value="" selected="selected">소분류</option>
-                                    <option value=""></option>
-                                </select>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">구분선택</th>
-                            <td>
-                                <input type="radio" value="" name="sel1" id="sel1_1"/><label for="sel1_1">단품</label>
-                                <input type="radio" value="" name="sel1" id="sel1_2"/><label for="sel1_2">결합</label>
-                            </td>
-                            <th scope="row">매입처</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">상품명</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">옵션</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">단위수량</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">매입단가</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">구분</th>
-                            <td colspan="3">
-                                <input type="radio" value="" name="sel2" id="sel2_1"/><label for="sel2_1">제조사 출고상품</label>
-                                <input type="radio" value="" name="sel2" id="sel2_2"/><label for="sel2_2">재고관리상품</label>
-                                <input type="radio" value="" name="sel2" id="sel2_3"/><label for="sel2_3">사은품</label>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row">배송비</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">등록일</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">자사상품코드</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">매입사코드등록</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <!-- 자사상품 출고시 생성 -->
-                        <tr>
-                            <th scope="row">우선창고 설정</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">상품크기</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">카톤수량</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                            <th scope="row">파렛트수량</th>
-                            <td><input type="text" class="it " title="" value="" name=""/></td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="layerTb mt10">
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="100%"/>
-                        </colgroup>
-                        <tbody>
-                        <tr>
-                            <th scope="row">메모내용</th>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div class="memoTxt">
-                                    메모내용
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <p class="memo">
-                                    <input type="text" class="it" title="" value="" name=""/>
-                                    <button>입력</button>
-                                </p>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
+<!-- 주문현황관리 -->
+<div id="layerCont" class="layerCont product">
+    <div class="inner">
+        <p class="layerTit">운영상품 등록 및 수정</p>
+        <div class="layerContents">
+            <div class="layerTb mb10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">상품카테고리</th>
+                        <td colspan="3">
+                            <select id="detail_category">
+                                <option value="">상품 카테고리</option>
+                                <c:forEach var="item" items="${ISM090}" varStatus="status">
+                                    <option value="${item.code}">${item.codeNm}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">구분선택</th>
+                        <td>
+                            <input type="radio" name="detail_sel1" id="detail_sel1_1" onclick="radiobox01Click('S')" value='S'/><label for="detail_sel1_1">단품</label>
+                            <input type="radio" name="detail_sel1" id="detail_sel1_2" onclick="radiobox01Click('P')" value='P'/><label for="detail_sel1_2">결합</label>
+                        </td>
+                        <th scope="row">매입처</th>
+                        <td>
+                            <select id="detail_byc">
+                                <option value="">매입처 선택</option>
+                                <c:forEach var="item" items="${bycList}" varStatus="status">
+                                    <option value="${item.byc010id}">${item.bycname}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <p class="layerFootBt">
-                <a href="#" class="confirm" name="claim">확인</a>
-                <a href="javascript:;" class="layerClose cancel">취소</a>
-            </p>
-            <a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
+            <!-- //여기 1 -->
+            <div id="detail_itemsearch" class="layerTb scrollTb mt10 mb10">
+                <table cellpadding="0" cellspacing="0">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="*"/>
+                        <col width="15%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr id="detail_autosearch">
+                        <td>
+                            <p class="memo">
+                                <input type="text" id="detail_autocomplete" class="it" placeholder=" 상품명 검색"/>
+                                <input type="hidden" id="detail_autosearch_name"/>
+                                <input type="hidden" id="detail_autosearch_value"/>
+                                <a href="javascript:addCrossitemSearch();">추가</a>
+                            </p>
+                        </td>
+                        <td style="text-align: center">
+                            <a href="javascript:initCrossitemSearch();"><strong>초기화</strong></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="layerTb">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">상품명</th>
+                        <td><input id="detail_itemname" type="text" class="it " title="" value="" name=""/></td>
+                        <th scope="row">옵션</th>
+                        <td><input id="detail_itemopt" type="text" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">단위수량</th>
+                        <td><input id="detail_itemea" type="text" class="it " title="" value="" name=""/></td>
+                        <th scope="row">매입단가</th>
+                        <td><input id="detail_itembuyprice" type="text" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">구분</th>
+                        <td colspan="3">
+                            <input id="detail_sel2_1" type="radio" value="1" name="detail_sel2" onclick="radiobox02Click(1)"/><label for="detail_sel2_1">제조사 출고상품</label>
+                            <input id="detail_sel2_2" type="radio" value="2" name="detail_sel2" onclick="radiobox02Click(2)"/><label for="detail_sel2_2">재고관리상품</label>
+                            <input id="detail_sel2_3" type="radio" value="3" name="detail_sel2" onclick="radiobox02Click(3)"/><label for="detail_sel2_3">사은품</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">매입배송비</th>
+                        <td colspan="3"><input id="detail_itembuydlvprice" type="text" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <!-- 자사상품 출고시 생성 -->
+                    <tr>
+                        <th scope="row">우선창고 설정</th>
+                        <td>
+                            <select id="detail_pristock" class="detail_itemgubun_2">
+                                <option value="">우선창고 선택</option>
+                                <c:forEach var="item" items="${whsList}" varStatus="status">
+                                    <option value="${item.whs010id}">${item.whsname}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <th scope="row">상품크기</th>
+                        <td><input id="detail_itemsize" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">카톤수량</th>
+                        <td><input id="detail_cartonqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                        <th scope="row">파렛트수량</th>
+                        <td><input id="detail_palletqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div class="layerTb mt10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="100%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">메모내용</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="memoTxt">
+                                <ul id='memoul'></ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="memo">
+                                <input type='text' class='it' title='' value='' id='detail_inputmemo' name='inputmemo'/>
+                                <a onclick='inputmemodata()'>입력</a>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
+        <p class="layerFootBt">
+            <a href="#" class="confirm" name="claim">확인</a>
+            <a href="javascript:;" class="layerClose cancel">취소</a>
+        </p>
+        <a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
     </div>
-</form>
+</div>
 
 
 </body>
 </html>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
 <script type="text/javascript" src="/js/jquery.techbytarun.excelexportjs.js"></script>
 <script src="/js/custom/multiselect.js"></script>
@@ -410,7 +445,58 @@
         <c:if test="${prd010SearchVO.search_isdetail eq 1}">
         $('.searchMore').slideToggle();
         </c:if>
+
+        $.ajax({
+            url: "/ism/cum/prd010selectAll.do",
+            type: "post",
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                $('#detail_autocomplete').autocomplete({
+                    minLength: 0,
+                    source: data,
+                    focus: function (event, ui) {
+                        return false;
+                    },
+                    select: function (event, ui) {
+                        $('#detail_autocomplete').val(ui.item.label);
+                        $('#detail_autosearch_name').val(ui.item.label);
+                        $('#detail_autosearch_value').val(ui.item.itemcode);
+                        return false;
+                    },
+                    open: function () {
+                        $(this).autocomplete('widget').css('z-index', 300).css('height', '200px').css('overflow-y', 'scroll').css('overflow-x', 'hidden');
+                        return false;
+                    }
+                }).autocomplete("instance")._renderItem = function (ul, item) {
+                    return $("<li>")
+                        .append("<div>" + item.label + "</div>")
+                        .appendTo(ul);
+                };
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
     });
+
+
     $('#pageUnit').change(function () { //페이지 크기 변경
         $('#form1').submit();
     });
@@ -422,18 +508,11 @@
         $('#form1').submit();
     });
 
-
-    //common.js 있는 부분을 여기서만 처리를 위해 common.js 빼고 추가
+    //common.js 있는 부분을 처리를 위해 common.js 빼고 추가
     $('.layerBt').on('click', function () {
-        openSingleItemDetail();
-        $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
-        $('.fade').fadeIn();
-        $('.' + $(this).attr('name')).css({
-            'margin': '-' + ($('.' + $(this).attr('name')).height() / 2) + 'px 0 0 -' + ($('.' + $(this).attr('name')).width() / 2) + 'px'
-        })
-        $('.' + $(this).attr('name')).fadeIn();
-        return false;
+
     })
+
     $('.layerClose').on('click', function () {
         $('.layerCont').fadeOut();
         $('.fade').fadeOut(function () {
@@ -441,31 +520,11 @@
         })
         return false;
     })
-    //레이어 작업시 레이어 버튼의 name 과 같은 class 를 찾아 오픈 (기본적으로 버튼의 클래스는 layerBt 로 통일)
-    //레이어의 클래스는 layerCont 로 통일. 더블 클래스를 사용하여 버튼의 네임값을 추가로 설정.
-    //레이어의 닫기 및 취소등의 버튼의 클래스는 layerClose 로 통일.
 
-
-    /* 레이어 위로 레이어가 뜰때. */
-    $(document).on('click', '.layerBt_v2', function () {
-        $('body').append('<div class="fade_v2" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:200; display:none;"></div>')
-        $('.fade_v2').fadeIn();
-        $('.' + $(this).attr('name')).css({
-            'margin': '-' + ($('.' + $(this).attr('name')).height() / 2) + 'px 0 0 -' + ($('.' + $(this).attr('name')).width() / 2) + 'px'
-        })
-        $('.' + $(this).attr('name')).fadeIn();
-        return false;
-    })
-    $(document).on('click', '.layerClose_v2', function () {
-        $('.layerCont_v2').fadeOut();
-        $('.fade_v2').fadeOut(function () {
-            $('.fade_v2').remove();
-        })
-        return false;
-    })
 
     //체크박스 전체 클릭하기.
     var chkallval = 0;
+
     function chkall() {
         if (chkallval == 0) {
             chkallval = 1;
@@ -476,7 +535,7 @@
         }
     }
 
-    //결합상품창 열기
+    //결합상품 결합상품들 열기
     function showCrossItem(itemcode) {
         var elementId = '#' + itemcode;
         var elementClass = '.' + itemcode;
@@ -490,15 +549,130 @@
         }
     }
 
-    function openSingleItemDetail(itemId) {
-        if (itemId == null || itemId == '') {
-            $('#dfDetail_orderitemid').val('');
+
+    //운영상품 디테일 설정 ----------------------------------------------------
+
+    var firstCheck = 0;
+    var currentItemcoed = '';
+
+    function openSingleItemDetail(itemcode) {
+        if (itemcode == null || itemcode == '') {
+            if (firstCheck == 0) {
+                currentItemcoed = '';
+
+                //초기화
+                firstCheck = 1;
+            }
+
+            //그대로 열기
             alert("운영상품 단품 등록클릭");
         } else {
-            $('#dfDetail_orderitemid').val(itemId);
-            alert(itemId + "운영상품 단품 수정 클릭");
+            //해당 상품의 내용을 클릭하기기
+            alert(itemcode + "운영상품 단품 수정 클릭");
+            currentItemcoed = itemcode;
+            firstCheck = 0;
+        }
+        //open
+        $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
+        $('.fade').fadeIn();
+        $('#layerCont').css({
+            'margin': '-' + ($('#layerCont').height() / 2) + 'px 0 0 -' + ($('#layerCont').width() / 2) + 'px'
+        })
+        $('#layerCont').fadeIn();
+        return false;
+    }
+
+    //등록 또는 수정입력시
+    //수정의 경우 currentItemcoed 값을 찾기
+    //등록을 하는경우 currentItemcoed에 값을 입력하기
+    //등록을 하는경우 firstCheck = 0;부여
+    //firstCheck = 0인경우 모든 값 초기화
+    //확인의 경우 메모 입력과는 별개로 동작
+    function initDetail() {
+        if (currentItemcoed == '') {
+            $('#detail_sel1_1').trigger('click');
+            $('#detail_sel2_1').trigger('click');
+        } else {
+            setMemo(currentItemcoed, 'PR', $('#memoul'));
+
         }
     }
+
+    //메모입력
+    function inputmemodata() {
+        if (currentItemcoed == '') {
+            alert("운영상품 등록 후 메모 등록이 가능합니다.");
+            return;
+        }
+        var inputmemo = $('#detail_inputmemo').val();
+        savememodata(currentItemcoed, 'PR', inputmemo, $('#memoul'));
+        $('#detail_inputmemo').val("");
+        return false;
+    }
+
+    //결합상품 결합상품들 추가
+    function addCrossitemSearch() {
+        var searchValue = $('#detail_autosearch_value').val();
+        var searchLavel = $('#detail_autocomplete').val();
+        var searchName = $('#detail_autosearch_name').val();
+        var a = 0;
+        if (searchValue != null && searchValue != '' && searchLavel != null && searchLavel != '' && searchName != null && searchName != '') {
+            $('.detail_autosearch_regist').each(function () {
+                var temp = $(this).attr("dataid");
+                if (searchValue == temp) {
+                    a = 1;
+                }
+            });
+            if (a == 1) {
+                alert("이미 추가하였습니다.");
+            } else {
+                $('#detail_autocomplete').val('');
+                $('#detail_autosearch_value').val('');
+                $('#detail_autosearch_name').val('');
+                $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "'><td colspan='2'>" + searchName + "(" + searchValue + ")</td></tr>");
+            }
+        } else {
+            alert("상품명을 입력해주세요.")
+        }
+    }
+
+    //결합상품 초기화
+    function initCrossitemSearch() {
+        $('.detail_autosearch_regist').remove();
+    }
+
+
+    //여기 2
+    //라디오박스 01
+    var detail_itemcrosstype = 'S';
+
+    function radiobox01Click(myRadio) {
+        if (myRadio == 'P') {
+            $('#detail_itemsearch').show();
+            detail_itemcrosstype = 'P';
+        } else if (myRadio == 'S') {
+            $('#detail_itemsearch').hide();
+            detail_itemcrosstype = 'S';
+        }
+    }
+
+    //라디오박스 02
+    var detail_itemgubun = 1;
+
+    function radiobox02Click(myRadio) {
+        if (myRadio == 1) {
+            $('.detail_itemgubun_2').prop('disabled', true);
+            detail_itemgubun = 1;
+        } else if (myRadio == 2) {
+            $('.detail_itemgubun_2').prop('disabled', false);
+            detail_itemgubun = 2;
+        } else if (myRadio == 3) {
+            $('.detail_itemgubun_2').prop('disabled', true);
+            detail_itemgubun = 3;
+        }
+    }
+
+
 
 
 </script>

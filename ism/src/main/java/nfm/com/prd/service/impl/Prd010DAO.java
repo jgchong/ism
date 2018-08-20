@@ -11,6 +11,10 @@ import java.util.Map;
 
 @Repository("prd010DAO")
 public class Prd010DAO extends EgovAbstractDAO {
+	public List<?> selectAll() {
+		return list("prd010DAO.selectAll");
+	}
+
 	public int selectListTotCnt(Prd010SearchVO prd010SearchVO) {
 		return (Integer)select("prd010DAO.selectListTotCnt", prd010SearchVO);
 	}
