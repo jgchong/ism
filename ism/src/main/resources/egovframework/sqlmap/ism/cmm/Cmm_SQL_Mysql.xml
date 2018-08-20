@@ -30,4 +30,11 @@
     		SELECT  LAST_INSERT_ID()
   		</selectKey>
     </insert>
+
+    <!-- 첨부파일 select -->
+    <select id="cmm010DAO.selectCmm020" parameterClass="int" resultClass="ismcmm020VO">
+	select a.cmm020id, a.orgfilename, a.savefilename
+      from ismcmm020 a
+     where a.cmm020id = #cmm020id#
+    </select>
 </sqlMap>

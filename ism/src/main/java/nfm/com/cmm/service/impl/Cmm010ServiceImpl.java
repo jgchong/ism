@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import nfm.com.cmm.service.Cmm010Service;
 import nfm.com.cmm.service.IsmCmm010VO;
+import nfm.com.cmm.service.IsmCmm020VO;
 
 import org.springframework.stereotype.Service;
 
@@ -34,5 +35,10 @@ public class Cmm010ServiceImpl extends EgovAbstractServiceImpl implements Cmm010
 	@Override
 	public void insertMemo(IsmCmm010VO ismCmm010VO) throws Exception {
 		cmm010DAO.insertMemo(ismCmm010VO);
+	}
+
+	@Override
+	public IsmCmm020VO selectCmm020(int cmm020id) throws Exception {
+		return cmm010DAO.selectCmm020(cmm020id);
 	}
 }

@@ -75,6 +75,7 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    	jsonObject.put("uploadgubun", "");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
+	    	jsonObject.put("cmm020id", "0");
 		}
 		
 	    for(Ismbyc010VO vo : listIsmbyc010VO){
@@ -132,6 +133,8 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    	}else{
 	    		jsonObject.put("savefilename", URLEncoder.encode(vo.getSavefilename(), "UTF-8"));
 	    	}
+	    	
+	    	jsonObject.put("cmm020id", vo.getCmm020id());
 	    }
 	    
 
