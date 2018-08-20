@@ -141,6 +141,10 @@ li img {
 </div>
 <input type="hidden" id="hbyc010id" name="byc010id" />
 </form>
+
+
+<form id="formatdn" name="formatdn" method="post"></form>
+<iframe name="tr" src="" width="0" height="0" frameborder="0" scrolling="no"></iframe>
 </body>
 </html>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -228,7 +232,7 @@ function viewBycData(byc010id) {
 			"			<tr>"+
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
 			"				<td style='text-align:left;'>"+
-			"                   <input type='text' class='it' style='width: 70%;' onclick='downLoadFile("+decodeURIComponent(data.savefilename.replace(Ca, " "))+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
+			"                   <input type='text' class='it' style='width: 70%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
 			"				<th scope='row'>매입처코드</th>"+
@@ -520,6 +524,22 @@ function delrow(obj) {
 		$(obj).parent().parent().find("input").val("");
 	}else{
 		$(obj).parent().parent().remove();
+	}
+}
+
+function downLoadFile(cmm020id) {
+	console.log(cmm020id);
+	if (cmm020id > 0) {
+		T = document.formatdn;
+		//임시저장
+		//var t = T.target;
+		//var a = T.action;
+		T.target	= "tr";
+		T.action	= "/ism/cmm/attachFileDown.do?cmm020id="+cmm020id;
+		//복구
+		T.submit();
+		//T.target	= t;
+		//T.action	= a;	
 	}
 }
 </script>

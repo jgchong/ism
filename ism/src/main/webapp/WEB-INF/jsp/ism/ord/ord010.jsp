@@ -21,6 +21,16 @@
 	<style type="text/css">
 	#sortable2 li.ui-state-default {background:#3a5199;}
 	#sortable1 li.ui-state-highlight {background:#333;}
+	.muploadbtn {
+		margin: 5px;
+	    padding: 3px 12px;
+	    border: 0;
+	    background: #45b6b6;
+	    color: #fff;
+	    font-size: 14px;
+	}
+	.layerTit { margin: 0 0 0; }
+	.upload { top: 31%; }
 	</style>
 </head>
 <body>
@@ -452,29 +462,35 @@ function uploadFile(){
     }
 }
 function mfileonchange(files) {
-	for (var i = 0; i < files.length; i++) {
-		  var file = files[i];
-		  console.log(file.name);
-	}
+	selectFile(files);
+	
+	//for (var i = 0; i < files.length; i++) {
+	//	  var file = files[i];
+	//	  console.log(file.name);
+	//}
 }
 </script>
 	<div class="layerCont upload">
 		<div class="inner">
 			<p class="layerTit">데이터 일괄 업로드</p>
 			<div class="layerContents">
-    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
-    <div id="dropZone">
-        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
-            <tbody id="fileTableTbody">
-                <tr>
-                    <td colspan="2">
-                        파일을 선택 하세요
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    </form>
+				<div style="float:right;margin:10px 0;">
+    				<label for="mfile" class="muploadbtn">업로드</label>
+        			<input multiple="multiple" type="file" id="mfile" name="mfile" onchange="javascript:mfileonchange(this.files);" style="display:none;"/>
+        		</div>
+			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+				    <div id="dropZone">
+				        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
+				            <tbody id="fileTableTbody">
+				                <tr>
+				                    <td colspan="2">
+				                        파일을 선택 하세요
+				                    </td>
+				                </tr>
+				            </tbody>
+				        </table>
+				    </div>
+			    </form>
 			</div>
 			<!-- <div onchange="dropfile();">Drap and Drop here.</div> -->
 			<p class="layerFootBt">

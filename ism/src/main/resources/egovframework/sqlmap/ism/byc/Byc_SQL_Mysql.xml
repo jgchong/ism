@@ -19,7 +19,7 @@
     <select id="byc010DAO.selectByc010List" parameterClass="byc010SearchVO" resultClass="ismbyc010VO">
 	select a.byc010id, a.bycname, a.byctype, a.cogubun, a.cono, a.lawcono, a.coaddr, IFNULL(a.cobustype,'') as cobustype,
 		   IFNULL(a.account,'') as account, IFNULL(a.accountno,'') as accountno,
-           a.useyn, a.purchaseform, a.attachname, IFNULL(a.byccode,'') as byccode, a.uploadgubun,
+           a.useyn, a.purchaseform, a.attachname, IFNULL(a.byccode,'') as byccode, a.uploadgubun, a.cmm020id,
            case a.byctype
 	           when '1' then '제조사'
 	           when '2' then '벤더'

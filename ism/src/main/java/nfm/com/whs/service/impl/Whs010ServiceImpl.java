@@ -68,6 +68,7 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	    	jsonObject.put("accontdate", "");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
+	    	jsonObject.put("cmm020id", "");
 		}
 		
 	    for(Ismwhs010VO vo : listIsmwhs010VO){
@@ -109,6 +110,8 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	    	}else{
 	    		jsonObject.put("savefilename", URLEncoder.encode(vo.getSavefilename(), "UTF-8"));
 	    	}
+
+	    	jsonObject.put("cmm020id", vo.getCmm020id());
 	    }
 
 	    //매입처 메모 정보 가져옴.[s]

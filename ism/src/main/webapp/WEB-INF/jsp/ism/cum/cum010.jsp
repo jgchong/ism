@@ -163,6 +163,9 @@ li img {
 </div>
 <input type="hidden" id="hcum010id" name="cum010id" />
 </form>
+
+<form id="formatdn" name="formatdn" method="post"></form>
+<iframe name="tr" src="" width="0" height="0" frameborder="0" scrolling="no"></iframe>
 </body>
 </html>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -184,6 +187,266 @@ function viewCumData(cum010id) {
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	console.log(data);
+
+        	var addhtml = ""+
+			"<div class='layerTb'>"+
+			"	<table cellpadding='0' cellspacing='0' class='c' summary='' >"+
+			"		<caption></caption>"+
+			"		<colgroup>"+
+			"			<col width='15%'/><col width='35%'/>"+
+			"			<col width='15%'/><col width='35%'/>"+
+			"		</colgroup>"+
+			"		<tbody>"+
+			"			<tr>"+
+			"				<th scope='row'>상호</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.coname.replace(Ca, " "))+"' id='coname' name='coname'/></td>"+
+			"				<th scope='row'>업체구분</th>"+
+			"				<td>"+
+			"					<select class='sel3' id='cotype1' name='cotype1' onchange='cotypeChg(1)' title=''>"+
+			"						<option value=''>대분류</option>${ISM020}"+
+			"					</select>"+
+			"					<select class='sel3' id='cotype2' name='cotype2' onchange='cotypeChg(2)' title=''>"+
+			"						<option value=''>중분류</option>"+
+			"					</select>"+
+			"					<select class='sel3' id='cotype3' name='cotype3' onchange='cotypeChg(3)' title=''>"+
+			"						<option value=''>소분류</option>"+
+			"					</select>"+
+			"				</td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>사업자구분</th>"+
+			"				<td>"+
+			"					<input type='radio' name='cogubun' value='1' id='sel1_1'/><label for='sel1_1'>법인</label>"+
+			"					<input type='radio' name='cogubun' value='2' id='sel1_2'/><label for='sel1_2'>개인</label>"+
+			"					<input type='radio' name='cogubun' value='3' id='sel1_3'/><label for='sel1_3'>기타</label>"+
+			"				</td>"+
+			"				<th scope='row'>사업자번호</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+data.cono+"' name='cono'/></td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>법인등록번호</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+data.lawcono+"' name='lawcono'/></td>"+
+			"				<th scope='row'>업태/종목</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.cobustype.replace(Ca, " "))+"' name='cobustype'/></td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>회사주소</th>"+
+			"				<td colspan='3' class='l'><input type='text' class='it ' title='' value='"+decodeURIComponent(data.coaddr.replace(Ca, " "))+"' name='coaddr'/></td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>정산<br/>(세금계산서발행)</th>"+
+			"				<td colspan='3'>"+
+			"					<input type='radio' name='account' value='1' id='sel2_1'/><label for='sel2_1'>정발행</label>"+
+			"					<input type='radio' name='account' value='2' id='sel2_2'/><label for='sel2_2'>역발행</label> /&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+
+			"					<input type='radio' name='account2' value='1' id='sel3_1'/><label for='sel3_1'>공급가 정산</label>"+
+			"					<input type='radio' name='account2' value='2' id='sel3_2'/><label for='sel3_2'>수수료 정산</label>"+
+			"				</td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>대금정산</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.accountamt.replace(Ca, " "))+"' name='accountamt'/></td>"+
+			"				<th scope='row'>매출처거래여부</th>"+
+			"				<td>"+
+			"					<input type='radio' name='useyn' id='sel4_1' value='Y' checked/><label for='sel4_1'>사용</label>"+
+			"					<input type='radio' name='useyn' id='sel4_2' value='N'/><label for='sel4_2'>비사용</label>"+
+			"				</td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
+			"				<td colspan='3' style='text-align:left;'>"+
+			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
+			"                   <label for='attachfile'>파일선택</label>"+
+			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
+			"			</tr>"+
+			"		</tbody>"+
+			"	</table>"+
+			"</div>"+
+			"<div class='layerTb mt10'>"+
+			"	<table id='userlist' cellpadding='0' cellspacing='0' class='c' summary='' >"+
+			"		<caption></caption>"+
+			"		<colgroup>"+
+			"			<col width='15%'/><col width='20%'/>"+
+			"			<col width='20%'/><col width='*'/>"+
+			"			<col width='6%'/>"+
+			"		</colgroup>"+
+			"		<thead>"+
+			"			<tr>"+
+			"				<th scope='row' colspan='5' class='tit'>담당자</th>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>담당자명</th>"+
+			"				<th scope='row'>연락처</th>"+
+			"				<th scope='row'>이메일</th>"+
+			"				<th scope='row'>메모</th>"+
+			"				<th scope='row'><a href='javascript:addUser();' class='celPlus'>+</a></th>"+
+			"			</tr>"+
+			"		</thead>"+
+			"		<tbody>";
+			
+			if (Object.keys(data.cum020).length > 0) {
+				$.each(data.cum020,function(index, item) {
+					addhtml = addhtml +
+					"			<tr>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.cumusername.replace(Ca, " "))+"' name='cumusername'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.cumusertel.replace(Ca, " "))+"' name='cumusertel'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.cumuseremail.replace(Ca, " "))+"' name='cumuseremail'/></td>"+
+					"				<td colspan='1'><input type='text' class='it ' title='' value='"+decodeURIComponent(item.cummemo.replace(Ca, " "))+"' name='cummemo'/></td>"+
+					"				<td><a href='javascript://' onclick='delrow(this)'>del</a></td>"+
+					"			</tr>";
+				});
+			}else{
+				addhtml = addhtml +
+				"			<tr>"+
+				"				<td><input type='text' class='it ' title='' value='' name='cumusername'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='cumusertel'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='cumuseremail'/></td>"+
+				"				<td colspan='1'><input type='text' class='it ' title='' value='' name='cummemo'/></td>"+
+				"				<td><a href='javascript://' onclick='delrow(this)'>del</a></td>"+
+				"			</tr>";				
+			}
+			
+			addhtml = addhtml +
+			"		</tbody>"+
+			"	</table>"+
+			"</div>"+
+			"<div class='layerTb mt10'>"+
+			"	<table id='shoplist' cellpadding='0' cellspacing='0' class='c' summary='' >"+
+			"		<caption></caption>"+
+			"		<colgroup>"+
+			"			<col width='*'/><col width='*'/><col width='10%'/>"+
+			"			<col width='10%'/><col width='*'/><col width='8%'/><col width='10%'/><col width='6%'/>"+
+			"		</colgroup>"+
+			"		<thead>"+
+			"			<tr>"+
+			"				<th scope='row' colspan='8' class='tit'>어드민</th>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>쇼핑몰명</th>"+
+			"				<th scope='row'>URL</th>"+
+			"				<th scope='row'>아이디</th>"+
+			"				<th scope='row'>패스워드</th>"+
+			"				<th scope='row'>업로드타입</th>"+
+			"				<th scope='row'>사용</th>"+
+			"				<th scope='row'>업로드구분</th>"+
+			"				<th scope='row'><a href='javascript:addShop();' class='celPlus'>+</a></th>"+
+			"			</tr>"+
+			"		</thead>"+
+			"		<tbody>";
+
+			if (Object.keys(data.cum030).length > 0) {
+				$.each(data.cum030,function(index, item) {
+					addhtml = addhtml +
+					"			<tr>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.shopmallname.replace(Ca, " "))+"' name='shopmallname'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.shopurl.replace(Ca, " "))+"' name='shopurl'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.shopuid.replace(Ca, " "))+"' name='shopuid'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.shoppwd+"' name='shoppwd'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.uploadtype.replace(Ca, " "))+"' name='uploadtype'/></td>";
+
+					if (item.useyn == "Y") {
+						addhtml = addhtml +
+						"               <td><select name='shopUseYn'><option value='Y' selected>Y</option><option value='N'>N</option></select></td>"
+					}else{
+						addhtml = addhtml +
+						"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N' selected>N</option></select></td>"
+						
+					}
+					
+					if (item.uploadgubun == "M") {
+						addhtml = addhtml +
+						"               <td colspan='1'><select name='uploadgubun'><option value='M' selected>수동</option><option value='A'>API</option></select></td>"
+					}else{
+						addhtml = addhtml +
+						"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A' selected>API</option></select></td>"
+						
+					}
+					addhtml = addhtml +
+					"					<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
+					"			</tr>";
+				});
+			}else{
+				addhtml = addhtml +
+				"			<tr>"+
+				"				<td><input type='text' class='it ' title='' value='' name='shopmallname'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='shopurl'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='shopuid'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='shoppwd'/></td>"+
+				"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
+				"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
+				"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"
+				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
+				"			</tr>";
+			}
+			
+			addhtml = addhtml +
+			"		</tbody>"+
+			"	</table>"+
+			"</div>"+
+			"<div class='layerTb mt10'>"+
+			"	<table cellpadding='0' cellspacing='0' class='' summary='' >"+
+			"		<caption></caption>"+
+			"		<colgroup>"+
+			"			<col width='100%'/>"+
+			"		</colgroup>"+
+			"		<tbody>"+
+			"			<tr>"+
+			"				<th scope='row'>메모내용</th>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<td>"+
+			"                   <div class='memoTxt'><ul id='memoul'>"+decodeURIComponent(data.cumMemo.replace(Ca, " "))+"</ul></div>"+
+			"				</td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<td>"+
+			"					<p class='memo'>"+
+			"						<input type='text' class='it' title='' value='' id='inputmemo' name='inputmemo'/>"+
+			"						<a onclick='inputmemodata(\"CM\","+data.cum010id+")'>입력</a>"+
+			"					</p>"+
+			"				</td>"+
+			"			</tr>"+
+			"		</tbody>"+
+			"	</table>"+
+			"</div>";
+        	$('#cumDetailData').html(addhtml);
+
+        	$("#cotype1").val(data.cotype1);
+        	
+        	if (data.cotype1 == "ISM031") $("#cotype2").append("${ISM031}");
+        	else if (data.cotype1 == "ISM032") $("#cotype2").append("${ISM032}");
+        	$("#cotype2").val(data.cotype2);
+        	
+        	if (data.cotype2 == "ISM041") $("#cotype3").append("${ISM041}");
+        	else if (data.cotype2 == "ISM042") $("#cotype3").append("${ISM042}");
+        	else if (data.cotype2 == "ISM043") $("#cotype3").append("${ISM043}");
+        	else if (data.cotype2 == "ISM044") $("#cotype3").append("${ISM044}");
+        	$("#cotype3").val(data.cotype3);
+        	
+        	if (data.cogubun != "") {
+            	$('input:radio[name=cogubun]:input[value=' + data.cogubun + ']').attr("checked", true);
+        	}
+
+        	if (data.account != "") {
+            	$('input:radio[name=account]:input[value=' + data.account + ']').attr("checked", true);
+        	}else{
+        		//정산 default 값 정발행으로 set
+        		$('input:radio[name=account]:input[value=1]').attr("checked", true);
+        	}
+
+        	if (data.account2 != "") {
+            	$('input:radio[name=account2]:input[value=' + data.account2 + ']').attr("checked", true);
+        	}else{
+        		//정산 default 값 공급가정산으로 set
+        		$('input:radio[name=account2]:input[value=1]').attr("checked", true);
+        	}
+
+        	if (data.uploadgubun != "") {
+            	$('input:radio[name=uploadgubun]:input[value=' + data.uploadgubun + ']').attr("checked", true);
+        	}
+
+        	if (data.useyn != "") {
+            	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
+        	}
         },
         error: function (jqXHR, exception) {
             var msg = '';
@@ -376,6 +639,22 @@ function delrow(obj, isshop) {
 		}
 	}else{
 		$(obj).parent().parent().remove();
+	}
+}
+
+function downLoadFile(cmm020id) {
+	console.log(cmm020id);
+	if (cmm020id > 0) {
+		T = document.formatdn;
+		//임시저장
+		//var t = T.target;
+		//var a = T.action;
+		T.target	= "tr";
+		T.action	= "/ism/cmm/attachFileDown.do?cmm020id="+cmm020id;
+		//복구
+		T.submit();
+		//T.target	= t;
+		//T.action	= a;	
 	}
 }
 </script>

@@ -112,26 +112,26 @@ table td input.hidden {
 <body>
 <noscript>자바스크립트를 지원하지 않는 브라우저에서는 일부 기능을 사용하실 수 없습니다.</noscript>    
 <!-- 전체 레이어 시작 -->
-<div id="wrap">
-    <!-- header 시작 -->
-	<c:import url="/sym/mms/EgovMainMenuHead.do" />  
-    <!-- //header 끝 --> 
-    <!-- container 시작 -->
-    <div class="container">
+
+<div class="wrap">
+	<c:import url="/sym/mms/EgovMainMenuHead.do" />
+	<div class="container">
 	    <!-- 좌측메뉴 시작 -->
 	    <div class="lnb">
 	    	<c:import url="/sym/mms/EgovMainMenuLeft.do" />
 	    </div>
 	    <!-- //좌측메뉴 끝 -->
-		<div class="contentsWrap">
+		<div class="contentsWrap"> <!-- 추가 div -->
+		
             <!-- 현재위치 네비게이션 시작 -->
             <div class="contents">
-				<h2 class="pageTit">사용자등록</h2>
+                <p class="layerTit">사용자등록</p>
+                
 		        <form:form commandName="userManageVO" action="${pageContext.request.contextPath}/uss/umt/user/EgovUserInsert.do" name="userManageVO" method="post" >
 		            <!-- 우편번호검색 -->
 		            <input type="hidden" name="zip_url" value="<c:url value='/sym/cmm/EgovCcmZipSearchPopup.do'/>" />
 
-                    <div class="modify_user" > 
+                    <div class="layerTb" > 
 				        <table>
 				        	<tr>
 				        		<th width="20%" height="23">이미지</th>
@@ -271,12 +271,9 @@ table td input.hidden {
 				            <tr>
 				                <th width="20%" height="23" class="required_text">주소</th>
 				                <td width="30%" >
-				                    <form:input path="homeadres" id="homeadres" title="주소" cssClass="txaIpt" size="40" maxlength="100" readonly="true" />
+				                    <form:input path="homeadres" id="homeadres" title="주소" cssClass="txaIpt" size="40" maxlength="100" />
 				                    <form:errors path="homeadres" cssClass="error" />
                                     <form:hidden path="zip" />
-                                        <a href="#LINK" onclick="javascript:fn_egov_ZipSearch(document.userManageVO, document.userManageVO.zip, document.userManageVO.zip_view, document.userManageVO.homeadres);">
-                                            <img src="<c:url value='/images/btn/icon_zip_search.gif'/>" alt=""/>(우편번호 검색)
-                                        </a>
                                     <form:errors path="zip" cssClass="error" />
                                     <input name="zip_view" id="zip_view" type="hidden" title="우편번호" size="20" value="<c:out value='${userManageVO.zip}'/>"  maxlength="8" readonly="readonly" />
 				                </td>
@@ -312,27 +309,14 @@ table td input.hidden {
                         </table>
                     </div>
 
-                    <!-- 버튼 시작(상세지정 style로 div에 지정) -->
-                    <div class="buttons" style="padding-top:10px;padding-bottom:10px;">
 
-                        <!-- 목록/저장버튼  -->
-                        <table border="0" cellspacing="0" cellpadding="0" align="center">
-                        <tr> 
-                          <td>
-                            <a href="#LINK" onclick="JavaScript:fnInsert(); return fallse;"><spring:message code="button.save" /></a> 
-                          </td>
-                          <td width="10"></td>
-                          <td>
-                            <a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" onclick="fnListPage(); return false;"><spring:message code="button.list" /></a> 
-                          </td>
-                          <td width="10"></td>
-                          <td>
-                            <a href="#LINK" onclick="javascript:document.userManageVO.reset();"><spring:message code="button.reset" /></a>
-                          </td>      
-                        </tr>
-                        </table>
-                    </div>
-                    <!-- 버튼 끝 -->                           
+                    <!-- 버튼 [s] -->   
+					<p class="layerFootBt">
+						<a href="#LINK" onclick="JavaScript:fnInsert(); return fallse;" class="confirm"><spring:message code="button.save" /></a>
+						<a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" class="cancel" onclick="fnListPage(); return false;"><spring:message code="button.list" /></a>
+						<a href="#LINK" onclick="javascript:document.userManageVO.reset();" class="cancel" ><spring:message code="button.reset" /></a>
+					</p>
+                    <!-- 버튼 [e] -->                         
 
 			        <!-- 검색조건 유지 -->
 			        <input type="hidden" name="searchCondition" value="<c:out value='${userSearchVO.searchCondition}'/>"/>
