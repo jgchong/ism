@@ -18,7 +18,7 @@
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
-<link href="<c:url value='/'/>css/common.css" rel="stylesheet" type="text/css" >
+
 <script type="text/javascript" src="<c:url value="/validator.do"/>"></script>
 <validator:javascript formName="userManageVO" staticJavascript="false" xhtml="true" cdata="false"/>
 <script type="text/javascript" src="<c:url value='/js/EgovZipPopup.js' />" ></script>
@@ -65,7 +65,9 @@ function fn_egov_dn_info_setting(dn) {
     
     frm.subDn.value = dn;
 }
-<c:if test="${!empty resultMsg}">alert("<spring:message code="${resultMsg}" />");</c:if>
+<c:if test="${!empty resultMsg}">
+	alert("<spring:message code="${resultMsg}" />");
+</c:if>
 //-->
 </script>
 
@@ -92,6 +94,7 @@ table td input.hidden {
 <body>
 <noscript>자바스크립트를 지원하지 않는 브라우저에서는 일부 기능을 사용하실 수 없습니다.</noscript>    
 <!-- 전체 레이어 시작 -->
+
 <div class="wrap">
 	<c:import url="/sym/mms/EgovMainMenuHead.do" />
 	<div class="container">
@@ -100,23 +103,12 @@ table td input.hidden {
 	    	<c:import url="/sym/mms/EgovMainMenuLeft.do" />
 	    </div>
 	    <!-- //좌측메뉴 끝 -->
+		<div class="contentsWrap"> <!-- 추가 div -->
+
             <!-- 현재위치 네비게이션 시작 -->
-            <div id="content">
-                <div id="cur_loc">
-                    <div id="cur_loc_align">
-                        <ul>
-                            <li>HOME</li>
-                            <li>&gt;</li>
-                            <li>내부시스템관리</li>
-                            <li>&gt;</li>
-                            <li><strong>사용자관리</strong></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- 검색 필드 박스 시작 -->
-                <div id="search_field">
-                    <div id="search_field_loc"><h2><strong>업무사용자 상세조회(수정)</strong></h2></div>
-                </div>
+            <div class="contents">
+                <p class="layerTit">업무사용자 상세조회(수정)</p>
+                
 		        <form:form commandName="userManageVO" action="${pageContext.request.contextPath}/uss/umt/user/EgovUserSelectUpdt.do" name="userManageVO" method="post" >
 		        
 			        <!-- 상세정보 사용자 삭제시 prameter 전달용 input -->
@@ -131,7 +123,7 @@ table td input.hidden {
 			        <!-- 사용자유형정보 : password 수정화면으로 이동시 타겟 유형정보 확인용, 만약검색조건으로 유형이 포함될경우 혼란을 피하기위해 userTy명칭을 쓰지 않음-->
 			        <input type="hidden" name="userTyForPassword" value="<c:out value='${userManageVO.userTy}'/>" />
 
-                    <div class="modify_user" >
+                    <div class="layerTb" >
                         <table>
                             <tr> 
                                 <th width="20%" height="23" class="required_text"  >사진</th>
@@ -257,9 +249,6 @@ table td input.hidden {
 				                    <form:errors path="homeadres" cssClass="error" />
 				                    <input name="zip_view" id="zip_view" type="hidden" size="20" value="<c:out value='${userManageVO.zip}'/>"  maxlength="8" readonly="readonly"/>
 				                    <form:hidden path="zip" />
-				                        <a href="#LINK" onclick="fn_egov_ZipSearch(document.userManageVO, document.userManageVO.zip, document.userManageVO.zip_view, document.userManageVO.homeadres);">
-				                            <img src="<c:url value='/images/btn/icon_zip_search.gif'/>" alt=""/>(우편번호 검색)
-				                        </a>
 				                    <form:errors path="zip" cssClass="error" />
                                 </td>
                                 <th width="20%" height="23" class="required_text"  >상세주소&nbsp;&nbsp;</th>
@@ -294,44 +283,26 @@ table td input.hidden {
                         </table>
                     </div>
 
-                    <!-- 버튼 시작(상세지정 style로 div에 지정) -->
-                    <div class="buttons" style="padding-top:10px;padding-bottom:10px;">
-
-                       <!-- 목록/저장버튼  -->
-                       <table border="0" cellspacing="0" cellpadding="0" align="center">
-                        <tr> 
-                          <td>
-                            <a href="#LINK" onclick="JavaScript:fnUpdate(); return false;"><spring:message code="button.save" /></a>
-                          </td>
+                    <!-- 버튼 [s] -->   
+					<p class="layerFootBt">
+						<a href="#LINK" onclick="JavaScript:fnUpdate(); return false;" class="confirm"><spring:message code="button.save" /></a>
 <c:if test="${userSearchVO.searchCondition ne 'ONLY'}">
-                          <td width="10"></td>
-                          <td>
-                            <a href="<c:url value='/uss/umt/user/EgovUserDelete.do'/>" onclick="fnDeleteUser('<c:out value='${userManageVO.userTy}'/>:<c:out value='${userManageVO.uniqId}'/>'); return false;"><spring:message code="button.delete" /></a> 
-                          </td>
-                          <td width="10"></td>
-                          <td>
-                            <a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" onclick="fnListPage(); return false;"><spring:message code="button.list" /></a>
-                          </td>
-</c:if>      
-                          <td width="10"></td>
-                          <td>
-                            <a href="<c:url value='/uss/umt/user/EgovUserPasswordUpdtView.do'/>" onclick="fnPasswordMove(); return false;"><spring:message code="button.passwordUpdate" /></a>
-                          </td>      
-                          <td width="10"></td>
-                          <td>
-                            <a href="#LINK" onclick="javascript:document.userManageVO.reset();"><spring:message code="button.reset" /></a>
-                          </td>      
-
-                        </tr>
-                       </table>
-                    </div>
-                    <!-- 버튼 끝 -->    
+						<a href="<c:url value='/uss/umt/user/EgovUserDelete.do'/>" class="cancel" onclick="fnDeleteUser('<c:out value='${userManageVO.userTy}'/>:<c:out value='${userManageVO.uniqId}'/>'); return false;"><spring:message code="button.delete" /></a>
+						<a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" class="cancel" onclick="fnListPage(); return false;"><spring:message code="button.list" /></a>
+</c:if>
+						<a href="<c:url value='/uss/umt/user/EgovUserPasswordUpdtView.do'/>" onclick="fnPasswordMove(); return false;" class="confirm"><spring:message code="button.passwordUpdate" /></a>
+                        <a href="#LINK" onclick="javascript:document.userManageVO.reset();" class="cancel" ><spring:message code="button.reset" /></a>
+					</p>
+                    <!-- 버튼 [e] -->
                     <form:hidden path="password" />                       
                 </form:form>
 
-            </div>  
-            <!-- //content 끝 -->    
-    </div>  
+
+            </div>
+            <!-- //contents 끝 -->    
+        </div>
+        <!-- //contentsWrap 끝 -->
+	</div>  
     <!-- //container 끝 -->
 </div>
 <!-- //전체 레이어 끝 -->

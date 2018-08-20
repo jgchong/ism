@@ -22,7 +22,7 @@
     <select id="cum010DAO.selectList" parameterClass="cum010SearchVO" resultClass="ismcum010VO">
 	select a.cum010id,    a.cono,     a.lawcono,      a.coname,  a.cotype1,    a.cotype2, a.cotype3,
            a.cogubun,     a.coaddr,   a.cobustype,    a.account, a.accountamt, a.useyn,   a.attachname,
-           a.account2,
+           a.account2,    a.cmm020id,
            case a.cogubun
 	           when '1' then '법인'
 	           when '2' then '개인'

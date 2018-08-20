@@ -16,6 +16,21 @@
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
+	<style type="text/css">
+div.searchArea		{ display:block; text-align:right; margin:0 0 20px; }
+div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; border-radius:4px; text-decoration:none; }
+div.searchArea .it	{ width:200px; height:30px; }
+div.searchArea select				{ width:160px; height:34px; font-size:14px; }
+div.searchArea button				{ padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom; border-radius:4px; }
+div.searchArea .ml30					{ margin-left:30px; }
+
+div.searchArea .searchMore		{ border:1px solid #ebebeb; padding:5px; box-sizing:border-box; margin:10px 0 0; background:#f7f7f7; display:none; }
+div.searchArea .searchMore ul	{ width:100%; display:inline-block; }
+div.searchArea .searchMore li	{ float:left; width:20%; text-align:center; padding:5px; box-sizing:border-box; }
+div.searchArea .searchMore li input			{ width:100%; box-sizing:border-box; text-align:center; font-size:14px; height:34px; }
+div.searchArea .searchMore p	{ padding:10px 5px; }
+	</style>
+
 <script type="text/javaScript" language="javascript" defer="defer">
 <!--
 function fnCheckAll() {
@@ -125,12 +140,13 @@ function fnViewCheck(){
             <!-- 현재위치 네비게이션 시작 -->
             <div class="contents">
 				<h2 class="pageTit">사용자목록</h2>
-                <form name="listForm" action="<c:url value='/uss/umt/user/EgovUserManage.do'/>" method="post" class="searchArea">
+                <form name="listForm" action="<c:url value='/uss/umt/user/EgovUserManage.do'/>" method="post">
                 <!-- <input type="submit" id="invisible" class="invisible"/> -->
 		        <input name="selectedId" type="hidden" />
 		        <input name="checkedIdForDel" type="hidden" />
 		        <input name="pageIndex" type="hidden" value="<c:out value='${userSearchVO.pageIndex}'/>"/>
                 <!-- 검색 필드 시작 -->
+                <div class="searchArea">
                 <select name="sbscrbSttus" id="sbscrbSttus" title="검색조건1-사용자상태" class="ml30">
                     <option value="0" <c:if test="${empty userSearchVO.sbscrbSttus || userSearchVO.sbscrbSttus == '0'}">selected="selected"</c:if> >상태(전체)</option>
                     <option value="A" <c:if test="${userSearchVO.sbscrbSttus == 'A'}">selected="selected"</c:if> >가입신청</option>
@@ -146,8 +162,8 @@ function fnViewCheck(){
                 <a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" onclick="javascript:fnSearch(); return false;">조회 </a>
                 <a href="#LINK" onclick="javascript:fnDeleteUser(); return false;"><spring:message code="button.delete" /></a>
                 <a href="<c:url value='/uss/umt/user/EgovUserInsertView.do'/>" onclick="fnAddUserView(); return false;"><spring:message code="button.create" /></a>
+                </div>
                 <!-- 검색 필드 끝 -->
-                </form>
                 <!-- table add start -->
                 <div class="listTb">
                     <table summary="사용자 목록을 제공한다." cellpadding="0" cellspacing="0">
@@ -202,6 +218,7 @@ function fnViewCheck(){
                     <ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
                 </div>                          
                 <!-- //페이지 네비게이션 끝 -->  
+                </form>
             </div>
             <!-- //contents 끝 -->    
         </div>

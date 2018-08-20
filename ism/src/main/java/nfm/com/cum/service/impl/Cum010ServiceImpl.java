@@ -85,6 +85,7 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 	    	jsonObject.put("shopuseyn", "");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
+	    	jsonObject.put("cmm020id", "");
 		}
 		
 	    for(Ismcum010VO vo : listIsmcum010VO){
@@ -173,6 +174,8 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 	    	}else{
 	    		jsonObject.put("savefilename", URLEncoder.encode(vo.getSavefilename(), "UTF-8"));
 	    	}
+	    	
+	    	jsonObject.put("cmm020id", vo.getCmm020id());
 	    }
 
 	    //발주처 메모 정보 가져옴.[s]

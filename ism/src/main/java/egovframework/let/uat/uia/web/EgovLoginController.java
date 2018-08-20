@@ -79,6 +79,13 @@ public class EgovLoginController {
 	 */
 	@RequestMapping(value = "/uat/uia/egovLoginUsr.do")
 	public String loginUsrView(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+
+        String clientIp1 = nfmLoginService.getRemoteIP(request); //jgc add id:ipv1 접속자 ip 가져오기
+		System.out.println("jgc1===>"+clientIp1); //jgc add id:ipv1 접속자 ip 가져오기
+		request.getSession().setAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기
+		model.addAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기
+		request.getSession().setAttribute("baseMenuNo", "6000000"); //jgc add id:lmv1 초기왼쪽 메뉴 setting
+		
 		return "uat/uia/EgovLoginUsr";
 	}
 

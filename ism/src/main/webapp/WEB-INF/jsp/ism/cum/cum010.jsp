@@ -163,6 +163,9 @@ li img {
 </div>
 <input type="hidden" id="hcum010id" name="cum010id" />
 </form>
+
+<form id="formatdn" name="formatdn" method="post"></form>
+<iframe name="tr" src="" width="0" height="0" frameborder="0" scrolling="no"></iframe>
 </body>
 </html>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -250,7 +253,7 @@ function viewCumData(cum010id) {
 			"			<tr>"+
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
 			"				<td colspan='3' style='text-align:left;'>"+
-			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+decodeURIComponent(data.savefilename.replace(Ca, " "))+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
+			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
 			"			</tr>"+
@@ -635,6 +638,22 @@ function delrow(obj, isshop) {
 		}
 	}else{
 		$(obj).parent().parent().remove();
+	}
+}
+
+function downLoadFile(cmm020id) {
+	console.log(cmm020id);
+	if (cmm020id > 0) {
+		T = document.formatdn;
+		//임시저장
+		//var t = T.target;
+		//var a = T.action;
+		T.target	= "tr";
+		T.action	= "/ism/cmm/attachFileDown.do?cmm020id="+cmm020id;
+		//복구
+		T.submit();
+		//T.target	= t;
+		//T.action	= a;	
 	}
 }
 </script>
