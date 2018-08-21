@@ -13,6 +13,10 @@ import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 
 @Repository("byc010DAO")
 public class Byc010DAO extends EgovAbstractDAO {
+	public Object selectismbyc010VO(String byc010id) {
+		return select("ismbyc010DAO.selectismbyc010VO", byc010id);
+	}
+
 	public List<?> selectAll() {
 		return list("ismbyc010DAO.selectAll");
 	}

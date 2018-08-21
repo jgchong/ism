@@ -145,7 +145,7 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		String[] chgodm010idArray = chgodm010ids.split(",");
 		HashMap hm = new HashMap();
 		hm.put("chgodm010ids", chgodm010idArray);
-		
+
 		ord020DAO.ord020SelectDel(hm);
 	}
 

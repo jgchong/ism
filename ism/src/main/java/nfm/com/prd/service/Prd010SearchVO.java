@@ -29,6 +29,15 @@ public class Prd010SearchVO implements Serializable {
     private Integer dfChange_whs010id;
     private Integer dfChange_orderitemid;
 
+    private String currentItemcoed;
+
+    public String getCurrentItemcoed() {
+        return currentItemcoed;
+    }
+
+    public void setCurrentItemcoed(String currentItemcoed) {
+        this.currentItemcoed = currentItemcoed;
+    }
 
 //    private String itemname;
 //    private String itemcrosstype;

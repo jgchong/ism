@@ -5,18 +5,35 @@
 
     <typeAlias alias="prd010SearchVO" type="nfm.com.prd.service.Prd010SearchVO"/>
     <typeAlias alias="prd010VO" type="nfm.com.prd.service.Prd010VO"/>
+
+    <select id="prd010DAO.selectPrd010VO" parameterClass="String" resultClass="prd010VO">
+        select
+        *
+        from ismprd010
+        where itemcode like #itemcode# '%'
+        order by orderitemid desc
+        limit 1
+    </select>
+
     <!-- 모든 목록 select -->
     <select id="prd010DAO.selectAll" resultClass="Prd010VO">
         select
         *
         from ismprd010
-        where itemcrosstype = 'S'
+        where itemcrosstype in ('S', 'F')
         order by orderitemid desc
+    </select>
+
+    <select id="prd010DAO.selectWithItemcode" resultClass="Prd010VO">
+        select
+        *
+        from ismprd010
+        where itemcode = #itemcode#
     </select>
 
     <!-- 상품 목록 select cnt -->
     <select id="prd010DAO.selectListTotCnt" parameterClass="prd010SearchVO" resultClass="int">
-    select count(1) totcnt
+        select count(1) totcnt
         from ismprd010 p
         left outer join ismbyc010 b on p.byc010id = b.byc010id
         left outer join ismwhs010 w on p.pristock = w.whs010id
@@ -145,5 +162,52 @@
         set pristock = #whsId#
         where orderitemid = #itemId#
     </update>
+
+    <update id="prd010DAO.updateCrossitemcodeInit" parameterClass="String">
+        update ismprd010
+        set crossitemcode = null, itemcrosstype = 'S'
+        where crossitemcode = #itemcode#
+    </update>
+
+    <update id="prd010DAO.updateCrossitemcodes" parameterClass="java.util.HashMap">
+        update ismprd010
+        set crossitemcode = #itemcode#, itemcrosstype = 'F'
+        where itemcode in
+        <iterate property="targetItemcodes" open="(" close=")" conjunction=",">
+            #targetItemcodes[]#
+        </iterate>
+    </update>
+
+    <insert id="prd010DAO.insertItem" parameterClass="java.util.HashMap">
+        insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty)
+        values (#detail_category#, #detail_itemname#, #detail_byc#, #detail_itemcrosstype#, #detail_itemopt#,
+        #detail_itemea#, #detail_itembuyprice#, #detail_itembuydlvprice#, #detail_itemgubun#, now(), #byccode#, #itemcode#, #detail_pristock#, #detail_itemsize#, #detail_cartonqty#, #detail_palletqty#)
+    </insert>
+
+    <update id="prd010DAO.updateItem" parameterClass="java.util.HashMap">
+        update ismprd010
+        set itemname = #detail_itemname#
+        , itemcat1 = #detail_category#
+        , byc010id = #detail_byc#
+        , itemgubun = #detail_itemgubun#
+        , byccode = #byccode#
+        , itemopt = #detail_itemopt#
+        , itemea = #detail_itemea#
+        , itembuyprice = #detail_itembuyprice#
+        , itembuydlvprice = #detail_itembuydlvprice#
+        , pristock = #detail_pristock#
+        , itemsize = #detail_itemsize#
+        , cartonqty = #detail_cartonqty#
+        , palletqty = #detail_palletqty#
+        where itemcode = #itemcode#
+    </update>
+
+    <delete id="prd010DAO.prd010SelectDel" parameterClass="java.util.HashMap">
+        delete from ismprd010
+        where orderitemid in
+        <iterate  property="orderitemids" open="(" close=")" conjunction=",">
+            #orderitemids[]#
+        </iterate>
+    </delete>
 
 </sqlMap>

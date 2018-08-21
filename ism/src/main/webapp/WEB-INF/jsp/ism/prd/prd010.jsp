@@ -90,6 +90,10 @@
             height: 34px;
             color: #666;
         }
+
+        li.delbtn {
+            width: 50px;
+        }
     </style>
 
 </head>
@@ -183,16 +187,17 @@
                     <table cellpadding="0" cellspacing="0" class="" summary="">
                         <caption></caption>
                         <colgroup>
-                            <col width="5%"/>
-                            <col width="5%"/>
+                            <col width="4%"/>
+                            <col width="4%"/>
+                            <col width="8%"/>
                             <col width="10%"/>
-                            <col width="13%"/>
                             <col width="8%"/>
                             <col width="*"/>
                             <col width="8%"/>
                             <col width="8%"/>
                             <col width="10%"/>
                             <col width="5%"/>
+                            <col width="10%"/>
                             <col width="10%"/>
                         </colgroup>
                         <thead>
@@ -207,14 +212,14 @@
                             <th scope="col">수량</th>
                             <th scope="col">매입단가</th>
                             <th scope="col">매입배송비</th>
+                            <th scope="col">구분</th>
                             <th scope="col">우선창고</th>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
                             <tr id="${result.itemcode}" value="off"
-                                <c:if test="${result.itemcrosstype eq 'F'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"
-                            </c:if>>
+                                <c:if test="${result.itemcrosstype eq 'F'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"</c:if>>
                                 <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.orderitemid}"/></td>
                                 <td>
                                     <c:out value="${result.listNo}"/>
@@ -241,7 +246,13 @@
                                 <td>
                                     <c:out value="${result.itembuydlvprice}"/></td>
                                 <td>
-                                    <select id="dfChange_whs010id_select" dataid="${result.orderitemid}" <c:if test="${result.itemgubun ne '2'}">disabled</c:if>>
+                                    <c:if test="${result.itemgubun eq ''}">구분없음</c:if>
+                                    <c:if test="${result.itemgubun eq '1'}">제조사출고상품</c:if>
+                                    <c:if test="${result.itemgubun eq '2'}">제조사출고상품</c:if>
+                                    <c:if test="${result.itemgubun eq '3'}">사은품</c:if>
+                                </td>
+                                <td>
+                                    <select class="dfChange_whs010id_select" dataid="${result.orderitemid}" <c:if test="${result.itemgubun ne '2'}">disabled</c:if>>
                                         <c:if test="${result.itemgubun ne '2'}">
                                             <option value="">우선창고없음</option>
                                         </c:if>
@@ -355,9 +366,9 @@
                     </tr>
                     <tr>
                         <th scope="row">단위수량</th>
-                        <td><input id="detail_itemea" type="text" class="it " title="" value="" name=""/></td>
+                        <td><input id="detail_itemea" type="number" class="it " title="" value="" name=""/></td>
                         <th scope="row">매입단가</th>
-                        <td><input id="detail_itembuyprice" type="text" class="it " title="" value="" name=""/></td>
+                        <td><input id="detail_itembuyprice" type="number" class="it " title="" value="" name=""/></td>
                     </tr>
                     <tr>
                         <th scope="row">구분</th>
@@ -369,7 +380,7 @@
                     </tr>
                     <tr>
                         <th scope="row">매입배송비</th>
-                        <td colspan="3"><input id="detail_itembuydlvprice" type="text" class="it " title="" value="" name=""/></td>
+                        <td colspan="3"><input id="detail_itembuydlvprice" type="number" class="it " title="" value="" name=""/></td>
                     </tr>
                     <!-- 자사상품 출고시 생성 -->
                     <tr>
@@ -387,9 +398,9 @@
                     </tr>
                     <tr>
                         <th scope="row">카톤수량</th>
-                        <td><input id="detail_cartonqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                        <td><input id="detail_cartonqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                         <th scope="row">파렛트수량</th>
-                        <td><input id="detail_palletqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                        <td><input id="detail_palletqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                     </tr>
                     </tbody>
                 </table>
@@ -426,7 +437,7 @@
             </div>
         </div>
         <p class="layerFootBt">
-            <a href="#" class="confirm" name="claim">확인</a>
+            <a href="javascript:saveDetailData();" class="confirm" name="claim">확인</a>
             <a href="javascript:;" class="layerClose cancel">취소</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
@@ -441,6 +452,7 @@
 <script src="/js/custom/multiselect.js"></script>
 <script src="/js/custom/ism.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
+    var Ca = /\+/g;
     $(document).ready(function () {
         <c:if test="${prd010SearchVO.search_isdetail eq 1}">
         $('.searchMore').slideToggle();
@@ -500,9 +512,9 @@
     $('#pageUnit').change(function () { //페이지 크기 변경
         $('#form1').submit();
     });
-    $('#dfChange_whs010id_select').change(function () { //우선창고 설정 변경
-        var a = $('#dfChange_whs010id_select').val();
-        var b = $('#dfChange_whs010id_select').attr("dataid");
+    $('.dfChange_whs010id_select').change(function () { //우선창고 설정 변경
+        var a = $(this).val();
+        var b = $(this).attr("dataid");
         $('#dfChange_whs010id').val(a);
         $('#dfChange_orderitemid').val(b);
         $('#form1').submit();
@@ -550,6 +562,59 @@
     }
 
 
+    //체크박스된 주문 목록 삭제
+    function selectDel() {
+        if (confirm("선택 주문을 삭제하시겠습니까?")) {
+            var orderitemids = "";
+            $('.chk_info').each(function() {
+                if ($(this).is(":checked")) {
+                    orderitemids += ($(this).attr("dataid") + ",");
+                }
+            });
+            if (orderitemids == "") {
+                alert("삭제 할 주문을 선택해주시기 바랍니다.");
+                return;
+            }else{
+                orderitemids = orderitemids.substring(0,orderitemids.length - 1);
+            }
+            $.ajax({
+                url : "/ism/prd/prd010SelectDel.do",
+                type: "post",
+                data : { "orderitemids" : orderitemids },
+                success : function(data){
+                    if (data == "SUCCESS") {
+                        alert("삭제 되었습니다.");
+                        $('#form1').submit();
+                    }else{
+                        alert("삭제 중 오류가 발생했습니다.");
+                    }
+                },
+                error: function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                    }
+                    alert("Error : "+msg);
+                }
+            });
+        }
+    }
+
+
+
+
     //운영상품 디테일 설정 ----------------------------------------------------
 
     var firstCheck = 0;
@@ -557,20 +622,19 @@
 
     function openSingleItemDetail(itemcode) {
         if (itemcode == null || itemcode == '') {
+            //처음 여는 경우
             if (firstCheck == 0) {
                 currentItemcoed = '';
-
-                //초기화
                 firstCheck = 1;
+                initAllDetail();
             }
-
             //그대로 열기
-            alert("운영상품 단품 등록클릭");
         } else {
             //해당 상품의 내용을 클릭하기기
-            alert(itemcode + "운영상품 단품 수정 클릭");
+
             currentItemcoed = itemcode;
             firstCheck = 0;
+            initSettingDetail();
         }
         //open
         $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
@@ -588,15 +652,183 @@
     //등록을 하는경우 firstCheck = 0;부여
     //firstCheck = 0인경우 모든 값 초기화
     //확인의 경우 메모 입력과는 별개로 동작
-    function initDetail() {
-        if (currentItemcoed == '') {
-            $('#detail_sel1_1').trigger('click');
-            $('#detail_sel2_1').trigger('click');
-        } else {
-            setMemo(currentItemcoed, 'PR', $('#memoul'));
+    function initAllDetail() {
+        $('#detail_sel1_1').prop('disabled', false);
+        $('#detail_sel1_2').prop('disabled', false);
+        $('#detail_sel1_1').trigger('click');
+        $('#detail_sel2_1').trigger('click');
+        $('#detail_category').val('');
+        $('#detail_byc').val('');
+        $('#detail_itemname').val('');
+        $('#detail_itemopt').val('');
+        $('#detail_itemea').val('');
+        $('#detail_itembuyprice').val('');
+        $('#detail_itembuydlvprice').val('');
+        $('#detail_pristock').val('');
+        $('#detail_itemsize').val('');
+        $('#detail_cartonqty').val('');
+        $('#detail_palletqty').val('');
+        $('#memoul').html('');
+        $('#detail_autocomplete').val('');
+        $('#detail_autosearch_value').val('');
+        $('#detail_autosearch_name').val('');
+        $('.detail_autosearch_regist').remove();
+    }
 
+    function initSettingDetail() {
+        if (currentItemcoed == '') {
+
+        } else {
+            initAllDetail();
+            setMemo(currentItemcoed, 'PR', $('#memoul'));
+            $.ajax({
+                url: "/ism/prd/prd010Detail.do",
+                type: "post",
+                data : { "currentItemcoed" : currentItemcoed },
+                dataType: 'json',
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+                success: function (data) {
+                    setDetailResult(data);
+                },
+                error: function (jqXHR, exception) {
+                    var msg = '';
+                    if (jqXHR.status === 0) {
+                        msg = 'Not connect.\n Verify Network.';
+                    } else if (jqXHR.status == 404) {
+                        msg = 'Requested page not found. [404]';
+                    } else if (jqXHR.status == 500) {
+                        msg = 'Internal Server Error [500].';
+                    } else if (exception === 'parsererror') {
+                        msg = 'Requested JSON parse failed.';
+                    } else if (exception === 'timeout') {
+                        msg = 'Time out error.';
+                    } else if (exception === 'abort') {
+                        msg = 'Ajax request aborted.';
+                    } else {
+                        msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                    }
+                    alert("Error : " + msg);
+                }
+            });
         }
     }
+
+    function setDetailResult(data) {
+        $('#detail_category').val(data.itemcat1);
+        if (data.itemcrosstype == 'P') {
+            $('#detail_sel1_2').trigger('click');
+            $.each(data.childItemcode, function(index, item){
+                createSearchResult(item.itemcode, item.label);
+            });
+        } else {
+            $('#detail_sel1_1').trigger('click');
+        }
+        $('#detail_byc').val(data.byc010id);
+        $('#detail_itemname').val(data.itemname);
+        $('#detail_itemopt').val(data.itemopt);
+        $('#detail_itemea').val(data.itemea);
+        $('#detail_itembuyprice').val(data.itembuyprice);
+        if (data.itemgubun == '3') {
+            $('#detail_sel2_3').trigger('click');
+        } else if (data.itemgubun == '2') {
+            $('#detail_sel2_2').trigger('click');
+        } else {
+            $('#detail_sel2_1').trigger('click');
+        }
+        $('#detail_itembuydlvprice').val(data.itembuydlvprice);
+        $('#detail_pristock').val(data.pristock);
+        $('#detail_itemsize').val(data.itemsize);
+        $('#detail_cartonqty').val(data.cartonqty);
+        $('#detail_palletqty').val(data.palletqty);
+        $('#detail_sel1_1').prop('disabled', true);
+        $('#detail_sel1_2').prop('disabled', true);
+    }
+
+    function saveDetailData() {
+        var detail_childItemcode = '';
+        var detail_category = $('#detail_category').val();
+        var detail_byc = $('#detail_byc').val()
+        var detail_itemname = $('#detail_itemname').val();
+        var detail_pristock = $('#detail_pristock').val()
+        $('.detail_autosearch_regist').each(function (index, item) {
+            var temp = $(this).attr("dataid");
+            if (index == 0) {
+                detail_childItemcode = temp
+            } else {
+                detail_childItemcode = detail_childItemcode +',' + temp;
+            }
+        });
+
+        if (detail_category == '') {
+            alert("카테고리를 선택해주세요.")
+            return;
+        }
+
+        if (detail_byc == '') {
+            alert("매입처를 선택해주세요.")
+            return;
+        }
+
+        if (detail_itemname == '') {
+            alert("상품명을 입력해주세요.")
+            return;
+        }
+
+        if (detail_itemgubun == 2) {
+            if (detail_pristock == '') {
+                alert("우선창고를 선택해주세요.")
+                return;
+            }
+        }
+        
+        $.ajax({
+            url: "/ism/prd/prd010DetailSave.do",
+            type: "post",
+            data : {
+                "currentItemcoed" : currentItemcoed,
+                "detail_category" : $('#detail_category').val(),
+                "detail_itemcrosstype" : detail_itemcrosstype,
+                "detail_byc" : $('#detail_byc').val(),
+                "detail_itemname" : $('#detail_itemname').val(),
+                "detail_itemopt" : $('#detail_itemopt').val(),
+                "detail_itemea" : $('#detail_itemea').val(),
+                "detail_itembuyprice" : $('#detail_itembuyprice').val(),
+                "detail_itembuydlvprice" : $('#detail_itembuydlvprice').val(),
+                "detail_itemgubun" : detail_itemgubun,
+                "detail_pristock" : $('#detail_pristock').val(),
+                "detail_itemsize" : $('#detail_itemsize').val(),
+                "detail_cartonqty" : $('#detail_cartonqty').val(),
+                "detail_palletqty" : $('#detail_palletqty').val(),
+                "detail_childItemcode" : detail_childItemcode
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                currentItemcoed = data.itemcode;
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = jqXHR.responseText;
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
 
     //메모입력
     function inputmemodata() {
@@ -629,11 +861,19 @@
                 $('#detail_autocomplete').val('');
                 $('#detail_autosearch_value').val('');
                 $('#detail_autosearch_name').val('');
-                $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "'><td colspan='2'>" + searchName + "(" + searchValue + ")</td></tr>");
+                createSearchResult(searchValue, searchName);
             }
         } else {
             alert("상품명을 입력해주세요.")
         }
+    }
+
+    function createSearchResult(searchValue, searchName) {
+        $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "'><td colspan='1'>" + searchName + "(" + searchValue + ")</td><td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td></tr>");
+    }
+
+    function delRow(obj) {
+        $(obj).parent().parent().remove();
     }
 
     //결합상품 초기화
