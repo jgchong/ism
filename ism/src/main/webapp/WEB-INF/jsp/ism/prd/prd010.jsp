@@ -141,12 +141,12 @@
                             </li>
                             <li>
                                 <select name="dfSearch_itemcrosstype" title="">
-                                    <option value="">결합여부</option>
-                                    <option value="S"
+                                    <option value=''>결합여부</option>
+                                    <option value='S'
                                             <c:if test="${prd010SearchVO.dfSearch_itemcrosstype eq 'S'}">selected</c:if> >N
                                     </option>
-                                    <option value="P"
-                                            <c:if test="${prd010SearchVO.dfSearch_itemcrosstype eq 'P'}">selected</c:if> >Y
+                                    <option value='F'
+                                            <c:if test="${prd010SearchVO.dfSearch_itemcrosstype eq 'F'}">selected</c:if> >Y
                                     </option>
                                 </select>
                             </li>
@@ -219,7 +219,7 @@
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
                             <tr id="${result.itemcode}" value="off"
-                                <c:if test="${result.itemcrosstype eq 'F'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"</c:if>>
+                                <c:if test="${result.itemcrosstype eq 'C'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"</c:if>>
                                 <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.orderitemid}"/></td>
                                 <td>
                                     <c:out value="${result.listNo}"/>
@@ -229,7 +229,7 @@
                                         <c:when test="${result.itemcrosstype eq 'S'}">
                                             N
                                         </c:when>
-                                        <c:when test="${result.itemcrosstype eq 'P'}">
+                                        <c:when test="${result.itemcrosstype eq 'F'}">
                                             <a href="javascript:showCrossItem('${result.itemcode}');">Y</a>
                                         </c:when>
                                         <c:otherwise>-</c:otherwise>
@@ -307,7 +307,7 @@
                         <th scope="row">구분선택</th>
                         <td>
                             <input type="radio" name="detail_sel1" id="detail_sel1_1" onclick="radiobox01Click('S')" value='S'/><label for="detail_sel1_1">단품</label>
-                            <input type="radio" name="detail_sel1" id="detail_sel1_2" onclick="radiobox01Click('P')" value='P'/><label for="detail_sel1_2">결합</label>
+                            <input type="radio" name="detail_sel1" id="detail_sel1_2" onclick="radiobox01Click('F')" value='F'/><label for="detail_sel1_2">결합</label>
                         </td>
                         <th scope="row">매입처</th>
                         <td>
@@ -323,7 +323,7 @@
                 </table>
             </div>
             <!-- //여기 1 -->
-            <div id="detail_itemsearch" class="layerTb scrollTb mt10 mb10">
+            <div id="detail_itemsearch" class="layerTb scrollTb mt10">
                 <table cellpadding="0" cellspacing="0">
                     <caption></caption>
                     <colgroup>
@@ -348,7 +348,7 @@
                 </table>
             </div>
 
-            <div class="layerTb">
+            <div class="layerTb mt10">
                 <table cellpadding="0" cellspacing="0" class="" summary="">
                     <caption></caption>
                     <colgroup>
@@ -715,7 +715,7 @@
 
     function setDetailResult(data) {
         $('#detail_category').val(data.itemcat1);
-        if (data.itemcrosstype == 'P') {
+        if (data.itemcrosstype == 'F') {
             $('#detail_sel1_2').trigger('click');
             $.each(data.childItemcode, function(index, item){
                 createSearchResult(item.itemcode, item.label);
@@ -804,6 +804,7 @@
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             success: function (data) {
+                alert("저장되었습니다.");
                 currentItemcoed = data.itemcode;
                 $('#form1').submit();
             },
@@ -887,9 +888,9 @@
     var detail_itemcrosstype = 'S';
 
     function radiobox01Click(myRadio) {
-        if (myRadio == 'P') {
+        if (myRadio == 'F') {
             $('#detail_itemsearch').show();
-            detail_itemcrosstype = 'P';
+            detail_itemcrosstype = 'F';
         } else if (myRadio == 'S') {
             $('#detail_itemsearch').hide();
             detail_itemcrosstype = 'S';

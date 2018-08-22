@@ -216,8 +216,8 @@ public class Prd010Controller {
             return "등록을 실패하였습니다. 다시 시도하여주세요.";
         }
 
-        //detail_itemcrosstype == "P"인경우, currentItemcoed을 부모로가지는 아이들의 부모코드를 전부 null로 수정 detail_childItemcode 들의 부모를 다시 설정
-        if ("P".equals(detail_itemcrosstype)) {
+        //detail_itemcrosstype == "F"인경우, currentItemcoed을 부모로가지는 아이들의 부모코드를 전부 null로 수정 detail_childItemcode 들의 부모를 다시 설정
+        if ("F".equals(detail_itemcrosstype)) {
             if (!StringUtils.isBlank(detail_childItemcode)) {
                 prd010Service.updateCross(result, detail_childItemcode);
             }

@@ -42,16 +42,32 @@ public class Prd010DAO extends EgovAbstractDAO {
 		update("prd010DAO.updateItemWhs", map);
 	}
 
-	public void updateCrossitemcodeInit(String itemcode) {
-		update("prd010DAO.updateCrossitemcodeInit", itemcode);
+//	public void updateCrossitemcodeInit(String targetItemcodes) {
+//		String[] targetItemcodesArr = targetItemcodes.split(",");
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("targetItemcodes", targetItemcodesArr);
+//		update("prd010DAO.updateCrossitemcodeInit", map);
+//	}
+
+	@SuppressWarnings("rawtypes")
+	public void deleteCrossitemcode(String itemcode) {
+		delete("prd010DAO.deleteCrossitemcode", itemcode);
 	}
 
-	public void updateCrossitemcodes(String itemcode, String targetItemcodes) {
+//	public void updateCrossitemcodes(String itemcode, String targetItemcodes) {
+//		String[] targetItemcodesArr = targetItemcodes.split(",");
+//		Map<String, Object> map = new HashMap<>();
+//		map.put("itemcode", itemcode);
+//		map.put("targetItemcodes", targetItemcodesArr);
+//		update("prd010DAO.updateCrossitemcodes", map);
+//	}
+
+	public void insertCrossitemcode(String itemcode, String targetItemcodes) {
 		String[] targetItemcodesArr = targetItemcodes.split(",");
 		Map<String, Object> map = new HashMap<>();
 		map.put("itemcode", itemcode);
 		map.put("targetItemcodes", targetItemcodesArr);
-		update("prd010DAO.updateCrossitemcodes", map);
+		insert("prd010DAO.insertCrossitemcode", map);
 	}
 
 	public void insertItem(Map param) {

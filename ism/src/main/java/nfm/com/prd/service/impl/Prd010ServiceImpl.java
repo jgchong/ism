@@ -46,10 +46,11 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
         }
         for (int i = 0; i < prd010VOList.size(); i++) {
             Prd010VO prd010VO = prd010VOList.get(i);
-            if ("P".equals(prd010VO.getItemcrosstype())) {
+            if ("F".equals(prd010VO.getItemcrosstype())) {
                 List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(prd010VO.getItemcode());
                 if (prd010VOFusionList != null && prd010VOFusionList.size() > 0) {
                     for (Prd010VO prd010VO1 : prd010VOFusionList) {
+                        prd010VO1.setItemcrosstype("C");
                         prd010VOList.add(i + 1, prd010VO1);
                     }
                 }
@@ -119,7 +120,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("cartonqty", getResult(originPrdVO.getCartonqty()));
             jsonObject.put("palletqty", getResult(originPrdVO.getPalletqty()));
         }
-        if ("P".equals(originPrdVO.getItemcrosstype())) {
+        if ("F".equals(originPrdVO.getItemcrosstype())) {
             List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(originPrdVO.getItemcode());
             JSONArray jsonArray = new JSONArray();
             for (Prd010VO tempPrdVO : prd010VOFusionList) {
@@ -143,7 +144,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
         param.put("byccode", ismbyc010VO.getByccode());
         String detail_itemcrosstype = (String) param.get("detail_itemcrosstype");
         String makingCode = "";
-        if (detail_itemcrosstype.equals("P")) {
+        if (detail_itemcrosstype.equals("F")) {
             makingCode = makingCode + "F";
         } else {
             makingCode = makingCode + "S";
@@ -182,8 +183,10 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
 
     @Override
     public String updateCross(String itemcode, String targetItemcodes) throws Exception {
-        prd010DAO.updateCrossitemcodeInit(itemcode);
-        prd010DAO.updateCrossitemcodes(itemcode, targetItemcodes);
+//        prd010DAO.updateCrossitemcodeInit(targetItemcodes);
+        prd010DAO.deleteCrossitemcode(itemcode);
+//        prd010DAO.updateCrossitemcodes(itemcode, targetItemcodes);
+        prd010DAO.insertCrossitemcode(itemcode, targetItemcodes);
         return null;
     }
 

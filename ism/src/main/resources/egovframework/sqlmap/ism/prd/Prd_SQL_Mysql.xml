@@ -6,29 +6,53 @@
     <typeAlias alias="prd010SearchVO" type="nfm.com.prd.service.Prd010SearchVO"/>
     <typeAlias alias="prd010VO" type="nfm.com.prd.service.Prd010VO"/>
 
+    <!-- 상품코드를 만들기 위해서, 가장 마지막에 만든 상품을 가져온다. -->
     <select id="prd010DAO.selectPrd010VO" parameterClass="String" resultClass="prd010VO">
         select
         *
         from ismprd010
-        where itemcode like #itemcode# '%'
+        where p.itemcode like #itemcode# '%'
         order by orderitemid desc
         limit 1
     </select>
 
-    <!-- 모든 목록 select -->
+    <!-- 결합용 부모가 아닌 모든 상품 목록 select -->
     <select id="prd010DAO.selectAll" resultClass="Prd010VO">
         select
         *
         from ismprd010
-        where itemcrosstype in ('S', 'F')
+        where itemcrosstype in ('S')
         order by orderitemid desc
     </select>
 
+    <!-- 디테일 상품을 조회를 위해 사용한다.. -->
     <select id="prd010DAO.selectWithItemcode" resultClass="Prd010VO">
         select
-        *
-        from ismprd010
-        where itemcode = #itemcode#
+        p.orderitemid,
+        p.itemcat1,
+        p.itemname,
+        p.byc010id,
+        p.itemcrosstype,
+        p.itemopt,
+        p.itemea,
+        p.itemprice,
+        p.itembuyprice,
+        p.taxtype,
+        p.itemdlvprice,
+        p.itembuydlvprice,
+        p.itemgubun,
+        p.createdate,
+        p.byccode,
+        p.itemcode,
+        p.pristock,
+        p.itemsize,
+        p.cartonqty,
+        p.palletqty,
+        p2.crossitemcode
+        from ismprd010 p
+        left outer join ismprd020 p2 on p.itemcode = p2.itemcode
+        where p.itemcode = #itemcode#
+        limit 1
     </select>
 
     <!-- 상품 목록 select cnt -->
@@ -38,7 +62,7 @@
         left outer join ismbyc010 b on p.byc010id = b.byc010id
         left outer join ismwhs010 w on p.pristock = w.whs010id
         where
-        p.itemcrosstype in ('S', 'P')
+            p.orderitemid > 0
         <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
             <![CDATA[
         	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
@@ -51,6 +75,27 @@
         </isNotEmpty>
         <isNotEmpty prepend="AND" property="dfSearch_itemcat1">
             p.itemcat1 = #dfSearch_itemcat1#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcrosstype">
+            p.itemcrosstype = #dfSearch_itemcrosstype#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemgubun">
+            p.itemgubun = #dfSearch_itemgubun#
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_bycname">
+            b.bycname LIKE '%' #dfSearch_bycname# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemcode">
+            p.itemcode LIKE '%' #dfSearch_itemcode# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemname">
+            p.itemname LIKE '%' #dfSearch_itemname# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_itemopt">
+            p.itemopt LIKE '%' #dfSearch_itemopt# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dfSearch_whsname">
+            w.whsname LIKE '%' #dfSearch_whsname# '%'
         </isNotEmpty>
     </select>
 
@@ -77,14 +122,13 @@
         p.itemsize,
         p.cartonqty,
         p.palletqty,
-        p.crossitemcode,
         b.bycname,
         w.whsname
         from ismprd010 p
         left outer join ismbyc010 b on p.byc010id = b.byc010id
         left outer join ismwhs010 w on p.pristock = w.whs010id
         where
-        p.itemcrosstype in ('S', 'P')
+            p.orderitemid > 0
         <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
             <![CDATA[
         	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
@@ -146,15 +190,16 @@
         p.itemsize,
         p.cartonqty,
         p.palletqty,
-        p.crossitemcode,
+        p2.crossitemcode,
         b.bycname,
         w.whsname
         from ismprd010 p
         left outer join ismbyc010 b on p.byc010id = b.byc010id
         left outer join ismwhs010 w on p.pristock = w.whs010id
+        left outer join ismprd020 p2 on p.itemcode = p2.itemcode
         where
-        p.itemcrosstype in ('F')
-        and p.crossitemcode = #itemcode#
+        p.itemcrosstype in ('S')
+        and p2.crossitemcode = #itemcode#
     </select>
 
     <update id="prd010DAO.updateItemWhs" parameterClass="java.util.HashMap">
@@ -163,20 +208,40 @@
         where orderitemid = #itemId#
     </update>
 
-    <update id="prd010DAO.updateCrossitemcodeInit" parameterClass="String">
-        update ismprd010
-        set crossitemcode = null, itemcrosstype = 'S'
-        where crossitemcode = #itemcode#
-    </update>
+    <!--<update id="prd010DAO.updateCrossitemcodeInit" parameterClass="String">-->
+        <!--update p-->
+        <!--set itemcrosstype = 'S'-->
+        <!--from ismprd010 p-->
+        <!--left outer join ismprd020 p2 on p.itemcode = p2.itemcode-->
+        <!--where p.crossitemcode = #itemcode#-->
+    <!--</update>-->
 
-    <update id="prd010DAO.updateCrossitemcodes" parameterClass="java.util.HashMap">
-        update ismprd010
-        set crossitemcode = #itemcode#, itemcrosstype = 'F'
-        where itemcode in
-        <iterate property="targetItemcodes" open="(" close=")" conjunction=",">
-            #targetItemcodes[]#
+    <delete id="prd010DAO.deleteCrossitemcode" parameterClass="String">
+        delete from ismprd020
+        where crossitemcode = #itemcode#
+    </delete>
+
+    <delete id="prd010DAO.deleteCrossitemcodeAtItemdelete" parameterClass="String">
+        delete from ismprd020
+        where itemcode = #itemcode#
+    </delete>
+
+    <!--<update id="prd010DAO.updateCrossitemcodes" parameterClass="java.util.HashMap">-->
+        <!--update ismprd010-->
+        <!--set itemcrosstype = 'F'-->
+        <!--where itemcode in-->
+        <!--<iterate property="targetItemcodes" open="(" close=")" conjunction=",">-->
+            <!--#targetItemcodes[]#-->
+        <!--</iterate>-->
+    <!--</update>-->
+
+    <insert id="prd010DAO.insertCrossitemcode" parameterClass="java.util.HashMap">
+        insert into ismprd020 (itemcode, crossitemcode)
+        values
+        <iterate property="targetItemcodes" conjunction=",">
+            (#targetItemcodes[]#, #itemcode#)
         </iterate>
-    </update>
+    </insert>
 
     <insert id="prd010DAO.insertItem" parameterClass="java.util.HashMap">
         insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty)
@@ -205,7 +270,7 @@
     <delete id="prd010DAO.prd010SelectDel" parameterClass="java.util.HashMap">
         delete from ismprd010
         where orderitemid in
-        <iterate  property="orderitemids" open="(" close=")" conjunction=",">
+        <iterate property="orderitemids" open="(" close=")" conjunction=",">
             #orderitemids[]#
         </iterate>
     </delete>
