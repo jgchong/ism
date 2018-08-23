@@ -1,16 +1,3 @@
-<%--
-  Class Name : EgovAuthorInsert.jsp
-  Description : EgovAuthorInsert 화면
-  Modification Information
- 
-      수정일         수정자                   수정내용
-    -------    --------    ---------------------------
-     2009.02.01    lee.m.j              최초 생성
-     2011.08.31   JJY       경량환경 버전 생성
- 
-    author   : 공통서비스 개발팀 lee.m.j
-    since    : 2009.02.01
---%>
 <%@ page contentType="text/html; charset=utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="ui" uri="http://egovframework.gov/ctl/ui"%>
@@ -28,9 +15,15 @@
 <head>
 
 <meta http-equiv="Content-Language" content="ko" >
-<link href="<c:url value='/'/>css/common.css" rel="stylesheet" type="text/css" >
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<title> KTI NMS </title>
+	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+	<script src="<c:url value='/'/>js/custom/common.js" type="text/javascript" charset="utf-8"></script>
+	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
+	<link href="<c:url value='/'/>css/custom/layout.css" type="text/css" rel="stylesheet"  />
+	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
 
-<title>그룹 등록</title>
 <script type="text/javascript" src="<c:url value="/validator.do"/>"></script>
 <validator:javascript formName="groupManage" staticJavascript="false" xhtml="true" cdata="false"/>
 <script type="text/javaScript" language="javascript">
@@ -81,38 +74,23 @@ function fncGroupDelete() {
 <body>
 <noscript>자바스크립트를 지원하지 않는 브라우저에서는 일부 기능을 사용하실 수 없습니다.</noscript>    
 <!-- 전체 레이어 시작 -->
-<div id="wrap">
-    <!-- header 시작 -->
-    <div id="header"><c:import url="/EgovPageLink.do?link=main/inc/EgovIncHeader" /></div>
-    <div id="topnavi"><c:import url="/sym/mms/EgovMainMenuHead.do" /></div>        
-    <!-- //header 끝 --> 
-    <!-- container 시작 -->
-    <div id="container">
-        <!-- 좌측메뉴 시작 -->
-        <div id="leftmenu"><c:import url="/sym/mms/EgovMainMenuLeft.do" /></div>
-        <!-- //좌측메뉴 끝 -->
+
+<div class="wrap">
+	<c:import url="/sym/mms/EgovMainMenuHead.do" />
+	<div class="container">
+	    <!-- 좌측메뉴 시작 -->
+	    <div class="lnb">
+	    	<c:import url="/sym/mms/EgovMainMenuLeft.do" />
+	    </div>
+	    <!-- //좌측메뉴 끝 -->
+		<div class="contentsWrap"> <!-- 추가 div -->
+
             <!-- 현재위치 네비게이션 시작 -->
-            <div id="content">
-                <div id="cur_loc">
-                    <div id="cur_loc_align">
-                        <ul>
-                            <li>HOME</li>
-                            <li>&gt;</li>
-                            <li>내부시스템관리</li>
-                            <li>&gt;</li>
-                            <li>사용자권한관리</li>
-                            <li>&gt;</li>
-                            <li><strong>사용자그룹관리</strong></li>
-                        </ul>
-                    </div>
-                </div>
-                <!-- 검색 필드 박스 시작 -->
-                <div id="search_field">
-                    <div id="search_field_loc"><h2><strong><c:out value="${registerFlagName}"/></strong></h2></div>
-                </div>
+            <div class="contents">
+                <p class="layerTit">사용자그룹관리</p>
                 <form:form commandName="groupManage" method="post" >
 
-                    <div class="modify_user" >
+                    <div class="layerTb" >
                         <table summary="그룹을 수정하는 테이블입니다.그룹 ID,그룹 명,설명,등록일자 정보를 담고 있습니다.">
                           <tr>
                             <th class="required_text" width="25%" scope="row"  nowrap="nowrap">그룹 ID
@@ -136,56 +114,34 @@ function fncGroupDelete() {
                         </table>
                     </div>
 
-                    <!-- 버튼 시작(상세지정 style로 div에 지정) -->
-                    <div class="buttons" style="padding-top:10px;padding-bottom:10px;">
-                        <!-- 목록/저장버튼  -->
-                        <table border="0" cellspacing="0" cellpadding="0" align="center">
-                        <tr> 
-                          <td>
-                            <a href="#LINK" onclick="javascript:fncSelectGroupList()" style="selector-dummy:expression(this.hideFocus=false);">목록</a>  
-                          </td>
-                          <c:if test="${registerFlag == 'INSERT'}">
-                              <td width="10"></td>
-                              <td>
-                                <a href="#LINK" onclick="javascript:fncGroupInsert()" style="selector-dummy:expression(this.hideFocus=false);">저장</a>  
-                              </td>
-                          </c:if>
-                          <c:if test="${registerFlag == 'UPDATE'}">
-                              <td width="10"></td>
-                              <td>
-                                <a href="#LINK" onclick="javascript:fncGroupUpdate()" style="selector-dummy:expression(this.hideFocus=false);">저장</a>  
-                              </td>
-                              <td width="10"></td>
-                              <td>
-                                <a href="#LINK" onclick="javascript:fncGroupDelete()" style="selector-dummy:expression(this.hideFocus=false);">삭제</a>   
-                              </td>
-                          </c:if>
-                        </tr>
-                        </table>
-                    </div>
-                    <!-- 버튼 끝 -->                           
+                    <!-- 버튼 [s] -->   
+					<p class="layerFootBt">
+<c:if test="${registerFlag == 'INSERT'}">
+						<a href="#LINK" onclick="javascript:fncSelectGroupList()" class="cancel" style="selector-dummy:expression(this.hideFocus=false);">목록</a>
+                        <a href="#LINK" onclick="javascript:fncGroupInsert()" class="confirm" style="selector-dummy:expression(this.hideFocus=false);">저장</a>  
+</c:if>
+<c:if test="${registerFlag == 'UPDATE'}">
+                        <a href="#LINK" onclick="javascript:fncGroupUpdate()" class="confirm" style="selector-dummy:expression(this.hideFocus=false);">저장</a>  
+                        <a href="#LINK" onclick="javascript:fncGroupDelete()" class="cancel" style="selector-dummy:expression(this.hideFocus=false);">삭제</a>   
+</c:if>
+					</p>
+                    <!-- 버튼 [e] -->
 
 					<!-- 검색조건 유지 -->
 					<c:if test="${registerFlag == 'UPDATE'}">
-					<input type="hidden" name="searchCondition" value="<c:out value='${groupManageVO.searchCondition}'/>"/>
-					<input type="hidden" name="searchKeyword" value="<c:out value='${groupManageVO.searchKeyword}'/>"/>
-					<input type="hidden" name="pageIndex" value="<c:out value='${groupManageVO.pageIndex}'/>"/>
+						<input type="hidden" name="searchCondition" value="<c:out value='${groupManageVO.searchCondition}'/>"/>
+						<input type="hidden" name="searchKeyword" value="<c:out value='${groupManageVO.searchKeyword}'/>"/>
+						<input type="hidden" name="pageIndex" value="<c:out value='${groupManageVO.pageIndex}'/>"/>
 					</c:if>
                     <!-- 검색조건 유지 -->
                 </form:form>
 
-                <div align="right">
-                    <input type="text" name="message" value="<c:out value='${message}'/>" size="30" readonly="readonly" title="메시지" />
-                </div>
-
-
-            </div>  
-            <!-- //content 끝 -->    
-    </div>  
+            </div>
+            <!-- //contents 끝 -->    
+        </div>
+        <!-- //contentsWrap 끝 -->
+	</div>  
     <!-- //container 끝 -->
-    <!-- footer 시작 -->
-    <div id="footer"><c:import url="/EgovPageLink.do?link=main/inc/EgovIncFooter" /></div>
-    <!-- //footer 끝 -->
 </div>
 <!-- //전체 레이어 끝 -->
 </body>

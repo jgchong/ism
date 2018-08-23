@@ -29,6 +29,8 @@ div.searchArea .searchMore ul	{ width:100%; display:inline-block; }
 div.searchArea .searchMore li	{ float:left; width:20%; text-align:center; padding:5px; box-sizing:border-box; }
 div.searchArea .searchMore li input			{ width:100%; box-sizing:border-box; text-align:center; font-size:14px; height:34px; }
 div.searchArea .searchMore p	{ padding:10px 5px; }
+
+.paging a.on {background-color:#457cac;color:#fff;}
 	</style>
 
 <script type="text/javaScript" language="javascript" defer="defer">

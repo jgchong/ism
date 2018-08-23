@@ -187,7 +187,6 @@ function viewCumData(cum010id) {
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	console.log(data);
-
         	var addhtml = ""+
 			"<div class='layerTb'>"+
 			"	<table cellpadding='0' cellspacing='0' class='c' summary='' >"+

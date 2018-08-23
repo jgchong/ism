@@ -291,7 +291,7 @@ table td input.hidden {
 						<a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" class="cancel" onclick="fnListPage(); return false;"><spring:message code="button.list" /></a>
 </c:if>
 						<a href="<c:url value='/uss/umt/user/EgovUserPasswordUpdtView.do'/>" onclick="fnPasswordMove(); return false;" class="confirm"><spring:message code="button.passwordUpdate" /></a>
-                        <a href="#LINK" onclick="javascript:document.userManageVO.reset();" class="cancel" ><spring:message code="button.reset" /></a>
+                        <!-- <a href="#LINK" onclick="javascript:document.userManageVO.reset();" class="cancel" ><spring:message code="button.reset" /></a> -->
 					</p>
                     <!-- 버튼 [e] -->
                     <form:hidden path="password" />                       

@@ -16,7 +16,7 @@ public class Whs010DAO extends EgovAbstractDAO {
 	public List<?> selectAll() {
 		return list("ismwhs010DAO.selectAll");
 	}
-
+	
 	public List<?> selectWhs020List(Whs010SearchVO whs010SearchVO) {
 		return list("whs010DAO.selectWhs020List", whs010SearchVO);
 	}

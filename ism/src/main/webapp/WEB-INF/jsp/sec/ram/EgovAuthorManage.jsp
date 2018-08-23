@@ -31,6 +31,8 @@ div.searchArea .searchMore ul	{ width:100%; display:inline-block; }
 div.searchArea .searchMore li	{ float:left; width:20%; text-align:center; padding:5px; box-sizing:border-box; }
 div.searchArea .searchMore li input			{ width:100%; box-sizing:border-box; text-align:center; font-size:14px; height:34px; }
 div.searchArea .searchMore p	{ padding:10px 5px; }
+
+.paging a.on {background-color:#457cac;color:#fff;}
 	</style>
 <script type="text/javaScript" language="javascript" defer="defer">
 <!--
@@ -184,7 +186,7 @@ function press() {
                 <!-- 검색 필드 박스 시작 -->
                 <form:form id="listForm" name="listForm" action="<c:url value='/sec/ram/EgovAuthorList.do'/>" method="post">
 	                <div class="searchArea">
-						<input id="searchKeyword" name="searchKeyword" type="text" value="<c:out value='${authorManageVO.searchKeyword}'/>" size="25" title="검색" onkeypress="press();" class="it ml30"/>
+						<input id="searchKeyword" name="searchKeyword" type="text" value="<c:out value='${authorManageVO.searchKeyword}'/>" size="25" placeholder="권한 명" onkeypress="press();" class="it ml30"/>
 						<a href="#LINK" onclick="javascript:fncSelectAuthorList('1')" style="selector-dummy:expression(this.hideFocus=false);">조회 </a>
 						<a href="#LINK" onclick="javascript:fncAddAuthorInsert()" style="selector-dummy:expression(this.hideFocus=false);">등록</a>
 						<a href="#LINK" onclick="javascript:fncAuthorDeleteList()" style="selector-dummy:expression(this.hideFocus=false);">삭제</a>
@@ -205,7 +207,7 @@ function press() {
 	                        <col width="25%" >
 	                        <col width="40%" >
 	                        <col width="15%" >
-	                        <col width="5%" >
+	                        <!--<col width="5%" >//-->
 	                    </colgroup>
 	                    <thead>
 	                    <tr>
@@ -214,7 +216,7 @@ function press() {
 	                        <th scope="col" nowrap="nowrap">권한 명</th>
 	                        <th scope="col" nowrap="nowrap">설명</th>
 	                        <th scope="col" nowrap="nowrap">등록일자</th>
-	                        <th scope="col" nowrap="nowrap">롤 정보</th>
+	                        <!-- <th scope="col" nowrap="nowrap">롤 정보</th> -->
 	                    </tr>
 	                    </thead>
 	                    <tbody>                 
@@ -227,18 +229,18 @@ function press() {
 						    <td nowrap="nowrap"><c:out value="${author.authorNm}"/></td>
 						    <td nowrap="nowrap"><c:out value="${author.authorDc}"/></td>
 						    <td nowrap="nowrap"><c:out value="${author.authorCreatDe}"/></td>
-						    <td nowrap="nowrap"><a href="#LINK" onclick="javascript:fncSelectAuthorRole('<c:out value="${author.authorCode}"/>')"><img src="<c:url value='/images/img_search.gif'/>" width="15" height="15" align="middle" alt="롤 정보"></a></td>
+						    <!-- <td nowrap="nowrap"><a href="#LINK" onclick="javascript:fncSelectAuthorRole('<c:out value="${author.authorCode}"/>')"><img src="<c:url value='/images/img_search.gif'/>" width="15" height="15" align="middle" alt="롤 정보"></a></td> -->
 	                      </tr>
 	                     </c:forEach>     
 	                    </tbody>
 	                    </table>
 	                </div>
 
-                <!-- 페이지 네비게이션 시작 -->
-                <div class="paging">
-                    <ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
-                </div>
-                <!-- //페이지 네비게이션 끝 -->
+	                <!-- 페이지 네비게이션 시작 -->
+	                <div class="paging">
+	                    <ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="linkPage" />
+	                </div>
+	                <!-- //페이지 네비게이션 끝 -->
             	</form:form>
 
             </div>
