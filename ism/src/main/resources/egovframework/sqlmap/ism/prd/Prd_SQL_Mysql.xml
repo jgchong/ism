@@ -25,6 +25,16 @@
         order by orderitemid desc
     </select>
 
+    <!-- 오토서치용 select -->
+    <select id="prd010DAO.selectGubun2" resultClass="Prd010VO">
+        select
+        *
+        from ismprd010
+        where itemcrosstype in ('S')
+        and itemgubun = 2
+        order by orderitemid desc
+    </select>
+
     <!-- 디테일 상품을 조회를 위해 사용한다.. -->
     <select id="prd010DAO.selectWithItemcode" resultClass="Prd010VO">
         select

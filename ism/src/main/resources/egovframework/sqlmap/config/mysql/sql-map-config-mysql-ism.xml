@@ -11,4 +11,6 @@
 	<sqlMap resource="egovframework/sqlmap/ism/po/Po_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ism/whs/Whs_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ism/prd/Prd_SQL_Mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ism/skd/Skd_SQL_Mysql.xml"/>
+
 </sqlMapConfig>

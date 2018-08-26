@@ -240,8 +240,19 @@ public class Prd010Controller {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
-        String test = prd010Service.selectAll();
-        return test;
+        return prd010Service.selectAll();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/prd/prd010selectGubun2.do", produces = "application/json; charset=utf8")
+    public String detailAutoSearch2(ModelMap model) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+        return prd010Service.selectGubun2();
     }
 
 

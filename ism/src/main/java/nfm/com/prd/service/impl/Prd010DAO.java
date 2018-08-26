@@ -19,6 +19,10 @@ public class Prd010DAO extends EgovAbstractDAO {
 		return list("prd010DAO.selectAll");
 	}
 
+	public List<?> selectGubun2() {
+		return list("prd010DAO.selectGubun2");
+	}
+
 	public int selectListTotCnt(Prd010SearchVO prd010SearchVO) {
 		return (Integer)select("prd010DAO.selectListTotCnt", prd010SearchVO);
 	}
@@ -71,7 +75,7 @@ public class Prd010DAO extends EgovAbstractDAO {
 	}
 
 	public void insertItem(Map param) {
-		insert("prd010DAO.insertItem", param);
+		insert("prd010DAO.insertSkd010", param);
 	}
 
 	public void updateItem(Map param) {

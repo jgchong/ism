@@ -9,6 +9,7 @@ public interface Prd010Service {
 	public int selectListTotCnt(Prd010SearchVO prd010SearchVO) throws Exception;
 	public void updateItemWhs(Integer itemId, Integer whsId) throws Exception;
 	public String selectAll() throws Exception;
+	public String selectGubun2() throws Exception;
 	public String selectWithItemcode(String itemcode) throws Exception;
 	public String insertItem(Map param) throws Exception;
 	public String updateItem(Map param) throws Exception;

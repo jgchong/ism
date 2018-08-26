@@ -248,7 +248,7 @@
                                 <td>
                                     <c:if test="${result.itemgubun eq ''}">구분없음</c:if>
                                     <c:if test="${result.itemgubun eq '1'}">제조사출고상품</c:if>
-                                    <c:if test="${result.itemgubun eq '2'}">제조사출고상품</c:if>
+                                    <c:if test="${result.itemgubun eq '2'}">재고관리상품</c:if>
                                     <c:if test="${result.itemgubun eq '3'}">사은품</c:if>
                                 </td>
                                 <td>
@@ -805,7 +805,8 @@
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             success: function (data) {
                 alert("저장되었습니다.");
-                currentItemcoed = data.itemcode;
+                currentItemcoed = '';
+                firstCheck = 0;
                 $('#form1').submit();
             },
             error: function (jqXHR, exception) {

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="Sl20">
+
+    <typeAlias alias="skd010VO" type="nfm.com.skd.service.Skd010VO"/>
+    <typeAlias alias="skd020VO" type="nfm.com.skd.service.Skd020VO"/>
+
+    <!-- skd020 오토서치용skd select -->
+    <select id="skd010DAO.prd020seletWhsitem" parameterClass="String" resultClass="skd020VO">
+        select
+        s2.skd010id,
+        s2.whs010id,
+        s2.itemea,
+        s2.itemdlprice,
+        s1.itemcode,
+        s1.createdate,
+        p.itemname
+        from ismskd020 s2
+        left outer join ismskd010 s1 on s2.skd010id = s1.skd010id
+        left outer join ismprd010 p on s1.itemcode = p.itemcode
+        where s2.whs010id = #whs010id#
+    </select>
+
+    <insert id="skd010DAO.insertSkd010" parameterClass="java.util.HashMap">
+        insert into ismskd010 (itemcode, itemea, createdate, expirationdate, itemdlprice)
+        values (#skd010save_itemcode#, #skd010save_itemea#, #skd010save_createdate#, #skd010save_expirationdate#, #skd010save_itemdlprice#)
+        <selectKey keyProperty="skd010id" resultClass="int">
+            SELECT skd010id from ismskd010 order by skd010id desc limit 1
+        </selectKey>
+    </insert>
+
+    <insert id="skd010DAO.insertSkd020" parameterClass="java.util.HashMap">
+        insert into ismskd020 (skd010id, whs010id, itemea, createdate, itemdlprice)
+        values (#skt010id#, #skd010save_whs010id#,  #skd010save_itemea#, #skd010save_createdate#, #skd010save_itemdlprice#)
+        <selectKey keyProperty="skd010id" resultClass="int">
+            SELECT skd010id from ismskd010 order by skd010id desc limit 1
+        </selectKey>
+    </insert>
+
+</sqlMap>

@@ -84,6 +84,19 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
     }
 
     @Override
+    public String selectGubun2() throws Exception {
+        List<Prd010VO> prd010VOList = (List<Prd010VO>) prd010DAO.selectGubun2();
+        JSONArray jsonArray = new JSONArray();
+        for (Prd010VO prd010VO : prd010VOList) {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("itemcode", prd010VO.getItemcode());
+            jsonObject.put("label", prd010VO.getItemname());
+            jsonArray.add(jsonObject);
+        }
+        return jsonArray.toJSONString();
+    }
+
+    @Override
     public String selectWithItemcode(String itemcode) throws Exception {
         Prd010VO originPrdVO = (Prd010VO) prd010DAO.selectWithItemcode(itemcode);
         JSONObject jsonObject = new JSONObject();
