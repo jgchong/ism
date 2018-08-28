@@ -9,6 +9,9 @@ public class Skd020VO {
     private String createdate;
     private String itemdlprice;
 
+
+    private String whsname;
+
     public int getSkd010id() {
         return skd010id;
     }
@@ -64,5 +67,14 @@ public class Skd020VO {
     public void setItemdlprice(String itemdlprice) {
         this.itemdlprice = itemdlprice;
     }
+
+    public String getWhsname() {
+        return whsname;
+    }
+
+    public void setWhsname(String whsname) {
+        this.whsname = whsname;
+    }
+
 
 }

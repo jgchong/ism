@@ -37,6 +37,18 @@ public class Skd010SearchVO implements Serializable {
     private int recordCountPerPage = 10;
 
 
+    //search 조건
+    private String dfSearch_itemname;
+
+
+    public String getDfSearch_itemname() {
+        return dfSearch_itemname;
+    }
+
+    public void setDfSearch_itemname(String dfSearch_itemname) {
+        this.dfSearch_itemname = dfSearch_itemname;
+    }
+
     public int getPageIndex() {
         return pageIndex;
     }

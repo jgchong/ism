@@ -108,17 +108,18 @@
                 <h2 class="pageTit">재고관리</h2>
 
                 <form id="form1" name="form1" method="post" action="/ism/skd/skd010.do" class="searchArea">
+                    <a href="javascript:selectDel();" class="ml30">선택삭제</a>
                     <a href="#">엑셀 다운로드</a>
-                    <input type="text" class="it ml30" title="" value="" name=""/>
+                    <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
                     <button>검색</button>
                 </form>
                 <div class="listTb">
                     <table cellpadding="0" cellspacing="0" class="" summary="">
                         <caption></caption>
                         <colgroup>
-                            <col width="4%"/>
+                            <col width="3%"/>
+                            <col width="8%"/>
                             <col width="*"/>
-                            <col width="10%"/>
                             <col width="8%"/>
                             <col width="8%"/>
                             <col width="8%"/>
@@ -143,46 +144,39 @@
                             <th scope="col">창고2</th>
                             <th scope="col">창고3</th>
                             <th scope="col">창고4</th>
-                            <th scope="col">기타</th>
+                            <th scope="col">...</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.orderitemid}"/></td>
-                            <td><a href="#">상품코드</a></td>
-                            <td>상품명</td>
-                            <td>창고1</td>
-                            <td>창고2</td>
-                            <td>창고3</td>
-                            <td>창고4</td>
-                            <td onmouseover="showlayer('layer_hidden1');" onmouseout="hidelayer('layer_hidden1');"></td>
-                            <td>합계</td>
-                            <td>총재고금액(VAT불포함)</td>
-                            <td>총재고금액(VAT포함)</td>
-                        </tr>
+                        <c:forEach var="result" items="${resultList}" varStatus="status">
+                            <tr>
+                                <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.skd010id}"/></td>
+                                <td><a href="#">${result.itemcode}</a></td>
+                                <td>${result.itemname} (${result.createdate})</td>
+                                <td onmouseover="showlayer('layer_hidden1', '${result.whs1itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs1itemea}</td>
+                                <td onmouseover="showlayer('layer_hidden1', '${result.whs2itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs2itemea}</td>
+                                <td onmouseover="showlayer('layer_hidden1', '${result.whs3itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs3itemea}</td>
+                                <td onmouseover="showlayer('layer_hidden1', '${result.whs4itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs4itemea}</td>
+                                <td onmouseover="showlayer('layer_hidden1', '${result.whsNamuge}');" onmouseout="hidelayer('layer_hidden1');">
+                                    <c:if test="${result.whsNamuge ne ''}">
+                                        ...
+                                    </c:if>
+                                    <c:if test="${result.whsNamuge eq ''}">
+                                        -
+                                    </c:if>
+                                </td>
+                                <td>${result.itemea}</td>
+                                <td>${result.itemAllprice}</td>
+                                <td>${result.itemAllbuyprice}</td>
+                            </tr>
+                        </c:forEach>
                         </tbody>
                     </table>
                 </div>
 
                 <div class="paging">
-                    <a href="#">&lt;&lt;</a>
-                    <a href="#">&lt;</a>
-                    <span>
-							<a href="#" class="on">1</a>
-							<a href="#">2</a>
-							<a href="#">3</a>
-							<a href="#">4</a>
-							<a href="#">5</a>
-							<a href="#">6</a>
-							<a href="#">7</a>
-							<a href="#">8</a>
-							<a href="#">9</a>
-							<a href="#">10</a>
-						</span>
-                    <a href="#">&gt;</a>
-                    <a href="#">&gt;&gt;</a>
+                    <ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fnLinkPage"/>
                 </div>
-
             </div>
         </div>
     </div> <!-- container -->
@@ -214,7 +208,7 @@
                         <th scope="row">수량</th>
                         <td><input type="number" id="skd010save_itemea" type="text" class="it " title="" value="" name=""/></td>
                         <th scope="row">입고날짜</th>
-                        <td><input id="skd010save_createdate" type="text" class="it datepicker" title="" value="" name="" placeHolder="입고잘짜"/></td>
+                        <td><input id="skd010save_createdate" type="text" class="it datepicker" title="" value="" name="" placeHolder="입고날짜"/></td>
                     </tr>
                     <tr>
                         <th scope="row">유통기한설정</th>
@@ -274,11 +268,11 @@
                             </select>
                         </td>
                         <th scope="row">이관될 날짜</th>
-                        <td><input type="text" class="it " title="" value="" name=""/></td>
+                        <td><input id="skd020save_createdate" type="text" class="it datepicker" title="" value="" name="" placeHolder="이관날짜"/></td>
                     </tr>
                     <tr>
                         <th scope="row">물류비</th>
-                        <td><input type="text" class="it " title="" value="" name=""/></td>
+                        <td><input type="number" id="skd020save_itemdlprice" type="text" class="it " title="" value="" name=""/></td>
                         <th scope="row"></th>
                         <td></td>
                     </tr>
@@ -328,7 +322,7 @@
 
         </div>
         <p class="layerFootBt">
-            <a href="#" class="layerBt_v2 confirm" name="claim">확인</a>
+            <a href="javascript:saveDetailData2();" class="layerBt_v2 confirm" name="claim">확인</a>
             <a href="javascript:;" class="layerClose cancel">취소</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>
@@ -373,7 +367,7 @@
                     select: function (event, ui) {
                         $('#skd010save_autosearch_input').val(ui.item.label);
                         $('#skd010save_autosearch_name').val(ui.item.label);
-                        $('#skd010save_autosearch_value').val(ui.item.skd010id);
+                        $('#skd010save_autosearch_value').val(ui.item.itemcode);
                         return false;
                     },
                     open: function () {
@@ -409,10 +403,16 @@
     });
 
     /////////////////////////////////////////////////////////////////////////// 메인화면 ///////////////////////////////////////////////////////////////////////
-    document.getElementById("layer_hidden1").innerHTML = '안녕하세요.fsdafasfasdfasdfsadgbsdgnb fgsfgbsfdgbadbadfbadfb';
 
-    function showlayer(id) {
+
+    function showlayer(id, namuge) {
+        if (namuge != '') {
+            document.getElementById("layer_hidden1").innerHTML = namuge;
+        } else {
+            document.getElementById("layer_hidden1").innerHTML = '더이상 보관하고 있지 않습니다.';
+        }
         layer_hidden1.style.visibility = "visible";
+
     }
 
     function hidelayer(id) {
@@ -456,9 +456,9 @@
                 orderitemids = orderitemids.substring(0, orderitemids.length - 1);
             }
             $.ajax({
-                url: "/ism/prd/prd010SelectDel.do",
+                url: "/ism/skd/skd010SelectDel.do",
                 type: "post",
-                data: {"orderitemids": orderitemids},
+                data: {"skd010ids": orderitemids},
                 success: function (data) {
                     if (data == "SUCCESS") {
                         alert("삭제 되었습니다.");
@@ -598,15 +598,8 @@
     /////////////////////////////////////////////////////////////////////////// 이관관리 ///////////////////////////////////////////////////////////////////////
 
 
-    var firstCheck02 = 0;
-
     function openSingleItemDetail2() {
-        //처음 여는 경우
-        if (firstCheck02 == 0) {
-            firstCheck02 = 1;
-            // initAllDetail();
-        }
-        //그대로 열기
+        initSkd020save()
         //open
         $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
         $('.fade').fadeIn();
@@ -617,13 +610,120 @@
         return false;
     }
 
+
+    function initSkd020save() {
+        $('#skd020save_whs010id').prop('disabled', false);
+        $('#skd020save_autosearch_input').val('');
+        $('#skd020save_autosearch_name').val('');
+        $('#skd020save_autosearch_itemea').val('');
+        $('#skd020save_autosearch_whs010id').val('');
+        $('#skd020save_autosearch_itemea_update').val('');
+        $('#skd020save_autosearch_value').val('');
+
+        $('.skd020save_autosearch_regist').remove()
+
+
+        //필수값
+        $('#skd020save_createdate').val('');
+        $('#skd020save_whs010id').val('');
+
+        //서브값
+        $('#skd020save_itemdlprice').val('');
+    }
+
+    function saveDetailData2() {
+        var skd020save_whs010id = $('#skd020save_whs010id').val();
+        var skd020save_createdate = $('#skd020save_createdate').val();
+        var skd020save_skd010id = '';
+        var skd020save_itemea = '';
+        var skd020save_itemea_update = '';
+        var skd020save_whs010id_update = '';
+
+        $('.skd020save_autosearch_regist').each(function (index, item) {
+            if (index == 0) {
+                skd020save_skd010id = $(this).attr("dataid01");
+                skd020save_whs010id_update = $(this).attr("dataid02");
+                skd020save_itemea_update = $(this).attr("dataid03");
+                skd020save_itemea = $(this).attr("dataid04");
+            } else {
+                skd020save_skd010id = skd020save_skd010id + ',' + $(this).attr("dataid01");
+                skd020save_whs010id_update = skd020save_whs010id_update + ',' + $(this).attr("dataid02");
+                skd020save_itemea_update = skd020save_itemea_update + ',' + $(this).attr("dataid03");
+                skd020save_itemea = skd020save_itemea + ',' + $(this).attr("dataid04");
+            }
+        });
+
+
+        if (skd020save_skd010id == '' || skd020save_itemea == '' || skd020save_itemea_update == '' || skd020save_whs010id_update == '') {
+            alert("이관할 창고 서식을 제대로 입력해주세요.")
+            return;
+        }
+
+        if (skd020save_whs010id == '') {
+            alert("창고를 입력해주세요.")
+            return;
+        }
+
+        if (skd010save_itemea == '') {
+            alert("수량을 입력해주세요.")
+            return;
+        }
+
+        if (skd020save_createdate == '') {
+            alert("입고날짜를 등록해주세요.")
+            return;
+        }
+
+        $.ajax({
+            url: "/ism/skd/skd020Save.do",
+            type: "post",
+            data: {
+                "skd020save_whs010id": skd020save_whs010id,
+                "skd020save_createdate": skd020save_createdate,
+                "skd020save_itemdlprice": $('#skd020save_itemdlprice').val(),
+                "skd020save_skd010ids": skd020save_skd010id,
+                "skd020save_itemeas": skd020save_itemea,
+                "skd020save_itemea_updates": skd020save_itemea_update,
+                "skd020save_whs010id_updates": skd020save_whs010id_update
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("저장되었습니다.");
+                firstCheck01 = 0;
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = jqXHR.responseText;
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
+
     $('#skd020save_autosearch_input').prop('disabled', true);
     $('#skd020save_whs010id').change(function () { //이관될 창고 설정 변경 (//자기자신은 클릭하면 안되도록 변경하기)
         var a = $(this).val();
         if (a != '') {
             $('#skd020save_autosearch_input').prop('disabled', false);
+            $('#skd020save_whs010id').prop('disabled', true);
             $.ajax({
-                url: "/ism/skd/prd020seletWhsitem.do",
+                url: "/ism/skd/skd020seletWhsitem.do",
                 type: "post",
                 data: {"whs010id": a},
                 success: function (data) {
@@ -667,10 +767,12 @@
                     } else {
                         msg = 'Uncaught Error.<br>' + jqXHR.responseText;
                     }
+                    $('#skd020save_whs010id').prop('disabled', false);
                     alert("Error : " + msg);
                 }
             });
         } else {
+            $('#skd020save_whs010id').prop('disabled', false);
             $('#skd020save_autosearch_input').prop('disabled', true);
         }
     });
@@ -681,6 +783,7 @@
         var searchName = $('#skd020save_autosearch_name').val();
         var whs010id = $('#skd020save_autosearch_whs010id').val();
         var itemea_update = $('#skd020save_autosearch_itemea_update').val();
+        var itemea = $('#skd020save_autosearch_itemea').val();
         var whsname = $('#skd020save_autosearch_whs010id option:selected').text();
         var a = 0;
         if (searchValue != null && searchValue != '' && searchLavel != null && searchLavel != '' && searchName != null && searchName != '' && whs010id != '' && itemea_update != '') {
@@ -697,10 +800,10 @@
                 $('#skd020save_autosearch_value').val('');
                 $('#skd020save_autosearch_input').val('');
                 $('#skd020save_autosearch_name').val('');
-                $('#skd020save_autosearch_itemea').val();
+                $('#skd020save_autosearch_itemea').val('');
                 $('#skd020save_autosearch_whs010id').val('');
                 $('#skd020save_autosearch_itemea_update').val('');
-                createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname);
+                createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname, itemea);
             }
         } else {
             alert("서식을 제대로 입력해주세요.")
@@ -708,10 +811,10 @@
 
     }
 
-    function createSearchResult(searchValue, searchName, itemea, whs010id, whsname) {
+    function createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname, itemea) {
         $('#skd020save_autosearch').after("" +
-            "<tr class='skd020save_autosearch_regist' dataid01='" + searchValue + "' dataid02='" + whs010id + "' dataid03='" + itemea + "'>" +
-            "<td colspan='4'>" + searchName + " (" + whsname + " | "+ itemea +"개" + ")</td>" +
+            "<tr class='skd020save_autosearch_regist' dataid01='" + searchValue + "' dataid02='" + whs010id + "' dataid03='" + itemea_update + "' dataid04='" + itemea + "'>" +
+            "<td colspan='4'>" + searchName + " ( 재고 : " + itemea + " | " + whsname + " 로 " + itemea_update + "개 이동" + ")</td>" +
             "<td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td>" +
             "</tr>");
     }

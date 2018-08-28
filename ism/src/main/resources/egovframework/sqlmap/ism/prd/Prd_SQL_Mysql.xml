@@ -11,7 +11,7 @@
         select
         *
         from ismprd010
-        where p.itemcode like #itemcode# '%'
+        where itemcode like #itemcode# '%'
         order by orderitemid desc
         limit 1
     </select>
@@ -277,6 +277,7 @@
         where itemcode = #itemcode#
     </update>
 
+
     <delete id="prd010DAO.prd010SelectDel" parameterClass="java.util.HashMap">
         delete from ismprd010
         where orderitemid in
@@ -284,5 +285,4 @@
             #orderitemids[]#
         </iterate>
     </delete>
-
 </sqlMap>

@@ -13,7 +13,7 @@
         select
         *
         from ismwhs010
-        order by whs010id desc
+        order by whs010id asc
     </select>
 
     <!-- 창고 목록 select -->

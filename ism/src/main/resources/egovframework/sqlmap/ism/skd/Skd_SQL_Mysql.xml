@@ -3,11 +3,44 @@
 
 <sqlMap namespace="Sl20">
 
+    <typeAlias alias="skd010SearchVO" type="nfm.com.skd.service.Skd010SearchVO"/>
     <typeAlias alias="skd010VO" type="nfm.com.skd.service.Skd010VO"/>
     <typeAlias alias="skd020VO" type="nfm.com.skd.service.Skd020VO"/>
 
+
+    <!-- 메인화면 selectList -->
+    <select id="skd010DAO.selectList" parameterClass="skd010SearchVO" resultClass="skd010VO">
+        select
+        s1.itemcode as itemcode,
+        s1.skd010id as skd010id,
+        s1.createdate as createdate,
+        p.itemname as itemname,
+        p.itembuyprice as itembuyprice,
+        s1.itemea as itemea
+        from ismskd010 s1
+        left outer join ismprd010 p on s1.itemcode = p.itemcode
+        <isNotEmpty property="dfSearch_itemname">
+            where p.itemname LIKE '%' #dfSearch_itemname# '%'
+        </isNotEmpty>
+        order by s1.skd010id desc
+        limit #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+
+    <!-- 창고 조회 -->
+    <select id="skd010DAO.selectWhsNameList" parameterClass="int" resultClass="skd020VO">
+        select
+        s2.skd010id as skd010id,
+        s2.whs010id as whs010id,
+        s2.itemea as itemea,
+        w.whsname as whsname
+        from ismskd020 s2
+        left outer join ismwhs010 w on s2.whs010id = w.whs010id
+        where s2.skd010id = #skd010id#
+        order by w.whs010id asc
+    </select>
+
     <!-- skd020 오토서치용skd select -->
-    <select id="skd010DAO.prd020seletWhsitem" parameterClass="String" resultClass="skd020VO">
+    <select id="skd010DAO.skd020seletWhsitem" parameterClass="String" resultClass="skd020VO">
         select
         s2.skd010id,
         s2.whs010id,
@@ -32,10 +65,46 @@
 
     <insert id="skd010DAO.insertSkd020" parameterClass="java.util.HashMap">
         insert into ismskd020 (skd010id, whs010id, itemea, createdate, itemdlprice)
-        values (#skt010id#, #skd010save_whs010id#,  #skd010save_itemea#, #skd010save_createdate#, #skd010save_itemdlprice#)
+        values (#skt010id#, #skd010save_whs010id#, #skd010save_itemea#, #skd010save_createdate#, #skd010save_itemdlprice#)
         <selectKey keyProperty="skd010id" resultClass="int">
             SELECT skd010id from ismskd010 order by skd010id desc limit 1
         </selectKey>
     </insert>
+
+    <update id="skd010DAO.updateOriginSkd020" parameterClass="java.util.HashMap">
+        update ismskd020
+        set itemea = #itemea#,
+        createdate = #createdate#,
+        itemdlprice = #itemdlprice#
+        where skd010id = #skd010id#
+        and whs010id = #whs010id#
+    </update>
+
+    <update id="skd010DAO.updateSkd020" parameterClass="java.util.HashMap">
+        update ismskd020
+        set itemea = itemea + #skd010save_itemea#,
+        createdate = #skd010save_createdate#,
+        itemdlprice = #skd010save_itemdlprice#
+        where skd010id = #skt010id#
+        and whs010id = #skd010save_whs010id#
+    </update>
+
+    <delete id="skd010DAO.skd010SelectDel" parameterClass="java.util.HashMap">
+        delete from ismskd010
+        where skd010id in
+        <iterate property="skd010ids" open="(" close=")" conjunction=",">
+            #skd010ids[]#
+        </iterate>
+    </delete>
+
+    <delete id="skd010DAO.skd020SelectDel" parameterClass="java.util.HashMap">
+        delete from ismskd020
+        where skd010id in
+        <iterate property="skd010ids" open="(" close=")" conjunction=",">
+            #skd010ids[]#
+        </iterate>
+    </delete>
+
+
 
 </sqlMap>

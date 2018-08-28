@@ -75,7 +75,7 @@ public class Prd010DAO extends EgovAbstractDAO {
 	}
 
 	public void insertItem(Map param) {
-		insert("prd010DAO.insertSkd010", param);
+		insert("prd010DAO.insertItem", param);
 	}
 
 	public void updateItem(Map param) {
