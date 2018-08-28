@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ISM">
+
+    <typeAlias  alias="mainGraphRetVO" type = "nfm.com.main.service.MainGraphRetVO"/>
+
+    <select id="mainDAO.selectChartAllDay" parameterClass="String" resultClass="mainGraphRetVO">
+	select 'ALL' as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.qty,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as chartValues14
+	  from (
+	        select sub1.monthseq, sum(sub1.qty) as qty from (
+		        select CASE
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)) THEN 1
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -12 DAY)) THEN 2
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -11 DAY)) THEN 3
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -10 DAY)) THEN 4
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -9 DAY)) THEN 5
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -8 DAY)) THEN 6
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -7 DAY)) THEN 7
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -6 DAY)) THEN 8
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -5 DAY)) THEN 9
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -4 DAY)) THEN 10
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -3 DAY)) THEN 11
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -2 DAY)) THEN 12
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -1 DAY)) THEN 13
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY)) THEN 14
+		                   ELSE 0
+		               END AS monthseq, IFNULL(a.orderitemqty,0) as qty
+		          from ismodm010 a
+		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+		           and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	        ) sub1
+	        group by sub1.monthseq
+	) aaa
+    </select>
+
+    <select id="mainDAO.selectChartProdDay" parameterClass="String" resultClass="mainGraphRetVO">
+	select prd.itemname,
+	       sum(IF (aaa.monthseq = '1',aaa.qty,0)) as day1,
+	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as day2,
+	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as day3,
+	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as day4,
+	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as day5,
+	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as day6,
+	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as day7,
+	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as day8,
+	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as day9,
+	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as day10,
+	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as day11,
+	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as day12,
+	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as day13,
+	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as day14
+	  from (
+	        select sub1.monthseq, sub1.orderitemid, sum(sub1.qty) as qty from (
+		        select CASE
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -13 DAY)) THEN 1
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -12 DAY)) THEN 2
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -11 DAY)) THEN 3
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -10 DAY)) THEN 4
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -9 DAY)) THEN 5
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -8 DAY)) THEN 6
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -7 DAY)) THEN 7
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -6 DAY)) THEN 8
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -5 DAY)) THEN 9
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -4 DAY)) THEN 10
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -3 DAY)) THEN 11
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -2 DAY)) THEN 12
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -1 DAY)) THEN 13
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL 0 DAY)) THEN 14
+		                   ELSE 0
+		               END AS monthseq, a.orderitemid, IFNULL(a.orderitemqty,0) as qty
+		          from ismodm010 a
+		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180208000000', INTERVAL -13 DAY)
+		           and DATE_ADD('20180208235959', INTERVAL 0 DAY)
+	        ) sub1
+	        group by sub1.monthseq, sub1.orderitemid
+		) aaa,
+		(
+			select a.orderitemid, sum(a.orderitemqty) from ismodm010 a 
+			where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180208000000', INTERVAL -13 DAY)
+			  and DATE_ADD('20180208235959', INTERVAL 0 DAY)
+			  <![CDATA[
+			  and a.orderitemid <> ''
+			  ]]>
+			group by a.orderitemid
+			order by sum(a.orderitemqty) desc
+			limit 3
+		) bbb, ismprd010 prd
+	where aaa.orderitemid = bbb.orderitemid
+	  and aaa.orderitemid = prd.itemcode
+	group by prd.itemname
+    </select>
+
+    <select id="mainDAO.selectChartAllYear" parameterClass="String" resultClass="mainGraphRetVO">
+	select 'ALL' as charTitle,
+           sum(IF (aaa.monthseq = '1',aaa.qty,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as chartValues14
+	  from (
+	        select sub1.monthseq, sum(sub1.qty) as qty from (
+		        select CASE
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -13 DAY)) THEN 1
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -12 DAY)) THEN 2
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -11 DAY)) THEN 3
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -10 DAY)) THEN 4
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -9 DAY)) THEN 5
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -8 DAY)) THEN 6
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -7 DAY)) THEN 7
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -6 DAY)) THEN 8
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -5 DAY)) THEN 9
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -4 DAY)) THEN 10
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -3 DAY)) THEN 11
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -2 DAY)) THEN 12
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -1 DAY)) THEN 13
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL 0 DAY)) THEN 14
+		                   ELSE 0
+		               END AS monthseq, IFNULL(a.orderitemqty,0) as qty
+		          from ismodm010 a
+		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180822000000', INTERVAL -13 DAY)
+		           and DATE_ADD('20180822235959', INTERVAL 0 DAY)
+	        ) sub1
+	        group by sub1.monthseq
+	) aaa
+    </select>
+</sqlMap>
