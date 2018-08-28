@@ -4,6 +4,7 @@
 
 <sqlMapConfig>
 	<sqlMap resource="egovframework/sqlmap/ism/login/NgmLogin_SQL_Mysql.xml"/>
+	<sqlMap resource="egovframework/sqlmap/ism/main/Main_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ism/ord/Ord_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ism/cmm/Cmm_SQL_Mysql.xml"/>
 	<sqlMap resource="egovframework/sqlmap/ism/cum/Cum_SQL_Mysql.xml"/>
