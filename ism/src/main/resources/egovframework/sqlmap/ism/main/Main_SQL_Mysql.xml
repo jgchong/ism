@@ -5,24 +5,25 @@
 
     <typeAlias  alias="mainGraphRetVO" type = "nfm.com.main.service.MainGraphRetVO"/>
 
+    <!-- //총매출액 일 -->
     <select id="mainDAO.selectChartAllDay" parameterClass="String" resultClass="mainGraphRetVO">
 	select 'ALL' as charTitle,
-	       sum(IF (aaa.monthseq = '1',aaa.qty,0)) as chartValues1,
-	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as chartValues2,
-	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as chartValues3,
-	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as chartValues4,
-	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as chartValues5,
-	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as chartValues6,
-	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as chartValues7,
-	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as chartValues8,
-	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as chartValues9,
-	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as chartValues10,
-	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as chartValues11,
-	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as chartValues12,
-	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as chartValues13,
-	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as chartValues14
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.amount,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.amount,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.amount,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.amount,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.amount,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.amount,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.amount,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.amount,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.amount,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.amount,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.amount,0)) as chartValues14
 	  from (
-	        select sub1.monthseq, sum(sub1.qty) as qty from (
+	        select sub1.monthseq, sum(sub1.amount) as amount from (
 		        select CASE
 		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)) THEN 1
 		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -12 DAY)) THEN 2
@@ -39,7 +40,7 @@
 		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -1 DAY)) THEN 13
 		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY)) THEN 14
 		                   ELSE 0
-		               END AS monthseq, IFNULL(a.orderitemqty,0) as qty
+		               END AS monthseq, IFNULL(a.orderitemqty,0) as amount
 		          from ismodm010 a
 		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
 		           and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
@@ -48,51 +49,52 @@
 	) aaa
     </select>
 
+	<!-- //상품별 매출액 일 -->
     <select id="mainDAO.selectChartProdDay" parameterClass="String" resultClass="mainGraphRetVO">
-	select prd.itemname,
-	       sum(IF (aaa.monthseq = '1',aaa.qty,0)) as day1,
-	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as day2,
-	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as day3,
-	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as day4,
-	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as day5,
-	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as day6,
-	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as day7,
-	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as day8,
-	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as day9,
-	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as day10,
-	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as day11,
-	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as day12,
-	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as day13,
-	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as day14
+	select prd.itemname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.amount,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.amount,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.amount,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.amount,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.amount,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.amount,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.amount,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.amount,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.amount,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.amount,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.amount,0)) as chartValues14
 	  from (
-	        select sub1.monthseq, sub1.orderitemid, sum(sub1.qty) as qty from (
+	        select sub1.monthseq, sub1.orderitemid, sum(sub1.amount) as amount from (
 		        select CASE
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -13 DAY)) THEN 1
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -12 DAY)) THEN 2
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -11 DAY)) THEN 3
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -10 DAY)) THEN 4
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -9 DAY)) THEN 5
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -8 DAY)) THEN 6
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -7 DAY)) THEN 7
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -6 DAY)) THEN 8
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -5 DAY)) THEN 9
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -4 DAY)) THEN 10
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -3 DAY)) THEN 11
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -2 DAY)) THEN 12
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL -1 DAY)) THEN 13
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180208000000', INTERVAL 0 DAY)) THEN 14
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)) THEN 1
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -12 DAY)) THEN 2
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -11 DAY)) THEN 3
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -10 DAY)) THEN 4
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -9 DAY)) THEN 5
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -8 DAY)) THEN 6
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -7 DAY)) THEN 7
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -6 DAY)) THEN 8
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -5 DAY)) THEN 9
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -4 DAY)) THEN 10
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -3 DAY)) THEN 11
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -2 DAY)) THEN 12
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -1 DAY)) THEN 13
+		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY)) THEN 14
 		                   ELSE 0
-		               END AS monthseq, a.orderitemid, IFNULL(a.orderitemqty,0) as qty
+		               END AS monthseq, a.orderitemid, IFNULL(a.orderitemqty,0) as amount
 		          from ismodm010 a
-		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180208000000', INTERVAL -13 DAY)
-		           and DATE_ADD('20180208235959', INTERVAL 0 DAY)
+		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+		           and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
 	        ) sub1
 	        group by sub1.monthseq, sub1.orderitemid
 		) aaa,
 		(
 			select a.orderitemid, sum(a.orderitemqty) from ismodm010 a 
-			where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180208000000', INTERVAL -13 DAY)
-			  and DATE_ADD('20180208235959', INTERVAL 0 DAY)
+			where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+			  and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
 			  <![CDATA[
 			  and a.orderitemid <> ''
 			  ]]>
@@ -105,46 +107,373 @@
 	group by prd.itemname
     </select>
 
-    <select id="mainDAO.selectChartAllYear" parameterClass="String" resultClass="mainGraphRetVO">
-	select 'ALL' as charTitle,
-           sum(IF (aaa.monthseq = '1',aaa.qty,0)) as chartValues1,
-	       sum(IF (aaa.monthseq = '2',aaa.qty,0)) as chartValues2,
-	       sum(IF (aaa.monthseq = '3',aaa.qty,0)) as chartValues3,
-	       sum(IF (aaa.monthseq = '4',aaa.qty,0)) as chartValues4,
-	       sum(IF (aaa.monthseq = '5',aaa.qty,0)) as chartValues5,
-	       sum(IF (aaa.monthseq = '6',aaa.qty,0)) as chartValues6,
-	       sum(IF (aaa.monthseq = '7',aaa.qty,0)) as chartValues7,
-	       sum(IF (aaa.monthseq = '8',aaa.qty,0)) as chartValues8,
-	       sum(IF (aaa.monthseq = '9',aaa.qty,0)) as chartValues9,
-	       sum(IF (aaa.monthseq = '10',aaa.qty,0)) as chartValues10,
-	       sum(IF (aaa.monthseq = '11',aaa.qty,0)) as chartValues11,
-	       sum(IF (aaa.monthseq = '12',aaa.qty,0)) as chartValues12,
-	       sum(IF (aaa.monthseq = '13',aaa.qty,0)) as chartValues13,
-	       sum(IF (aaa.monthseq = '14',aaa.qty,0)) as chartValues14
+	<!-- //매출처별 매출액 일 -->
+    <select id="mainDAO.selectChartCustDay" parameterClass="String" resultClass="mainGraphRetVO">
+	select aaa.cum030id, cum3.shopmallname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.amount,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.amount,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.amount,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.amount,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.amount,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.amount,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.amount,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.amount,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.amount,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.amount,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.amount,0)) as chartValues14
 	  from (
-	        select sub1.monthseq, sum(sub1.qty) as qty from (
-		        select CASE
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -13 DAY)) THEN 1
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -12 DAY)) THEN 2
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -11 DAY)) THEN 3
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -10 DAY)) THEN 4
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -9 DAY)) THEN 5
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -8 DAY)) THEN 6
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -7 DAY)) THEN 7
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -6 DAY)) THEN 8
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -5 DAY)) THEN 9
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -4 DAY)) THEN 10
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -3 DAY)) THEN 11
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -2 DAY)) THEN 12
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL -1 DAY)) THEN 13
-		                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD('20180822000000', INTERVAL 0 DAY)) THEN 14
-		                   ELSE 0
-		               END AS monthseq, IFNULL(a.orderitemqty,0) as qty
-		          from ismodm010 a
-		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD('20180822000000', INTERVAL -13 DAY)
-		           and DATE_ADD('20180822235959', INTERVAL 0 DAY)
+	        select sub1.monthseq, sub1.cum030id, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)) THEN 1
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -12 DAY)) THEN 2
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -11 DAY)) THEN 3
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -10 DAY)) THEN 4
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -9 DAY)) THEN 5
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -8 DAY)) THEN 6
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -7 DAY)) THEN 7
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -6 DAY)) THEN 8
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -5 DAY)) THEN 9
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -4 DAY)) THEN 10
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -3 DAY)) THEN 11
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -2 DAY)) THEN 12
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -1 DAY)) THEN 13
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY)) THEN 14
+	                   ELSE 0
+	               END AS monthseq, a.cum030id, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a
+		     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+		       and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	        ) sub1
+	        group by sub1.monthseq, sub1.cum030id
+	) aaa,
+	(
+	select a.cum030id, sum(a.orderitemqty) from ismodm010 a
+     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+	   and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	  <![CDATA[
+	   and a.cum030id <> ''
+	  ]]>
+	 group by a.cum030id
+	 order by sum(a.orderitemqty) desc
+	 limit 3
+	) bbb, ismcum030 cum3
+	where aaa.cum030id = bbb.cum030id
+	  and aaa.cum030id = cum3.cum030id
+	group by aaa.cum030id, cum3.shopmallname;
+    </select>
+
+	<!-- //매입처별 매출액 일 -->
+    <select id="mainDAO.selectChartBuyDay" parameterClass="String" resultClass="mainGraphRetVO">
+	select aaa.byc010id, byc.bycname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3,
+	       sum(IF (aaa.monthseq = '4',aaa.amount,0)) as chartValues4,
+	       sum(IF (aaa.monthseq = '5',aaa.amount,0)) as chartValues5,
+	       sum(IF (aaa.monthseq = '6',aaa.amount,0)) as chartValues6,
+	       sum(IF (aaa.monthseq = '7',aaa.amount,0)) as chartValues7,
+	       sum(IF (aaa.monthseq = '8',aaa.amount,0)) as chartValues8,
+	       sum(IF (aaa.monthseq = '9',aaa.amount,0)) as chartValues9,
+	       sum(IF (aaa.monthseq = '10',aaa.amount,0)) as chartValues10,
+	       sum(IF (aaa.monthseq = '11',aaa.amount,0)) as chartValues11,
+	       sum(IF (aaa.monthseq = '12',aaa.amount,0)) as chartValues12,
+	       sum(IF (aaa.monthseq = '13',aaa.amount,0)) as chartValues13,
+	       sum(IF (aaa.monthseq = '14',aaa.amount,0)) as chartValues14
+	  from (
+	        select sub1.monthseq, sub1.byc010id, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)) THEN 1
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -12 DAY)) THEN 2
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -11 DAY)) THEN 3
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -10 DAY)) THEN 4
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -9 DAY)) THEN 5
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -8 DAY)) THEN 6
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -7 DAY)) THEN 7
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -6 DAY)) THEN 8
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -5 DAY)) THEN 9
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -4 DAY)) THEN 10
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -3 DAY)) THEN 11
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -2 DAY)) THEN 12
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -1 DAY)) THEN 13
+	                   WHEN dayofmonth(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) =  dayofmonth(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY)) THEN 14
+	                   ELSE 0
+	               END AS monthseq, prd.byc010id, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
+		     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+		       and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	        ) sub1
+	        group by sub1.monthseq, sub1.byc010id
+	) aaa,
+	(
+	select prd.byc010id, sum(a.orderitemqty)
+	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
+
+     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
+	   and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+		<![CDATA[
+	  and prd.byc010id <> ''
+	  	]]>
+	group by prd.byc010id
+	order by sum(a.orderitemqty) desc
+	limit 3
+	) bbb, ismbyc010 byc
+	where aaa.byc010id = bbb.byc010id
+	  and aaa.byc010id = byc.byc010id
+	group by aaa.byc010id, byc.bycname;
+    </select>
+    
+    <!-- 총 매출액월 -->
+    <select id="mainDAO.selectChartAllMon" parameterClass="String" resultClass="mainGraphRetVO">
+	select 'ALL' as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3
+	  from (
+	        select sub1.monthseq, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)) THEN 1
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -1 MONTH)) THEN 2
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL 0 MONTH)) THEN 3
+	                   ELSE 0
+	               END AS monthseq, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a
+	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
 	        ) sub1
 	        group by sub1.monthseq
-	) aaa
+	) aaa;
+    </select>
+    
+    <!-- 상품별 매출액 월 -->
+    <select id="mainDAO.selectChartProdMon" parameterClass="String" resultClass="mainGraphRetVO">
+	select aaa.orderitemid, prd.itemname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3
+	  from (
+	        select sub1.monthseq, sub1.orderitemid, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)) THEN 1
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -1 MONTH)) THEN 2
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL 0 MONTH)) THEN 3
+	                   ELSE 0
+	               END AS monthseq,
+	               a.orderitemid, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a
+	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	        ) sub1
+	        group by sub1.monthseq, sub1.orderitemid
+	) aaa,
+	(
+	select a.orderitemid, sum(a.orderitemqty) from ismodm010 a 
+	where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	  and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+		<![CDATA[
+	  and a.orderitemid <> ''
+	  	]]>
+	group by a.orderitemid
+	order by sum(a.orderitemqty) desc
+	limit 3
+	) bbb, ismprd010 prd
+	where aaa.orderitemid = bbb.orderitemid
+	  and aaa.orderitemid = prd.itemcode
+	group by aaa.orderitemid, prd.itemname;
+    </select>
+    
+    <!-- 매출처별 매출액 월 -->
+    <select id="mainDAO.selectChartCustMon" parameterClass="String" resultClass="mainGraphRetVO">
+	select aaa.cum030id, cum3.shopmallname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3
+	  from (
+	        select sub1.monthseq, sub1.cum030id, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)) THEN 1
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -1 MONTH)) THEN 2
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL 0 MONTH)) THEN 3
+	                   ELSE 0
+	               END AS monthseq,
+	               a.cum030id, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a
+	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	        ) sub1
+	        group by sub1.monthseq, sub1.cum030id
+	) aaa,
+	(
+	select a.cum030id, sum(a.orderitemqty) from ismodm010 a 
+	where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	  and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+		<![CDATA[
+	  and a.cum030id <> ''
+	  	]]>
+	group by a.cum030id
+	order by sum(a.orderitemqty) desc
+	limit 3
+	) bbb, ismcum030 cum3
+	where aaa.cum030id = bbb.cum030id
+	  and aaa.cum030id = cum3.cum030id
+	group by aaa.cum030id, cum3.shopmallname;
+    </select>
+    
+    <!-- 매입처별 매출액 월 -->
+    <select id="mainDAO.selectChartBuyMon" parameterClass="String" resultClass="mainGraphRetVO">
+	select aaa.byc010id, byc.bycname as charTitle,
+	       sum(IF (aaa.monthseq = '1',aaa.amount,0)) as chartValues1,
+	       sum(IF (aaa.monthseq = '2',aaa.amount,0)) as chartValues2,
+	       sum(IF (aaa.monthseq = '3',aaa.amount,0)) as chartValues3
+	  from (
+	        select sub1.monthseq, sub1.byc010id, sum(sub1.amount) as amount from (
+	        select CASE
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)) THEN 1
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -1 MONTH)) THEN 2
+	                   WHEN MONTH(DATE_ADD(a.orderdate, INTERVAL 0 MONTH)) =  MONTH(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL 0 MONTH)) THEN 3
+	                   ELSE 0
+	               END AS monthseq,
+	               prd.byc010id, IFNULL(a.orderitemqty,0) as amount
+	          from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
+	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	        ) sub1
+	        group by sub1.monthseq, sub1.byc010id
+	) aaa,
+	(
+	select prd.byc010id, sum(a.orderitemqty)
+	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
+	 where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
+	   and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+		<![CDATA[
+	   and prd.byc010id <> ''
+	    ]]>
+	 group by prd.byc010id
+	 order by sum(a.orderitemqty) desc
+	 limit 3
+	) bbb, ismbyc010 byc
+	where aaa.byc010id = bbb.byc010id
+	  and aaa.byc010id = byc.byc010id
+	group by aaa.byc010id, byc.bycname;
+    </select>
+    
+    <!-- 총 매출액 년 -->
+    <select id="mainDAO.selectChartAllYear" parameterClass="String" resultClass="mainGraphRetVO">
+	select 'ALL' as charTitle,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '1',a.orderitemqty,0)) as chartValues1,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '2',a.orderitemqty,0)) as chartValues2,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '3',a.orderitemqty,0)) as chartValues3,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '4',a.orderitemqty,0)) as chartValues4,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '5',a.orderitemqty,0)) as chartValues5,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '6',a.orderitemqty,0)) as chartValues6,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '7',a.orderitemqty,0)) as chartValues7,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '8',a.orderitemqty,0)) as chartValues8,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '9',a.orderitemqty,0)) as chartValues9,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '10',a.orderitemqty,0)) as chartValues10,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '11',a.orderitemqty,0)) as chartValues11,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '12',a.orderitemqty,0)) as chartValues12
+	  from ismodm010 a
+	 where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	   and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY);
+    </select>
+    
+    <!-- 상품별 매출액 년 -->
+    <select id="mainDAO.selectChartProdYear" parameterClass="String" resultClass="mainGraphRetVO">
+	 select a.orderitemid, prd.itemname as charTitle,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '1',a.orderitemqty,0)) as chartValues1,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '2',a.orderitemqty,0)) as chartValues2,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '3',a.orderitemqty,0)) as chartValues3,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '4',a.orderitemqty,0)) as chartValues4,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '5',a.orderitemqty,0)) as chartValues5,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '6',a.orderitemqty,0)) as chartValues6,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '7',a.orderitemqty,0)) as chartValues7,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '8',a.orderitemqty,0)) as chartValues8,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '9',a.orderitemqty,0)) as chartValues9,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '10',a.orderitemqty,0)) as chartValues10,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '11',a.orderitemqty,0)) as chartValues11,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '12',a.orderitemqty,0)) as chartValues12
+	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode,
+	      (       
+	       select suba.orderitemid, sum(suba.orderitemqty) FROM ismodm010 suba
+	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+			<![CDATA[
+	          and suba.orderitemid <> ''
+	        ]]>
+	        group by suba.orderitemid
+	        order by sum(suba.orderitemqty) desc
+	        limit 3
+	      ) b
+	 where a.orderitemid = b.orderitemid
+	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	 group by a.orderitemid, prd.itemname;
+    </select>
+    
+    <!-- 매출처별 매출액 년 -->
+    <select id="mainDAO.selectChartCustYear" parameterClass="String" resultClass="mainGraphRetVO">
+	select a.cum030id, cum3.shopmallname as charTitle,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '1',a.orderitemqty,0)) as chartValues1,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '2',a.orderitemqty,0)) as chartValues2,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '3',a.orderitemqty,0)) as chartValues3,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '4',a.orderitemqty,0)) as chartValues4,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '5',a.orderitemqty,0)) as chartValues5,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '6',a.orderitemqty,0)) as chartValues6,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '7',a.orderitemqty,0)) as chartValues7,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '8',a.orderitemqty,0)) as chartValues8,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '9',a.orderitemqty,0)) as chartValues9,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '10',a.orderitemqty,0)) as chartValues10,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '11',a.orderitemqty,0)) as chartValues11,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '12',a.orderitemqty,0)) as chartValues12
+	  from ismodm010 a,
+	      (       
+	       select suba.cum030id, sum(suba.orderitemqty) FROM ismodm010 suba
+	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	        group by suba.cum030id
+	        order by sum(suba.orderitemqty) desc
+	        limit 3
+	      ) b, ismcum030 cum3
+	 where a.cum030id = b.cum030id
+	   and a.cum030id = cum3.cum030id
+	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	 group by a.cum030id;
+    </select>
+    
+    <!-- 매입처별 매출액 년 -->
+    <select id="mainDAO.selectChartBuyYear" parameterClass="String" resultClass="mainGraphRetVO">
+	select prd.byc010id, byc.bycname as charTitle,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '1',a.orderitemqty,0)) as chartValues1,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '2',a.orderitemqty,0)) as chartValues2,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '3',a.orderitemqty,0)) as chartValues3,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '4',a.orderitemqty,0)) as chartValues4,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '5',a.orderitemqty,0)) as chartValues5,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '6',a.orderitemqty,0)) as chartValues6,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '7',a.orderitemqty,0)) as chartValues7,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '8',a.orderitemqty,0)) as chartValues8,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '9',a.orderitemqty,0)) as chartValues9,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '10',a.orderitemqty,0)) as chartValues10,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '11',a.orderitemqty,0)) as chartValues11,
+	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '12',a.orderitemqty,0)) as chartValues12
+	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
+	       left outer join ismbyc010 byc on byc.byc010id = prd.byc010id,
+	      (
+	       select subprd.byc010id, sum(suba.orderitemqty) FROM ismodm010 suba left outer join ismprd010 subprd on suba.orderitemid = subprd.itemcode
+	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+			<![CDATA[
+	          and subprd.byc010id <> ''
+	        ]]>
+	        group by subprd.byc010id
+	        order by sum(suba.orderitemqty) desc
+	        limit 3
+	      ) b
+	 where prd.byc010id = b.byc010id
+	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
+	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	 group by prd.byc010id, byc.bycname;
     </select>
 </sqlMap>
