@@ -138,7 +138,7 @@ public class Prd010Controller {
     @ResponseBody
     @RequestMapping(value = "/ism/prd/prd010DetailSave.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public String detailSave(ModelMap model, String currentItemcoed, String detail_category, String detail_itemcrosstype, String detail_byc, String detail_itemname, String detail_itemopt, String detail_itemea, String detail_itembuyprice,
-                             String detail_itembuydlvprice, String detail_itemgubun, String detail_pristock, String detail_itemsize, String detail_cartonqty, String detail_palletqty, String detail_childItemcode
+                             String detail_itembuydlvprice, String detail_itemgubun, String detail_pristock, String detail_itemsize, String detail_cartonqty, String detail_palletqty, String detail_childItemcode, String detail_taxfree
     ) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -146,8 +146,8 @@ public class Prd010Controller {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
-        if (StringUtils.isBlank(detail_category) || StringUtils.isBlank(detail_itemcrosstype) || StringUtils.isBlank(detail_byc) || StringUtils.isBlank(detail_itemname) || StringUtils.isBlank(detail_itemgubun)
-                || ("2".equals(detail_itemgubun) && StringUtils.isBlank(detail_pristock))) {
+        if (StringUtils.isBlank(detail_category) || StringUtils.isBlank(detail_itemcrosstype) || StringUtils.isBlank(detail_taxfree) || StringUtils.isBlank(detail_byc) || StringUtils.isBlank(detail_itemname) || StringUtils.isBlank(detail_itemgubun)
+                || ("2".equals(detail_itemgubun) && StringUtils.isBlank(detail_pristock)) || ("3".equals(detail_itemgubun) && StringUtils.isBlank(detail_pristock))) {
             return "정상적으로 값을 입력해주세요.";
         }
         Map<String, String> param = new HashMap<>();
@@ -155,6 +155,7 @@ public class Prd010Controller {
         param.put("detail_itemcrosstype", detail_itemcrosstype);
         param.put("detail_byc", detail_byc);
         param.put("detail_itemname", detail_itemname);
+        param.put("detail_taxfree", detail_taxfree);
 
         if (StringUtils.isBlank(detail_itemopt)) {
             detail_itemopt = null;
@@ -176,9 +177,9 @@ public class Prd010Controller {
         }
         param.put("detail_itembuydlvprice", detail_itembuydlvprice);
 
-        //만약 "2".equals(detail_itemgubun)인경우 뒤의 값들도 넣기. 아닌경우 null을 넣을것
+        //만약 "1".equals(detail_itemgubun)인경우 null을 넣을것
         param.put("detail_itemgubun", detail_itemgubun);
-        if (!"2".equals(detail_itemgubun)) {
+        if ("1".equals(detail_itemgubun)) {
             detail_pristock = null;
             detail_itemsize = null;
             detail_cartonqty = null;

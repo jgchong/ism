@@ -131,27 +131,32 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th scope="col" rowspan="2"><a href="javascript:chkall();">V</a></th>
-                            <th scope="col" rowspan="2">상품코드</th>
-                            <th scope="col" rowspan="2">상품명</th>
+                            <th scope="col" rowspan="3"><a href="javascript:chkall();">V</a></th>
+                            <th scope="col" rowspan="3">상품코드</th>
+                            <th scope="col" rowspan="3">상품명</th>
                             <th scope="col" colspan="5">보관장소</th>
-                            <th scope="col" rowspan="2">합계</th>
-                            <th scope="col" rowspan="2">총재고금액(VAT불포함)</th>
-                            <th scope="col" rowspan="2">총재고금액(VAT포함)</th>
+                            <th scope="col" rowspan="3">합계</th>
+                            <th scope="col" rowspan="3">총재고금액(VAT불포함)</th>
+                            <th scope="col" rowspan="3">총재고금액(VAT포함)</th>
                         </tr>
                         <tr>
-                            <th scope="col">창고1</th>
-                            <th scope="col">창고2</th>
-                            <th scope="col">창고3</th>
-                            <th scope="col">창고4</th>
-                            <th scope="col">...</th>
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                                <th scope="col">${item.whsname} 합계</th>
+                            </c:forEach>
+                            <th scope="col">기타</th>
+                        </tr>
+                        <tr>
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                                <th scope="col">${item.cmm020id}</th>
+                                <th scope="col"></th>
+                            </c:forEach>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
                             <tr>
                                 <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.skd010id}"/></td>
-                                <td><a href="#">${result.itemcode}</a></td>
+                                <td><a href="javascript:" onclick="openSingleItemDetail3('${result.skd010id}')">${result.itemcode}</a></td>
                                 <td>${result.itemname} (${result.createdate})</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs1itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs1itemea}</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs2itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs2itemea}</td>
@@ -242,6 +247,8 @@
 </div>
 
 
+
+
 <!-- 이관등록 -->
 <div id="skd020save" class="layerCont stock2">
     <div class="inner">
@@ -329,6 +336,84 @@
     </div>
 </div>
 
+
+<!-- 재고 상세 -->
+<div id="skd010Detail" class="layerCont stock1">
+    <div class="inner">
+        <p class="layerTit">재고상세</p>
+        <div class="layerContents">
+            <div class="layerTb">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <td colspan="4">
+                            <input type="text" id="skd010Detail_itemname" class="it" placeholder="상품명 검색" readonly/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">수량</th>
+                        <td><input type="text" id="skd010Detail_itemea" type="text" class="it " title="" value="" name="" readonly/></td>
+                        <th scope="row">입고날짜</th>
+                        <td><input id="skd010Detail_createdate" type="text" class="it" title="" value="" name="" placeHolder="입고날짜" readonly/></td>
+                    </tr>
+                    <tr id="skd010Detail_lasttr">
+                        <th scope="row">유통기한설정</th>
+                        <td><input id="skd010Detail_expirationdate" type="text" class="it " title="" value="" name="" readonly/></td>
+                        <th scope="row">물류비</th>
+                        <td><input type="text" id="skd010Detail_itemdlprice" type="text" class="it " title="" value="" name="" readonly/></td>
+                    </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="layerTb mt10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="100%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">메모내용</th>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="memoTxt">
+                                <ul id='memoul'></ul>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <p class="memo">
+                                <input type='text' class='it' title='' value='' id='detail_inputmemo' name='inputmemo'/>
+                                <a onclick='inputmemodata()'>입력</a>
+                            </p>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+        <p class="layerFootBt">
+            <a href="javascript:saveDetailData();" class="layerBt_v2 confirm" name="claim">확인</a>
+            <a href="javascript:;" class="layerClose cancel">취소</a>
+        </p>
+        <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>
+    </div>
+</div>
+
+
+
 <div id="layer_hidden1">게시물 본문 미리 보기</div>
 </body>
 </html>
@@ -344,6 +429,7 @@
 
         //디테일창 닫기 초기화
         $('.layerClose').on('click', function () {
+            g_currentId =''
             $('.layerCont').fadeOut();
             $('.fade').fadeOut(function () {
                 $('.fade').remove();
@@ -823,6 +909,93 @@
         $(obj).parent().parent().remove();
     }
 
+
+
+
+    ////////////////////////////////////////////////////////// 상세화면
+
+    var g_currentId;
+
+    function openSingleItemDetail3(currentId) {
+        setMemo(currentId, 'SK', $('#memoul'));
+        initSettingDetail(currentId);
+        g_currentId = currentId;
+
+        //open
+        $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
+        $('.fade').fadeIn();
+        $('#skd010Detail').css({
+            'margin': '-' + ($('#skd010Detail').height() / 2) + 'px 0 0 -' + ($('#skd010Detail').width() / 2) + 'px'
+        })
+        $('#skd010Detail').fadeIn();
+        return false;
+    }
+
+
+    function initSettingDetail(currentId) {
+        $('.skd020Detail').remove()
+        $.ajax({
+            url: "/ism/skd/skd010Detail.do",
+            type: "post",
+            data : { "currentId" : currentId },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                $('#skd010Detail_itemname').val(data.itemname)
+                $('#skd010Detail_itemea').val(data.itemea)
+                $('#skd010Detail_createdate').val(data.createdate)
+                $('#skd010Detail_expirationdate').val(data.expirationdate)
+                $('#skd010Detail_itemdlprice').val(data.itemdlprice)
+                $.each(data.skd020, function(index, item){
+                    $('#skd010Detail_lasttr').after("<tr class=\"skd020Detail\">\n" +
+                        "                        <td colspan=\"1\">\n" +
+                        "                            <input value='"+item.whsname+"' type=\"text\" class=\"it \" placeholder=\"창고\" readonly/>\n" +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\">\n" +
+                        "                            <input value='"+item.itemea+"' type=\"text\" class=\"it\" placeholder=\"재고수량\" readonly/>\n" +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\">\n" +
+                        "                            <input value='"+item.createdate+"' type=\"text\" class=\"it\" placeholder=\"이관날짜\" readonly/>\n" +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\">\n" +
+                        "                            <input value='"+item.itemdlprice+"' type=\"text\" class=\"it\" placeholder=\"물류비\" readonly/>\n" +
+                        "                        </td>\n" +
+                        "                    </tr>")
+                });
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
+    //메모입력
+    function inputmemodata() {
+        if (g_currentId == '') {
+            alert("운영상품 등록 후 메모 등록이 가능합니다.");
+            return;
+        }
+        var inputmemo = $('#detail_inputmemo').val();
+        savememodata(g_currentId, 'SK', inputmemo, $('#memoul'));
+        $('#detail_inputmemo').val("");
+        return false;
+    }
 
 </script>
 <script type="text/javascript">

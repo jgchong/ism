@@ -116,6 +116,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("itemsize", "");
             jsonObject.put("cartonqty", "");
             jsonObject.put("palletqty", "");
+            jsonObject.put("taxfree", "");
         } else {
             jsonObject.put("itemcode", getResult(originPrdVO.getItemcode()));
             jsonObject.put("orderitemid", getResult(String.valueOf(originPrdVO.getOrderitemid())));
@@ -132,6 +133,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("itemsize", getResult(originPrdVO.getItemsize()));
             jsonObject.put("cartonqty", getResult(originPrdVO.getCartonqty()));
             jsonObject.put("palletqty", getResult(originPrdVO.getPalletqty()));
+            jsonObject.put("taxfree", getResult(originPrdVO.getTaxfree()));
         }
         if ("F".equals(originPrdVO.getItemcrosstype())) {
             List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(originPrdVO.getItemcode());
@@ -173,6 +175,14 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             code = 0;
         }
         makingCode = makingCode + String.format("%04d", code);
+        if("1".equals(String.valueOf(param.get("detail_itemgubun")))) {
+            makingCode = makingCode + "I";
+        } else if ("2".equals(String.valueOf(param.get("detail_itemgubun")))) {
+            makingCode = makingCode + "D";
+        } else if ("3".equals(String.valueOf(param.get("detail_itemgubun")))) {
+            makingCode = makingCode + "P";
+        }
+
         param.put("itemcode", makingCode);
         try {
             prd010DAO.insertItem(param);

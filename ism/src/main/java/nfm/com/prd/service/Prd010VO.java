@@ -31,6 +31,16 @@ public class Prd010VO {
     private String bycname;
     private String whsname;
 
+    public String getTaxfree() {
+        return taxfree;
+    }
+
+    public void setTaxfree(String taxfree) {
+        this.taxfree = taxfree;
+    }
+
+    private String taxfree;
+
     public String getListNo() {
         return listNo;
     }

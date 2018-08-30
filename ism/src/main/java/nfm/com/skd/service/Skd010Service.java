@@ -10,4 +10,8 @@ public interface Skd010Service {
 	public int insertSkd020(Map param) throws Exception;
 	public String skd020seletWhsitem(String whs010id) throws Exception;
 	public void skd010SelectDel(String skd010ids) throws Exception;
+
+	public int getSumItemea(int i);
+
+	String selectWithSkd010id(String currentId);
 }

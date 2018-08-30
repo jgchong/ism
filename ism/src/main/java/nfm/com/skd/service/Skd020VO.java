@@ -9,7 +9,6 @@ public class Skd020VO {
     private String createdate;
     private String itemdlprice;
 
-
     private String whsname;
 
     public int getSkd010id() {

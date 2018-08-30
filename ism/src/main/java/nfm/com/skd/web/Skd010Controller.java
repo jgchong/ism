@@ -101,6 +101,12 @@ public class Skd010Controller {
                 ismwhs010VOList.add(ismwhs010VO);
             }
         }
+        for (int i = 0; i < 4; i ++) {
+            ismwhs010VOList.get(i).setCmm020id(skd010Service.getSumItemea(i));
+        }
+
+
+
         model.addAttribute("whsListForTop", ismwhs010VOList);
 
         //입고등록 만들기 (save)만 (입고할 경우, 최초 창고 이관하기)
@@ -293,6 +299,25 @@ public class Skd010Controller {
     public String skd010SelectDel(@RequestParam("skd010ids") String skd010ids, ModelMap model) throws Exception {
         skd010Service.skd010SelectDel(skd010ids);
         return "SUCCESS";
+    }
+
+    /**
+     * 상품 상세
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/ism/skd/skd010Detail.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String detailSelect(ModelMap model, String currentId) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        return skd010Service.selectWithSkd010id(currentId);
     }
 
 

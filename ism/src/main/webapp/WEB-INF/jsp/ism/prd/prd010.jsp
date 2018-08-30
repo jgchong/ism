@@ -252,8 +252,8 @@
                                     <c:if test="${result.itemgubun eq '3'}">사은품</c:if>
                                 </td>
                                 <td>
-                                    <select class="dfChange_whs010id_select" dataid="${result.orderitemid}" <c:if test="${result.itemgubun ne '2'}">disabled</c:if>>
-                                        <c:if test="${result.itemgubun ne '2'}">
+                                    <select class="dfChange_whs010id_select" dataid="${result.orderitemid}" <c:if test="${result.itemgubun eq '1'}">disabled</c:if>>
+                                        <c:if test="${result.itemgubun eq '1'}">
                                             <option value="">우선창고없음</option>
                                         </c:if>
                                         <c:forEach var="item" items="${whsList}" varStatus="status">
@@ -371,11 +371,18 @@
                         <td><input id="detail_itembuyprice" type="number" class="it " title="" value="" name=""/></td>
                     </tr>
                     <tr>
+                        <th scope="row">면세여부</th>
+                        <td colspan="3">
+                            <input id="detail_sel3_1" class="detail_update_no" type="radio" value="1" name="detail_sel3" onclick="radiobox03Click(1)"/><label for="detail_sel3_1">세금부과상품</label>
+                            <input id="detail_sel3_2" class="detail_update_no" type="radio" value="2" name="detail_sel3" onclick="radiobox03Click(2)"/><label for="detail_sel3_2">면세상품</label>
+                        </td>
+                    </tr>
+                    <tr>
                         <th scope="row">구분</th>
                         <td colspan="3">
-                            <input id="detail_sel2_1" type="radio" value="1" name="detail_sel2" onclick="radiobox02Click(1)"/><label for="detail_sel2_1">제조사 출고상품</label>
-                            <input id="detail_sel2_2" type="radio" value="2" name="detail_sel2" onclick="radiobox02Click(2)"/><label for="detail_sel2_2">재고관리상품</label>
-                            <input id="detail_sel2_3" type="radio" value="3" name="detail_sel2" onclick="radiobox02Click(3)"/><label for="detail_sel2_3">사은품</label>
+                            <input id="detail_sel2_1" class="detail_update_no" type="radio" value="1" name="detail_sel2" onclick="radiobox02Click(1)"/><label for="detail_sel2_1">제조사 출고상품</label>
+                            <input id="detail_sel2_2" class="detail_update_no" type="radio" value="2" name="detail_sel2" onclick="radiobox02Click(2)"/><label for="detail_sel2_2">재고관리상품</label>
+                            <input id="detail_sel2_3" class="detail_update_no" type="radio" value="3" name="detail_sel2" onclick="radiobox02Click(3)"/><label for="detail_sel2_3">사은품</label>
                         </td>
                     </tr>
                     <tr>
@@ -653,10 +660,12 @@
     //firstCheck = 0인경우 모든 값 초기화
     //확인의 경우 메모 입력과는 별개로 동작
     function initAllDetail() {
+        $('.detail_update_no').attr('disabled', false);
         $('#detail_sel1_1').prop('disabled', false);
         $('#detail_sel1_2').prop('disabled', false);
         $('#detail_sel1_1').trigger('click');
         $('#detail_sel2_1').trigger('click');
+        $('#detail_sel3_1').trigger('click');
         $('#detail_category').val('');
         $('#detail_byc').val('');
         $('#detail_itemname').val('');
@@ -740,8 +749,14 @@
         $('#detail_itemsize').val(data.itemsize);
         $('#detail_cartonqty').val(data.cartonqty);
         $('#detail_palletqty').val(data.palletqty);
+        if (data.taxfree == '0') {
+            $('#detail_sel3_1').trigger('click');
+        } else if (data.taxfree == '1') {
+            $('#detail_sel3_2').trigger('click');
+        }
         $('#detail_sel1_1').prop('disabled', true);
         $('#detail_sel1_2').prop('disabled', true);
+        $('.detail_update_no').attr('disabled', true);
     }
 
     function saveDetailData() {
@@ -774,7 +789,7 @@
             return;
         }
 
-        if (detail_itemgubun == 2) {
+        if (detail_itemgubun == 2 || detail_itemgubun == 3) {
             if (detail_pristock == '') {
                 alert("우선창고를 선택해주세요.")
                 return;
@@ -799,7 +814,8 @@
                 "detail_itemsize" : $('#detail_itemsize').val(),
                 "detail_cartonqty" : $('#detail_cartonqty').val(),
                 "detail_palletqty" : $('#detail_palletqty').val(),
-                "detail_childItemcode" : detail_childItemcode
+                "detail_childItemcode" : detail_childItemcode,
+                "detail_taxfree" : detail_taxfree
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
@@ -909,8 +925,19 @@
             $('.detail_itemgubun_2').prop('disabled', false);
             detail_itemgubun = 2;
         } else if (myRadio == 3) {
-            $('.detail_itemgubun_2').prop('disabled', true);
+            $('.detail_itemgubun_2').prop('disabled', false);
             detail_itemgubun = 3;
+        }
+    }
+
+    //라디오박스 02
+    var detail_taxfree = 0;
+
+    function radiobox03Click(myRadio) {
+        if (myRadio == 1) {
+            detail_taxfree = 0;
+        } else if (myRadio == 2) {
+            detail_taxfree = 1;
         }
     }
 

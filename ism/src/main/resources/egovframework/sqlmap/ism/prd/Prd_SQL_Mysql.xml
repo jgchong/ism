@@ -31,7 +31,7 @@
         *
         from ismprd010
         where itemcrosstype in ('S')
-        and itemgubun = 2
+        and itemgubun in ('2', '3')
         order by orderitemid desc
     </select>
 
@@ -58,7 +58,8 @@
         p.itemsize,
         p.cartonqty,
         p.palletqty,
-        p2.crossitemcode
+        p2.crossitemcode,
+        p.taxfree
         from ismprd010 p
         left outer join ismprd020 p2 on p.itemcode = p2.itemcode
         where p.itemcode = #itemcode#
@@ -254,9 +255,9 @@
     </insert>
 
     <insert id="prd010DAO.insertItem" parameterClass="java.util.HashMap">
-        insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty)
+        insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty, taxfree)
         values (#detail_category#, #detail_itemname#, #detail_byc#, #detail_itemcrosstype#, #detail_itemopt#,
-        #detail_itemea#, #detail_itembuyprice#, #detail_itembuydlvprice#, #detail_itemgubun#, now(), #byccode#, #itemcode#, #detail_pristock#, #detail_itemsize#, #detail_cartonqty#, #detail_palletqty#)
+        #detail_itemea#, #detail_itembuyprice#, #detail_itembuydlvprice#, #detail_itemgubun#, now(), #byccode#, #itemcode#, #detail_pristock#, #detail_itemsize#, #detail_cartonqty#, #detail_palletqty#, #detail_taxfree#)
     </insert>
 
     <update id="prd010DAO.updateItem" parameterClass="java.util.HashMap">

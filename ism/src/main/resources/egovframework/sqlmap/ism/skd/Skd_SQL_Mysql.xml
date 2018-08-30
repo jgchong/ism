@@ -7,6 +7,23 @@
     <typeAlias alias="skd010VO" type="nfm.com.skd.service.Skd010VO"/>
     <typeAlias alias="skd020VO" type="nfm.com.skd.service.Skd020VO"/>
 
+    <!-- 메인화면 selectList -->
+    <select id="skd010DAO.selectWithSkd010id" parameterClass="String" resultClass="skd010VO">
+        select
+        s1.itemcode as itemcode,
+        s1.skd010id as skd010id,
+        s1.createdate as createdate,
+        s1.itemdlprice as itemdlprice,
+        s1.expirationdate as expirationdate,
+        p.itemname as itemname,
+        p.itembuyprice as itembuyprice,
+        s1.itemea as itemea
+        from ismskd010 s1
+        left outer join ismprd010 p on s1.itemcode = p.itemcode
+        where s1.skd010id = #currentId#
+        order by s1.skd010id desc
+    </select>
+
 
     <!-- 메인화면 selectList -->
     <select id="skd010DAO.selectList" parameterClass="skd010SearchVO" resultClass="skd010VO">
@@ -30,6 +47,8 @@
     <select id="skd010DAO.selectWhsNameList" parameterClass="int" resultClass="skd020VO">
         select
         s2.skd010id as skd010id,
+        s2.createdate as createdate,
+        s2.itemdlprice as itemdlprice,
         s2.whs010id as whs010id,
         s2.itemea as itemea,
         w.whsname as whsname

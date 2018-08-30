@@ -5,6 +5,28 @@ public class Skd010VO {
     private String itemcode;
     private String itemname;
 
+
+    private String itemAllprice;
+    private String itemAllbuyprice;
+    private Integer itembuyprice;
+
+
+    private String itemea;
+    private String createdate;
+    private String expirationdate;
+    private String itemdlprice;
+    private String whs1itemea = "-";
+
+    private String whs1itemname = "-";
+    private String whs2itemea = "-";
+    private String whs2itemname = "-";
+    private String whs3itemea = "-";
+    private String whs3itemname = "-";
+    private String whs4itemea = "-";
+    private String whs4itemname = "-";
+    private String whsNamuge = "";
+
+
     public String getItemAllprice() {
         return itemAllprice;
     }
@@ -20,17 +42,6 @@ public class Skd010VO {
     public void setItemAllbuyprice(String itemAllbuyprice) {
         this.itemAllbuyprice = itemAllbuyprice;
     }
-
-    private String itemAllprice;
-    private String itemAllbuyprice;
-    private Integer itembuyprice;
-
-
-    private String itemea;
-    private String createdate;
-    private String expirationdate;
-    private String itemdlprice;
-    private String whs1itemea = "-";
 
     public String getWhs1itemname() {
         return whs1itemname;
@@ -63,15 +74,6 @@ public class Skd010VO {
     public void setWhs4itemname(String whs4itemname) {
         this.whs4itemname = whs4itemname;
     }
-
-    private String whs1itemname = "-";
-    private String whs2itemea = "-";
-    private String whs2itemname = "-";
-    private String whs3itemea = "-";
-    private String whs3itemname = "-";
-    private String whs4itemea = "-";
-    private String whs4itemname = "-";
-    private String whsNamuge = "";
 
 
     public int getSkd010id() {
