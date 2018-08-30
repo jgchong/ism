@@ -1,8 +1,10 @@
 package nfm.com.main.service.impl;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -174,5 +176,66 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 		strRet = strRet.substring(0,strRet.length()-1);
 
 		return strRet;
+	}
+
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public Object selectYear() throws Exception {
+
+		Calendar cal = Calendar.getInstance();
+
+		SimpleDateFormat yearFm = new SimpleDateFormat("yyyy");
+
+		List listYear = new ArrayList();
+		
+		int yearVal = Integer.parseInt(yearFm.format(cal.getTime()));
+
+		listYear.add(yearVal);
+		listYear.add(yearVal-1);
+		listYear.add(yearVal-2);
+		
+		return listYear;
+	}
+
+	@Override
+	public Object selectMonth() throws Exception {
+		Calendar cal = Calendar.getInstance();
+
+		SimpleDateFormat monthFm1 = new SimpleDateFormat("yyyy-MM");
+		SimpleDateFormat monthFm2 = new SimpleDateFormat("yyyyMM");
+		
+		//기준일자 기준으로 월의 select값 저장[s]
+		HashMap<String, String> mapMonth = new HashMap<String, String>();
+		
+		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
+		
+		cal.add(Calendar.MONTH, -1);
+		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
+
+		cal.add(Calendar.MONTH, -1);
+		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
+
+		return mapMonth;
+	}
+
+	@Override
+	public Object selectCountAndTime() throws Exception {
+		HashMap<String, String> countAndTime = new HashMap<String, String>();
+		
+		countAndTime.put("ipDayCnt",   mainDAO.selectipDayCnt());   //재고상품입고현황 일단위 count
+		countAndTime.put("ipWeekCnt",  mainDAO.selectipWeekCnt());  //재고상품입고현황 주단위 count
+		countAndTime.put("ipMonthCnt", mainDAO.selectipMonthCnt()); //재고상품입고현황 월단위 count
+		countAndTime.put("ipTime",     mainDAO.selectipTime());     //재고상품입고현황 데이터반영시점
+
+		countAndTime.put("otDayCnt",   mainDAO.selectotDayCnt());   //출고대기현황 일단위 count
+		countAndTime.put("otWeekCnt",  mainDAO.selectotWeekCnt());  //출고대기현황 주단위 count
+		countAndTime.put("otMonthCnt", mainDAO.selectotMonthCnt()); //출고대기현황 월단위 count
+		countAndTime.put("otTime",     mainDAO.selectotTime());     //출고대기현황 데이터반영시점
+
+		countAndTime.put("prodMakerCnt", ""); //현재운영상품수 제조사 출고상품 count
+		countAndTime.put("prodStockCnt", ""); //현재운영상품수 재고상품 count
+		countAndTime.put("prodTime", "");     //현재운영상품수 데이터반영시점
+
+		return countAndTime;
 	}
 }

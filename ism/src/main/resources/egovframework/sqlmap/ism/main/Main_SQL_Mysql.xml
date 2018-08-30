@@ -476,4 +476,42 @@
 	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
 	 group by prd.byc010id, byc.bycname;
     </select>
+    
+    <select id="mainDAO.selectipDayCnt" resultClass="String">
+    select count(*) from ismskd010 where createdate = DATE_FORMAT(now(),'%Y-%m-%d');
+    </select>
+    
+    <select id="mainDAO.selectipWeekCnt" resultClass="String">
+    select count(*) from ismskd010 where createdate between DATE_FORMAT(DATE_ADD(now(), interval -7 DAY),'%Y-%m-%d') and DATE_FORMAT(now(),'%Y-%m-%d');
+    </select>
+    
+    <select id="mainDAO.selectipMonthCnt" resultClass="String">
+    select count(*) from ismskd010 where createdate between DATE_FORMAT(DATE_ADD(now(), interval -30 DAY),'%Y-%m-%d') and DATE_FORMAT(now(),'%Y-%m-%d');
+    </select>
+    
+    <select id="mainDAO.selectipTime" resultClass="String">
+    select max(createdate) from ismskd010;
+    </select>
+    
+    <select id="mainDAO.selectotDayCnt" resultClass="String">
+    select count(*) from ismodm010
+     where processdate between concat(DATE_FORMAT(now(),'%Y-%m-%d'),' 0') and concat(DATE_FORMAT(now(),'%Y-%m-%d'),' 9')
+       and status = 1;
+    </select>
+    
+    <select id="mainDAO.selectotWeekCnt" resultClass="String">
+    select count(*) from ismodm010
+     where processdate between concat(DATE_FORMAT(DATE_ADD(now(), interval -7 DAY),'%Y-%m-%d'),' 0') and concat(DATE_FORMAT(now(),'%Y-%m-%d'),' 9')
+       and status = 1;
+    </select>
+    
+    <select id="mainDAO.selectotMonthCnt" resultClass="String">
+    select count(*) from ismodm010
+     where processdate between concat(DATE_FORMAT(DATE_ADD(now(), interval -30 DAY),'%Y-%m-%d'),' 0') and concat(DATE_FORMAT(now(),'%Y-%m-%d'),' 9')
+       and status = 1;
+    </select>
+    
+    <select id="mainDAO.selectotTime" resultClass="String">
+    select max(processdate) from ismodm010 where status = 1;
+    </select>
 </sqlMap>

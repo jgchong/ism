@@ -44,6 +44,9 @@
 		<isNotEqual prepend="AND" property="byc010id" compareValue="0">
            a.byc010id = #byc010id#
         </isNotEqual>
+		<isNotEmpty prepend="AND" property="byccode">
+           a.byccode = #byccode#
+        </isNotEmpty>
      order by $orderbyclause$
     </select>
     

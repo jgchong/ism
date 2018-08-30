@@ -20,6 +20,7 @@ public class WhsAllVO implements Serializable {
     private String whsadress = "";
     private String whsbustype = "";
     private String accontdate = "";
+    private String useyn = "";
     private String[] whsusername;
     private String[] whsusertel;
     private String[] whsuseremail;
@@ -98,6 +99,14 @@ public class WhsAllVO implements Serializable {
 
 	public void setAccontdate(String accontdate) {
 		this.accontdate = accontdate;
+	}
+
+	public String getUseyn() {
+		return useyn;
+	}
+
+	public void setUseyn(String useyn) {
+		this.useyn = useyn;
 	}
 
 	public String[] getWhsusername() {

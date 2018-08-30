@@ -400,7 +400,7 @@
            retprice = #retprice#
         </isNotEmpty>
 		<isNotEmpty prepend="," property="status">
-           status = #status#
+           status = #status#, processdate = now()
         </isNotEmpty>
 		<isNotEmpty prepend="," property="rcvusercontacthp">
            rcvusercontacthp = #rcvusercontacthp#

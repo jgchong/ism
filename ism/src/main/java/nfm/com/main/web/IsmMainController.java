@@ -1,8 +1,6 @@
 package nfm.com.main.web;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -59,36 +57,13 @@ public class IsmMainController {
 			mainSearchVO.setSearch_day(search_day.replaceAll("-", ""));
 		}
 		
-		Calendar cal = Calendar.getInstance();
-
-		SimpleDateFormat yearFm = new SimpleDateFormat("yyyy");
-		SimpleDateFormat monthFm1 = new SimpleDateFormat("yyyy-MM");
-		SimpleDateFormat monthFm2 = new SimpleDateFormat("yyyyMM");
-
-		List listYear = new ArrayList();
-		
-		int yearVal = Integer.parseInt(yearFm.format(cal.getTime()));
-
-		listYear.add(yearVal);
-		listYear.add(yearVal-1);
-		listYear.add(yearVal-2);
-		
-		HashMap<String, String> mapMonth = new HashMap<String, String>();
-		
-		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
-		
-		cal.add(Calendar.MONTH, -1);
-		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
-
-		cal.add(Calendar.MONTH, -1);
-		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
-		
 		if ( (search_period == null) || ("".equals(search_period)) ) {
 			mainSearchVO.setSearch_period("D");
 			session.setAttribute("search_period", "D");
 		}else{
 			mainSearchVO.setSearch_period(search_period);
 		}
+		
 		if ( (search_type == null) || ("".equals(search_type)) ) {
 			mainSearchVO.setSearch_type("A");
 			session.setAttribute("search_type", "A");
@@ -110,36 +85,13 @@ public class IsmMainController {
 			mainSearchVO.setSearch_day(search_dayBar.replaceAll("-", ""));
 		}
 		
-		Calendar calBar = Calendar.getInstance();
-
-		SimpleDateFormat yearFmBar = new SimpleDateFormat("yyyy");
-		SimpleDateFormat monthFm1Bar = new SimpleDateFormat("yyyy-MM");
-		SimpleDateFormat monthFm2Bar = new SimpleDateFormat("yyyyMM");
-
-		List listYearBar = new ArrayList();
-		
-		int yearValBar = Integer.parseInt(yearFmBar.format(calBar.getTime()));
-
-		listYearBar.add(yearValBar);
-		listYearBar.add(yearValBar-1);
-		listYearBar.add(yearValBar-2);
-		
-		HashMap<String, String> mapMonthBar = new HashMap<String, String>();
-		
-		mapMonthBar.put(monthFm2Bar.format(calBar.getTime()), monthFm1Bar.format(calBar.getTime()));
-		
-		calBar.add(Calendar.MONTH, -1);
-		mapMonthBar.put(monthFm2Bar.format(calBar.getTime()), monthFm1Bar.format(calBar.getTime()));
-
-		calBar.add(Calendar.MONTH, -1);
-		mapMonthBar.put(monthFm2Bar.format(calBar.getTime()), monthFm1Bar.format(calBar.getTime()));
-		
 		if ( (search_periodBar == null) || ("".equals(search_periodBar)) ) {
 			mainSearchVO.setSearch_period("D");
 			session.setAttribute("search_periodBar", "D");
 		}else{
 			mainSearchVO.setSearch_period(search_periodBar);
 		}
+		
 		if ( (search_typeBar == null) || ("".equals(search_typeBar)) ) {
 			mainSearchVO.setSearch_type("A");
 			session.setAttribute("search_typeBar", "A");
@@ -150,13 +102,14 @@ public class IsmMainController {
 		JSONObject jsonObjectBar = mainService.selectChart(mainSearchVO);
 		//각 조건에 값이 없을 경우 default 값 처리 bar [e]
 
-		model.addAttribute("graphVal", jsonObject);
-		model.addAttribute("listYear", listYear);
-		model.addAttribute("mapMonth", mapMonth);
-		model.addAttribute("graphValBar", jsonObjectBar);
-		model.addAttribute("listYearBar", listYearBar);
-		model.addAttribute("mapMonthBar", mapMonthBar);
-		
+		model.addAttribute("graphVal", jsonObject); //라인그래프의 표시값(매출액)
+		model.addAttribute("listYear", (List) mainService.selectYear());   //라인그래프의 년별 기준일자 select 값
+		model.addAttribute("mapMonth", (HashMap<String, String>) mainService.selectMonth());   //라인그래프의 월별 기준일자 select 값
+		model.addAttribute("graphValBar", jsonObjectBar); //막대그래프의 표시값(매출액)
+		model.addAttribute("listYearBar", (List) mainService.selectYear());   //막대그래프의 년별 기준일자 select 값
+		model.addAttribute("mapMonthBar", (HashMap<String, String>) mainService.selectMonth());   //막대그래프의 월별 기준일자 select 값
+		model.addAttribute("countAndTime", (HashMap<String, String>) mainService.selectCountAndTime());   //메인화면의 건수 및 데이터 반영시점 값 select
+
 		return "ism/main/ismMain";
 	}
 

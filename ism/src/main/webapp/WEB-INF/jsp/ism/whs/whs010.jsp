@@ -89,7 +89,7 @@ li img {
 							<colgroup>
 								<col width="6%"/><col width="22%"/>
 								<col width="6%"/><col width="11%"/>
-								<col width="*"/>
+								<col width="*"/><col width="6%"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -98,6 +98,7 @@ li img {
 									<th scope="col">사업자구분</th>
 									<th scope="col">사업자번호</th>
 									<th scope="col">창고주소</th>
+									<th scope="col">사용여부</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -108,6 +109,7 @@ li img {
 									<td>${result.whscotypenm}</td>
 									<td>${result.whscono}</td>
 									<td>${result.whsadress}</td>
+									<td>${result.useyn}</td>
 								</tr>
 </c:forEach>
 							</tbody>
@@ -174,7 +176,7 @@ function viewWhsData(whs010id) {
 			"                   <input type='radio' name='whsgubun' id='whsgubun_1' value='2'/><label for='sel1_1'>외부창고</label>"+
 			"				</td>"+
 			"				<th scope='row'>창고명</th>"+
-			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.whsname.replace(Ca, " "))+"' id='whsname' name='whsname'/></td>"+
+			"				<td><input type='text' class='it ' title='' value='"+data.whsname+"' id='whsname' name='whsname'/></td>"+
 			"			</tr>"+
 			"			<tr>"+
 			"				<th scope='row'>사업자구분</th>"+
@@ -190,20 +192,25 @@ function viewWhsData(whs010id) {
 			"				<th scope='row'>법인등록번호</th>"+
 			"				<td><input type='text' class='it ' title='' value='"+data.whslawcono+"' name='whslawcono'/></td>"+
 			"				<th scope='row'>업태/종목</th>"+
-			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.whsbustype.replace(Ca, " "))+"' name='whsbustype'/></td>"+
+			"				<td><input type='text' class='it ' title='' value='"+data.whsbustype+"' name='whsbustype'/></td>"+
 			"			</tr>"+
 			"			<tr>"+
 			"				<th scope='row'>창고주소</th>"+
-			"				<td colspan='3' class='l'><input type='text' class='it ' title='' value='"+decodeURIComponent(data.whsadress.replace(Ca, " "))+"' name='whsadress'/></td>"+
+			"				<td colspan='3' class='l'><input type='text' class='it ' title='' value='"+data.whsadress+"' name='whsadress'/></td>"+
 			"			</tr>"+
 			"			<tr>"+
-			"				<th scope='row'>정산밀</th>"+
-			"				<td colspan='3'><input type='text' class='it ' title='' value='"+data.accontdate+"' name='accontdate'/></td>"+
+			"				<th scope='row'>정산일</th>"+
+			"				<td><input type='text' class='it ' title='' value='"+data.accontdate+"' name='accontdate'/></td>"+
+			"				<th scope='row'>사용여부</th>"+
+			"				<td>"+
+			"					<input type='radio' name='useyn' id='sel4_1' value='Y' checked/><label for='sel4_1'>사용</label>"+
+			"					<input type='radio' name='useyn' id='sel4_2' value='N'/><label for='sel4_2'>비사용</label>"+
+			"				</td>"+
 			"			</tr>"+
 			"			<tr>"+
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
 			"				<td colspan='3' style='text-align:left;'>"+
-			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
+			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+data.orgfilename+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
 			"			</tr>"+
@@ -236,10 +243,10 @@ function viewWhsData(whs010id) {
 				$.each(data.userlist,function(index, item) {
 					addhtml = addhtml +
 					"			<tr>"+
-					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.username.replace(Ca, " "))+"' name='whsusername'/></td>"+
-					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.usertel.replace(Ca, " "))+"' name='whsusertel'/></td>"+
-					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"' name='whsuseremail'/></td>"+
-					"				<td colspan='1'><input type='text' class='it ' title='' value='"+decodeURIComponent(item.memo.replace(Ca, " "))+"' name='whsmemo'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.username+"' name='whsusername'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.usertel+"' name='whsusertel'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.useremail+"' name='whsuseremail'/></td>"+
+					"				<td colspan='1'><input type='text' class='it ' title='' value='"+item.memo+"' name='whsmemo'/></td>"+
 					"				<td><a href='javascript://' onclick='delrow(this)'>del</a></td>"+
 					"			</tr>";
 				});
@@ -282,8 +289,8 @@ function viewWhsData(whs010id) {
 				$.each(data.whs030,function(index, item) {
 					addhtml = addhtml +
 					"			<tr>"+
-					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.whsurl.replace(Ca, " "))+"' name='whsurl'/></td>"+
-					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.whsuid.replace(Ca, " "))+"' name='whsuid'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.whsurl+"' name='whsurl'/></td>"+
+					"				<td><input type='text' class='it ' title='' value='"+item.whsuid+"' name='whsuid'/></td>"+
 					"				<td><input type='text' class='it ' title='' value='"+item.whspwd+"' name='whspwd'/></td>"+
 					"				<td><a href='javascript://' onclick='delrow(this)'>del</a></td>"+
 					"			</tr>";
@@ -314,7 +321,7 @@ function viewWhsData(whs010id) {
 			"			</tr>"+
 			"			<tr>"+
 			"				<td>"+
-			"                   <div class='memoTxt'><ul id='memoul'>"+decodeURIComponent(data.whsMemo.replace(Ca, " "))+"</ul></div>"+
+			"                   <div class='memoTxt'><ul id='memoul'>"+data.whsMemo+"</ul></div>"+
 			"				</td>"+
 			"			</tr>"+
 			"			<tr>"+
@@ -336,6 +343,10 @@ function viewWhsData(whs010id) {
 
         	if (data.whscotype != "") {
             	$('input:radio[name=whscotype]:input[value=' + data.whscotype + ']').attr("checked", true);
+        	}
+
+        	if (data.useyn != "") {
+            	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
         	}
         },
         error: function (jqXHR, exception) {

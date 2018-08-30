@@ -54,7 +54,7 @@ public class Whs010Controller {
 	 * 창고 상세 조회
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/whs/whs010SelectDetail.do")
+	@RequestMapping(value = "/ism/whs/whs010SelectDetail.do", produces="text/plain;charset=UTF-8")
 	public String whs010SelectDetail(@ModelAttribute("whs010SearchVO") Whs010SearchVO whs010SearchVO, ModelMap model) throws Exception {
 		// 미인증 사용자에 대한 보안처리
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();

@@ -216,8 +216,21 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    return jsonObject.toString();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public int saveBycAll(MultipartFile mf, String path, BycAllVO bycAllVO) throws Exception {
+		
+		//매입사 코드 중복 확인 - 등록일 경우만 확인 [s]
+		if (bycAllVO.getByc010id() == -1) { 
+			Byc010SearchVO byc010SearchVO = new Byc010SearchVO();
+			byc010SearchVO.setByccode(bycAllVO.getByccode());
+			List<Ismbyc010VO> listIsmbyc010VO = (List<Ismbyc010VO>) byc010DAO.selectByc010List(byc010SearchVO);
+			
+			if (listIsmbyc010VO.size() != 0) { //중복인 경우 -9 return
+				return -9;
+			}
+		}
+		//매입사 코드 중복 확인[e]
 		
 		int cmm020id = 0;
 		if (mf != null) {

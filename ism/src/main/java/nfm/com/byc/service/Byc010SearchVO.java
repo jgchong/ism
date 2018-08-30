@@ -13,6 +13,7 @@ public class Byc010SearchVO implements Serializable {
 
 	/** 검색조건*/
 	private int byc010id = 0;
+	private String byccode = "";
     private String orderbyclause = "a.bycname";
 
     /** 현재페이지 */
@@ -34,6 +35,14 @@ public class Byc010SearchVO implements Serializable {
 
 	public void setByc010id(int byc010id) {
 		this.byc010id = byc010id;
+	}
+
+	public String getByccode() {
+		return byccode;
+	}
+
+	public void setByccode(String byccode) {
+		this.byccode = byccode;
 	}
 
 	public String getOrderbyclause() {

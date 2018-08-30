@@ -89,6 +89,9 @@ public class Byc010Controller {
 		String path = propertiesService.getString("Globals.fileStorePath");
 		int byc010id = byc010Service.saveBycAll(mf, path, bycAllVO);
 
-    	return "SUCCESS,"+byc010id;
+		String retVal = "SUCCESS,"+byc010id;
+		if (byc010id == -9) retVal = "FAIL-1,"+byc010id; //매입사코드 중복 오류 return
+		
+    	return retVal;
 	}
 }

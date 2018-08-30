@@ -56,4 +56,36 @@ public class MainDAO extends EgovAbstractDAO {
 	public List<?> selectChartBuyYear(String search_day) {
 		return list("mainDAO.selectChartBuyYear",search_day);
 	}
+	
+	public String selectipDayCnt() {
+		return (String) select("mainDAO.selectipDayCnt");
+	}
+	
+	public String selectipWeekCnt() {
+		return (String) select("mainDAO.selectipWeekCnt");
+	}
+	
+	public String selectipMonthCnt() {
+		return (String) select("mainDAO.selectipMonthCnt");
+	}
+	
+	public String selectipTime() {
+		return (String) select("mainDAO.selectipTime");
+	}
+	
+	public String selectotDayCnt() {
+		return (String) select("mainDAO.selectotDayCnt");
+	}
+	
+	public String selectotWeekCnt() {
+		return (String) select("mainDAO.selectotWeekCnt");
+	}
+	
+	public String selectotMonthCnt() {
+		return (String) select("mainDAO.selectotMonthCnt");
+	}
+	
+	public String selectotTime() {
+		return (String) select("mainDAO.selectotTime");
+	}
 }

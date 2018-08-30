@@ -235,8 +235,15 @@ function viewBycData(byc010id) {
 			"                   <input type='text' class='it' style='width: 70%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
-			"				<th scope='row'>매입처코드</th>"+
-			"				<td><input type='text' class='it ' title='' value='"+data.byccode+"' name='byccode'/></td>"+
+			"				<th scope='row'>매입처코드</th>";
+			//매입처 코드 수정 못하도록 막음.
+			if (byc010id == -1) {
+				addhtml = addhtml +"<td><input type='text' class='it ' title='' value='' id='byccode' name='byccode'/></td>";
+			}else{
+				addhtml = addhtml +"<td>"+data.byccode+"</td>";
+			}
+			
+			addhtml = addhtml +
 			"			</tr>"+
 			"		</tbody>"+
 			"	</table>"+
@@ -435,8 +442,14 @@ function addShop() {
 }
 
 function saveBycAll() {
+
 	if ($('#bycname').val().trim() == "") {
 		alert("상호는 필수 입력 사항입니다.");
+		return;
+	}
+
+	if ( ($('#byccode').val() == "") || ($('#byccode').val() === undefined) ) {
+		alert("매입처코드는 필수 입력 사항입니다.");
 		return;
 	}
 
@@ -499,6 +512,8 @@ function saveBycAll() {
         		isSave = "T";
         		viewBycData(retVal[1]);
         		//location.href="/ism/cum/cum010.do";
+        	}else if (retVal[0] == "FAIL-1") {
+        		alert("매입사코드가 중복입니다. 확인 후 재입력 바랍니다.");  
         	}else{
         		alert("저장 중 오류가 발생했습니다.");        		
         	}
