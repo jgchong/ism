@@ -112,37 +112,44 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
 
         List<Skd010VO> skd010VOList = (List<Skd010VO>) skd010DAO.selectList(skd010SearchVO);
         List<Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) ismwhs010DAO.selectAll();
+        for (int i = 0; i < 4; i ++) {
+            if (ismwhs010VOList.size() < 4) {
+                Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
+                ismwhs010VO.setWhsname("창고없음");
+                ismwhs010VO.setWhs010id(-1);
+                ismwhs010VOList.add(ismwhs010VO);
+            }
+        }
+
         for (Skd010VO skd010VO : skd010VOList) {
             List<Skd020VO> skd020VOList = (List<Skd020VO>) skd010DAO.selectWhsNameList(skd010VO.getSkd010id());
             int i = 0;
             for (Skd020VO skd020VO : skd020VOList) {
-                if (i < ismwhs010VOList.size()) {
-                    if (ismwhs010VOList.get(i).getWhs010id() == skd020VO.getWhs010id()) {
-                        if (i == 0) {
-                            itemeaSum01 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
-                            skd010VO.setWhs1itemea(skd020VO.getItemea());
-                            skd010VO.setWhs1itemname(skd020VO.getWhsname());
-                        } else if (i == 1) {
-                            itemeaSum02 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
-                            skd010VO.setWhs2itemea(skd020VO.getItemea());
-                            skd010VO.setWhs2itemname(skd020VO.getWhsname());
-                        } else if (i == 2) {
-                            itemeaSum03 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
-                            skd010VO.setWhs3itemea(skd020VO.getItemea());
-                            skd010VO.setWhs3itemname(skd020VO.getWhsname());
-                        } else if (i == 3) {
-                            itemeaSum04 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
-                            skd010VO.setWhs4itemea(skd020VO.getItemea());
-                            skd010VO.setWhs4itemname(skd020VO.getWhsname());
-                        }
+                if (i < 4) {
+                    if (ismwhs010VOList.get(0).getWhs010id() == skd020VO.getWhs010id()) {
+                        itemeaSum01 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
+                        skd010VO.setWhs1itemea(skd020VO.getItemea());
+                        skd010VO.setWhs1itemname(skd020VO.getWhsname());
+                    } else if (ismwhs010VOList.get(1).getWhs010id() == skd020VO.getWhs010id()) {
+                        itemeaSum02 = itemeaSum02 + Integer.parseInt(skd020VO.getItemea());
+                        skd010VO.setWhs2itemea(skd020VO.getItemea());
+                        skd010VO.setWhs2itemname(skd020VO.getWhsname());
+                    } else if (ismwhs010VOList.get(2).getWhs010id() == skd020VO.getWhs010id()) {
+                        itemeaSum03 = itemeaSum03 + Integer.parseInt(skd020VO.getItemea());
+                        skd010VO.setWhs3itemea(skd020VO.getItemea());
+                        skd010VO.setWhs3itemname(skd020VO.getWhsname());
+                    } else if (ismwhs010VOList.get(3).getWhs010id() == skd020VO.getWhs010id()) {
+                        itemeaSum04 = itemeaSum04 + Integer.parseInt(skd020VO.getItemea());
+                        skd010VO.setWhs4itemea(skd020VO.getItemea());
+                        skd010VO.setWhs4itemname(skd020VO.getWhsname());
                     } else {
                         String tempNamuge = skd010VO.getWhsNamuge();
-                        tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + "재고 : " + skd020VO.getItemea() + "\n";
+                        tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + " | 재고 : " + skd020VO.getItemea() + " | ";
                         skd010VO.setWhsNamuge(tempNamuge);
                     }
                 } else {
                     String tempNamuge = skd010VO.getWhsNamuge();
-                    tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + "재고 : " + skd020VO.getItemea() + "\n";
+                    tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + " | 재고 : " + skd020VO.getItemea() + " | ";
                     skd010VO.setWhsNamuge(tempNamuge);
                 }
                 i++;

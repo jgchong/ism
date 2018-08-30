@@ -148,8 +148,8 @@
                         <tr>
                             <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
-                                <th scope="col"></th>
                             </c:forEach>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
@@ -495,7 +495,7 @@
         if (namuge != '') {
             document.getElementById("layer_hidden1").innerHTML = namuge;
         } else {
-            document.getElementById("layer_hidden1").innerHTML = '더이상 보관하고 있지 않습니다.';
+            document.getElementById("layer_hidden1").innerHTML = '-';
         }
         layer_hidden1.style.visibility = "visible";
 
