@@ -8,6 +8,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainSearchVO;
 import nfm.com.main.service.MainService;
 
@@ -17,6 +18,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import egovframework.com.cmm.LoginVO;
 
 @Controller
 public class IsmMainController {
@@ -29,6 +32,8 @@ public class IsmMainController {
 	@RequestMapping(value = "/ism/main/mainPage.do", produces="text/plain;charset=UTF-8")
 	public String ismMainPage(ModelMap model, HttpSession session) throws Exception {
 		
+		LoginVO loginVO = (LoginVO) session.getAttribute("LoginVO");
+
 		//기존 조회 내용 유지위해 session 사용
 		//String search_day = (String) session.getAttribute("search_day");
 		//String search_period = (String) session.getAttribute("search_period");
@@ -109,6 +114,7 @@ public class IsmMainController {
 		model.addAttribute("listYearBar", (List) mainService.selectYear());   //막대그래프의 년별 기준일자 select 값
 		model.addAttribute("mapMonthBar", (HashMap<String, String>) mainService.selectMonth());   //막대그래프의 월별 기준일자 select 값
 		model.addAttribute("countAndTime", (HashMap<String, String>) mainService.selectCountAndTime());   //메인화면의 건수 및 데이터 반영시점 값 select
+		model.addAttribute("dashBoardSetting", mainService.selectDashBoardSetting(loginVO.getId()));
 
 		return "ism/main/ismMain";
 	}
@@ -130,6 +136,27 @@ public class IsmMainController {
 		mainSearchVO.setSearch_day(mainSearchVO.getSearch_day().replaceAll("-", ""));
 		
 		return mainService.selectChart(mainSearchVO).toString();
+	}
+
+	/**
+	 * 대쉬보드 환경 설정 저장
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ism/main/mainSaveDashBoardSetting.do")
+	public String mainSaveDashBoardSetting(@ModelAttribute("ismdbo010VO") Ismdbo010VO ismdbo010VO, HttpSession session) throws Exception {
+		
+		LoginVO loginVO = (LoginVO) session.getAttribute("LoginVO");
+
+		System.out.println("jgc debug a = " + ismdbo010VO.getLinegraph());
+		System.out.println("jgc debug b = " + ismdbo010VO.getBargraph());
+		System.out.println("jgc debug c = " + ismdbo010VO.getIpStatus());
+		System.out.println("jgc debug d = " + ismdbo010VO.getOtStatus());
+		System.out.println("jgc debug e = " + ismdbo010VO.getProdStatus());
+		System.out.println("jgc debug f = " + loginVO.getId());
+
+		ismdbo010VO.setEmplyr_id(loginVO.getId());
+
+		return mainService.saveDashBoardSetting(ismdbo010VO);
 	}
 
 }

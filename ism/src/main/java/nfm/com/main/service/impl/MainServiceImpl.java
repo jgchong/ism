@@ -10,6 +10,7 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainGraphRetVO;
 import nfm.com.main.service.MainSearchVO;
 import nfm.com.main.service.MainService;
@@ -232,10 +233,35 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 		countAndTime.put("otMonthCnt", mainDAO.selectotMonthCnt()); //출고대기현황 월단위 count
 		countAndTime.put("otTime",     mainDAO.selectotTime());     //출고대기현황 데이터반영시점
 
-		countAndTime.put("prodMakerCnt", ""); //현재운영상품수 제조사 출고상품 count
-		countAndTime.put("prodStockCnt", ""); //현재운영상품수 재고상품 count
-		countAndTime.put("prodTime", "");     //현재운영상품수 데이터반영시점
+		countAndTime.put("prodMakerCnt", mainDAO.selectprodMakerCnt()); //현재운영상품수 제조사 출고상품 count
+		countAndTime.put("prodStockCnt", mainDAO.selectprodStockCnt()); //현재운영상품수 재고상품 count
+		countAndTime.put("prodTime",     mainDAO.selectprodTime());     //현재운영상품수 데이터반영시점
 
 		return countAndTime;
+	}
+
+	@Override
+	public Object selectDashBoardSetting(String emplyr_id) throws Exception {
+		
+		Ismdbo010VO ismdbo010VO = (Ismdbo010VO) mainDAO.selectDbo010(emplyr_id);
+		
+		if (ismdbo010VO == null) {
+			Ismdbo010VO ismdbo010VONew = new Ismdbo010VO();
+			ismdbo010VONew.setBargraph("Y");
+			ismdbo010VONew.setIpStatus("Y");
+			ismdbo010VONew.setLinegraph("Y");
+			ismdbo010VONew.setOtStatus("Y");
+			ismdbo010VONew.setProdStatus("Y");
+			
+			ismdbo010VO = ismdbo010VONew;
+		}
+
+		return ismdbo010VO;
+	}
+
+	@Override
+	public String saveDashBoardSetting(Ismdbo010VO ismdbo010VO) throws Exception {
+		mainDAO.insertOrUpdateDbo010(ismdbo010VO);
+		return "SUCCESS";
 	}
 }

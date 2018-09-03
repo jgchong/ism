@@ -13,5 +13,9 @@ public interface MainService  {
 	public Object selectMonth() throws Exception;
 
 	public Object selectCountAndTime() throws Exception;
+
+	public Object selectDashBoardSetting(String emplyr_id) throws Exception;
+
+	public String saveDashBoardSetting(Ismdbo010VO ismdbo010VO) throws Exception;
 	
 }

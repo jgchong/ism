@@ -2,6 +2,8 @@ package nfm.com.main.service.impl;
 
 import java.util.List;
 
+import nfm.com.main.service.Ismdbo010VO;
+
 import org.springframework.stereotype.Repository;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
@@ -87,5 +89,25 @@ public class MainDAO extends EgovAbstractDAO {
 	
 	public String selectotTime() {
 		return (String) select("mainDAO.selectotTime");
+	}
+
+	public String selectprodMakerCnt() {
+		return (String) select("mainDAO.selectprodMakerCnt");
+	}
+	
+	public String selectprodStockCnt() {
+		return (String) select("mainDAO.selectprodStockCnt");
+	}
+	
+	public String selectprodTime() {
+		return (String) select("mainDAO.selectprodTime");
+	}
+	
+	public Object selectDbo010(String emplyr_id) {
+		return select("mainDAO.selectDbo010", emplyr_id);
+	}
+	
+	public void insertOrUpdateDbo010(Ismdbo010VO ismdbo010VO) {
+		insert("mainDAO.insertOrUpdateDbo010", ismdbo010VO);
 	}
 }
