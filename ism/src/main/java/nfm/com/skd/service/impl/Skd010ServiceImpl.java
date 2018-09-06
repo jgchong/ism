@@ -34,20 +34,41 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
     public int itemeaSum02 = 0;
     public int itemeaSum03 = 0;
     public int itemeaSum04 = 0;
+    public int itemeaSum05 = 0;
+    public int itemeaSum06 = 0;
+    public int itemeaSum07 = 0;
+    public int itemeaSum08 = 0;
+    public String resultSumA = "";
+    public String resultSumB = "";
+
+    @Override
+    public String getResultSumB(int i) {
+        if (i == 6) {
+            return resultSumA;
+        } else if (i == 7) {
+            return resultSumB;
+        }
+        return "";
+    }
 
     @Override
     public int getSumItemea(int i) {
         if (i == 0) {
             return itemeaSum01;
-
         } else if (i == 1) {
             return itemeaSum02;
-
         } else if (i == 2) {
             return itemeaSum03;
-
         } else if (i == 3) {
             return itemeaSum04;
+        } else if (i == 4) {
+            return itemeaSum05;
+        } else if (i == 5) {
+            return itemeaSum06;
+        } else if (i == 6) {
+            return itemeaSum07;
+        } else if (i == 7) {
+            return itemeaSum08;
         }
         return 0;
     }
@@ -109,10 +130,16 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
         itemeaSum02 = 0;
         itemeaSum03 = 0;
         itemeaSum04 = 0;
+        itemeaSum05 = 0;
+        itemeaSum06 = 0;
+        itemeaSum07 = 0;
+        itemeaSum08 = 0;
+        resultSumA = "";
+        resultSumB = "";
 
         List<Skd010VO> skd010VOList = (List<Skd010VO>) skd010DAO.selectList(skd010SearchVO);
         List<Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) ismwhs010DAO.selectAll();
-        for (int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             if (ismwhs010VOList.size() < 4) {
                 Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
                 ismwhs010VO.setWhsname("창고없음");
@@ -158,20 +185,29 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
             if (buyPrice == null) {
                 buyPrice = 0;
             }
+            long buyPriceToLong = buyPrice;
 
             try {
-                long allBuyPrice = buyPrice * Integer.parseInt(skd010VO.getItemea());
+                long allBuyPrice = buyPriceToLong * Long.parseLong(skd010VO.getItemea());
                 long allPrice = (allBuyPrice * 10) / 11;
                 skd010VO.setItemAllbuyprice(String.format("%,3d", allBuyPrice));
                 skd010VO.setItemAllprice(String.format("%,3d", allPrice));
+
+                itemeaSum08 = itemeaSum08 + (buyPrice * Integer.parseInt(skd010VO.getItemea()));
+                long b = itemeaSum08;
+                long a = b * 10 / 11;
+                itemeaSum07 = (int) a;
+                resultSumA = String.format("%,3d", itemeaSum07);
+                resultSumB = String.format("%,3d", itemeaSum08);
+
             } catch (Exception e) {
                 skd010VO.setItemAllbuyprice("액수가 너무 큽니다.");
                 skd010VO.setItemAllprice("액수가 너무 큽니다.");
             }
 
+            itemeaSum06 = itemeaSum06 + Integer.parseInt(skd010VO.getItemea());
         }
-
-
+        itemeaSum05 = itemeaSum06 - (itemeaSum01 + itemeaSum02 + itemeaSum03 + itemeaSum04);
         return skd010VOList;
     }
 

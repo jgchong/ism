@@ -1,6 +1,7 @@
 package nfm.com.prd.service.impl;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import nfm.com.adj.service.Adj010SearchVO;
 import nfm.com.ord.service.*;
 import nfm.com.prd.service.Prd010SearchVO;
 import org.springframework.stereotype.Repository;
@@ -86,4 +87,9 @@ public class Prd010DAO extends EgovAbstractDAO {
 	public void prd010SelectDel(HashMap hm) {
 		delete("prd010DAO.prd010SelectDel", hm);
 	}
+
+	public List<?> adj030selectList(Adj010SearchVO adj010SearchVO) {
+		return list("adj030DAO.selectAll", adj010SearchVO);
+	}
+
 }

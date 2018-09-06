@@ -390,7 +390,7 @@
                         <td colspan="3"><input id="detail_itembuydlvprice" type="number" class="it " title="" value="" name=""/></td>
                     </tr>
                     <!-- 자사상품 출고시 생성 -->
-                    <tr>
+                    <tr class="detail_itemgubun_2">
                         <th scope="row">우선창고 설정</th>
                         <td>
                             <select id="detail_pristock" class="detail_itemgubun_2">
@@ -403,7 +403,7 @@
                         <th scope="row">상품크기</th>
                         <td><input id="detail_itemsize" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                     </tr>
-                    <tr>
+                    <tr class="detail_itemgubun_2">
                         <th scope="row">카톤수량</th>
                         <td><input id="detail_cartonqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                         <th scope="row">파렛트수량</th>
@@ -920,12 +920,15 @@
     function radiobox02Click(myRadio) {
         if (myRadio == 1) {
             $('.detail_itemgubun_2').prop('disabled', true);
+            $('.detail_itemgubun_2').hide()
             detail_itemgubun = 1;
         } else if (myRadio == 2) {
             $('.detail_itemgubun_2').prop('disabled', false);
+            $('.detail_itemgubun_2').show()
             detail_itemgubun = 2;
         } else if (myRadio == 3) {
             $('.detail_itemgubun_2').prop('disabled', false);
+            $('.detail_itemgubun_2').show()
             detail_itemgubun = 3;
         }
     }

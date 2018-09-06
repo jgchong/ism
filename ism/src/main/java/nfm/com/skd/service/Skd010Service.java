@@ -11,6 +11,8 @@ public interface Skd010Service {
 	public String skd020seletWhsitem(String whs010id) throws Exception;
 	public void skd010SelectDel(String skd010ids) throws Exception;
 
+	String getResultSumB(int i);
+
 	public int getSumItemea(int i);
 
 	String selectWithSkd010id(String currentId);

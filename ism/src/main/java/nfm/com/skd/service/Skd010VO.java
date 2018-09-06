@@ -15,14 +15,14 @@ public class Skd010VO {
     private String createdate;
     private String expirationdate;
     private String itemdlprice;
-    private String whs1itemea = "-";
+    private String whs1itemea = "0";
 
     private String whs1itemname = "-";
-    private String whs2itemea = "-";
+    private String whs2itemea = "0";
     private String whs2itemname = "-";
-    private String whs3itemea = "-";
+    private String whs3itemea = "0";
     private String whs3itemname = "-";
-    private String whs4itemea = "-";
+    private String whs4itemea = "0";
     private String whs4itemname = "-";
     private String whsNamuge = "";
 

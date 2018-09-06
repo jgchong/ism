@@ -135,9 +135,9 @@
                             <th scope="col" rowspan="3">상품코드</th>
                             <th scope="col" rowspan="3">상품명</th>
                             <th scope="col" colspan="5">보관장소</th>
-                            <th scope="col" rowspan="3">합계</th>
-                            <th scope="col" rowspan="3">총재고금액(VAT불포함)</th>
-                            <th scope="col" rowspan="3">총재고금액(VAT포함)</th>
+                            <th scope="col" colspan="1" rowspan="2">합계</th>
+                            <th scope="col" colspan="1" rowspan="2">총재고금액(VAT불포함)</th>
+                            <th scope="col" colspan="1" rowspan="2">총재고금액(VAT포함)</th>
                         </tr>
                         <tr>
                             <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
@@ -149,7 +149,12 @@
                             <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
-                            <th scope="col"></th>
+                            <c:forEach var="item" items="${whsListForTop}" begin="4" end="5"  step="1"   varStatus="status">
+                                <th scope="col">${item.cmm020id}</th>
+                            </c:forEach>
+                            <c:forEach var="item" items="${whsListForTop}" begin="6" end="7"  step="1"   varStatus="status">
+                                <th scope="col">${item.whsname}</th>
+                            </c:forEach>
                         </tr>
                         </thead>
                         <tbody>

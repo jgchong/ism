@@ -33,4 +33,14 @@ public class Ord020DAO extends EgovAbstractDAO {
 	public void updateOrderDetailData(Ismodm010VO ismodm010vo) {
 		update("ord020DAO.updateOrderDetailData", ismodm010vo);
 	}
+
+	public List<?> adj020selectList(String yyyymm) {
+		return list("adj020DAO.selectList", yyyymm);
+	}
+
+	public List<?> adj020selectTop10List(String yyyymm) {
+		return list("adj020DAO.selectTop10List", yyyymm);
+	}
+
+
 }

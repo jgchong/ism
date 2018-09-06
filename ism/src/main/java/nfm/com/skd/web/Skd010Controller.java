@@ -93,21 +93,27 @@ public class Skd010Controller {
 //        vo.setCodeId("ISM090");	//주문상태필드
 //        model.addAttribute("ISM090", egovCmmUseService.selectCmmCodeDetail(vo));
         model.addAttribute("whsList", prd010Service.selectWhsAll());
-        List <Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
+        List <Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
         for (int i = 0; i < 4; i ++) {
-            if (ismwhs010VOList.size() < 4) {
+            if (whsListForTop.size() < 4) {
                 Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
                 ismwhs010VO.setWhsname("창고없음");
-                ismwhs010VOList.add(ismwhs010VO);
+                whsListForTop.add(ismwhs010VO);
             }
         }
         for (int i = 0; i < 4; i ++) {
-            ismwhs010VOList.get(i).setCmm020id(skd010Service.getSumItemea(i));
+            whsListForTop.get(i).setCmm020id(skd010Service.getSumItemea(i));
+        }
+        for (int i = 4; i < 8; i ++) {
+            Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
+            ismwhs010VO.setCmm020id(skd010Service.getSumItemea(i));
+            ismwhs010VO.setWhsname(skd010Service.getResultSumB(i));
+            whsListForTop.add(ismwhs010VO);
         }
 
 
 
-        model.addAttribute("whsListForTop", ismwhs010VOList);
+        model.addAttribute("whsListForTop", whsListForTop);
 
         //입고등록 만들기 (save)만 (입고할 경우, 최초 창고 이관하기)
 
