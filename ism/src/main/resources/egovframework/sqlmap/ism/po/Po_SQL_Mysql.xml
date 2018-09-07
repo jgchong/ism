@@ -28,7 +28,7 @@
            b.uploaddate,
            (select count(*) from ismodm010 suba, ismprd010 subb 
              where suba.orderitemid = subb.itemcode and subb.byc010id = a.byc010id and suba.status = 1 and IFNULL(subb.itemgubun,'1') in ('1','3')) pocnt
-      from ismbyc010 a left outer join ismpol010 b on a.byc010id = b.pol010id and b.pocotype = 'B'
+      from ismbyc010 a left outer join ismpol010 b on a.byc010id = b.poo010id and b.pocotype = 'B'
      where 1 = 1
      order by a.bycname
     </select>
@@ -72,16 +72,20 @@
 	<insert id="po010DAO.insertPom010Arr" parameterClass="java.util.HashMap">
 	insert into ismpom010 (
 		pom010id,
-		odm010id, orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact,
+		odm010id, orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact,
+		rcvuser,
+		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, ordermemo
 	) (select
 		#poNum#,
-		odm010id, orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact,
+		odm010id, orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact,
+		IF(#addorderuser# = 'Y', concat(rcvuser, '(보내는 사람 : ',orderuser,')'),rcvuser),
+		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, #ordermemo#
 	     from ismodm010
 	    where odm010id in
 		<iterate  property="odm010idArr" open="(" close=")" conjunction=",">
@@ -94,7 +98,8 @@
 	select a.pom010id, a.odm010id, a.orderno, a.orderdate, a.cum010id, a.cum030id, a.byc010id, a.orderuser, a.orderusercontact,
            a.rcvuser, a.rcvusercontact, a.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitemprice, a.postno, a.address,
            a.dlvmemo, a.dlvprice, a.dlvno, a.dlvco, a.dlvstatus, a.processdate, a.accountcum, a.accountbuy, a.status, a.cstype, 
-           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, a.orderitemname, a.rcvusercontacthp, a.rcvuseremail,
+           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, a.orderitemname, a.rcvusercontacthp,
+		   a.rcvuseremail, a.ordermemo,
            b.coname,
            c.shopmallname
       from ismpom010 a, ismcum010 b, ismcum030 c

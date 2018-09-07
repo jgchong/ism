@@ -17,5 +17,9 @@ public interface MainService  {
 	public Object selectDashBoardSetting(String emplyr_id) throws Exception;
 
 	public String saveDashBoardSetting(Ismdbo010VO ismdbo010VO) throws Exception;
+
+	public void accountCloseAct(Ismadj090VO ismadj090vo) throws Exception;
+
+	public Object selectAccountClose(String today) throws Exception;
 	
 }

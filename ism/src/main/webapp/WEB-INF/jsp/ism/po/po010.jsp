@@ -178,7 +178,7 @@ input.orderitemqty {
 			<div class="layerContents">
 				<div id="layerPoListPoCoName" class="lfl">창고-1</div>
 				<div style="padding:5px;">
-					매입처 담당자 : <select id="userList" name="userList"></select>
+					담당자 : <select id="userList" name="userList"></select>
 				</div>
 				<div style="padding:5px;">
 					참조 : <input type="text" name="ccUserList" value="" style="width:70%;">
@@ -188,6 +188,10 @@ input.orderitemqty {
 				</div>
 				<div style="padding:5px;">
 					<span style="vertical-align:top;">내용 : </span><textarea id="mailText" name="mailText" rows="3" style="width:70%;"></textarea>
+				</div>
+				<div style="padding:5px;">
+					주문메모 : <input type="text" id="ordermemo" name="ordermemo" value="" style="width:50%;">
+					수령자에 주문자 포함 <input type="checkbox" id="addorderuser" name="addorderuser" value="Y" />
 				</div>
 
 				<div>
@@ -778,7 +782,11 @@ function openLayerPOList(poconame, keyId, PoType) {
         success : function(data){
         	//담당자가 2이상일 경우 선택 option 추가
 			if (data.userlist.length == 0) {
-        		$("#userList").append("<option value='0'>해당 매입처에서 담당자를 등록해주시기 바랍니다.</option>");
+				if (PoType == "W") {
+	        		$("#userList").append("<option value='0'>해당 창고관리에서 담당자를 등록해주시기 바랍니다.</option>");
+				}else{
+	        		$("#userList").append("<option value='0'>해당 매입처관리에서 담당자를 등록해주시기 바랍니다.</option>");
+				}
 			}else if (data.userlist.length > 1) {
         		$("#userList").append("<option value='0'>담당자 선택</option>");
         	}
@@ -1010,8 +1018,12 @@ function poDetailView(odm010id) {
         	"						<tr>"+
         	"							<th scope='row'>상품명</th>"+
         	"							<td><textarea name='orderitemname' style='width:100%;'>"+decodeURIComponent(data.orderitemname.replace(Ca, " "))+"</textarea></td>"+
-        	"							<th scope='row'>주소</th>"+
-        	"							<td><textarea name='address' style='width:100%;'>"+decodeURIComponent(data.address.replace(Ca, " "))+"</textarea></td>"+
+        	"							<th scope='row'>주소(우편번호)</th>"+
+        	"							<td>"+
+        	"								<input type='text' name='postno' value='"+data.postno+"' size='6' /> &nbsp;"+ 
+        	"                               <a href=''>우편번호찾기</a>"+
+        	"								<textarea name='address' style='width:100%;'>"+decodeURIComponent(data.address.replace(Ca, " "))+"</textarea>"+
+			"							</td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>옵션</th>"+
@@ -1258,7 +1270,7 @@ function confirmpo() {
 	}
 	
 	if (userList == "0") {
-		alert("매입처 담당자를 선택해주시기 바랍니다.");
+		alert("담당자를 선택해주시기 바랍니다.");
 		return false;
 	}
 	
@@ -1289,6 +1301,6 @@ function confirmpo() {
             type : "POST"
     };
         	
-    $("#formpo").ajaxSubmit(options);
+    $("#formpo").ajaxSubmit(options); ///ism/po/po010SavePoList.do
 }
 </script>

@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import nfm.com.main.service.Ismadj090VO;
 import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainGraphRetVO;
 import nfm.com.main.service.MainSearchVO;
@@ -206,14 +209,17 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 		SimpleDateFormat monthFm2 = new SimpleDateFormat("yyyyMM");
 		
 		//기준일자 기준으로 월의 select값 저장[s]
-		HashMap<String, String> mapMonth = new HashMap<String, String>();
+		Map<String, String> mapMonth = new LinkedHashMap<String, String>();
 		
+		System.out.println("jgc debug1 = "+monthFm2.format(cal.getTime()));
 		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
 		
 		cal.add(Calendar.MONTH, -1);
+		System.out.println("jgc debug2 = "+monthFm2.format(cal.getTime()));
 		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
 
 		cal.add(Calendar.MONTH, -1);
+		System.out.println("jgc debug3 = "+monthFm2.format(cal.getTime()));
 		mapMonth.put(monthFm2.format(cal.getTime()), monthFm1.format(cal.getTime()));
 
 		return mapMonth;
@@ -263,5 +269,41 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 	public String saveDashBoardSetting(Ismdbo010VO ismdbo010VO) throws Exception {
 		mainDAO.insertOrUpdateDbo010(ismdbo010VO);
 		return "SUCCESS";
+	}
+
+	@Override
+	public void accountCloseAct(Ismadj090VO ismadj090vo) throws Exception {
+		mainDAO.accountCloseActSP(ismadj090vo);
+	}
+
+	@SuppressWarnings({ "unchecked" })
+	@Override
+	public Object selectAccountClose(String today) throws Exception {
+		
+		List<Ismadj090VO> listIsmadj090VO = (List<Ismadj090VO>) mainDAO.selectAdj090(today);
+		
+		if (listIsmadj090VO == null) { //빈값이면 현재월의 초기화값 넣어줌
+			listIsmadj090VO = new ArrayList<Ismadj090VO>();
+			Ismadj090VO ismadj090VO = new Ismadj090VO();
+			ismadj090VO.setClosemonth(today);
+
+			listIsmadj090VO.add(ismadj090VO);
+		}else{
+			//select 값중에 현재 마감월의 데이터 있는지 확인 없으면 초기값 넣어줌 
+			int isToday = 0;
+			for(Ismadj090VO ismadj090VO : listIsmadj090VO) {
+				if (today.equals(ismadj090VO.getClosemonth())) {
+					isToday = 1;
+					break;
+				}
+			}
+			if (isToday == 0) {
+				Ismadj090VO ismadj090VO = new Ismadj090VO();
+				ismadj090VO.setClosemonth(today);
+
+				listIsmadj090VO.add(0,ismadj090VO);				
+			}
+		}
+		return listIsmadj090VO;
 	}
 }

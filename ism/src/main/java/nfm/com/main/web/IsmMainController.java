@@ -1,6 +1,7 @@
 package nfm.com.main.web;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import nfm.com.main.service.Ismadj090VO;
 import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainSearchVO;
 import nfm.com.main.service.MainService;
@@ -41,6 +43,7 @@ public class IsmMainController {
 		//String search_dayBar= (String) session.getAttribute("search_dayBar");
 		//String search_periodBar = (String) session.getAttribute("search_periodBar");
 		//String search_typeBar = (String) session.getAttribute("search_typeBar");
+
 		String search_day = "";
 		String search_period = "";
 		String search_type = "";
@@ -147,16 +150,48 @@ public class IsmMainController {
 		
 		LoginVO loginVO = (LoginVO) session.getAttribute("LoginVO");
 
-		System.out.println("jgc debug a = " + ismdbo010VO.getLinegraph());
-		System.out.println("jgc debug b = " + ismdbo010VO.getBargraph());
-		System.out.println("jgc debug c = " + ismdbo010VO.getIpStatus());
-		System.out.println("jgc debug d = " + ismdbo010VO.getOtStatus());
-		System.out.println("jgc debug e = " + ismdbo010VO.getProdStatus());
-		System.out.println("jgc debug f = " + loginVO.getId());
-
 		ismdbo010VO.setEmplyr_id(loginVO.getId());
 
 		return mainService.saveDashBoardSetting(ismdbo010VO);
 	}
 
+	/*
+	 * 정산 마감용 sample
+	 */
+	@RequestMapping(value = "/ism/main/samPage.do", produces="text/plain;charset=UTF-8")
+	public String ismSamPage(ModelMap model, HttpSession session) throws Exception {
+		return "ism/main/ismSam";
+	}
+	
+	/**
+	 * 정산 마감 팝업
+	 */
+	@RequestMapping(value = "/ism/main/mainAccountClose.do")
+	public String mainAccountClose(ModelMap model, HttpSession session) throws Exception {
+
+		SimpleDateFormat formatter  = new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat formatter1 = new SimpleDateFormat("yyyyMM");
+		Calendar calender = Calendar.getInstance();
+
+		model.addAttribute("today", formatter.format(calender.getTime()));
+
+		calender.add(Calendar.MONTH, -1);
+
+		model.addAttribute("closeAccountInfo", mainService.selectAccountClose(formatter1.format(calender.getTime())));
+
+		return "ism/main/ismAccountClose";
+	}
+	
+	/**
+	 * 정산 마감 처리
+	 */
+	@RequestMapping(value = "/ism/main/mainAccountCloseAct.do")
+	public String mainAccountCloseAct(@ModelAttribute("ismadj090VO") Ismadj090VO ismadj090VO, ModelMap model, HttpSession session) throws Exception {
+
+		mainService.accountCloseAct(ismadj090VO);
+		
+		model.addAttribute("resultMsg", "마감처리되었습니다.");
+		
+		return "forward:/ism/main/mainAccountClose.do";
+	}
 }

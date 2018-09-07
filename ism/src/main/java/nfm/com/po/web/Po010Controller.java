@@ -5,10 +5,12 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import nfm.com.po.service.Po010SaveVO;
 import nfm.com.po.service.Po010Service;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,21 +73,21 @@ public class Po010Controller {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/ism/po/po010SelectUserListJson.do")
+	@RequestMapping(value = "/ism/po/po010SelectUserListJson.do", produces="text/plain;charset=UTF-8")
 	public String po010SelectUserListJson(@RequestParam("keyid") int keyid, @RequestParam("pocotype") String pocotype) throws Exception {
 
 		return po010Service.selectUserListJson(keyid, pocotype);
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/ism/po/po010SelectPoo010ListJson.do")
+	@RequestMapping(value = "/ism/po/po010SelectPoo010ListJson.do", produces="text/plain;charset=UTF-8")
 	public String po010SelectPoo010ListJson(@RequestParam("poo010id") int poo010id, @RequestParam("pocotype") String pocotype) throws Exception {
 
 		return po010Service.selectPoo010ListJson(poo010id, pocotype);
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/ism/po/po010SelectOrm010ListJson.do")
+	@RequestMapping(value = "/ism/po/po010SelectOrm010ListJson.do", produces="text/plain;charset=UTF-8")
 	public String po010SelectOrm010ListJson(@RequestParam("poo010id") int poo010id, @RequestParam("pocotype") String pocotype) throws Exception {
 		
 		return po010Service.selectOrm010ListJson(poo010id, pocotype);
@@ -124,18 +126,12 @@ public class Po010Controller {
 
 	@ResponseBody
 	@RequestMapping(value = "/ism/po/po010SavePoList.do")
-	public String po010SavePoList(
-			@RequestParam("poo010id") int poo010id,
-			@RequestParam("pocotype") String pocotype,
-			@RequestParam("userList") String userList,
-			@RequestParam("ccUserList") String ccUserList,
-			@RequestParam("mailSubject") String mailSubject,
-			@RequestParam("mailText") String mailText,
+	public String po010SavePoList(@ModelAttribute("po010SaveVO") Po010SaveVO po010SaveVO,
 			@RequestParam("odm010id") String[] odm010idArr, HttpSession session) throws Exception {
 
 		LoginVO loginVO = (LoginVO) session.getAttribute("LoginVO");
-	    
-		return po010Service.savePoList(odm010idArr, poo010id, pocotype, userList, ccUserList, mailSubject, mailText, loginVO);
+
+		return po010Service.savePoList(odm010idArr, po010SaveVO, loginVO);
 	}
 	
 	/**

@@ -2,6 +2,7 @@ package nfm.com.main.service.impl;
 
 import java.util.List;
 
+import nfm.com.main.service.Ismadj090VO;
 import nfm.com.main.service.Ismdbo010VO;
 
 import org.springframework.stereotype.Repository;
@@ -109,5 +110,13 @@ public class MainDAO extends EgovAbstractDAO {
 	
 	public void insertOrUpdateDbo010(Ismdbo010VO ismdbo010VO) {
 		insert("mainDAO.insertOrUpdateDbo010", ismdbo010VO);
+	}
+
+	public void accountCloseActSP(Ismadj090VO ismadj090vo) {
+		insert("mainDAO.accountCloseActSP", ismadj090vo);
+	}
+
+	public List<?> selectAdj090(String today) {
+		return list("mainDAO.selectAdj090", today);
 	}
 }

@@ -30,6 +30,7 @@ import nfm.com.po.service.Ismpol010VO;
 import nfm.com.po.service.Ismpom010VO;
 import nfm.com.po.service.Ismpoo010VO;
 import nfm.com.po.service.Ismpoo020VO;
+import nfm.com.po.service.Po010SaveVO;
 import nfm.com.po.service.Po010Service;
 import nfm.com.whs.service.Whs010SearchVO;
 import nfm.com.whs.service.Whs010Service;
@@ -270,7 +271,14 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public String savePoList(String[] odm010idArr, int poo010id, String pocotype, String userList, String ccUserList, String mailSubject, String mailText, LoginVO loginVO) throws Exception {
+	public String savePoList(String[] odm010idArr, Po010SaveVO po010SaveVO, LoginVO loginVO) throws Exception {
+		
+		int poo010id = po010SaveVO.getPoo010id();
+		String pocotype = po010SaveVO.getPocotype();
+		String userList = po010SaveVO.getUserList();
+		String ccUserList = po010SaveVO.getCcUserList();
+		String mailSubject = po010SaveVO.getMailSubject();
+		String mailText = po010SaveVO.getMailText();
 		
 		String retVal = "SUCCESS";
 		//트랜잭션 처리
@@ -285,6 +293,8 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			HashMap hm = new HashMap();
 			hm.put("poNum", poNum);
 			hm.put("odm010idArr", odm010idArr);
+			hm.put("ordermemo", po010SaveVO.getOrdermemo()); //발주시 사용자가 입력한 발주메모로 현재 발주에 모든 주문에 적용
+			hm.put("addorderuser", po010SaveVO.getAddorderuser()); //발주시 사용자가 선택으로 수령자에 주문자명 포함여부 Y인 경우 포함
 			
 		    po010DAO.insertPom010Arr(hm);
 		    //발주 정보 저장[e]
@@ -316,6 +326,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    		header.add(vo.getOrderfieldnm());
 		    	}
 		    }
+			header.add("주문메모");
 		    
 		    Ismpom010VO ismpom010VO = new Ismpom010VO();
 		    ismpom010VO.setPom010id(poNum);
@@ -363,14 +374,16 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 		    	List<Object> obj = new ArrayList<Object>();
 			    
-		    	obj.add(vo.getOdm010id());
-	    		obj.add("");
+		    	obj.add(vo.getOdm010id()); //key value
+	    		obj.add("");               //송장번호
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {
 			    		obj.add(listKetValueHm.get(vosub.getOrderfield()));
 			    	}
 			    }
+	    		obj.add(vo.getOrdermemo()); //주문메모
+	    		
 			    data.add(obj);
 		    }
 	
@@ -405,9 +418,6 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    
 	
 		    //메일전송[s]
-		    System.out.println("jgc debug userList = " + userList);
-		    System.out.println("jgc debug loginVO.getEmail() = " + loginVO.getEmail());
-		    System.out.println("jgc debug loginVO.getName() = " + loginVO.getName());
 		    String content = new StringBuffer().
 		    		append(mailText).
 		    		toString();

@@ -22,7 +22,7 @@ public interface Po010Service  {
 
 	public String selectPoo020Json(int byc010id) throws Exception;
 
-	public String savePoList(String[] odm010idArr, int poo010id, String userList, String ccUserList, String pocotype, String mailSubject, String mailText, LoginVO loginVO) throws Exception;
+	public String savePoList(String[] odm010idArr, Po010SaveVO po010SaveVO, LoginVO loginVO) throws Exception;
 
 	public String batchupExcel(List<MultipartFile> fileList) throws Exception;
 

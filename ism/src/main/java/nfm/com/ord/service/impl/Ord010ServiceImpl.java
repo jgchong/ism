@@ -65,7 +65,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         String uploaddate = sf.format(d);
         
 		for (MultipartFile mf : fileList) {
-			System.out.println("jgc debug = " + mf.getOriginalFilename());
 
 			//파일명으로 매출처/쇼핑몰 정보 get [s]
 			int cum010id = 0;
@@ -185,7 +184,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 				}
 		    }
         }
-	    System.out.println("ret >>> " + retStr);
 	    
 	    convFile.delete();
 	    
@@ -229,16 +227,12 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 
 		List<Ismodo020VO> listIsmodo020VO = (List<Ismodo020VO>) ord010DAO.selectApiDataDetail(cum030id);
     	JSONObject jsonObject = new JSONObject();
-    	//String retVal = "";
+
 	    for(Ismodo020VO vo : listIsmodo020VO){
 	    	jsonObject.put("url", vo.getApiurl());
 	    	jsonObject.put("context", vo.getApicontext());
-	    	
-	    	System.out.println(URLEncoder.encode(vo.getApiversion() , "UTF-8"));
-	    	System.out.println(vo.getApiversion());
+
 	    	jsonObject.put("version", URLEncoder.encode(vo.getApiversion() , "UTF-8"));
-	    	//retVal = vo.getApiurl() + "^" + vo.getApicontext() + "^" + vo.getApiversion();
-	    	
 	    }
 		return jsonObject.toString();
 	}
@@ -267,10 +261,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	jsonObject.put("additem", URLEncoder.encode(vo.getAdditem(), "UTF-8"));
 	    	jsonObject.put("isassign", vo.getIsassign());
 	    	jsonObject.put("orderfield", vo.getOrderfield());
-	    	
-	    	System.out.println(URLEncoder.encode(vo.getAdditem(), "UTF-8"));
-	    	System.out.println(vo.getIsassign());
-	    	System.out.println(vo.getOrderfield());
+
 	    	jsonArray.add(jsonObject);
 	    }
 		return jsonArray.toString();
@@ -291,7 +282,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         //헤더 시작점 읽을때 중간에 빈행이 있는 경우 전체행에서 그 빈행만큼 빠지므로 이부분 가지고 있다가 데이터 읽을때 넣어줘야함
         //중간에 한번 더 헤어를 읽을때 reset 되므로 여기서 가지고 있다가 나중에 넣어줘야함
         int saveLstAddrowCnt = excelReadOption.getLstRow();
-        System.out.println("jgc debug excelReadOption.getLstRow = " + excelReadOption.getLstRow());
         
         // 업로드 엑셀 컬럼타이틀 읽기 [s]
         int blankFielsCnt = 0;
@@ -315,7 +305,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    excelReadOption.setStartRow(rowCnt+1); //위에서 찾은 유효한 행으로 다시 setting 후 읽어서 타이틀 get
 	        List<Map<String, String>>excelContentAdd1 =ExcelRead.read(excelReadOption);
 	        Iterator<Map<String, String>> excelItemAdd1 = excelContentAdd1.iterator();
-	        
 	
 			Map<String, String> excelItemInfoAdd1 = (Map<String, String>) excelItemAdd1.next();
 		    for(String item : excelReadOption.getOutputColumns()){
@@ -356,7 +345,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     		for (String posnoSplit : postnos ){
     			listPostNo.add(fileHeader.get(posnoSplit));
             }
-    		//postno = fileHeader.get(postno);
     	}
 
     	String address = dbHeader.get("address");
@@ -367,7 +355,6 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     		for (String addressSplit : addresss ){
     			listAddress.add(fileHeader.get(addressSplit));
             }
-    		//address = fileHeader.get(address);
     	}
     	
     	String dlvmemo = dbHeader.get("dlvmemo");
@@ -411,6 +398,12 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	
     	String rcvuseremail = dbHeader.get("rcvuseremail");
     	if (rcvuseremail != null) rcvuseremail = fileHeader.get(rcvuseremail);
+    	
+    	String orderitemprice = dbHeader.get("orderitemprice");
+    	if (orderitemprice != null) orderitemprice = fileHeader.get(orderitemprice);
+    	
+    	String dlvprice = dbHeader.get("dlvprice");
+    	if (dlvprice != null) dlvprice = fileHeader.get(dlvprice);
     	//필드 추가시 여기 추가 1/2
 
         while (excelItem2.hasNext()) {
@@ -420,93 +413,93 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         	if (listPostNo.size() > 0) {
         		String setPostNo = "";
         		for(String str : listPostNo) {
-            		//System.out.println(str + " = ["+excelItemInfo.get(str)+"] / ");
         			setPostNo += excelItemInfo.get(str) + " ";
         		}
 
         		System.out.println("setPostNo = ["+setPostNo+"] / ");
+        		//mod-jgc 180904 우편번호가 4자리이면 맨앞무조건 0 붙이기
+        		if (setPostNo.trim().length() == 4) {
+        			setPostNo = "0" + setPostNo.trim();
+        		}
+
         		ismodm010VO.setPostno(setPostNo.trim());
         	}
         	
         	if (listAddress.size() > 0) {
         		String setAddress = "";
         		for(String str : listAddress) {
-            		//System.out.println(str + " = ["+excelItemInfo.get(str)+"] / ");
             		setAddress += excelItemInfo.get(str) + " ";
         		}
 
-        		//System.out.println("setPostNo = ["+setAddress+"] / ");
         		ismodm010VO.setAddress(setAddress.trim());
         	}
 
         	if (dlvmemo != null) {
-        		//System.out.println(dlvmemo + " = ["+excelItemInfo.get(dlvmemo)+"] / ");
         		ismodm010VO.setDlvmemo(excelItemInfo.get(dlvmemo));
         	}
 
         	if (orderdate != null) {
-        		//System.out.println(orderdate + " = ["+excelItemInfo.get(orderdate)+"] / ");
         		ismodm010VO.setOrderdate(excelItemInfo.get(orderdate));
         	}
 
         	if (orderitembyprice != null) {
-        		//System.out.println(orderitembyprice + " = ["+excelItemInfo.get(orderitembyprice)+"] / ");
         		ismodm010VO.setOrderitembyprice(excelItemInfo.get(orderitembyprice));
         	}
 
         	if (orderitemid != null) {
-        		//System.out.println(orderitemid + " = ["+excelItemInfo.get(orderitemid)+"] / ");
         		ismodm010VO.setOrderitemid(excelItemInfo.get(orderitemid));
         	}
 
         	if (orderitemname != null) {
-        		//System.out.println(orderitemopt + " = ["+excelItemInfo.get(orderitemopt)+"] / ");
         		ismodm010VO.setOrderitemname(excelItemInfo.get(orderitemname));
         	}
 
         	if (orderitemopt != null) {
-        		//System.out.println(orderitemopt + " = ["+excelItemInfo.get(orderitemopt)+"] / ");
         		ismodm010VO.setOrderitemopt(excelItemInfo.get(orderitemopt));
         	}
 
         	if (orderitemqty != null) {
-        		//System.out.println(orderitemqty + " = ["+excelItemInfo.get(orderitemqty)+"] / ");
         		ismodm010VO.setOrderitemqty(excelItemInfo.get(orderitemqty));
         	}
 
         	if (orderno != null) {
-        		//System.out.println(orderno + " = ["+excelItemInfo.get(orderno)+"] / ");
         		ismodm010VO.setOrderno(excelItemInfo.get(orderno));
         	}
 
         	if (orderuser != null) {
-        		//System.out.println(orderuser + " = ["+excelItemInfo.get(orderuser)+"] / ");
         		ismodm010VO.setOrderuser(excelItemInfo.get(orderuser));
         	}
 
         	if (orderusercontact != null) {
-        		//System.out.println(orderusercontact + " = ["+excelItemInfo.get(orderusercontact)+"] / ");
-        		ismodm010VO.setOrderusercontact(excelItemInfo.get(orderusercontact));
+        		//mod-jgc 180906 전화번호 맨압자리가 0이 아니면 0 추가
+        		ismodm010VO.setOrderusercontact(chgContactNo(excelItemInfo.get(orderusercontact)));
         	}
 
         	if (rcvuser != null) {
-        		//System.out.println(rcvuser + " = ["+excelItemInfo.get(rcvuser)+"] / ");
         		ismodm010VO.setRcvuser(excelItemInfo.get(rcvuser));
         	}
 
         	if (rcvusercontact != null) {
-        		//System.out.println(rcvusercontact + " = ["+excelItemInfo.get(rcvusercontact)+"] / ");
-        		ismodm010VO.setRcvusercontact(excelItemInfo.get(rcvusercontact));
+        		//mod-jgc 180906 전화번호 맨압자리가 0이 아니면 0 추가
+        		ismodm010VO.setRcvusercontact(chgContactNo(excelItemInfo.get(rcvusercontact)));
         	}
 
         	if (rcvusercontacthp != null) {
-        		ismodm010VO.setRcvusercontacthp(excelItemInfo.get(rcvusercontacthp));
+        		//mod-jgc 180906 전화번호 맨압자리가 0이 아니면 0 추가
+        		ismodm010VO.setRcvusercontacthp(chgContactNo(excelItemInfo.get(rcvusercontacthp)));
         	}
 
         	if (rcvuseremail != null) {
         		ismodm010VO.setRcvuseremail(excelItemInfo.get(rcvuseremail));
         	}
-        	
+
+        	if (orderitemprice != null) {
+        		ismodm010VO.setOrderitemprice(excelItemInfo.get(orderitemprice));
+        	}
+
+        	if (dlvprice != null) {
+        		ismodm010VO.setDlvprice(excelItemInfo.get(dlvprice));
+        	}
         	//필드 추가시 여기 추가 2/2
         	
         	ismodm010VO.setUploadviewkey(orderTempKey);
@@ -516,4 +509,14 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         }
         return 0;
     }
+	
+	private String chgContactNo(String contactno) {
+		String retVal = contactno;
+		if ( (retVal != null)&&(retVal.length() > 0) ) {
+			if (!"0".equals(contactno.subSequence(0, 1))) {
+				retVal = "0" + retVal;
+			}
+		}
+		return retVal;
+	}
 }

@@ -120,8 +120,11 @@ li img {
 						<tr>
 							<th scope='row'>상품명</th>
 							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
-							<th scope='row'>주소</th>
-							<td><textarea name='address' style='width:100%;'>${item.address}</textarea></td>
+							<th scope='row'>주소(우편번호)</th>
+							<td>
+								<input type='text' name='postno' value='${item.postno}' size="6" /> &nbsp; <a href=''>우편번호찾기</a>
+								<textarea name='address' style='width:100%;'>${item.address}</textarea>
+							</td>
 						</tr>
 						<tr>
 							<th scope='row'>옵션</th>

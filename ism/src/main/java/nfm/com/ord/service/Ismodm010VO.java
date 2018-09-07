@@ -36,8 +36,8 @@ public class Ismodm010VO implements Serializable {
     private String dlvco = "";
     private String dlvstatus = "";
     private String processdate = "";
-    private String accountcum = "";
-    private String accountbuy = "";
+    private String accountcum = "1";
+    private String accountbuy = "1";
     private String status = "";
     private String cstype = "";
     private String uploadfilename = "";

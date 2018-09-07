@@ -47,6 +47,9 @@ public class Ismpom010VO implements Serializable {
 	private String retqty = "";
 	private String retprice = "";
 	private String orderitemname = "";
+	private String coname = "";
+	private String shopmallname = "";
+	private String ordermemo = "";
 
 	public String getPom010id() {
 		return pom010id;
@@ -334,6 +337,30 @@ public class Ismpom010VO implements Serializable {
 
 	public void setRcvuseremail(String rcvuseremail) {
 		this.rcvuseremail = rcvuseremail;
+	}
+
+	public String getConame() {
+		return coname;
+	}
+
+	public void setConame(String coname) {
+		this.coname = coname;
+	}
+
+	public String getShopmallname() {
+		return shopmallname;
+	}
+
+	public void setShopmallname(String shopmallname) {
+		this.shopmallname = shopmallname;
+	}
+
+	public String getOrdermemo() {
+		return ordermemo;
+	}
+
+	public void setOrdermemo(String ordermemo) {
+		this.ordermemo = ordermemo;
 	}
 
 	/**
