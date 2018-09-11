@@ -231,16 +231,22 @@ function viewBycData(byc010id) {
 			"			</tr>"+
 			"			<tr>"+
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
-			"				<td style='text-align:left;'>"+
+			"				<td colspan='3' style='text-align:left;'>"+
 			"                   <input type='text' class='it' style='width: 70%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
-			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
+			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/>"+
+			"                   <input type='hidden' value='"+data.cmm020id+"' id='cmm020id' name='cmm020id' />"+
+			"               </td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>발주전송타입</th>"+
+			"				<td><select id='receivetype' name='receivetype'><option value='E' selected>이메일</option><option value='X'>엑셀</option></select></td>"+
 			"				<th scope='row'>매입처코드</th>";
 			//매입처 코드 수정 못하도록 막음.
 			if (byc010id == -1) {
 				addhtml = addhtml +"<td><input type='text' class='it ' title='' value='' id='byccode' name='byccode'/></td>";
 			}else{
-				addhtml = addhtml +"<td>"+data.byccode+"</td>";
+				addhtml = addhtml +"<td>"+data.byccode+"<input type='hidden' value='"+data.byccode+"' id='byccode' name='byccode'/></td>";
 			}
 			
 			addhtml = addhtml +
@@ -379,6 +385,7 @@ function viewBycData(byc010id) {
         	if (data.useyn != "") {
             	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
         	}
+        	$("#receivetype").val(data.receivetype);
         },
         error: function (jqXHR, exception) {
             var msg = '';

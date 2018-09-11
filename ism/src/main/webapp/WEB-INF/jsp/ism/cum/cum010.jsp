@@ -14,6 +14,7 @@
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/layout.css" type="text/css" rel="stylesheet"  />
@@ -61,6 +62,12 @@ li img {
 }
 .layerTb .sel3 {
     width: 30%;
+}
+.layerTb .selcs1 {
+    width: 43%;
+}
+.itcs1 {
+	width:49%;display:none;float:right;text-align:center;
 }
 </style>
 </head>
@@ -243,7 +250,12 @@ function viewCumData(cum010id) {
 			"			</tr>"+
 			"			<tr>"+
 			"				<th scope='row'>대금정산</th>"+
-			"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(data.accountamt.replace(Ca, " "))+"' name='accountamt'/></td>"+
+			"				<td>"+
+			"					<select id='accountamt' name='accountamt' onchange='accountamtChg()' title=''>"+
+			"						<option value=''>선택</option>${ISM0A0}"+
+			"					</select>"+
+			"                   <input type='text' class='itcs1 datepicker' title='' value='"+data.accountamtdate+"' id='accountamtdate' name='accountamtdate'/>"+
+			"				</td>"+
 			"				<th scope='row'>매출처거래여부</th>"+
 			"				<td>"+
 			"					<input type='radio' name='useyn' id='sel4_1' value='Y' checked/><label for='sel4_1'>사용</label>"+
@@ -255,7 +267,9 @@ function viewCumData(cum010id) {
 			"				<td colspan='3' style='text-align:left;'>"+
 			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
-			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
+			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/>"+
+			"                   <input type='hidden' value='"+data.cmm020id+"' id='cmm020id' name='cmm020id' />"+
+			"               </td>"+
 			"			</tr>"+
 			"		</tbody>"+
 			"	</table>"+
@@ -446,6 +460,8 @@ function viewCumData(cum010id) {
         	if (data.useyn != "") {
             	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
         	}
+        	$("#accountamt").val(data.accountamt);
+        	accountamtChg(); //위 대금정산이 3일 경우 일자입력 input display 하기 위해
         },
         error: function (jqXHR, exception) {
             var msg = '';
@@ -579,6 +595,11 @@ function saveCumAll() {
 		alert("1개이상의 쇼핑몰을 등록해야합니다.");
 		return;
 	}
+
+	//대금정산 타입이 보증보험 발행이 3이 아니면 일자 clear
+	if ($("#accountamt").val() != "3") {
+		$("#accountamtdate").val("");
+	}
 	
     var options = {
     	success : function(data) {
@@ -621,6 +642,17 @@ function cotypeChg(gubun) {
 	}
 }
 
+function accountamtChg() {
+	if($("#accountamt").val()=="3") {
+		$("#accountamt").attr("class","selcs1");
+		$("#accountamtdate").css("display","block");
+		setdatepicker();
+	}else{
+		$("#accountamt").removeClass("selcs1");
+		$("#accountamtdate").css("display","none");
+	}
+}
+
 function closeLayerPop() {
 	if (isSave == "T") {
 		location.href="/ism/cum/cum010.do";
@@ -655,5 +687,22 @@ function downLoadFile(cmm020id) {
 		//T.target	= t;
 		//T.action	= a;	
 	}
+}
+</script>
+
+
+<script type="text/javascript">
+function setdatepicker() {
+    $(function () {
+        $(".datepicker").datepicker({
+            dateFormat : "yy-mm-dd",
+            monthNamesShort : ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            dayNamesMin : ['일', '월', '화', '수', '목', '금', '토'],
+            changeMonth : true,
+            changeYear : true,
+            yearRange : "c-70:c+70",
+            showMonthAfterYear : true
+        });
+    });
 }
 </script>

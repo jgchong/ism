@@ -93,6 +93,8 @@ public class Cum010Controller {
 		model.addAttribute("ISM043", CmmUtil.cmmCodeOptionConvert(egovCmmUseService.selectCmmCodeDetail(vo), ""));
 		vo.setCodeId("ISM044");	//업체소분류4
 		model.addAttribute("ISM044", CmmUtil.cmmCodeOptionConvert(egovCmmUseService.selectCmmCodeDetail(vo), ""));
+		vo.setCodeId("ISM0A0");	//매출처 대금정산
+		model.addAttribute("ISM0A0", CmmUtil.cmmCodeOptionConvert(egovCmmUseService.selectCmmCodeDetail(vo), ""));
 				
 		return "ism/cum/cum010";
 	}
@@ -101,7 +103,7 @@ public class Cum010Controller {
 	 * 매출처 상세 조회
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/cum/cum010SelectDetail.do")
+	@RequestMapping(value = "/ism/cum/cum010SelectDetail.do", produces="text/plain;charset=UTF-8")
 	public String cum010SelectDetail(@ModelAttribute("cum010SearchVO") Cum010SearchVO cum010SearchVO, ModelMap model) throws Exception {
 		// 미인증 사용자에 대한 보안처리
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -122,6 +124,8 @@ public class Cum010Controller {
 
 		MultipartFile mf = mtfrequest.getFile("attachfile");
 		String path = propertiesService.getString("Globals.fileStorePath");
+		System.out.println("jgc debug getAccountamt = "+cumAllVO.getAccountamt());
+		System.out.println("jgc debug getAccountamtdate = ["+cumAllVO.getAccountamtdate()+"]");
 		int cum010id = cum010Service.insertCumAllData(mf, path, cumAllVO);
 
     	return "SUCCESS,"+cum010id;

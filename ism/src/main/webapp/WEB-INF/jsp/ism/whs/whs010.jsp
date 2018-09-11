@@ -212,7 +212,14 @@ function viewWhsData(whs010id) {
 			"				<td colspan='3' style='text-align:left;'>"+
 			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+data.orgfilename+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
 			"                   <label for='attachfile'>파일선택</label>"+
-			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/></td>"+
+			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/>"+
+			"                   <input type='hidden' value='"+data.cmm020id+"' id='cmm020id' name='cmm020id' />"+
+			"               </td>"+
+			"			</tr>"+
+			"			<tr>"+
+			"				<th scope='row'>발주전송타입</th>"+
+			"				<td><select id='receivetype' name='receivetype'><option value='E' selected>이메일</option><option value='X'>엑셀</option></select></td>"+
+			"				<th scope='row' colspan='2'>&nbsp;</th>"+
 			"			</tr>"+
 			"		</tbody>"+
 			"	</table>"+
@@ -348,6 +355,7 @@ function viewWhsData(whs010id) {
         	if (data.useyn != "") {
             	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
         	}
+        	$("#receivetype").val(data.receivetype);
         },
         error: function (jqXHR, exception) {
             var msg = '';

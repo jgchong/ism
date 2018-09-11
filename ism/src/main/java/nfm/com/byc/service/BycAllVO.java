@@ -25,6 +25,8 @@ public class BycAllVO implements Serializable {
     private String uploadgubun = "";
     private String attachname = "";
     private String byccode = "";
+    private int cmm020id = 0;
+    private String receivetype = "";
     private String[] bycusername;
     private String[] bycusertel;
     private String[] bycuseremail;
@@ -116,6 +118,18 @@ public class BycAllVO implements Serializable {
 	}
 	public void setByccode(String byccode) {
 		this.byccode = byccode;
+	}
+	public int getCmm020id() {
+		return cmm020id;
+	}
+	public void setCmm020id(int cmm020id) {
+		this.cmm020id = cmm020id;
+	}
+	public String getReceivetype() {
+		return receivetype;
+	}
+	public void setReceivetype(String receivetype) {
+		this.receivetype = receivetype;
 	}
 	public String[] getBycusername() {
 		return bycusername;

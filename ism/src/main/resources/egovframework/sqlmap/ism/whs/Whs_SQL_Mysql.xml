@@ -18,7 +18,8 @@
 
     <!-- 창고 목록 select -->
     <select id="whs010DAO.selectWhs010List" parameterClass="whs010SearchVO" resultClass="ismwhs010VO">
-	select a.whs010id, a.whsgubun, a.whsname, a.whscotype, a.whscono, a.whslawcono, a.whsadress, a.whsbustype, a.accontdate, a.cmm020id, a.useyn,
+	select a.whs010id, a.whsgubun, a.whsname, a.whscotype, a.whscono, a.whslawcono, a.whsadress, a.whsbustype, a.accontdate,
+           a.cmm020id, a.useyn, a.receivetype,
            case a.whsgubun
 	           when '1' then '자사창고'
 	           when '2' then '외부창고'
@@ -56,9 +57,9 @@
     <!-- 창고 메인 정보 저장 -->
     <insert id="whs010DAO.insertWhs010" parameterClass="ismwhs010VO">
     insert into ismwhs010 (whsgubun,     whsname,    whscotype,   whscono,   whslawcono,   whsadress,   whsbustype,
-						   accontdate,   cmm020id,   useyn)
+						   accontdate,   cmm020id,   useyn,       receivetype)
                    values (#whsgubun#,   #whsname#,  #whscotype#, #whscono#, #whslawcono#, #whsadress#, #whsbustype#,
-						   #accontdate#, #cmm020id#, #useyn#)
+						   #accontdate#, #cmm020id#, #useyn#,     #receivetype#)
   		<selectKey keyProperty="whs010id" resultClass="int">
     		SELECT  LAST_INSERT_ID()
   		</selectKey>
@@ -116,6 +117,9 @@
         </isNotEmpty>
 		<isNotEmpty prepend="," property="useyn">
            useyn = #useyn#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="receivetype">
+           receivetype = #receivetype#
         </isNotEmpty>
      where whs010id = #whs010id#
     </update>

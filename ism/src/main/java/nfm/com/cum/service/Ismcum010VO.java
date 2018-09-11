@@ -26,6 +26,7 @@ public class Ismcum010VO implements Serializable {
     private String cobustype = "";
     private String account = "";
     private String accountamt = "";
+    private String accountamtdate = "0";
     private String useyn = "";
     private String attachname = "";
     private String shopmallname = "";
@@ -184,6 +185,16 @@ public class Ismcum010VO implements Serializable {
 
 	public void setAccountamt(String accountamt) {
 		this.accountamt = accountamt;
+	}
+
+
+	public String getAccountamtdate() {
+		return accountamtdate;
+	}
+
+
+	public void setAccountamtdate(String accountamtdate) {
+		this.accountamtdate = accountamtdate;
 	}
 
 

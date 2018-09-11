@@ -33,6 +33,7 @@ public class Ismbyc010VO implements Serializable {
 	private int cmm020id = 0;
 	private String uploaddate = "";
 	private int pocnt = 0;
+	private String receivetype = "";
 
 	public int getByc010id() {
 		return byc010id;
@@ -208,6 +209,14 @@ public class Ismbyc010VO implements Serializable {
 
 	public void setPocnt(int pocnt) {
 		this.pocnt = pocnt;
+	}
+
+	public String getReceivetype() {
+		return receivetype;
+	}
+
+	public void setReceivetype(String receivetype) {
+		this.receivetype = receivetype;
 	}
 
 	/**

@@ -85,7 +85,8 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 	    	jsonObject.put("shopuseyn", "");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
-	    	jsonObject.put("cmm020id", "");
+	    	jsonObject.put("cmm020id", "0");
+	    	jsonObject.put("accountamtdate", ""); //jgc add 180910 대금정산 select 변경 및 일자 필드 추가
 		}
 		
 	    for(Ismcum010VO vo : listIsmcum010VO){
@@ -176,6 +177,7 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 	    	}
 	    	
 	    	jsonObject.put("cmm020id", vo.getCmm020id());
+	    	jsonObject.put("accountamtdate", vo.getAccountamtdate()); //jgc add 180910 대금정산 select 변경 및 일자 필드 추가
 	    }
 
 	    //발주처 메모 정보 가져옴.[s]
@@ -272,7 +274,7 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 	@Override
 	public int insertCumAllData(MultipartFile mf, String path, CumAllVO cumAllVO) throws Exception {
 		
-		int cmm020id = 0;
+		int cmm020id = cumAllVO.getCmm020id();
 		if (mf != null) {
 			String orgfilename  = mf.getOriginalFilename();
 	
@@ -307,6 +309,7 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 		ismcum010VO.setAccountamt(cumAllVO.getAccountamt());
 		ismcum010VO.setUseyn(cumAllVO.getUseyn());
 		ismcum010VO.setCmm020id(cmm020id+"");
+		ismcum010VO.setAccountamtdate(cumAllVO.getAccountamtdate()); //jgc add 180910 대금정산 select 변경 및 일자 필드 추가
 		
 		int cum010id = 0;
 		if (cumAllVO.getCum010id() <= 0) {

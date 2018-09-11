@@ -1,7 +1,6 @@
 package nfm.com.whs.service.impl;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -68,66 +67,35 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	    	jsonObject.put("accontdate", "");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
-	    	jsonObject.put("cmm020id", "");
+	    	jsonObject.put("cmm020id", "0");
 	    	jsonObject.put("useyn", "");
+	    	jsonObject.put("receivetype", "");
 		}
 		
 	    for(Ismwhs010VO vo : listIsmwhs010VO){
 	    	jsonObject.put("whs010id", vo.getWhs010id());
 	    	jsonObject.put("whsgubun", vo.getWhsgubun());
-	    	
-	    	//if (vo.getWhsname() == null) {
-	    	//	jsonObject.put("whsname", "");
-	    	//}else{
-	    	//	jsonObject.put("whsname", URLEncoder.encode(vo.getWhsname(), "UTF-8"));
-	    	//}
 	    	jsonObject.put("whsname", vo.getWhsname());
-
 	    	jsonObject.put("whscotype", vo.getWhscotype());
 	    	jsonObject.put("whscono", vo.getWhscono());
 	    	jsonObject.put("whslawcono", vo.getWhslawcono());
-
-	    	//if (vo.getWhsadress() == null) {
-	    	//	jsonObject.put("whsadress", "");
-	    	//}else{
-	    	//	jsonObject.put("whsadress", URLEncoder.encode(vo.getWhsadress(), "UTF-8"));
-	    	//}
 	    	jsonObject.put("whsadress", vo.getWhsadress());
-
-	    	//if (vo.getWhsbustype() == null) {
-	    	//	jsonObject.put("whsbustype", "");
-	    	//}else{
-	    	//	jsonObject.put("whsbustype", URLEncoder.encode(vo.getWhsbustype(), "UTF-8"));
-	    	//}
 	    	jsonObject.put("whsbustype", vo.getWhsbustype());
-
 	    	jsonObject.put("accontdate", vo.getAccontdate());
-	    	
-	    	//if (vo.getOrgfilename() == null) {
-	    	//	jsonObject.put("orgfilename", "");
-	    	//}else{
-	    	//	jsonObject.put("orgfilename", URLEncoder.encode(vo.getOrgfilename(), "UTF-8"));
-	    	//}
 	    	jsonObject.put("orgfilename", vo.getOrgfilename());
-
-	    	//if (vo.getSavefilename() == null) {
-	    	//	jsonObject.put("savefilename", "");
-	    	//}else{
-	    	//	jsonObject.put("savefilename", URLEncoder.encode(vo.getSavefilename(), "UTF-8"));
-	    	//}
 	    	jsonObject.put("savefilename", vo.getSavefilename());
-
 	    	jsonObject.put("cmm020id", vo.getCmm020id());
 	    	jsonObject.put("useyn", vo.getUseyn());
+	    	jsonObject.put("receivetype", vo.getReceivetype());
 	    }
 
-	    //매입처 메모 정보 가져옴.[s]
+	    //창고 메모 정보 가져옴.[s]
 	    IsmCmm010VO ismCmm010VO = new IsmCmm010VO();
 	    ismCmm010VO.setBuss_key(""+whs010SearchVO.getWhs010id());
 	    ismCmm010VO.setBuss_type("ST");
 	    String strMemo = (String) cmm010Service.selectListMemo(ismCmm010VO);
-    	jsonObject.put("whsMemo", URLEncoder.encode(strMemo, "UTF-8"));
-    	//매입처 메모 정보 가져옴.[e]
+    	jsonObject.put("whsMemo", strMemo);
+    	//창고 메모 정보 가져옴.[e]
     	
     	//창고 담당자 목록 정보 가져옴.[s]
 		List<Ismwhs020VO> listIsmwhs020VO = (List<Ismwhs020VO>) whs010DAO.selectWhs020List(whs010SearchVO); //whs010id로 조회
@@ -138,33 +106,9 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	    	JSONObject jsonObject020 = new JSONObject();
 	    	jsonObject020.put("whs010id", vo.getWhs010id());
 	    	jsonObject020.put("whs020id", vo.getWhs020id());
-
-	    	//if (vo.getWhsusername() == null) {
-	    	//	jsonObject020.put("username", "");
-	    	//}else{
-	    	//	jsonObject020.put("username", URLEncoder.encode(vo.getWhsusername(), "UTF-8"));
-	    	//}
     		jsonObject020.put("username", vo.getWhsusername());
-
-	    	//if (vo.getWhsusertel() == null) {
-	    	//	jsonObject020.put("usertel", "");
-	    	//}else{
-	    	//	jsonObject020.put("usertel", URLEncoder.encode(vo.getWhsusertel(), "UTF-8"));
-	    	//}
     		jsonObject020.put("usertel", vo.getWhsusertel());
-
-	    	//if (vo.getWhsuseremail() == null) {
-	    	//	jsonObject020.put("useremail", "");
-	    	//}else{
-	    	//	jsonObject020.put("useremail", URLEncoder.encode(vo.getWhsuseremail(), "UTF-8"));
-	    	//}
     		jsonObject020.put("useremail", vo.getWhsuseremail());
-
-	    	//if (vo.getWhsmemo() == null) {
-	    	//	jsonObject020.put("memo", "");
-	    	//}else{
-	    	//	jsonObject020.put("memo", URLEncoder.encode(vo.getWhsmemo(), "UTF-8"));
-	    	//}
     		jsonObject020.put("memo", vo.getWhsmemo());
 
 	    	jsonArray020.add(jsonObject020);
@@ -179,21 +123,8 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	    	JSONObject jsonObject030 = new JSONObject();
 	    	jsonObject030.put("whs010id", vo.getWhs010id());
 	    	jsonObject030.put("whs030id", vo.getWhs030id());
-
-	    	//if (vo.getWhsurl() == null) {
-	    	//	jsonObject030.put("whsurl", "");
-	    	//}else{
-	    	//	jsonObject030.put("whsurl", URLEncoder.encode(vo.getWhsurl(), "UTF-8"));
-	    	//}
     		jsonObject030.put("whsurl", vo.getWhsurl());
-	    	
-	    	//if (vo.getWhsuid() == null) {
-	    	//	jsonObject030.put("whsuid", "");
-	    	//}else{
-	    	//	jsonObject030.put("whsuid", URLEncoder.encode(vo.getWhsuid(), "UTF-8"));
-	    	//}
     		jsonObject030.put("whsuid", vo.getWhsuid());
-
 			jsonObject030.put("whspwd", vo.getWhspwd());
 			
 			jsonArray030.add(jsonObject030);
@@ -207,7 +138,7 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 	@Override
 	public int saveWhsAll(MultipartFile mf, String path, WhsAllVO whsAllVO) throws Exception {
 		
-		int cmm020id = 0;
+		int cmm020id = whsAllVO.getCmm020id();
 		if (mf != null) {
 			String orgfilename  = mf.getOriginalFilename();
 	
@@ -238,6 +169,7 @@ public class Whs010ServiceImpl extends EgovAbstractServiceImpl implements Whs010
 		ismwhs010VO.setAccontdate(whsAllVO.getAccontdate());
 		ismwhs010VO.setCmm020id(cmm020id);
 		ismwhs010VO.setUseyn(whsAllVO.getUseyn());
+		ismwhs010VO.setReceivetype(whsAllVO.getReceivetype());
 
 		int whs010id = 0;
 		if (whsAllVO.getWhs010id() <= 0) {

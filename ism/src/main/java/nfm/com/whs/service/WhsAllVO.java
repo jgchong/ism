@@ -21,6 +21,8 @@ public class WhsAllVO implements Serializable {
     private String whsbustype = "";
     private String accontdate = "";
     private String useyn = "";
+    private int cmm020id = 0;
+    private String receivetype = "";
     private String[] whsusername;
     private String[] whsusertel;
     private String[] whsuseremail;
@@ -107,6 +109,22 @@ public class WhsAllVO implements Serializable {
 
 	public void setUseyn(String useyn) {
 		this.useyn = useyn;
+	}
+
+	public int getCmm020id() {
+		return cmm020id;
+	}
+
+	public void setCmm020id(int cmm020id) {
+		this.cmm020id = cmm020id;
+	}
+
+	public String getReceivetype() {
+		return receivetype;
+	}
+
+	public void setReceivetype(String receivetype) {
+		this.receivetype = receivetype;
 	}
 
 	public String[] getWhsusername() {

@@ -26,6 +26,7 @@ public class Ismwhs010VO implements Serializable {
 	private String orgfilename = "";
 	private String savefilename = "";
 	private String useyn = "";
+	private String receivetype = "";
 
 	public int getWhs010id() {
 		return whs010id;
@@ -145,6 +146,14 @@ public class Ismwhs010VO implements Serializable {
 
 	public void setUseyn(String useyn) {
 		this.useyn = useyn;
+	}
+
+	public String getReceivetype() {
+		return receivetype;
+	}
+
+	public void setReceivetype(String receivetype) {
+		this.receivetype = receivetype;
 	}
 
 	/**

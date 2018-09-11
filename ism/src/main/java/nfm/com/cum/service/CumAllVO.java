@@ -24,8 +24,10 @@ public class CumAllVO implements Serializable {
     private String account = "";
     private String account2 = "";
     private String accountamt = "";
+    private String accountamtdate = "";
     private String useyn = "";
     private String attachname = "";
+    private int cmm020id = 0;
     private String[] cumusername;
     private String[] cumusertel;
     private String[] cumuseremail;
@@ -169,6 +171,16 @@ public class CumAllVO implements Serializable {
 	}
 
 
+	public String getAccountamtdate() {
+		return accountamtdate;
+	}
+
+
+	public void setAccountamtdate(String accountamtdate) {
+		this.accountamtdate = accountamtdate;
+	}
+
+
 	public String getUseyn() {
 		return useyn;
 	}
@@ -186,6 +198,16 @@ public class CumAllVO implements Serializable {
 
 	public void setAttachname(String attachname) {
 		this.attachname = attachname;
+	}
+
+
+	public int getCmm020id() {
+		return cmm020id;
+	}
+
+
+	public void setCmm020id(int cmm020id) {
+		this.cmm020id = cmm020id;
 	}
 
 

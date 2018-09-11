@@ -78,7 +78,7 @@ public class Cmm010Controller {
 		return "SUCCESS";
 	}
 
-	/*첨부파일 가져오기 */
+	/*cmm010 테이블에서 첨부파일 가져오기 */
 	@RequestMapping(value = "/ism/cmm/attachFileDown.do")
 	public void attachFileDown(@RequestParam("cmm020id") int cmm020id, HttpServletRequest request, HttpServletResponse response) throws Exception {
 
@@ -131,6 +131,61 @@ public class Cmm010Controller {
 			PrintWriter printwriter = response.getWriter();
 			printwriter.println("<html>");
 			printwriter.println("<br><br><br><h2>Could not get file name:<br>"+ismCmm020VO.getOrgfilename()+"</h2>");
+			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
+			printwriter.println("<br><br><br>&copy; webAccess");
+			printwriter.println("</html>");
+			printwriter.flush();
+			printwriter.close();
+		}
+	}
+
+	/*파일명으로 첨부파일 가져오기 */
+	@RequestMapping(value = "/ism/cmm/attachFileDownFileName.do")
+	public void attachFileDownFileName(@RequestParam("filename") String filename, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		File uFile = new File(filename);
+		long fSize = uFile.length();
+	
+		if (fSize > 0) {
+			String mimetype = "application/x-msdownload";
+		
+			response.setContentType(mimetype);
+			setDisposition(uFile.getName(), request, response);
+		
+			BufferedInputStream in = null;
+			BufferedOutputStream out = null;
+		
+			try {
+				in = new BufferedInputStream(new FileInputStream(uFile));
+				out = new BufferedOutputStream(response.getOutputStream());
+		
+				FileCopyUtils.copy(in, out);
+				out.flush();
+			} catch (Exception ex) {
+				System.out.println("IGNORED: {}" + ex.getMessage());
+			} finally {
+				if (in != null) {
+					try {
+						in.close();
+					} catch (Exception ignore) {
+						System.out.println("IGNORED: {}" + ignore.getMessage());
+					}
+				}
+				if (out != null) {
+					try {
+						out.close();
+					} catch (Exception ignore) {
+						System.out.println("IGNORED: {}" + ignore.getMessage());
+					}
+				}
+			}
+		
+		} else {
+			response.setContentType("application/x-msdownload");
+		
+			PrintWriter printwriter = response.getWriter();
+			printwriter.println("<html>");
+			printwriter.println("<br><br><br><h2>Could not get file name:<br>"+uFile.getName()+"</h2>");
 			printwriter.println("<br><br><br><center><h3><a href='javascript: history.go(-1)'>Back</a></h3></center>");
 			printwriter.println("<br><br><br>&copy; webAccess");
 			printwriter.println("</html>");

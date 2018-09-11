@@ -279,6 +279,10 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		String ccUserList = po010SaveVO.getCcUserList();
 		String mailSubject = po010SaveVO.getMailSubject();
 		String mailText = po010SaveVO.getMailText();
+		String receiveType = po010SaveVO.getReceivetype();
+		if (receiveType == null) {
+			receiveType = "E";
+		}
 		
 		String retVal = "SUCCESS";
 		//트랜잭션 처리
@@ -417,22 +421,26 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    // 발주 정보 엑셀 저장[e]
 		    
 	
+		    if ("X".equals(receiveType)) {
+		    	retVal = filefullname;
+		    }else{
 		    //메일전송[s]
-		    String content = new StringBuffer().
-		    		append(mailText).
-		    		toString();
-
-	    	MailHandler sendMail = new MailHandler(mailSender);
-	        sendMail.setSubject(mailSubject);
-	        sendMail.setText(content);
-	        sendMail.setFrom(loginVO.getEmail(), loginVO.getName());
-	        sendMail.setTo(userList);
-	        if ( (ccUserList != null) && (!"".equals(ccUserList)) ) {
-	        	sendMail.setToCC(ccUserList);
-	        }
-	        sendMail.addAttachFile(poNum + ".xlsx", filefullname);
-	        sendMail.send();
-		    //메일전송[e]
+			    String content = new StringBuffer().
+			    		append(mailText).
+			    		toString();
+	
+		    	MailHandler sendMail = new MailHandler(mailSender);
+		        sendMail.setSubject(mailSubject);
+		        sendMail.setText(content);
+		        sendMail.setFrom(loginVO.getEmail(), loginVO.getName());
+		        sendMail.setTo(userList);
+		        if ( (ccUserList != null) && (!"".equals(ccUserList)) ) {
+		        	sendMail.setToCC(ccUserList);
+		        }
+		        sendMail.addAttachFile(poNum + ".xlsx", filefullname);
+		        sendMail.send();
+			//메일전송[e]
+		    }
 	        //로그생성[s]
 	        Ismpol010VO ismpol010VO = new Ismpol010VO();
 	        ismpol010VO.setPoo010id(poo010id);

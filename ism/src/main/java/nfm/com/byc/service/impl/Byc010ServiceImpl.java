@@ -76,6 +76,7 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
 	    	jsonObject.put("cmm020id", "0");
+	    	jsonObject.put("receivetype", "");
 		}
 		
 	    for(Ismbyc010VO vo : listIsmbyc010VO){
@@ -135,6 +136,7 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    	}
 	    	
 	    	jsonObject.put("cmm020id", vo.getCmm020id());
+	    	jsonObject.put("receivetype", vo.getReceivetype());
 	    }
 	    
 
@@ -232,7 +234,7 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 		}
 		//매입사 코드 중복 확인[e]
 		
-		int cmm020id = 0;
+		int cmm020id = bycAllVO.getCmm020id();
 		if (mf != null) {
 			String orgfilename  = mf.getOriginalFilename();
 	
@@ -266,6 +268,7 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 		ismbyc010VO.setUploadgubun(bycAllVO.getUploadgubun());
 		ismbyc010VO.setByccode(bycAllVO.getByccode());
 		ismbyc010VO.setCmm020id(cmm020id);
+		ismbyc010VO.setReceivetype(bycAllVO.getReceivetype());
 
 		int byc010id = 0;
 		if (bycAllVO.getByc010id() <= 0) {

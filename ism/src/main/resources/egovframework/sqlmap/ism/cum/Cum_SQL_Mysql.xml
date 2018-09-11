@@ -22,7 +22,7 @@
     <select id="cum010DAO.selectList" parameterClass="cum010SearchVO" resultClass="ismcum010VO">
 	select a.cum010id,    a.cono,     a.lawcono,      a.coname,  a.cotype1,    a.cotype2, a.cotype3,
            a.cogubun,     a.coaddr,   a.cobustype,    a.account, a.accountamt, a.useyn,   a.attachname,
-           a.account2,    a.cmm020id,
+           a.account2,    a.cmm020id, a.accountamtdate,
            case a.cogubun
 	           when '1' then '법인'
 	           when '2' then '개인'
@@ -61,10 +61,10 @@
     <insert id="cum010DAO.insertCum010" parameterClass="ismcum010VO">
     insert into ismcum010 (cono,      lawcono,     coname,    cotype1,      cotype2,   cotype3,      cogubun,
                            coaddr,    cobustype,   account,   accountamt,   useyn,     attachname,   account2,
-                           cmm020id)
+                           cmm020id,  accountamtdate)
                    values (#cono#,    #lawcono#,   #coname#,  #cotype1#,    #cotype2#, #cotype3#,    #cogubun#,
                            #coaddr#,  #cobustype#, #account#, #accountamt#, #useyn#,   #attachname#, #account2#,
-                           #cmm020id#)
+                           #cmm020id#,#accountamtdate#)
   		<selectKey keyProperty="cum010id" resultClass="String">
     		SELECT  LAST_INSERT_ID()
   		</selectKey>
@@ -128,6 +128,9 @@
 		<isNotEmpty prepend="," property="cmm020id">
            cmm020id = #cmm020id#
         </isNotEmpty>
+		<isNotEqual prepend="," property="accountamtdate" compareValue="0">
+           accountamtdate = #accountamtdate#
+        </isNotEqual>
      where cum010id = #cum010id#
     </update>
     

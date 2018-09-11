@@ -19,6 +19,7 @@ public class Po010SaveVO implements Serializable {
 	private String mailText = "";
 	private String ordermemo = "";
 	private String addorderuser = "N";
+	private String receivetype = "";
 
 	public int getPoo010id() {
 		return poo010id;
@@ -82,6 +83,14 @@ public class Po010SaveVO implements Serializable {
 
 	public void setAddorderuser(String addorderuser) {
 		this.addorderuser = addorderuser;
+	}
+
+	public String getReceivetype() {
+		return receivetype;
+	}
+
+	public void setReceivetype(String receivetype) {
+		this.receivetype = receivetype;
 	}
 
 	/**

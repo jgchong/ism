@@ -106,7 +106,7 @@ input.orderitemqty {
 							<strong>${result.whsname}</strong>
 							<p>
 								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
-								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W')" name="poList">발주</a>
+								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W','${result.receivetype}')" name="poList">발주</a>
 							</p>
 						</li>
 </c:forEach>
@@ -123,7 +123,7 @@ input.orderitemqty {
 									<strong>${result.pocnt}</strong><span>건</span>
 								</p>
 								<p class="icoBt">
-									<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.bycname}','${result.byc010id}','B')" name="poList">발주</a>
+									<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.bycname}','${result.byc010id}','B','${result.receivetype}')" name="poList">발주</a>
 									<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.bycname}','${result.byc010id}','B')" name="poSetting">발주환경설정</a>
 								</p>
 							</li>
@@ -168,6 +168,7 @@ input.orderitemqty {
 	<input type="hidden" id="poo010id" name="poo010id" value="" />
 	<input type="hidden" id="poconame" name="poconame" value="" />
 	<input type="hidden" id="pocotype" name="pocotype" value="" />
+	<input type="hidden" id="receivetype" name="receivetype" value="" />
 	<!-- 발주주문양식 환경설정[e] -->
 	
 	<!-- 발주목록[s] -->
@@ -177,17 +178,19 @@ input.orderitemqty {
 			<p class="layerTit">발주목록 및 전송</p>
 			<div class="layerContents">
 				<div id="layerPoListPoCoName" class="lfl">창고-1</div>
-				<div style="padding:5px;">
-					담당자 : <select id="userList" name="userList"></select>
-				</div>
-				<div style="padding:5px;">
-					참조 : <input type="text" name="ccUserList" value="" style="width:70%;">
-				</div>
-				<div style="padding:5px;">
-					제목 : <input type="text" id="mailSubject" name="mailSubject" value="" style="width:70%;">
-				</div>
-				<div style="padding:5px;">
-					<span style="vertical-align:top;">내용 : </span><textarea id="mailText" name="mailText" rows="3" style="width:70%;"></textarea>
+				<div id="poEmailSend">
+					<div style="padding:5px;">
+						담당자 : <select id="userList" name="userList"></select>
+					</div>
+					<div style="padding:5px;">
+						참조 : <input type="text" name="ccUserList" value="" style="width:70%;">
+					</div>
+					<div style="padding:5px;">
+						제목 : <input type="text" id="mailSubject" name="mailSubject" value="" style="width:70%;">
+					</div>
+					<div style="padding:5px;">
+						<span style="vertical-align:top;">내용 : </span><textarea id="mailText" name="mailText" rows="3" style="width:70%;"></textarea>
+					</div>
 				</div>
 				<div style="padding:5px;">
 					주문메모 : <input type="text" id="ordermemo" name="ordermemo" value="" style="width:50%;">
@@ -200,7 +203,7 @@ input.orderitemqty {
 				</div>
 			</div>
 			<p class="layerFootBt">
-				<a href="javascript://" class="confirm" onclick="confirmpo()">발주전송</a>
+				<a href="javascript://" class="confirm" onclick="confirmpo()" id="posendbtn">발주전송</a>
 				<a href="javascript://" class="layerClose cancel">취소</a>
 			</p>
 			<a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
@@ -209,6 +212,7 @@ input.orderitemqty {
 	<input type="hidden" id="list_poo010id" name="poo010id" value="" />
 	<input type="hidden" id="list_poconame" name="poconame" value="" />
 	<input type="hidden" id="list_pocotype" name="pocotype" value="" />
+	<input type="hidden" id="list_receivetype" name="receivetype" value="" />
 	</form>
 	<!-- 발주목록[e] -->
 
@@ -549,6 +553,10 @@ function mfileonchange(files) {
 	</div>
 	<!-- 송장 데이터 등록 [e] -->
 <!-- 레이어 팝업 [e] -->
+
+<form id="formatdn" name="formatdn" method="post"></form>
+<iframe name="tr" src="" width="0" height="0" frameborder="0" scrolling="no"></iframe>
+
 </body>
 </html>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -756,7 +764,7 @@ function savePOManualOption() {
         }
     });
 }
-function openLayerPOList(poconame, keyId, PoType) {
+function openLayerPOList(poconame, keyId, PoType, receivetype) {
 	// 제목, 내용 clear
 	$('#mailSubject').val("");
 	$('#mailText').val("");
@@ -765,10 +773,20 @@ function openLayerPOList(poconame, keyId, PoType) {
 	$('#poo010id').val(keyId);
 	$('#poconame').val(poconame);
 	$('#pocotype').val(PoType);
+	$('#receivetype').val(receivetype);
 	$('#layerPoListPoCoName').text(poconame);
 	$('#list_poo010id').val(keyId);
 	$('#list_poconame').val(poconame);
 	$('#list_pocotype').val(PoType);
+	$('#list_receivetype').val(receivetype);
+
+	if (receivetype == "X") {
+		$('#poEmailSend').css("display","none");
+		$('#posendbtn').text("발주저장");
+	}else{
+		$('#poEmailSend').css("display","block");
+		$('#posendbtn').text("발주전송");
+	}
 
 	//발주처의 담당자 정보 읽기
 	$("#userList").html("");
@@ -1260,6 +1278,7 @@ function delRow(obj) {
 
 //발주서 전송
 function confirmpo() {
+
 	var userList = $("#userList").val().trim();
 	var mailSubject = $("#mailSubject").val().trim();
 	var mailText = $("#mailText").val().trim();
@@ -1269,19 +1288,21 @@ function confirmpo() {
 		return false;
 	}
 	
-	if (userList == "0") {
-		alert("담당자를 선택해주시기 바랍니다.");
-		return false;
-	}
-	
-	if (mailSubject == "") {
-		alert("제목은 입력 필수입니다.");
-		return false;
-	}
+	if ($("#receivetype").val() != "X") {
+		if (userList == "0") {
+			alert("담당자를 선택해주시기 바랍니다.");
+			return false;
+		}
+		
+		if (mailSubject == "") {
+			alert("제목은 입력 필수입니다.");
+			return false;
+		}
 
-	if (mailText == "") {
-		alert("내용은 입력 필수입니다.");
-		return false;
+		if (mailText == "") {
+			alert("내용은 입력 필수입니다.");
+			return false;
+		}		
 	}
 	
     var options = {
@@ -1290,6 +1311,10 @@ function confirmpo() {
             if (data == 'SUCCESS') {
                	alert("발주 전송 되었습니다.");
             	//$('.layerClose').trigger('click');
+            	location.href="/ism/po/po010.do";
+            }else if (data.indexOf(".xls") >= 0){
+               	alert("발주 저장 되었습니다.");
+               	downLoadFile(data);
             	location.href="/ism/po/po010.do";
             }else{
                	alert("저장 중 오류가 발생했습니다.");
@@ -1302,5 +1327,12 @@ function confirmpo() {
     };
         	
     $("#formpo").ajaxSubmit(options); ///ism/po/po010SavePoList.do
+}
+
+function downLoadFile(filename) {
+	T = document.formatdn;
+	T.target	= "tr";
+	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+filename;
+	T.submit();
 }
 </script>

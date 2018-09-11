@@ -13,8 +13,7 @@
 
     <!-- 창고 목록 select -->
     <select id="po010DAO.selectWhsList" resultClass="ismwhs010VO">
-	select a.whs010id,   a.whsgubun,   a.whsname, a.whscotype, a.whscono, a.whslawcono, a.whsadress,
-           a.whsbustype, a.accontdate, a.cmm020id
+	select *
       from ismwhs010 a
      where 1 = 1
      order by a.whsgubun, a.whsname
@@ -22,13 +21,11 @@
 
     <!-- 매입처 목록 select -->
     <select id="po010DAO.selectBycList" resultClass="ismbyc010VO">
-	select a.byc010id,  a.bycname, a.byctype,   a.cogubun, a.cono,         a.lawcono,    a.coaddr,
-           a.cobustype, a.account, a.accountno, a.useyn,   a.purchaseform, a.attachname, a.byccode,
-           a.uploadgubun,
-           b.uploaddate,
+	select a.*,
+           (select max(subb.uploaddate) from ismpol010 subb where subb.poo010id = a.byc010id and subb.pocotype = 'B') as uploaddate,
            (select count(*) from ismodm010 suba, ismprd010 subb 
              where suba.orderitemid = subb.itemcode and subb.byc010id = a.byc010id and suba.status = 1 and IFNULL(subb.itemgubun,'1') in ('1','3')) pocnt
-      from ismbyc010 a left outer join ismpol010 b on a.byc010id = b.poo010id and b.pocotype = 'B'
+      from ismbyc010 a
      where 1 = 1
      order by a.bycname
     </select>
