@@ -1,8 +1,7 @@
 package nfm.com.prd.service.impl;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
-import nfm.com.adj.service.Adj010SearchVO;
-import nfm.com.ord.service.*;
+import nfm.com.adj.model.Adj010SearchVO;
 import nfm.com.prd.service.Prd010SearchVO;
 import org.springframework.stereotype.Repository;
 

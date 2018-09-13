@@ -1,4 +1,4 @@
-package nfm.com.adj.service;
+package nfm.com.adj.model;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 

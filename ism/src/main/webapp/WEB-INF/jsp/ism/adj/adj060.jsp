@@ -113,11 +113,90 @@
                 <li><a href="#">엑셀 다운로드</a></li>
                 <li><a href="#">프린트 출력</a></li>
             </ul>
-
-
+            <div class="contents">
+                <h2 class="pageTit">운송비대장</h2>
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj060.do" class="searchArea">
+                    <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
+                </form>
+                <div class="listTb">
+                    <table cellpadding="0" cellspacing="0" class="" summary="" >
+                        <caption></caption>
+                        <colgroup>
+                            <col width="10%"/>
+                            <col width="8%"/>
+                            <col width="8%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="6%"/>
+                            <col width="*"/>
+                            <col width="6%"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">구분</th>
+                            <th scope="col">정상택배비</th>
+                            <th scope="col">반품택배비</th>
+                            <th scope="col">항공료</th>
+                            <th scope="col">도선료</th>
+                            <th scope="col">오발송</th>
+                            <th scope="col">보관료</th>
+                            <th scope="col">상차비</th>
+                            <th scope="col">작업비</th>
+                            <th scope="col">부자재비</th>
+                            <th scope="col">클레임</th>
+                            <th scope="col">기타</th>
+                            <th scope="col">메모</th>
+                            <th scope="col"></th>
+                        </tr>
+                        </thead>
+                        <tfoot>
+                        <tr class="total">
+                            <td>합계</td>
+                            <td>${adj060ResultSum.a1}</td>
+                            <td>${adj060ResultSum.a2}</td>
+                            <td>${adj060ResultSum.a3}</td>
+                            <td>${adj060ResultSum.a4}</td>
+                            <td>${adj060ResultSum.a5}</td>
+                            <td>${adj060ResultSum.a6}</td>
+                            <td>${adj060ResultSum.a7}</td>
+                            <td>${adj060ResultSum.a8}</td>
+                            <td>${adj060ResultSum.a9}</td>
+                            <td>${adj060ResultSum.a10}</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        </tfoot>
+                        <tbody>
+                        <c:forEach var="result" items="${resultList}" varStatus="status">
+                            <tr>
+                                <td>${result.adj060name}</td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.dlprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.retprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.airprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.doprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.missprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.saveprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.moveprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.workprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.subprice}" name=""/></td>
+                                <td><input type="number" class="it it2 adj060update${result.adj060id}" value="${result.claim}" name=""/></td>
+                                <td><input type="text" class="it it2 adj060update${result.adj060id}" value="${result.namuge}" name=""/></td>
+                                <td><input type="text" class="it it2 adj060update${result.adj060id}" value="${result.memo}" name=""/></td>
+                                <td><a href="javascript:" onclick="updateItem(${result.adj060id})" class="btn">확인</a></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-
     </div> <!-- container -->
 </div> <!-- wrap -->
 
@@ -138,19 +217,86 @@
 
     });
 
+    function updateItem(adj060id) {
+        var input = new Array();
+
+
+        $('.adj060update'+adj060id).each(function (index, item) {
+            input[index] = $(this).val()
+        });
+        $.ajax({
+            url: "/ism/adj/adj060update.do",
+            type: "post",
+            data : {
+                "adj060id" : adj060id,
+                "closedt" : $(".monthPicker").val(),
+                "in1" : input[0],
+                "in2" : input[1],
+                "in3" : input[2],
+                "in4" : input[3],
+                "in5" : input[4],
+                "in6" : input[5],
+                "in7" : input[6],
+                "in8" : input[7],
+                "in9" : input[8],
+                "in10" : input[9],
+                "in11" : input[10],
+                "in12" : input[11],
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("등록되었습니다.");
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
 
 
 </script>
 <script type="text/javascript">
     $(function () {
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",
-            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        $(".monthPicker").datepicker({
+            dateFormat: 'yy-mm',
             changeMonth: true,
             changeYear: true,
-            yearRange: "c-70:c+70",
-            showMonthAfterYear: true
+            showButtonPanel: true,
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            onClose: function (dateText, inst) {
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+                $('#form1').submit();
+            }
+        });
+
+        $(".monthPicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "center top",
+                at: "center bottom",
+                of: $(this)
+            });
         });
     });
 </script>

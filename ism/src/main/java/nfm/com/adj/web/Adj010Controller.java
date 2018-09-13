@@ -5,6 +5,10 @@ import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import nfm.com.adj.dao.Adj040DAO;
+import nfm.com.adj.dao.Adj060DAO;
+import nfm.com.adj.dao.Adj070DAO;
+import nfm.com.adj.model.*;
 import nfm.com.adj.service.*;
 import nfm.com.ord.service.Adj020VO;
 import nfm.com.ord.service.impl.Ord020DAO;
@@ -14,6 +18,7 @@ import nfm.com.skd.service.Skd010Service;
 import nfm.com.skd.service.Skd010VO;
 import nfm.com.whs.service.Ismwhs010VO;
 import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -21,10 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 @Controller
 public class Adj010Controller {
@@ -214,10 +216,75 @@ public class Adj010Controller {
 
 
 
+    @Autowired
+    Adj040DAO adj040DAO;
 
-    /**
-     * skd010Service
-     */
+    @RequestMapping(value = "/ism/adj/adj040.do")
+    public String mainList4(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+        }
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+
+        adj040DAO.insertInit(yyyymm);
+
+        model.addAttribute("resultList", adj040DAO.selectList(yyyymm));
+
+        adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
+        return "/ism/adj/adj040";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj040update.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList4_update(ModelMap model, int adj060id, String closedt, String in1, String in2, String in3, String in4) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+        in4 = setStringToNull(in4);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj060id", String.valueOf(adj060id));
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        param.put("in4", in4);
+        adj040DAO.updateItem(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+
+
+
     @Resource(name = "skd010Service")
     private Skd010Service skd010Service;
 
@@ -294,6 +361,9 @@ public class Adj010Controller {
         return "/ism/adj/adj050";
     }
 
+    @Autowired
+    Adj060DAO adj060DAO;
+
     @RequestMapping(value = "/ism/adj/adj060.do")
     public String mainList6(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
@@ -303,9 +373,134 @@ public class Adj010Controller {
             return "uat/uia/EgovLoginUsr";
         }
 
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+        }
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+        adj060DAO.insertInit(yyyymm);
+        List<Adj060Result> adj060ResultList = (List<Adj060Result>) adj060DAO.selectList(yyyymm);
+        Adj060ResultSum adj060ResultSum = new Adj060ResultSum();
+        for (Adj060Result adj060Result : adj060ResultList) {
+            try {
+                adj060ResultSum.a1 = adj060ResultSum.a1 + adj060Result.getDlprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a2 = adj060ResultSum.a2 + adj060Result.getRetprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a3 = adj060ResultSum.a3 + adj060Result.getAirprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a4 = adj060ResultSum.a4 + adj060Result.getDoprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a5 = adj060ResultSum.a5 + adj060Result.getMissprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a6 = adj060ResultSum.a6 + adj060Result.getSaveprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a7 = adj060ResultSum.a7 + adj060Result.getMoveprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a8 = adj060ResultSum.a8 + adj060Result.getWorkprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a9 = adj060ResultSum.a9 + adj060Result.getSubprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a10 = adj060ResultSum.a10 + adj060Result.getClaim();
+            } catch (Exception ignored) {
+            }
+        }
 
+
+        model.addAttribute("resultList", adj060ResultList);
+
+        model.addAttribute("adj060ResultSum", adj060ResultSum);
+
+
+        adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj060";
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj060update.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList6_update(ModelMap model, int adj060id, String closedt, String in1, String in2, String in3, String in4, String in5,
+                                   String in6, String in7, String in8, String in9, String in10, String in11, String in12) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+        in4 = setStringToNull(in4);
+        in5 = setStringToNull(in5);
+        in6 = setStringToNull(in6);
+        in7 = setStringToNull(in7);
+        in8 = setStringToNull(in8);
+        in9 = setStringToNull(in9);
+        in10 = setStringToNull(in10);
+        in11 = setStringToNull(in11);
+        in12 = setStringToNull(in12);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj060id", String.valueOf(adj060id));
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        param.put("in4", in4);
+        param.put("in5", in5);
+        param.put("in6", in6);
+        param.put("in7", in7);
+        param.put("in8", in8);
+        param.put("in9", in9);
+        param.put("in10", in10);
+        param.put("in11", in11);
+        param.put("in12", in12);
+        adj060DAO.updateItem(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+    private String setStringToNull(String in1) {
+        if (StringUtils.isBlank(in1)) {
+            in1 = null;
+        }
+        return in1;
+    }
+
+    @Autowired
+    Adj070DAO adj070DAO;
+
 
     @RequestMapping(value = "/ism/adj/adj070.do")
     public String mainList7(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
@@ -316,9 +511,157 @@ public class Adj010Controller {
             return "uat/uia/EgovLoginUsr";
         }
 
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+        }
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
 
+        adj070DAO.insertInit(yyyymm);
+        adj040DAO.insertInit(yyyymm);
+        List<Adj040Result> adj040Results = (List<Adj040Result>) adj040DAO.selectList(yyyymm);
+        model.addAttribute("resultObject", adj070DAO.selectObject(yyyymm));
+        model.addAttribute("resultList3", adj040Results);
+        model.addAttribute("resultList4", adj040Results);
 
+        adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj070";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update1.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update1(ModelMap model, String closedt, String in1, String in2, String in3) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        adj070DAO.updateItem07_01(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update2.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update2(ModelMap model, String closedt, String in1, String in2, String in3) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        adj070DAO.updateItem07_02(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update3.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update3(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj060id", String.valueOf(adj060id));
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        adj040DAO.updateItem07_03(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update4.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update4(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if(!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-","");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj060id", String.valueOf(adj060id));
+        param.put("closedt", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        adj040DAO.updateItem07_04(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
     }
 
     @RequestMapping(value = "/ism/adj/adj080.do")

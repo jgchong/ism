@@ -5,8 +5,8 @@
 
     <typeAlias alias="prd010SearchVO" type="nfm.com.prd.service.Prd010SearchVO"/>
     <typeAlias alias="prd010VO" type="nfm.com.prd.service.Prd010VO"/>
-    <typeAlias alias="adj030Result" type="nfm.com.adj.service.Adj030Result"/>
-    <typeAlias alias="adj010SearchVO" type="nfm.com.adj.service.Adj010SearchVO"/>
+    <typeAlias alias="adj030Result" type="nfm.com.adj.model.Adj030Result"/>
+    <typeAlias alias="adj010SearchVO" type="nfm.com.adj.model.Adj010SearchVO"/>
 
     <!-- 상품코드를 만들기 위해서, 가장 마지막에 만든 상품을 가져온다. -->
     <select id="prd010DAO.selectPrd010VO" parameterClass="String" resultClass="prd010VO">
@@ -302,7 +302,20 @@
         where s.createdate LIKE '%' #dtSearch_frCreateDt# '%'
         and p.byc010id = #dtSearch_adj030_byc#
         group by itemcode
-        order by p.orderitemid desc
+        union
+        select
+        p.itemname as itemname,
+        p.itemcode as itemcode,
+        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaAll,
+        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaOut,
+        (select sum(i.retqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaBroken
+        from ismprd010 p
+        left outer join ismodm010 o on o.orderitemid = p.itemcode
+        where o.closedt = REPLACE(#dtSearch_frCreateDt#,'-','')
+        and p.itemgubun = 1
+        and p.byc010id = #dtSearch_adj030_byc#
+        group by itemcode
+        order by itemeaAll desc
         limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
 

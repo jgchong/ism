@@ -20,7 +20,7 @@
            a.shopmallname LIKE '%' #search_key1# '%'
         </isNotEmpty>
     </select>
-    
+
     <!-- 주문수집 목록 select -->
     <select id="ord010DAO.selectList" parameterClass="ord010SearchVO" resultClass="ismcum030VOOrd">
 	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
@@ -39,38 +39,38 @@
      order by $orderbyclause$
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
-    
+
     <select id="ord010DAO.selectManualDataDetail" parameterClass="String" resultClass="ismodo010VO">
 	select a.cum030id, a.additem, a.isassign, a.orderfield
       from ismodo010 a
      where a.cum030id = #cum030id#
     </select>
-    
+
     <select id="ord010DAO.selectApiDataDetail" parameterClass="String" resultClass="ismodo020VO">
 	select a.cum030id, a.apiurl, a.apicontext, a.apiversion
       from ismodo020 a
      where a.cum030id = #cum030id#
     </select>
-    
+
     <insert id="ord010DAO.insertApiDetailData" parameterClass="ismodo020VO">
 	insert into ismodo020 (cum030id, apiurl, apicontext, apiversion) values (#cum030id#, #apiurl#, #apicontext#, #apiversion#)
     </insert>
-    
+
     <update id="ord010DAO.updateApiDetailData" parameterClass="ismodo020VO">
 	update ismodo020
        set apiurl = #apiurl#, apicontext = #apicontext#, apiversion = #apiversion#
      where cum030id = #cum030id#
     </update>
-    
+
     <delete id="ord010DAO.deleteManualDetailData" parameterClass="String">
 	delete from ismodo010
      where cum030id = #cum030id#
     </delete>
-    
+
     <insert id="ord010DAO.insertManualDetailData" parameterClass="ismodo010VO">
 	insert into ismodo010 (cum030id, additem, isassign, orderfield) values (#cum030id#, #additem#, #isassign#, #orderfield#)
     </insert>
-    
+
     <insert id="ord010DAO.insertOrderMainData" parameterClass="ismodm010VO">
 	insert into ismodm010 (
 		orderno,        orderdate,         cum010id,      cum030id,       byc010id,       orderuser,          orderusercontact,
@@ -96,7 +96,7 @@
     </insert>
 
     <insert id="ord010DAO.insertOrderLogData" parameterClass="java.util.List">
-	insert into ismodl010 (cum010id, cum030id, uploaddate, uploadviewkey) values 
+	insert into ismodl010 (cum010id, cum030id, uploaddate, uploadviewkey) values
     <iterate conjunction=",">
 		(#[].cum010id#, #[].cum030id#, #[].uploaddate#, #[].uploadviewkey#)
 	</iterate>
@@ -109,11 +109,11 @@
            left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
-           
+
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
            left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
-           
+
            ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
            LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
      where a.cum010id = b.cum010id
@@ -194,7 +194,10 @@
         	d.byc010id = #poSearch_byc010id# and IFNULL(d.itemgubun,'1') in ('1','3')
         </isNotEqual>
     </select>
-    
+
+
+
+
     <!-- 주문 목록 select -->
     <select id="ord020DAO.selectList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
 	select a.odm010id,         a.orderno,       DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY) , '%Y-%m-%d') as orderdate,
@@ -223,11 +226,11 @@
            left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
-           
+
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
            left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
-           
+
            ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
            LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
      where a.cum010id = b.cum010id
@@ -310,7 +313,7 @@
      order by b.coname, a.orderno, a.orderitemid
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
-    
+
     <update id="ord020DAO.ord020SelectChgOrderStatus" parameterClass="java.util.HashMap">
 	update ismodm010
        set processdate = now()
@@ -328,7 +331,7 @@
         #chgodm010ids[]#
     	</iterate>
     </update>
-    
+
     <delete id="ord020DAO.ord020SelectDel" parameterClass="java.util.HashMap">
 	delete from ismodm010
      where odm010id in
@@ -352,8 +355,8 @@
 		<isNotEmpty prepend="," property="orderitemname">
            orderitemname = #orderitemname#
         </isNotEmpty>
-		<isNotEmpty prepend="," property="postno">
-           postno = #postno#
+        <isNotEmpty prepend="," property="postno">
+            postno = #postno#
         </isNotEmpty>
 		<isNotEmpty prepend="," property="address">
            address = #address#
@@ -432,6 +435,26 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
+        group by o1.cum030id, b.byc010id
+        order by cum030id asc
+    </select>
+
+    <select id="adj020DAO.selectListBYC" parameterClass="String" resultClass="adj020VO">
+        select
+        o1.cum010id as cum010id,
+        c1.coname as cum010name,
+        o1.cum030id as cum030id,
+        c3.shopmallname as cum030name,
+        b.byc010id as byc010id,
+        b.bycname as byc010name,
+        sum(o1.orderitemprice) as itemprice,
+        sum(p.itembuyprice) as itembuyprice
+        from ismodm010 o1
+        left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
+        left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        where o1.bycclosedt LIKE '%' #yyyymm# '%'
         group by o1.cum030id, b.byc010id
         order by cum030id asc
     </select>

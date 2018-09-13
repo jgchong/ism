@@ -410,7 +410,6 @@
 
         </div>
         <p class="layerFootBt">
-            <a href="javascript:saveDetailData();" class="layerBt_v2 confirm" name="claim">확인</a>
             <a href="javascript:;" class="layerClose cancel">취소</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>

@@ -1,5 +1,9 @@
 package nfm.com.adj.service;
 
+import nfm.com.adj.model.Adj010SearchVO;
+import nfm.com.adj.model.Adj020Result;
+import nfm.com.adj.model.Adj030AllResult;
+import nfm.com.adj.model.Adj030Result;
 import nfm.com.ord.service.Adj020VO;
 import nfm.com.ord.service.impl.Ord020DAO;
 import nfm.com.prd.service.impl.Prd010DAO;
@@ -16,7 +20,7 @@ public class Adj010Service {
     private Ord020DAO ord020DAO;
 
     public List<Adj020Result> adj020selectList(String yyyymm) {
-        List<Adj020VO> adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectList(yyyymm);
+        List<Adj020VO> adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectListBYC(yyyymm);
         List<Adj020VO> top10bycList = (List<Adj020VO>) ord020DAO.adj020selectTop10List(yyyymm);
         initData(top10bycList);
 

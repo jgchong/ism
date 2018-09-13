@@ -81,10 +81,19 @@
             border: 2px #000000 dotted;
             visibility: hidden;
         }
-        .colR{color:red}
-        .colB{color:blue}
+
+        .colR {
+            color: red
+        }
+
+        .colB {
+            color: blue
+        }
+
         .listTb .bg_col th,
-        .listTb .bg_col td{background:#eff9fe}
+        .listTb .bg_col td {
+            background: #eff9fe
+        }
     </style>
 </head>
 <body>
@@ -100,8 +109,8 @@
         <!-- 이부부까지가 기본 -->
         <div class="contentsWrap">
             <ul class="contentsMenu">
-                <li><a href="adj010.do" >종합판매정산</a></li>
-                <li><a href="adj020.do" >상품별정산</a></li>
+                <li><a href="adj010.do">종합판매정산</a></li>
+                <li><a href="adj020.do">상품별정산</a></li>
                 <li><a href="adj030.do">상품수불부</a></li>
                 <li><a href="adj040.do" class="on">수금관리대장</a></li>
                 <li><a href="adj050.do">재고관리대장</a></li>
@@ -113,14 +122,75 @@
                 <li><a href="#">엑셀 다운로드</a></li>
                 <li><a href="#">프린트 출력</a></li>
             </ul>
-
+            <div class="contents">
+                <h2 class="pageTit">수금관리대장</h2>
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj040.do" class="searchArea">
+                    <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
+                </form>
+                <div class="listTb">
+                    <table cellpadding="0" cellspacing="0" class="" summary="">
+                        <caption></caption>
+                        <colgroup>
+                            <col width="*"/>
+                            <col width="9%"/>
+                            <col width="8%"/>
+                            <col width="8%"/>
+                            <col width="9%"/>
+                            <col width="9%"/>
+                            <col width="9%"/>
+                            <col width="9%"/>
+                            <col width="9%"/>
+                            <col width="6%"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col" rowspan="2">업체명</th>
+                            <th scope="col" rowspan="2">세금계산서발행여부</th>
+                            <th scope="col" colspan="2">공급가</th>
+                            <th scope="col" rowspan="2">공급가 합계</th>
+                            <th scope="col" rowspan="2">수수료</th>
+                            <th scope="col" rowspan="2">기타</th>
+                            <th scope="col" rowspan="2">수금일</th>
+                            <th scope="col" rowspan="2">수금액</th>
+                            <th scope="col" rowspan="2"></th>
+                        </tr>
+                        <tr>
+                            <th scope="col">과세</th>
+                            <th scope="col">면세</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <c:forEach var="result" items="${resultList}" varStatus="status">
+                            <tr>
+                                <td>${result.cum010name}</td>
+                                <td>
+                                    <c:if test="${result.account eq '1'}">
+                                        정발행
+                                    </c:if>
+                                    <c:if test="${result.account eq '2'}">
+                                        역발행
+                                    </c:if>
+                                </td>
+                                <td>${result.taxprice}</td>
+                                <td>${result.taxfreeprice}</td>
+                                <td>${result.price}</td>
+                                <td><input type="text" class="it it2 adj040update${result.cum010id}" value="${result.susuprice}" name=""/></td>
+                                <td><input type="text" class="it it2 adj040update${result.cum010id}" value="${result.namuge}" name=""/></td>
+                                <td><input type="text" class="it it2 adj040update${result.cum010id}" value="${result.sugumdate}" name=""/></td>
+                                <td><input type="text" class="it it2 adj040update${result.cum010id}" value="${result.sugumprice}" name=""/></td>
+                                <td><a href="javascript:" onclick="updateItem(${result.cum010id})" class="btn">확인</a></td>
+                            </tr>
+                        </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
         </div>
 
 
     </div> <!-- container -->
 </div> <!-- wrap -->
-
 
 
 <div id="layer_hidden1">게시물 본문 미리 보기</div>
@@ -138,19 +208,77 @@
 
     });
 
+    function updateItem(adj060id) {
+        var input = new Array();
+
+
+        $('.adj040update' + adj060id).each(function (index, item) {
+            input[index] = $(this).val()
+        });
+        $.ajax({
+            url: "/ism/adj/adj040update.do",
+            type: "post",
+            data: {
+                "adj060id": adj060id,
+                "closedt": $(".monthPicker").val(),
+                "in1": input[0],
+                "in2": input[1],
+                "in3": input[2],
+                "in4": input[3]
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("등록되었습니다.");
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
 
 
 </script>
 <script type="text/javascript">
     $(function () {
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",
-            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        $(".monthPicker").datepicker({
+            dateFormat: 'yy-mm',
             changeMonth: true,
             changeYear: true,
-            yearRange: "c-70:c+70",
-            showMonthAfterYear: true
+            showButtonPanel: true,
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            onClose: function (dateText, inst) {
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+                $('#form1').submit();
+            }
+        });
+
+        $(".monthPicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "center top",
+                at: "center bottom",
+                of: $(this)
+            });
         });
     });
 </script>

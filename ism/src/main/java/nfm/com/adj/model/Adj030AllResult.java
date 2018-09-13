@@ -1,4 +1,4 @@
-package nfm.com.adj.service;
+package nfm.com.adj.model;
 
 public class Adj030AllResult {
     public int a = 0;

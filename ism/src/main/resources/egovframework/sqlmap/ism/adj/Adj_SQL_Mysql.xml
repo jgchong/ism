@@ -1,6 +1,148 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
-
 <sqlMap namespace="Sl20">
+    <typeAlias alias="adj060Result" type="nfm.com.adj.model.Adj060Result"/>
+    <typeAlias alias="adj040Result" type="nfm.com.adj.model.Adj040Result"/>
+    <typeAlias alias="adj070Result" type="nfm.com.adj.model.Adj070Result"/>
+
+    <insert id="adj060DAO.insertInit" parameterClass="String">
+        insert IGNORE into ismadj060 (adj060id, closedt, adj060name)
+        values
+        (1, #yyyymm#, 'netKTI'),
+        (2, #yyyymm#, '현주물류'),
+        (3, #yyyymm#, '에이친앤비'),
+        (4, #yyyymm#, '기타1'),
+        (5, #yyyymm#, '기타2')
+    </insert>
+
+    <select id="adj060DAO.selectList" parameterClass="String" resultClass="adj060Result">
+        select
+        *
+        from ismadj060
+        where closedt = #yyyymm#
+        order by adj060id asc
+    </select>
+
+    <update id="adj060DAO.updateItem" parameterClass="java.util.HashMap">
+        update ismadj060
+        set
+        dlprice = #in1#
+        , retprice = #in2#
+        , airprice = #in3#
+        , doprice = #in4#
+        , missprice = #in5#
+        , saveprice = #in6#
+        , moveprice = #in7#
+        , workprice = #in8#
+        , subprice = #in9#
+        , claim = #in110#
+        , namuge = #in11#
+        , memo = #in12#
+        where adj060id = #adj060id#
+        and closedt = #closedt#
+    </update>
+
+    <insert id="adj040DAO.insertInit" parameterClass="String">
+        insert IGNORE into ismadj040
+        (cum010id, closedt, cum010name, account, taxprice, taxfreeprice, price)
+        (select
+        o.cum010id as cum010id,
+        o.closedt as closedt,
+        c.coname as cum010name,
+        c.account as account,
+        (select
+        sum(oo.orderitemprice) as orderitemprice
+        from ismodm010 oo
+        left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
+        where pp.taxfree = 0
+        and oo.closedt = #yyyymm#
+        and oo.cum010id = o.cum010id
+        group by oo.cum010id
+        ) as taxprice,
+        (select
+        sum(oo.orderitemprice) as orderitemprice
+        from ismodm010 oo
+        left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
+        where pp.taxfree = 1
+        and oo.closedt = #yyyymm#
+        and oo.cum010id = o.cum010id
+        group by oo.cum010id
+        ) as taxfreeprice,
+        sum(o.orderitemprice) as price
+        from ismodm010 o
+        left outer join ismcum010 c on c.cum010id = o.cum010id
+        where o.closedt = #yyyymm#
+        and c.account in ('1', '2')
+        group by o.cum010id)
+    </insert>
+
+    <select id="adj040DAO.selectList" parameterClass="String" resultClass="adj040Result">
+        select
+        *
+        from ismadj040
+        where closedt = #yyyymm#
+        order by cum010id asc
+    </select>
+
+    <update id="adj040DAO.updateItem" parameterClass="java.util.HashMap">
+        update ismadj040
+        set
+        susuprice = #in1#
+        , namuge = #in2#
+        , sugumdate = #in3#
+        , sugumprice = #in4#
+        where cum010id = #adj060id#
+        and closedt = #closedt#
+    </update>
+
+    <update id="adj040DAO.updateItem07_03" parameterClass="java.util.HashMap">
+        update ismadj040
+        set
+        givesusuprice = #in1#
+        , policy = #in2#
+        where cum010id = #adj060id#
+        and closedt = #closedt#
+    </update>
+
+    <update id="adj040DAO.updateItem07_04" parameterClass="java.util.HashMap">
+        update ismadj040
+        set
+        exprice = #in1#
+        , memo = #in2#
+        where cum010id = #adj060id#
+        and closedt = #closedt#
+    </update>
+
+    <insert id="adj070DAO.insertInit" parameterClass="String">
+        insert into ismadj070 (closedt)
+        values
+        (#yyyymm#)
+    </insert>
+
+    <select id="adj070DAO.selectList" parameterClass="String" resultClass="adj070Result">
+        select
+        *
+        from ismadj070
+        where closedt = #yyyymm#
+        limit 1
+    </select>
+
+    <update id="adj070DAO.updateItem07_01" parameterClass="java.util.HashMap">
+        update ismadj070
+        set
+        price1 = #in1#
+        , price2 = #in2#
+        , price3 = #in3#
+        where closedt = #closedt#
+    </update>
+
+    <update id="adj070DAO.updateItem07_02" parameterClass="java.util.HashMap">
+        update ismadj070
+        set
+        price4 = #in1#
+        , price5 = #in2#
+        , price6 = #in3#
+        where closedt = #closedt#
+    </update>
 
 </sqlMap>
