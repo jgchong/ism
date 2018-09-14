@@ -138,12 +138,12 @@
         </isNotEqual>
 		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
         ]]>
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
         ]]>
         </isNotEmpty>
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
@@ -249,12 +249,12 @@
         </isNotEqual>
 		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
         ]]>
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
         ]]>
         </isNotEmpty>
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
