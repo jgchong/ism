@@ -34,8 +34,12 @@ public class Adj010Service {
         StringBuilder sb = new StringBuilder(yyyymm);
         String yyyymmm = sb.insert(4, '-').toString();
         Adj020VO adj020VONamuge = (Adj020VO) ord020DAO.adj020selectListBYCAllNull(yyyymmm);
-        adj020Result.setNamuge(adj020VONamuge.getItembuyprice());
-        adj020Result.priceAll = adj020Result.priceAll + adj020VONamuge.getItembuyprice();
+        Long itemPrice = adj020VONamuge.getItembuyprice();
+        if (itemPrice == null) {
+            itemPrice = 0L;
+        }
+        adj020Result.setNamuge(itemPrice);
+        adj020Result.priceAll = adj020Result.priceAll + itemPrice;
         return adj020Result;
     }
 
@@ -102,8 +106,12 @@ public class Adj010Service {
         StringBuilder sb = new StringBuilder(yyyymm);
         String yyyymmm = sb.insert(4, '-').toString();
         Adj020VO adj020VONamuge = (Adj020VO) ord020DAO.adj020selectListAllNull(yyyymmm);
-        adj020Result.setNamuge(adj020VONamuge.getItemprice());
-        adj020Result.priceAll = adj020Result.priceAll + adj020VONamuge.getItemprice();
+        Long itemPrice = adj020VONamuge.getItemprice();
+        if (itemPrice == null) {
+            itemPrice = 0L;
+        }
+        adj020Result.setNamuge(itemPrice);
+        adj020Result.priceAll = adj020Result.priceAll + itemPrice;
         return adj020Result;
     }
 

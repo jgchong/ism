@@ -431,6 +431,7 @@
     <select id="adj020DAO.selectListAll" parameterClass="String" resultClass="adj020VO">
         select
         b.byc010id as byc010id,
+        b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
@@ -475,6 +476,7 @@
     <select id="adj020DAO.selectListBYCAll" parameterClass="String" resultClass="adj020VO">
         select
         b.byc010id as byc010id,
+        b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1

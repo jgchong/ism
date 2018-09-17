@@ -83,16 +83,33 @@ public class Adj010Controller {
         String yyyy00 = String.valueOf(Integer.valueOf(yyyy01) - 1);
         List<String> yyyymmList = getAllyyyymmList(yyyymm);
 
-        Adj020Result adj020Result00 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy00);
-        Adj020Result adj020Result01 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy01);
-        List<Adj020Result> adj020ResultList = new ArrayList<>();
+        Adj020Result adj020ResultBYC0 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy00);
+        Adj020Result adj020ResultBYC1 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy01);
+        List<Adj020Result> adj020ResultBYCList = new ArrayList<>();
         for (String tempyyyymm : yyyymmList) {
             Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListBycAll(tempyyyymm);
-            adj020ResultList.add(adj020Result);
+            adj020ResultBYCList.add(adj020Result);
         }
 
-
-        model.addAttribute("resultList", adj020Result00);
+        Adj020Result adj020ResultCUM0 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy00);
+        Adj020Result adj020ResultCUM1 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy01);
+        List<Adj020Result> adj020ResultCUMList = new ArrayList<>();
+        for (String tempyyyymm : yyyymmList) {
+            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListCumAll(tempyyyymm);
+            adj020ResultCUMList.add(adj020Result);
+        }
+        model.addAttribute("yyyy00", yyyy00);
+        model.addAttribute("yyyy01", yyyy01);
+        model.addAttribute("yyyymmList", yyyymmList);
+        model.addAttribute("adj020ResultBYC0", adj020ResultBYC0);
+        model.addAttribute("adj020ResultBYC1", adj020ResultBYC1);
+        model.addAttribute("adj020ResultBYCList", adj020ResultBYCList);
+        model.addAttribute("adj020ResultCUM0", adj020ResultCUM0);
+        model.addAttribute("adj020ResultCUM1", adj020ResultCUM1);
+        model.addAttribute("adj020ResultCUMList", adj020ResultCUMList);
+        List<Adj020VO> top10bycList = (List<Adj020VO>) ord020DAO.adj020selectTop10List(adj010SearchVO.getDtSearch_frCreateDt());
+        initData(top10bycList);
+        model.addAttribute("top10bycList", top10bycList);
 
         adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj010";

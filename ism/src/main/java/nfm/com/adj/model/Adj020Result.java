@@ -32,10 +32,10 @@ public class Adj020Result {
     public Long price08 = 0L;
     public Long price09 = 0L;
     public Long price10 = 0L;
+    /**
+     * price11은 기타상품들의 합이다.
+     */
     public Long price11 = 0L;
-
-
-
     public Long namuge = 0L;
 
     public String getName() {
