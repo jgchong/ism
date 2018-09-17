@@ -165,15 +165,15 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    List<List<Object>> data = new ArrayList<List<Object>>();
 
 	    header.add("사업자구분");
-	    header.add("매출처");
-	    header.add("쇼핑몰명");
-	    header.add("매입처");
-	    header.add("주문번호");
-	    header.add("주문일자");
-	    header.add("상품코드");
-	    header.add("상품명");
-	    header.add("상품옵션");
-	    header.add("수량");
+		header.add("매출처");
+		header.add("쇼핑몰명");
+		header.add("매입처");
+		header.add("주문번호");
+		header.add("주문일자");
+		header.add("상품코드");
+		header.add("상품명");
+		header.add("상품옵션");
+		header.add("수량");
 	    
 	    header.add("매입배송비");
 	    header.add("공급배송비");

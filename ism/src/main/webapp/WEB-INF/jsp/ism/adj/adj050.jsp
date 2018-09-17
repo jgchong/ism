@@ -110,8 +110,8 @@
                 <li><a href="adj080.do">정산도움말</a></li>
             </ul>
             <ul class="topBt">
-                <li><a href="#">엑셀 다운로드</a></li>
-                <li><a href="#">프린트 출력</a></li>
+                <li><a id="excelDownbtn" href="javascript:;">엑셀 다운로드</a></li>
+                <li><a href="#" onclick="window.print()">프린트 출력</a></li>
             </ul>
 
             <div class="contents">
@@ -239,8 +239,11 @@
 
     document.onmousemove = movetip;
 
-
-
+    $("#excelDownbtn").click(function () {
+        document.form1.action = "<c:url value='/ism/skd/skd010ExcelDownload.do'/>";
+        document.form1.submit();
+        document.form1.action = "<c:url value='/ism/skd/skd010.do'/>";
+    });
 
 </script>
 <script type="text/javascript">

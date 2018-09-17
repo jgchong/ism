@@ -6,6 +6,7 @@ import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import nfm.com.exl.util.ExcelManager;
 import nfm.com.prd.service.Prd010Service;
 import nfm.com.skd.service.Skd010SearchVO;
 import nfm.com.skd.service.Skd010Service;
@@ -19,6 +20,9 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -324,6 +328,72 @@ public class Skd010Controller {
         }
 
         return skd010Service.selectWithSkd010id(currentId);
+    }
+
+    @RequestMapping(value="/ism/skd/skd010ExcelDownload.do")
+    public @ResponseBody byte[] ord020ExcelDownload(@ModelAttribute("skd010SearchVO") Skd010SearchVO skd010SearchVO, ModelMap model, HttpServletRequest request,
+                                                    HttpServletResponse response, HttpSession session ) throws Exception {
+
+
+        skd010SearchVO.setFirstIndex(0);
+        skd010SearchVO.setRecordCountPerPage(100000);
+        List<Skd010VO> skd010VOList = skd010Service.selectList(skd010SearchVO);
+
+        List <Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
+        for (int i = 0; i < 4; i ++) {
+            if (whsListForTop.size() < 4) {
+                Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
+                ismwhs010VO.setWhsname("창고없음");
+                whsListForTop.add(ismwhs010VO);
+            }
+        }
+
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("상품코드");
+        header.add("상품명");
+        for (Ismwhs010VO ismwhs010VO : whsListForTop) {
+            header.add(ismwhs010VO.getWhsname());
+        }
+        header.add("기타");
+        header.add("합계");
+        header.add("총재고금액(VAT불포함)");
+        header.add("총재고금액(VAT포함)");
+
+        for (Skd010VO skd010VO : skd010VOList) {
+            List<Object> obj = new ArrayList<Object>();
+            obj.add(skd010VO.getItemcode());
+            obj.add(skd010VO.getItemname());
+            obj.add(skd010VO.getWhs1itemea());
+            obj.add(skd010VO.getWhs2itemea());
+            obj.add(skd010VO.getWhs3itemea());
+            obj.add(skd010VO.getWhs4itemea());
+            obj.add(skd010VO.getWhsNamuge());
+            obj.add(skd010VO.getItemea());
+            obj.add(skd010VO.getItemAllprice());
+            obj.add(skd010VO.getItemAllbuyprice());
+            data.add(obj);
+        }
+
+        String[] excelCellType = {"S","S","S","S","S","S","S","S","S","S"};
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("재고관리");
+        excelManager.setWidth(6000);
+        excelManager.setCellDataType(excelCellType);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xls");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=InventoryManagementExcel.xls");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
     }
 
 

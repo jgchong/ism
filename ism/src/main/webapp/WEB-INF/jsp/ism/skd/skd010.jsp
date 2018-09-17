@@ -109,7 +109,7 @@
 
                 <form id="form1" name="form1" method="post" action="/ism/skd/skd010.do" class="searchArea">
                     <a href="javascript:selectDel();" class="ml30">선택삭제</a>
-                    <a href="#">엑셀 다운로드</a>
+                    <a id="excelDownbtn" href="javascript:;">엑셀저장</a>
                     <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
                     <button>검색</button>
                 </form>
@@ -490,6 +490,12 @@
                 alert("Error : " + msg);
             }
         });
+    });
+
+    $("#excelDownbtn").click(function () {
+        document.form1.action = "<c:url value='/ism/skd/skd010ExcelDownload.do'/>";
+        document.form1.submit();
+        document.form1.action = "<c:url value='/ism/skd/skd010.do'/>";
     });
 
     /////////////////////////////////////////////////////////////////////////// 메인화면 ///////////////////////////////////////////////////////////////////////
