@@ -242,7 +242,7 @@
     $("#excelDownbtn").click(function () {
         document.form1.action = "<c:url value='/ism/skd/skd010ExcelDownload.do'/>";
         document.form1.submit();
-        document.form1.action = "<c:url value='/ism/skd/skd010.do'/>";
+        document.form1.action = "<c:url value='/ism/adj/adj050.do'/>";
     });
 
 </script>

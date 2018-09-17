@@ -13,6 +13,7 @@ import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +22,7 @@ import java.util.Map;
 public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010Service {
 
     /**
-     * ord010DAO
+     * prd010DAO
      */
     @Resource(name = "prd010DAO")
     private Prd010DAO prd010DAO;
@@ -134,6 +135,8 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("cartonqty", getResult(originPrdVO.getCartonqty()));
             jsonObject.put("palletqty", getResult(originPrdVO.getPalletqty()));
             jsonObject.put("taxfree", getResult(originPrdVO.getTaxfree()));
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+            jsonObject.put("createdate", getResult(formatter.format(originPrdVO.getCreatedate())));
         }
         if ("F".equals(originPrdVO.getItemcrosstype())) {
             List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(originPrdVO.getItemcode());
@@ -156,7 +159,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
     @Override
     public String insertItem(Map param) throws Exception {
         Ismbyc010VO ismbyc010VO = (Ismbyc010VO) ismbyc010DAO.selectismbyc010VO(String.valueOf(param.get("detail_byc")));
-        param.put("byccode", ismbyc010VO.getByccode());
+        param.put("byccode", ismbyc010VO.getByccode().substring(0,2));
         String detail_itemcrosstype = (String) param.get("detail_itemcrosstype");
         String makingCode = "";
         if (detail_itemcrosstype.equals("F")) {
@@ -164,12 +167,13 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
         } else {
             makingCode = makingCode + "S";
         }
-        makingCode = makingCode + ismbyc010VO.getByccode();
+        makingCode = makingCode + ismbyc010VO.getByccode().substring(0,2);
 
         Prd010VO prd010VO = (Prd010VO) prd010DAO.selectPrd010VO(makingCode);
         Integer code = null;
         if (prd010VO != null && !StringUtils.isBlank(prd010VO.getItemcode())) {
-            code = Integer.parseInt(prd010VO.getItemcode().replace(makingCode, ""));
+            String tempItemCode = prd010VO.getItemcode();
+            code = Integer.parseInt(tempItemCode.substring(0,7).replace(makingCode, ""));
             code++;
         } else {
             code = 0;

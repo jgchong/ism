@@ -126,7 +126,7 @@
                     <ul style="margin-top: 10px; margin-bottom:10px;">
                         <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
                         <a href="#" style="margin-top: 30px;">운영상품 일괄 업로드</a>
-                        <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">운영상품 엑셀 저장</a>
+                        <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
                     </ul>
                     <div class="searchMore">
                         <ul>
@@ -409,6 +409,12 @@
                         <th scope="row">파렛트수량</th>
                         <td><input id="detail_palletqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                     </tr>
+                    <tr class="detail_onlydetail">
+                        <th scope="row">상품코드</th>
+                        <td><input id="detail_itemcode" type="text" class="it detail_onlydetail" title="" value="" name=""/></td>
+                        <th scope="row">등록일짜</th>
+                        <td><input id="detail_createdate" type="text" class="it detail_onlydetail" title="" value="" name=""/></td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
@@ -663,6 +669,7 @@
         $('.detail_update_no').attr('disabled', false);
         $('#detail_sel1_1').prop('disabled', false);
         $('#detail_sel1_2').prop('disabled', false);
+        $('.detail_onlydetail').prop('disabled', true);
         $('#detail_sel1_1').trigger('click');
         $('#detail_sel2_1').trigger('click');
         $('#detail_sel3_1').trigger('click');
@@ -681,6 +688,8 @@
         $('#detail_autocomplete').val('');
         $('#detail_autosearch_value').val('');
         $('#detail_autosearch_name').val('');
+        $('#detail_itemcode').val('');
+        $('#detail_createdate').val('');
         $('.detail_autosearch_regist').remove();
     }
 
@@ -757,6 +766,10 @@
         $('#detail_sel1_1').prop('disabled', true);
         $('#detail_sel1_2').prop('disabled', true);
         $('.detail_update_no').attr('disabled', true);
+        $('.detail_onlydetail').prop('disabled', false);
+        $('#detail_itemcode').val(data.itemcode);
+        $('#detail_createdate').val(data.createdate);
+        $('.detail_onlydetail').prop('disabled', true);
     }
 
     function saveDetailData() {
@@ -944,6 +957,11 @@
         }
     }
 
+    $("#excelDownbtn").click(function () {
+        document.form1.action = "<c:url value='/ism/prd/prd010ExcelDownload.do'/>";
+        document.form1.submit();
+        document.form1.action = "<c:url value='/ism/prd/prd010.do'/>";
+    });
 
 
 

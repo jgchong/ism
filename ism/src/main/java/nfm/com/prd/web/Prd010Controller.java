@@ -2,12 +2,20 @@ package nfm.com.prd.web;
 
 import egovframework.com.cmm.ComDefaultCodeVO;
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.com.cmm.service.CmmnDetailCode;
 import egovframework.com.cmm.service.EgovCmmUseService;
 import egovframework.rte.fdl.property.EgovPropertyService;
 import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
+import nfm.com.byc.service.Ismbyc010VO;
+import nfm.com.exl.util.ExcelManager;
 import nfm.com.prd.service.Prd010SearchVO;
 import nfm.com.prd.service.Prd010Service;
+import nfm.com.prd.service.Prd010VO;
+import nfm.com.prd.service.impl.Prd010DAO;
+import nfm.com.skd.service.Skd010SearchVO;
+import nfm.com.skd.service.Skd010VO;
+import nfm.com.whs.service.Ismwhs010VO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
@@ -15,31 +23,41 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class Prd010Controller {
-    /** EgovMessageSource */
+    /**
+     * EgovMessageSource
+     */
     @Resource(name = "egovMessageSource")
     EgovMessageSource egovMessageSource;
 
-    /** EgovPropertyService */
+    /**
+     * EgovPropertyService
+     */
     @Resource(name = "propertiesService")
     protected EgovPropertyService propertiesService;
 
-    /** egovCmmUseService */
+    /**
+     * egovCmmUseService
+     */
     @Resource(name = "EgovCmmUseService")
     private EgovCmmUseService egovCmmUseService;
 
-    /** ord020Service */
+    /**
+     * ord020Service
+     */
     @Resource(name = "prd010Service")
     private Prd010Service prd010Service;
 
     /**
      * 주문수집 목록
+     *
      * @param prd010SearchVO
      * @param model
      * @return
@@ -49,7 +67,7 @@ public class Prd010Controller {
     public String mainList(@ModelAttribute("prd010SearchVO") Prd010SearchVO prd010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -75,11 +93,10 @@ public class Prd010Controller {
         /** pageing [e]*/
 
 
-
         model.addAttribute("resultList", prd010Service.selectList(prd010SearchVO));
 
         ComDefaultCodeVO vo = new ComDefaultCodeVO();
-        vo.setCodeId("ISM090");	//주문상태필드
+        vo.setCodeId("ISM090");    //주문상태필드
         model.addAttribute("ISM090", egovCmmUseService.selectCmmCodeDetail(vo));
 
         model.addAttribute("bycList", prd010Service.selectBycAll());
@@ -98,7 +115,7 @@ public class Prd010Controller {
 
         // 선택 삭제 기능 구현
 
-       return "/ism/prd/prd010";
+        return "/ism/prd/prd010";
     }
 
     @ResponseBody
@@ -109,9 +126,9 @@ public class Prd010Controller {
     }
 
 
-
     /**
      * 상품 상세
+     *
      * @param model
      * @return
      * @throws Exception
@@ -121,7 +138,7 @@ public class Prd010Controller {
     public String detailSelect(ModelMap model, String currentItemcoed) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -131,6 +148,7 @@ public class Prd010Controller {
 
     /**
      * 상품 상세 저장
+     *
      * @param model
      * @return
      * @throws Exception
@@ -142,7 +160,7 @@ public class Prd010Controller {
     ) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -237,7 +255,7 @@ public class Prd010Controller {
     public String detailAutoSearch(ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -249,13 +267,12 @@ public class Prd010Controller {
     public String detailAutoSearch2(ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
         return prd010Service.selectGubun2();
     }
-
 
 
     private void prd010SearchVOInit(@ModelAttribute("prd010SearchVO") Prd010SearchVO prd010SearchVO) throws Exception {
@@ -266,7 +283,7 @@ public class Prd010Controller {
             calender.add(Calendar.DATE, -30);
             prd010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         }
-        if (StringUtils.isBlank (prd010SearchVO.getDtSearch_toCreateDt())) {
+        if (StringUtils.isBlank(prd010SearchVO.getDtSearch_toCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Calendar calender = Calendar.getInstance();
             calender.add(Calendar.DATE, 1);
@@ -305,4 +322,116 @@ public class Prd010Controller {
         prd010SearchVO.setDfChange_orderitemid(null);
         prd010SearchVO.setDfChange_whs010id(null);
     }
+
+
+    @Resource(name = "prd010DAO")
+    private Prd010DAO prd010DAO;
+
+    @RequestMapping(value = "/ism/prd/prd010ExcelDownload.do")
+    public @ResponseBody
+    byte[] ord020ExcelDownload(@ModelAttribute("prd010SearchVO") Prd010SearchVO prd010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+
+
+        prd010SearchVO.setFirstIndex(0);
+        prd010SearchVO.setRecordCountPerPage(100000);
+        List<Prd010VO> prd010VOList = (List<Prd010VO>) prd010DAO.selectList(prd010SearchVO);
+
+        List<Ismbyc010VO> ismbyc010VOList = (List<Ismbyc010VO>) prd010Service.selectBycAll();
+        List<Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("NO");
+        header.add("결합여부");
+        header.add("매입처");
+        header.add("상품코드");
+        header.add("상품명");
+        header.add("상품카테고리");
+        header.add("면세여부");
+        header.add("옵션");
+        header.add("단위수량");
+        header.add("매입단가");
+        header.add("매입배송비");
+        header.add("구분");
+        header.add("우선창고");
+        header.add("상품크기");
+        header.add("카톤수량");
+        header.add("피렛트수량");
+
+        ComDefaultCodeVO vo = new ComDefaultCodeVO();
+        vo.setCodeId("ISM090");    //주문상태필드
+        List<CmmnDetailCode> cmmnDetailCodeList = egovCmmUseService.selectCmmCodeDetail(vo);
+
+
+        int index = 1;
+        for (Prd010VO prd010VO : prd010VOList) {
+            List<Object> obj = new ArrayList<Object>();
+            obj.add("" + index);
+            if ("S".equals(prd010VO.getItemcrosstype())) {
+                obj.add("단품");
+            } else {
+                obj.add("결합");
+            }
+
+            for (Ismbyc010VO ismbyc010VO : ismbyc010VOList) {
+                if (ismbyc010VO.getByc010id() == prd010VO.getByc010id()) {
+                    obj.add(ismbyc010VO.getBycname());
+                }
+            }
+            obj.add(prd010VO.getItemcode());
+            obj.add(prd010VO.getItemname());
+
+            for (CmmnDetailCode cmmnDetailCode : cmmnDetailCodeList) {
+                if (cmmnDetailCode.getCode().equals(String.valueOf(prd010VO.getItemcat1()))) {
+                    obj.add(cmmnDetailCode.getCodeNm());
+                }
+            }
+
+            if ("0".equals(prd010VO.getTaxfree())) {
+                obj.add("과세");
+            } else {
+                obj.add("비과세");
+            }
+
+
+            obj.add(prd010VO.getItemopt());
+            obj.add(prd010VO.getItemea());
+            obj.add(prd010VO.getItembuyprice());
+            obj.add(prd010VO.getItembuydlvprice());
+
+            if ("1".equals(prd010VO.getItemgubun())) {
+                obj.add("제조사출고상품");
+            } else if("2".equals(prd010VO.getItemgubun())) {
+                obj.add("재고관리상품");
+            } else {
+                obj.add("사은품");
+            }
+            obj.add(prd010VO.getWhsname());
+            obj.add(prd010VO.getItemsize());
+            obj.add(prd010VO.getCartonqty());
+            obj.add(prd010VO.getPalletqty());
+            data.add(obj);
+            index++;
+        }
+
+        String[] excelCellType = {"S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"};
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("운영상품관리");
+        excelManager.setWidth(6000);
+        excelManager.setCellDataType(excelCellType);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xls");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ItemManagementExcel.xls");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
 }
