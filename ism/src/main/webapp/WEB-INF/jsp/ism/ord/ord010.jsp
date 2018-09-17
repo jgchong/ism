@@ -90,12 +90,15 @@
 									<td><c:out value="${result.shoppwd}"/></td>
 <c:if test="${result.uploadgubun eq 'A'}">
 									<td>API</td>
+									<td>&nbsp;</td>
+									<td>&nbsp;
 </c:if>
 <c:if test="${result.uploadgubun eq 'M'}">
 									<td>수동</td>
-</c:if>
 									<td><c:out value="${result.uploadCnt}"/></td>
-									<td><label for="file${result.cum030id}" class="upload1">개별업로드</label>
+									<td>
+										<label for="file${result.cum030id}" class="upload1">개별업로드</label>
+</c:if>
 
 <form id="orderfileform${result.cum030id}" name="orderfileform${result.cum030id}" action='/ism/ord/odo010orderupfile.do' enctype='multipart/form-data' method='post'>
 										<input type="hidden" id="filecum010id" name="filecum010id" value="${result.cum010id}">
@@ -561,6 +564,7 @@ function titfileUpload() {
 	if (selectval == "0") {
 		//$('#msgareamanual').text("매출처/쇼핑몰을 선택해주시기 바랍니다.");
 		alert("매출처/쇼핑몰을 선택해주시기 바랍니다.");
+		clearInputFile();
 		return;
 	}
     var Ca = /\+/g;
@@ -584,6 +588,7 @@ function titfileUpload() {
 
         	if (isDup) {
                 alert(dupTitle + "가 중복되었습니다. 중복 제거 후 다시 업로드해주시기 바랍니다.");
+        		clearInputFile();
         		return false;
         	}
         	
@@ -594,6 +599,7 @@ function titfileUpload() {
             }
         },
         error : function(xhr, status, error) {
+    		clearInputFile();
         	console.log(error);
        	},
         type : "POST"
@@ -640,7 +646,7 @@ function selectManualDetailData(cum030id) {
             		$('#sortable1').append('<li class="ui-state-default" style="margin:5px;">'+additem+'</li>');
             	}
             	if ((additem != "NONE") && (isassign == "Y") ) {
-            		var additems = additem.split(",");
+            		var additems = additem.split("#");
             	    console.log("additems = " + additems);
                 	for ( var i in additems ) {
                 	    console.log(i + "/" + additems[i]);
@@ -778,7 +784,7 @@ function saveManualDetail() {
 		if ($(this).children('ul').children('li').text() == "") setItem = "NONE";
 		else {
 			$(this).children('ul').children('li').each(function(index) {
-				setItem += $(this).text() + ",";
+				setItem += $(this).text() + "#";
 				setItemCnt += 1;
 			});
 			setItem = setItem.substring(0,setItem.length - 1);
@@ -824,5 +830,15 @@ function saveManualDetail() {
             $('#msgareamanual').text("Error : "+msg);
         }
     });
+}
+
+function clearInputFile() {
+	var agent = navigator.userAgent.toLowerCase();
+	
+	if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ){
+		$("#file").replaceWith( $("#file").clone(true) );
+	} else { // other browser 일때 input[type=file] init.
+		$("#file").val("");
+	}
 }
 </script>

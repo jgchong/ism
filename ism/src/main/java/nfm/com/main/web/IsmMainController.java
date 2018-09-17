@@ -9,6 +9,8 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import nfm.com.cum.service.Cum010SearchVO;
+import nfm.com.cum.service.Cum010Service;
 import nfm.com.main.service.Ismadj090VO;
 import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainSearchVO;
@@ -29,6 +31,10 @@ public class IsmMainController {
 	/** mainService */
 	@Resource(name = "mainService")
 	private MainService mainService;
+	
+	/** mainService */
+	@Resource(name = "cum010Service")
+	private Cum010Service cum010Service;
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@RequestMapping(value = "/ism/main/mainPage.do", produces="text/plain;charset=UTF-8")
@@ -118,6 +124,11 @@ public class IsmMainController {
 		model.addAttribute("mapMonthBar", (HashMap<String, String>) mainService.selectMonth());   //막대그래프의 월별 기준일자 select 값
 		model.addAttribute("countAndTime", (HashMap<String, String>) mainService.selectCountAndTime());   //메인화면의 건수 및 데이터 반영시점 값 select
 		model.addAttribute("dashBoardSetting", mainService.selectDashBoardSetting(loginVO.getId()));
+
+		//매출처에 3:보증보험발행 인 경우 오늘일자가 있는지 확인용
+		Cum010SearchVO cum010SearchVO = new Cum010SearchVO();
+		cum010SearchVO.setAccountamt("3");
+		model.addAttribute("resultList", cum010Service.selectList(cum010SearchVO));
 
 		return "ism/main/ismMain";
 	}

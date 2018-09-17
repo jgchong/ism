@@ -118,7 +118,7 @@ input.orderitemqty {
 	<c:if test="${result.uploadgubun eq 'M'}">
 							<li>
 								<p class="tit">${result.bycname}</p>
-								<p class="date">데이터반영시점<br/>${result.uploaddate}</p>
+								<p class="date">데이터반영시점 &nbsp; ${result.uploaddate}</p>
 								<p class="num">
 									<strong>${result.pocnt}</strong><span>건</span>
 								</p>

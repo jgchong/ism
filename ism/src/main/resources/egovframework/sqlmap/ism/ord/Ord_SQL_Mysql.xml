@@ -20,7 +20,7 @@
            a.shopmallname LIKE '%' #search_key1# '%'
         </isNotEmpty>
     </select>
-
+    
     <!-- 주문수집 목록 select -->
     <select id="ord010DAO.selectList" parameterClass="ord010SearchVO" resultClass="ismcum030VOOrd">
 	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
@@ -39,38 +39,38 @@
      order by $orderbyclause$
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
-
+    
     <select id="ord010DAO.selectManualDataDetail" parameterClass="String" resultClass="ismodo010VO">
 	select a.cum030id, a.additem, a.isassign, a.orderfield
       from ismodo010 a
      where a.cum030id = #cum030id#
     </select>
-
+    
     <select id="ord010DAO.selectApiDataDetail" parameterClass="String" resultClass="ismodo020VO">
 	select a.cum030id, a.apiurl, a.apicontext, a.apiversion
       from ismodo020 a
      where a.cum030id = #cum030id#
     </select>
-
+    
     <insert id="ord010DAO.insertApiDetailData" parameterClass="ismodo020VO">
 	insert into ismodo020 (cum030id, apiurl, apicontext, apiversion) values (#cum030id#, #apiurl#, #apicontext#, #apiversion#)
     </insert>
-
+    
     <update id="ord010DAO.updateApiDetailData" parameterClass="ismodo020VO">
 	update ismodo020
        set apiurl = #apiurl#, apicontext = #apicontext#, apiversion = #apiversion#
      where cum030id = #cum030id#
     </update>
-
+    
     <delete id="ord010DAO.deleteManualDetailData" parameterClass="String">
 	delete from ismodo010
      where cum030id = #cum030id#
     </delete>
-
+    
     <insert id="ord010DAO.insertManualDetailData" parameterClass="ismodo010VO">
 	insert into ismodo010 (cum030id, additem, isassign, orderfield) values (#cum030id#, #additem#, #isassign#, #orderfield#)
     </insert>
-
+    
     <insert id="ord010DAO.insertOrderMainData" parameterClass="ismodm010VO">
 	insert into ismodm010 (
 		orderno,        orderdate,         cum010id,      cum030id,       byc010id,       orderuser,          orderusercontact,
@@ -96,7 +96,7 @@
     </insert>
 
     <insert id="ord010DAO.insertOrderLogData" parameterClass="java.util.List">
-	insert into ismodl010 (cum010id, cum030id, uploaddate, uploadviewkey) values
+	insert into ismodl010 (cum010id, cum030id, uploaddate, uploadviewkey) values 
     <iterate conjunction=",">
 		(#[].cum010id#, #[].cum030id#, #[].uploaddate#, #[].uploadviewkey#)
 	</iterate>
@@ -109,21 +109,16 @@
            left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
-
+           
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
            left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
-
-           ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
-           LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
+           
+           ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g
      where a.cum010id = b.cum010id
        and a.cum030id = g.cum030id
        and b.cotype1 = c.CODE
        and c.CODE_ID = 'ISM020'
-       and b.cotype2 = h.CODE
-       and h.CODE_ID in ('ISM031','ISM032')
-       and b.cotype3 = i.CODE
-       and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044')
 		<isNotEmpty prepend="AND" property="search_key1">
            a.uploadviewkey LIKE '%' #search_key1# '%'
         </isNotEmpty>
@@ -143,12 +138,12 @@
         </isNotEqual>
 		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
         ]]>
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
         ]]>
         </isNotEmpty>
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
@@ -194,10 +189,7 @@
         	d.byc010id = #poSearch_byc010id# and IFNULL(d.itemgubun,'1') in ('1','3')
         </isNotEqual>
     </select>
-
-
-
-
+    
     <!-- 주문 목록 select -->
     <select id="ord020DAO.selectList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
 	select a.odm010id,         a.orderno,       DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY) , '%Y-%m-%d') as orderdate,
@@ -226,21 +218,18 @@
            left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
-
+           
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
            left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
-
-           ismcum010 b, LETTCCMMNDETAILCODE c, ismcum030 g,
-           LETTCCMMNDETAILCODE h, LETTCCMMNDETAILCODE i
+           
+           ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
+                       left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
+           LETTCCMMNDETAILCODE c, ismcum030 g
      where a.cum010id = b.cum010id
        and a.cum030id = g.cum030id
        and b.cotype1 = c.CODE
        and c.CODE_ID = 'ISM020'
-       and b.cotype2 = h.CODE
-       and h.CODE_ID in ('ISM031','ISM032')
-       and b.cotype3 = i.CODE
-       and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044')
 		<isNotEmpty prepend="AND" property="search_key1">
            a.uploadviewkey LIKE '%' #search_key1# '%'
         </isNotEmpty>
@@ -260,12 +249,12 @@
         </isNotEqual>
 		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) >= DATE_ADD(concat(#dtSearch_frOrderDt#,' 00:00:00'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
         ]]>
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
 		<![CDATA[
-        	IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)) <= DATE_ADD(concat(#dtSearch_toOrderDt#,' 23:59:59'), INTERVAL 0 DAY)
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
         ]]>
         </isNotEmpty>
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
@@ -313,7 +302,7 @@
      order by b.coname, a.orderno, a.orderitemid
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
-
+    
     <update id="ord020DAO.ord020SelectChgOrderStatus" parameterClass="java.util.HashMap">
 	update ismodm010
        set processdate = now()
@@ -331,7 +320,7 @@
         #chgodm010ids[]#
     	</iterate>
     </update>
-
+    
     <delete id="ord020DAO.ord020SelectDel" parameterClass="java.util.HashMap">
 	delete from ismodm010
      where odm010id in
@@ -355,8 +344,8 @@
 		<isNotEmpty prepend="," property="orderitemname">
            orderitemname = #orderitemname#
         </isNotEmpty>
-        <isNotEmpty prepend="," property="postno">
-            postno = #postno#
+		<isNotEmpty prepend="," property="postno">
+           postno = #postno#
         </isNotEmpty>
 		<isNotEmpty prepend="," property="address">
            address = #address#

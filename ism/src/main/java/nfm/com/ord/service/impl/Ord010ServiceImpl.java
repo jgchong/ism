@@ -340,7 +340,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	String postno = dbHeader.get("postno");
     	List<String> listPostNo = new ArrayList();
     	if (postno != null) {
-    		String[] postnos = postno.split(",");
+    		String[] postnos = postno.split("#");
 
     		for (String posnoSplit : postnos ){
     			listPostNo.add(fileHeader.get(posnoSplit));
@@ -350,7 +350,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	String address = dbHeader.get("address");
     	List<String> listAddress = new ArrayList();
     	if (address != null) {
-    		String[] addresss = address.split(",");
+    		String[] addresss = address.split("#");
 
     		for (String addressSplit : addresss ){
     			listAddress.add(fileHeader.get(addressSplit));

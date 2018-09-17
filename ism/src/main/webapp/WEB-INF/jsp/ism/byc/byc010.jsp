@@ -376,10 +376,14 @@ function viewBycData(byc010id) {
 
         	if (data.byctype != "") {
             	$('input:radio[name=byctype]:input[value=' + data.byctype + ']').attr("checked", true);
+        	}else{
+        		$('input:radio[name=byctype]:input[value=1]').attr("checked", true);
         	}
         	
         	if (data.cogubun != "") {
             	$('input:radio[name=cogubun]:input[value=' + data.cogubun + ']').attr("checked", true);
+        	}else{
+        		$('input:radio[name=cogubun]:input[value=1]').attr("checked", true);
         	}
 
         	if (data.useyn != "") {

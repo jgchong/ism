@@ -58,7 +58,7 @@
 			<ul class="topBt leng4">
 				<li><a href="/ism/ord/ord010.do">주문관리</a></li>
 				<li><a href="/ism/po/po010.do">발주관리</a></li>
-				<li><a href="m4.html">재고관리</a></li>
+				<li><a href="/ism/skd/skd010.do">재고관리</a></li>
 				<li><a href="javascript://" class="layerBt" name="dashBoardSetting">DashBoard 옵션</a></li>
 			</ul>
 			<div class="dashBoard">
@@ -267,6 +267,14 @@
 <script type="text/javascript" src="/js/jquery.form.js"></script>
 
 <script type="text/javascript">
+<c:set var="cntadjdate" value="0"/>
+<c:set var="stradjdate" value=""/>
+<c:forEach var="result" items="${resultList}" varStatus="status">
+	<c:set var="cntadjdate" value="${cntadjdate+1}"/>
+	<c:set var="stradjdate" value="${stradjdate}\n${result.shopmallname}"/>
+</c:forEach>
+var cntadjdate = "${cntadjdate}";
+var stradjdate = "${stradjdate}";
 //기초 선언 [s]
 //기본 색상 14개 setting
 var colorArra = ["#494841", "#0099a4", "#000080", "#c53c23", "#6a8518", "#003458", "#fbceb1", "#ff3399", "#392f31", "#f7e600", "#008d62", "#660099", "#800000", "#ff0000"];
@@ -372,6 +380,10 @@ $(document).ready(function(){
 	$("body").on("change", "#search_dayBar", function() {
 		setData($(this).val(), $("#search_periodBar").val(), $("#search_typeBar").val(), "Bar");
 	});
+
+	if (cntadjdate > 0) {
+		alert("아래 업체의 보증보험일자 확인 바랍니다.\n"+stradjdate);
+	}
 });
 
 //일별, 월별, 년별 버튼 클릭시 처리

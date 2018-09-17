@@ -118,7 +118,7 @@ public class Po010Controller {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/ism/po/po010SelectApiDetail.do")
+	@RequestMapping(value = "/ism/po/po010SelectApiDetail.do", produces="text/plain;charset=UTF-8")
 	public String po010SelectApiDetail(@RequestParam("byc010id") int byc010id) throws Exception {
 		
 		return po010Service.selectPoo020Json(byc010id);
