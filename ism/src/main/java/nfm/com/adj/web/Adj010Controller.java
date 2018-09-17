@@ -30,26 +30,33 @@ import java.util.*;
 
 @Controller
 public class Adj010Controller {
-    /** EgovMessageSource */
+    /**
+     * EgovMessageSource
+     */
     @Resource(name = "egovMessageSource")
     EgovMessageSource egovMessageSource;
 
-    /** EgovPropertyService */
+    /**
+     * EgovPropertyService
+     */
     @Resource(name = "propertiesService")
     protected EgovPropertyService propertiesService;
 
-    /** egovCmmUseService */
+    /**
+     * egovCmmUseService
+     */
     @Resource(name = "EgovCmmUseService")
     private EgovCmmUseService egovCmmUseService;
 
     @Autowired
     Adj010Service adj010Service;
 
-    @Resource(name="ord020DAO")
+    @Resource(name = "ord020DAO")
     private Ord020DAO ord020DAO;
 
     /**
      * 주문수집 목록
+     *
      * @param adj010SearchVO
      * @param model
      * @return
@@ -57,45 +64,63 @@ public class Adj010Controller {
      */
     @RequestMapping(value = "/ism/adj/adj010.do")
     public String mainList(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
-        // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
 
-        /** EgovPropertyService */
-        //ord020SearchVO.setPageUnit(propertiesService.getInt("pageUnit"));
-        adj010SearchVO.setPageSize(propertiesService.getInt("pageSize"));
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+        String yyyy01 = yyyymm.substring(0, 4);
+        String yyyy00 = String.valueOf(Integer.valueOf(yyyy01) - 1);
+        List<String> yyyymmList = getAllyyyymmList(yyyymm);
 
-        /** pageing [s] */
-        PaginationInfo paginationInfo = new PaginationInfo();
-        paginationInfo.setCurrentPageNo(adj010SearchVO.getPageIndex());
-        paginationInfo.setRecordCountPerPage(adj010SearchVO.getPageUnit());
-        paginationInfo.setPageSize(adj010SearchVO.getPageSize());
-
-        adj010SearchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-        adj010SearchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-        adj010SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-
-//        int totCnt = prd010Service.selectListTotCnt(adj010SearchVO);
-//        paginationInfo.setTotalRecordCount(totCnt);
-        model.addAttribute("paginationInfo", paginationInfo);
-        /** pageing [e]*/
-
-//        model.addAttribute("resultList", prd010Service.selectList(adj010SearchVO));
+        Adj020Result adj020Result00 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy00);
+        Adj020Result adj020Result01 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy01);
+        List<Adj020Result> adj020ResultList = new ArrayList<>();
+        for (String tempyyyymm : yyyymmList) {
+            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListBycAll(tempyyyymm);
+            adj020ResultList.add(adj020Result);
+        }
 
 
-       return "/ism/adj/adj010";
+        model.addAttribute("resultList", adj020Result00);
+
+        adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
+        return "/ism/adj/adj010";
     }
 
+    private List<String> getAllyyyymmList(String yyyymm) {
+        Integer today = Integer.valueOf(yyyymm);
+        List<String> yyyymmList = new ArrayList<>();
+        while (true) {
+            String endString = String.valueOf(today).substring(4, 6);
+            if (endString.equals("00")) {
+                break;
+            } else {
+                yyyymmList.add(String.valueOf(today));
+                today = today - 1;
+            }
+        }
+        Collections.reverse(yyyymmList);
+
+        return yyyymmList;
+    }
 
 
     @RequestMapping(value = "/ism/adj/adj020.do")
     public String mainList2(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -106,7 +131,7 @@ public class Adj010Controller {
             calender.add(Calendar.DATE, 0);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
-            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
         }
 
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_adj020_01())) {
@@ -129,9 +154,9 @@ public class Adj010Controller {
         List<Adj020Result> resultList;
 
         if ("1".equals(adj010SearchVO.getDtSearch_adj020_01())) {
-            resultList = adj010Service.adj020selectList(adj010SearchVO.getDtSearch_frCreateDt());
+            resultList = adj010Service.adj020selectListByc(adj010SearchVO.getDtSearch_frCreateDt());
         } else {
-            resultList = adj010Service.adj020selectList2(adj010SearchVO.getDtSearch_frCreateDt());
+            resultList = adj010Service.adj020selectListCum(adj010SearchVO.getDtSearch_frCreateDt());
         }
         Collections.sort(resultList, new Ascending());
         int totCnt = resultList.size();
@@ -158,7 +183,7 @@ public class Adj010Controller {
 
 
     private void initData(List<Adj020VO> top10bycList) {
-        for (int i = 0; i < 10; i ++) {
+        for (int i = 0; i < 10; i++) {
             if (top10bycList.size() < 10) {
                 Adj020VO adj020VO = new Adj020VO();
                 adj020VO.setByc010name("-");
@@ -169,12 +194,11 @@ public class Adj010Controller {
     }
 
 
-
     @RequestMapping(value = "/ism/adj/adj030.do")
     public String mainList3(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -215,7 +239,6 @@ public class Adj010Controller {
     }
 
 
-
     @Autowired
     Adj040DAO adj040DAO;
 
@@ -223,7 +246,7 @@ public class Adj010Controller {
     public String mainList4(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -234,7 +257,7 @@ public class Adj010Controller {
             calender.add(Calendar.DATE, 0);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
-            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
         }
         String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
 
@@ -251,7 +274,7 @@ public class Adj010Controller {
     public String mainList4_update(ModelMap model, int adj060id, String closedt, String in1, String in2, String in3, String in4) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -259,13 +282,12 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
         in3 = setStringToNull(in3);
         in4 = setStringToNull(in4);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -281,8 +303,6 @@ public class Adj010Controller {
         resultMessage.put("success", "success");
         return resultMessage.toJSONString();
     }
-
-
 
 
     @Resource(name = "skd010Service")
@@ -331,18 +351,18 @@ public class Adj010Controller {
 //        vo.setCodeId("ISM090");	//주문상태필드
 //        model.addAttribute("ISM090", egovCmmUseService.selectCmmCodeDetail(vo));
         model.addAttribute("whsList", prd010Service.selectWhsAll());
-        List <Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
-        for (int i = 0; i < 4; i ++) {
+        List<Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
+        for (int i = 0; i < 4; i++) {
             if (whsListForTop.size() < 4) {
                 Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
                 ismwhs010VO.setWhsname("창고없음");
                 whsListForTop.add(ismwhs010VO);
             }
         }
-        for (int i = 0; i < 4; i ++) {
+        for (int i = 0; i < 4; i++) {
             whsListForTop.get(i).setCmm020id(skd010Service.getSumItemea(i));
         }
-        for (int i = 4; i < 8; i ++) {
+        for (int i = 4; i < 8; i++) {
             Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
             ismwhs010VO.setCmm020id(skd010Service.getSumItemea(i));
             ismwhs010VO.setWhsname(skd010Service.getResultSumB(i));
@@ -368,7 +388,7 @@ public class Adj010Controller {
     public String mainList6(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -379,7 +399,7 @@ public class Adj010Controller {
             calender.add(Calendar.DATE, 0);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
-            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
         }
         String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
         adj060DAO.insertInit(yyyymm);
@@ -444,7 +464,7 @@ public class Adj010Controller {
                                    String in6, String in7, String in8, String in9, String in10, String in11, String in12) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -452,7 +472,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
@@ -466,7 +486,6 @@ public class Adj010Controller {
         in10 = setStringToNull(in10);
         in11 = setStringToNull(in11);
         in12 = setStringToNull(in12);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -506,7 +525,7 @@ public class Adj010Controller {
     public String mainList7(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -517,7 +536,7 @@ public class Adj010Controller {
             calender.add(Calendar.DATE, 0);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
-            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-",""));
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
         }
         String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
 
@@ -537,7 +556,7 @@ public class Adj010Controller {
     public String mainList7_update1(ModelMap model, String closedt, String in1, String in2, String in3) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -545,12 +564,11 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
         in3 = setStringToNull(in3);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -570,7 +588,7 @@ public class Adj010Controller {
     public String mainList7_update2(ModelMap model, String closedt, String in1, String in2, String in3) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -578,12 +596,11 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
         in3 = setStringToNull(in3);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -599,13 +616,12 @@ public class Adj010Controller {
     }
 
 
-
     @ResponseBody
     @RequestMapping(value = "/ism/adj/adj070update3.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public String mainList7_update3(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -613,11 +629,10 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -637,7 +652,7 @@ public class Adj010Controller {
     public String mainList7_update4(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
@@ -645,11 +660,10 @@ public class Adj010Controller {
         if (StringUtils.isBlank(closedt)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
-            closedt = closedt.replaceAll("-","");
+            closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
-
 
 
         Map<String, String> param = new HashMap<>();
@@ -668,11 +682,10 @@ public class Adj010Controller {
     public String mainList8(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
-        if(!isAuthenticated) {
+        if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
-
 
 
         return "/ism/adj/adj080";

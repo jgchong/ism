@@ -34,6 +34,10 @@ public class Adj020Result {
     public Long price10 = 0L;
     public Long price11 = 0L;
 
+
+
+    public Long namuge = 0L;
+
     public String getName() {
         return name;
     }
@@ -138,5 +142,11 @@ public class Adj020Result {
         this.priceAll = priceAll;
     }
 
+    public Long getNamuge() {
+        return namuge;
+    }
 
+    public void setNamuge(Long namuge) {
+        this.namuge = namuge;
+    }
 }

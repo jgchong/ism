@@ -38,8 +38,24 @@ public class Ord020DAO extends EgovAbstractDAO {
 		return list("adj020DAO.selectList", yyyymm);
 	}
 
+	public List<?> adj020selectListAll(String yyyymm) {
+		return list("adj020DAO.selectListAll", yyyymm);
+	}
+
+	public Object adj020selectListAllNull(String yyyymm) {
+		return select("adj020DAO.selectListAllNull", yyyymm);
+	}
+
 	public List<?> adj020selectListBYC(String yyyymm) {
-		return list("adj020DAO.selectList", yyyymm);
+		return list("adj020DAO.selectListBYC", yyyymm);
+	}
+
+	public List<?> adj020selectListBYCAll(String yyyymm) {
+		return list("adj020DAO.selectListBYCAll", yyyymm);
+	}
+
+	public Object adj020selectListBYCAllNull(String yyyymm) {
+		return select("adj020DAO.selectListBYCAllNull", yyyymm);
 	}
 
 	public List<?> adj020selectTop10List(String yyyymm) {

@@ -439,6 +439,30 @@
         order by cum030id asc
     </select>
 
+    <select id="adj020DAO.selectListAll" parameterClass="String" resultClass="adj020VO">
+        select
+        b.byc010id as byc010id,
+        sum(o1.orderitemprice) as itemprice,
+        sum(p.itembuyprice) as itembuyprice
+        from ismodm010 o1
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        where o1.closedt LIKE '%' #yyyymm# '%'
+        group by b.byc010id
+        order by byc010id asc
+    </select>
+
+    <select id="adj020DAO.selectListAllNull" parameterClass="String" resultClass="adj020VO">
+        select
+        sum(o1.orderitemprice) as itemprice,
+        sum(p.itembuyprice) as itembuyprice
+        from ismodm010 o1
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        where o1.closedt is NULL
+        and o1.orderdate LIKE '%' #yyyymm# '%'
+    </select>
+
     <select id="adj020DAO.selectListBYC" parameterClass="String" resultClass="adj020VO">
         select
         o1.cum010id as cum010id,
@@ -457,6 +481,30 @@
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
         group by o1.cum030id, b.byc010id
         order by cum030id asc
+    </select>
+
+    <select id="adj020DAO.selectListBYCAll" parameterClass="String" resultClass="adj020VO">
+        select
+        b.byc010id as byc010id,
+        sum(o1.orderitemprice) as itemprice,
+        sum(p.itembuyprice) as itembuyprice
+        from ismodm010 o1
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        where o1.bycclosedt LIKE '%' #yyyymm# '%'
+        group by b.byc010id
+        order by byc010id asc
+    </select>
+
+    <select id="adj020DAO.selectListBYCAllNull" parameterClass="String" resultClass="adj020VO">
+        select
+        sum(o1.orderitemprice) as itemprice,
+        sum(p.itembuyprice) as itembuyprice
+        from ismodm010 o1
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        where o1.bycclosedt is null
+        and o1.orderdate LIKE '%' #yyyymm# '%'
     </select>
 
     <select id="adj020DAO.selectTop10List" parameterClass="String" resultClass="adj020VO">
