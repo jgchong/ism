@@ -258,9 +258,11 @@ form.searchArea .searchMore li select {
 						</table>
 					</div>
 
+<c:if test="${ord020SearchVO.search_key1 eq ''}">
 					<div class="paging">
 						<ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
 					</div>
+</c:if>
 				</div>
 				<!-- contents 레이어 끝 -->
 			</div>
@@ -481,6 +483,7 @@ function search_status(status) {
 	document.form1.reset();
 	$('#search_status').val(status);
 	$('#search_cstype').val('0');
+	document.form1.pageIndex.value = 1;
 	$('#form1').submit();
 }
 

@@ -386,7 +386,7 @@ function viewCumData(cum010id) {
 				"				<td><input type='text' class='it ' title='' value='' name='shoppwd'/></td>"+
 				"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
 				"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
-				"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"
+				"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"+
 				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
 				"			</tr>";
 			}
@@ -437,6 +437,8 @@ function viewCumData(cum010id) {
         	
         	if (data.cogubun != "") {
             	$('input:radio[name=cogubun]:input[value=' + data.cogubun + ']').attr("checked", true);
+        	}else{
+            	$('input:radio[name=cogubun]:input[value=1]').attr("checked", true);
         	}
 
         	if (data.account != "") {

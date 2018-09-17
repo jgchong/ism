@@ -44,8 +44,9 @@
 		                   ELSE 0
 		               END AS monthseq, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 		          from ismodm010 a
-		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-		           and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+		         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+               between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+		           and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq
 	) aaa
@@ -88,15 +89,17 @@
 		                   ELSE 0
 		               END AS monthseq, a.orderitemid, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 		          from ismodm010 a
-		         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-		           and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+		         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+               between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+		           and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.orderitemid
 		) aaa,
 		(
 			select a.orderitemid, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0)) from ismodm010 a 
-			where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-			  and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+           between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 			  <![CDATA[
 			  and a.orderitemid <> ''
 			  ]]>
@@ -146,15 +149,17 @@
 	                   ELSE 0
 	               END AS monthseq, a.cum030id, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a
-		     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-		       and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+           between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.cum030id
 	) aaa,
 	(
 	select a.cum030id, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0)) from ismodm010 a
-     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-	   and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+     where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+   between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+       and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 	  <![CDATA[
 	   and a.cum030id <> ''
 	  ]]>
@@ -204,17 +209,18 @@
 	                   ELSE 0
 	               END AS monthseq, prd.byc010id, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
-		     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-		       and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+           between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.byc010id
 	) aaa,
 	(
 	select prd.byc010id, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0))
 	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
-
-     where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY)
-	   and DATE_ADD(concat(#search_day#,'235959'), INTERVAL 0 DAY)
+     where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+   between DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL -13 DAY),'%Y-%m-%d')
+       and DATE_FORMAT(DATE_ADD(concat(#search_day#,'000000'), INTERVAL 0 DAY),'%Y-%m-%d')
 		<![CDATA[
 	  and prd.byc010id <> ''
 	  	]]>
@@ -242,8 +248,9 @@
 	                   ELSE 0
 	               END AS monthseq, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a
-	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+	       between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq
 	) aaa;
@@ -265,15 +272,17 @@
 	               END AS monthseq,
 	               a.orderitemid, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a
-	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+	       between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.orderitemid
 	) aaa,
 	(
 	select a.orderitemid, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0)) from ismodm010 a 
-	where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	  and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+     where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+   between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+       and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 		<![CDATA[
 	  and a.orderitemid <> ''
 	  	]]>
@@ -302,15 +311,17 @@
 	               END AS monthseq,
 	               a.cum030id, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a
-	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+	       between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.cum030id
 	) aaa,
 	(
 	select a.cum030id, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0)) from ismodm010 a 
-	where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	  and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+     where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+   between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+       and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 		<![CDATA[
 	  and a.cum030id <> ''
 	  	]]>
@@ -339,16 +350,18 @@
 	               END AS monthseq,
 	               prd.byc010id, IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0) as amount
 	          from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
-	         where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	           and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH)
+	         where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+	       between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+	           and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 	        ) sub1
 	        group by sub1.monthseq, sub1.byc010id
 	) aaa,
 	(
 	select prd.byc010id, sum(IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0))
 	  from ismodm010 a left outer join ismprd010 prd on a.orderitemid = prd.itemcode
-	 where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH)
-	   and DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 DAY)
+     where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d')
+   between DATE_FORMAT(DATE_ADD(concat(#search_day#,'01000000'), INTERVAL -2 MONTH),'%Y-%m-%d')
+       and DATE_FORMAT(DATE_ADD(LAST_DAY(concat(#search_day#,'01')), INTERVAL 0 MONTH),'%Y-%m-%d')
 		<![CDATA[
 	   and prd.byc010id <> ''
 	    ]]>
@@ -377,8 +390,8 @@
 	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '11',IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0),0)) as chartValues11,
 	       sum(IF (MONTH(DATE_ADD(a.orderdate, INTERVAL 0 DAY)) = '12',IFNULL(a.orderitemqty,0) * IFNULL(a.orderitemprice,0),0)) as chartValues12
 	  from ismodm010 a
-	 where DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	   and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY);
+	 where DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	   and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY);
     </select>
     
     <!-- 상품별 매출액 년 -->
@@ -399,8 +412,8 @@
 	  from ismodm010 a join ismprd010 prd on a.orderitemid = prd.itemcode,
 	      (       
 	       select suba.orderitemid, sum(IFNULL(suba.orderitemqty,0) * IFNULL(suba.orderitemprice,0)) FROM ismodm010 suba
-	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	        where DATE_FORMAT(DATE_ADD(suba.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 			<![CDATA[
 	          and IFNULL(suba.orderitemid,'') <> ''
 	        ]]>
@@ -409,8 +422,8 @@
 	        limit 10
 	      ) b
 	 where a.orderitemid = b.orderitemid
-	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	   and DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	                                                                         and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 	 group by a.orderitemid, prd.itemname;
     </select>
     
@@ -432,16 +445,16 @@
 	  from ismodm010 a,
 	      (       
 	       select suba.cum030id, sum(IFNULL(suba.orderitemqty,0) * IFNULL(suba.orderitemprice,0)) FROM ismodm010 suba
-	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	        where DATE_FORMAT(DATE_ADD(suba.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 	        group by suba.cum030id
 	        order by sum(IFNULL(suba.orderitemqty,0) * IFNULL(suba.orderitemprice,0)) desc
-	        limit 3
+	        limit 10
 	      ) b, ismcum030 cum3
 	 where a.cum030id = b.cum030id
 	   and a.cum030id = cum3.cum030id
-	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	   and DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	                                                                         and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 	 group by a.cum030id;
     </select>
     
@@ -464,18 +477,18 @@
 	       left outer join ismbyc010 byc on byc.byc010id = prd.byc010id,
 	      (
 	       select subprd.byc010id, sum(IFNULL(suba.orderitemqty,0) * IFNULL(suba.orderitemprice,0)) FROM ismodm010 suba left outer join ismprd010 subprd on suba.orderitemid = subprd.itemcode
-	        where DATE_ADD(suba.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	          and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	        where DATE_FORMAT(DATE_ADD(suba.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	          and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 			<![CDATA[
 	          and subprd.byc010id <> ''
 	        ]]>
 	        group by subprd.byc010id
 	        order by sum(IFNULL(suba.orderitemqty,0) * IFNULL(suba.orderitemprice,0)) desc
-	        limit 3
+	        limit 10
 	      ) b
 	 where prd.byc010id = b.byc010id
-	   and DATE_ADD(a.orderdate, INTERVAL 0 DAY) between DATE_ADD(concat(#search_day#,'0101000000'), INTERVAL 0 DAY)
-	                                                 and DATE_ADD(concat(#search_day#,'1231235959'), INTERVAL 0 DAY)
+	   and DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY),'%Y-%m-%d') between DATE_ADD(concat(#search_day#,'0101'), INTERVAL 0 DAY)
+	                                                                         and DATE_ADD(concat(#search_day#,'1231'), INTERVAL 0 DAY)
 	 group by prd.byc010id, byc.bycname;
     </select>
     

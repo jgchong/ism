@@ -72,7 +72,8 @@ public class Ord010Controller {
 
 		ord010SearchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
 		ord010SearchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		ord010SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		ord010SearchVO.setRecordCountPerPage(10000);
+		//ord010SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
 		
 		int totCnt = ord010Service.selectListTotCnt(ord010SearchVO);
 		paginationInfo.setTotalRecordCount(totCnt);
@@ -169,7 +170,7 @@ public class Ord010Controller {
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/ord/odo020.do")
+	@RequestMapping(value = "/ism/ord/odo020.do", produces="text/plain;charset=UTF-8")
 	public String selectApiDataDetail(@RequestParam("cum030id") String cum030id) throws Exception {
 		return ord010Service.selectApiDataDetail(cum030id);
 	    //return retVal;

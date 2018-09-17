@@ -22,7 +22,7 @@
     <select id="cum010DAO.selectList" parameterClass="cum010SearchVO" resultClass="ismcum010VO">
 	select a.cum010id,    a.cono,     a.lawcono,      a.coname,  a.cotype1,    a.cotype2, a.cotype3,
            a.cogubun,     a.coaddr,   a.cobustype,    a.account, a.accountamt, a.useyn,   a.attachname,
-           a.account2,    a.cmm020id, a.accountamtdate,
+           a.account2,    a.cmm020id, ifnull(a.accountamtdate,'') as accountamtdate,
            case a.cogubun
 	           when '1' then '법인'
 	           when '2' then '개인'
@@ -40,6 +40,9 @@
 		<isNotEqual prepend="AND" property="cum010id" compareValue="0">
            a.cum010id = #cum010id#
         </isNotEqual>
+		<isEqual prepend="AND" property="accountamt" compareValue="3">
+           a.accountamt = '3' AND a.accountamtdate = DATE_FORMAT(now(), '%Y-%m-%d')
+        </isEqual>
      order by $orderbyclause$
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>

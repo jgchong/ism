@@ -66,25 +66,7 @@ public class Ord020Controller {
         	return "uat/uia/EgovLoginUsr";
     	}
 
-		/** EgovPropertyService */
-    	//ord020SearchVO.setPageUnit(propertiesService.getInt("pageUnit"));
-    	ord020SearchVO.setPageSize(propertiesService.getInt("pageSize"));
-    	
-		/** pageing [s] */
-		PaginationInfo paginationInfo = new PaginationInfo();
-		paginationInfo.setCurrentPageNo(ord020SearchVO.getPageIndex());
-		paginationInfo.setRecordCountPerPage(ord020SearchVO.getPageUnit());
-		paginationInfo.setPageSize(ord020SearchVO.getPageSize());
-
-		ord020SearchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
-		ord020SearchVO.setLastIndex(paginationInfo.getLastRecordIndex());
-		ord020SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
-		
-		int totCnt = ord020Service.selectListTotCnt(ord020SearchVO);
-		paginationInfo.setTotalRecordCount(totCnt);
-		model.addAttribute("paginationInfo", paginationInfo);
-		/** pageing [e]*/
-
+    	int pageUnit = ord020SearchVO.getPageUnit();
 		if (!"TEMP".equals(ord020SearchVO.getSearch_status())) {
 			if ( (ord020SearchVO.getDtSearch_frOrderDt() == null) || ("".equals(ord020SearchVO.getDtSearch_frOrderDt()) ) ) {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -97,7 +79,30 @@ public class Ord020Controller {
 				Calendar calender = Calendar.getInstance();
 				ord020SearchVO.setDtSearch_toOrderDt(formatter.format(calender.getTime()));
 			}
+		}else{
+			if (!"".equals(ord020SearchVO.getSearch_key1())) {
+				pageUnit = 10000;
+			}
 		}
+		
+		/** EgovPropertyService */
+    	//ord020SearchVO.setPageUnit(propertiesService.getInt("pageUnit"));
+    	ord020SearchVO.setPageSize(propertiesService.getInt("pageSize"));
+    	
+		/** pageing [s] */
+		PaginationInfo paginationInfo = new PaginationInfo();
+		paginationInfo.setCurrentPageNo(ord020SearchVO.getPageIndex());
+		paginationInfo.setRecordCountPerPage(pageUnit);
+		paginationInfo.setPageSize(ord020SearchVO.getPageSize());
+
+		ord020SearchVO.setFirstIndex(paginationInfo.getFirstRecordIndex());
+		ord020SearchVO.setLastIndex(paginationInfo.getLastRecordIndex());
+		ord020SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
+		
+		int totCnt = ord020Service.selectListTotCnt(ord020SearchVO);
+		paginationInfo.setTotalRecordCount(totCnt);
+		model.addAttribute("paginationInfo", paginationInfo);
+		/** pageing [e]*/
 		
 		model.addAttribute("resultList", ord020Service.selectList(ord020SearchVO));
 		//공통코드 전달

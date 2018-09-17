@@ -72,11 +72,11 @@ public class Byc010ServiceImpl extends EgovAbstractServiceImpl implements Byc010
 	    	jsonObject.put("purchaseform", "");
 	    	jsonObject.put("attachname", "");
 	    	jsonObject.put("byccode", "");
-	    	jsonObject.put("uploadgubun", "");
+	    	jsonObject.put("uploadgubun", "M");
 	    	jsonObject.put("orgfilename", "");
 	    	jsonObject.put("savefilename", "");
 	    	jsonObject.put("cmm020id", "0");
-	    	jsonObject.put("receivetype", "");
+	    	jsonObject.put("receivetype", "E");
 		}
 		
 	    for(Ismbyc010VO vo : listIsmbyc010VO){
