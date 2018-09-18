@@ -17,15 +17,22 @@ import nfm.com.skd.service.Skd010SearchVO;
 import nfm.com.skd.service.Skd010VO;
 import nfm.com.whs.service.Ismwhs010VO;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -402,7 +409,7 @@ public class Prd010Controller {
 
             if ("1".equals(prd010VO.getItemgubun())) {
                 obj.add("제조사출고상품");
-            } else if("2".equals(prd010VO.getItemgubun())) {
+            } else if ("2".equals(prd010VO.getItemgubun())) {
                 obj.add("재고관리상품");
             } else {
                 obj.add("사은품");
@@ -434,4 +441,211 @@ public class Prd010Controller {
         return bytes;
     }
 
+    /**
+     * 운영상품 데이터 일괄 업로드
+     *
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/ism/prd/prd010batchup.do", produces = "application/json; charset=utf8")
+    public String upload(MultipartHttpServletRequest mtfrequest) throws Exception {
+        List<Ismbyc010VO> ismbyc010VOList = (List<Ismbyc010VO>) prd010Service.selectBycAll();
+        List<Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
+        List<Prd010VO> prd010VOList = (List<Prd010VO>) prd010DAO.selectAll(); //단품 리스트
+        ComDefaultCodeVO vo = new ComDefaultCodeVO();
+        vo.setCodeId("ISM090");    //주문상태필드
+        List<CmmnDetailCode> cmmnDetailCodeList = egovCmmUseService.selectCmmCodeDetail(vo);
+
+
+        Map<String, Integer> bycMap = new HashMap<>();
+        for (Ismbyc010VO ismbyc010VO : ismbyc010VOList) {
+            bycMap.put(ismbyc010VO.getBycname(), ismbyc010VO.getByc010id());
+        }
+
+        Map<String, Integer> whsMap = new HashMap<>();
+        for (Ismwhs010VO ismwhs010VO : ismwhs010VOList) {
+            whsMap.put(ismwhs010VO.getWhsname(), ismwhs010VO.getWhs010id());
+        }
+
+        Map<String, Integer> prdMap = new HashMap<>();
+        for (Prd010VO prd010VO : prd010VOList) {
+            prdMap.put("" + prd010VO.getByc010id() + prd010VO.getItemname(), prd010VO.getByc010id());
+        }
+
+
+        try {
+            XSSFWorkbook wb = new XSSFWorkbook(mtfrequest.getFile("file1").getInputStream());
+            for (Row row : wb.getSheetAt(0)) {
+                if (row.getRowNum() == 0) {
+                    continue;
+                }
+                try {
+                    Map<String, String> param = new HashMap<>();
+                    String itemname;
+                    String byc010name;
+                    String itemcrossType;
+
+                    itemcrossType = row.getCell(1).getStringCellValue();
+                    if (StringUtils.isBlank(itemcrossType) || "결합".equals(itemcrossType)) {
+                        continue;
+                    } else if ("단품".equals(itemcrossType)) {
+                        param.put("detail_itemcrosstype", "S");
+                    } else {
+                        continue;
+                    }
+
+                    byc010name = row.getCell(2).getStringCellValue();
+                    if (StringUtils.isBlank(byc010name)) {
+                        continue;
+                    }
+
+                    if (bycMap.get(byc010name) == null) {
+                        continue;
+                    } else {
+                        param.put("detail_byc", "" + bycMap.get(byc010name));
+                    }
+
+                    itemname = row.getCell(4).getStringCellValue();
+                    if (StringUtils.isBlank(itemname)) {
+                        continue;
+                    }
+
+                    if (prdMap.get("" + bycMap.get(byc010name) + itemname) == null) {
+                        param.put("detail_itemname", itemname);
+                    } else {
+                        continue;
+                    }
+                    //상품명, 매입처, 결합여부 등록완료
+
+                    String itemCat1;
+
+                    itemCat1 = row.getCell(5).getStringCellValue();
+                    if (StringUtils.isBlank(itemCat1)) {
+                        continue;
+                    }
+
+                    boolean isPass = false;
+                    for (CmmnDetailCode cmmnDetailCode : cmmnDetailCodeList) {
+                        if (cmmnDetailCode.getCodeNm().equals(String.valueOf(itemCat1))) {
+                            param.put("detail_category", cmmnDetailCode.getCode());
+                            isPass = true;
+                        }
+                    }
+
+                    if (isPass == false) {
+                        continue;
+                    }
+                    isPass = false;
+
+
+                    String taxfree;
+
+                    taxfree = row.getCell(6).getStringCellValue();
+                    if (StringUtils.isBlank(taxfree)) {
+                        continue;
+                    } else if ("과세".equals(taxfree)) {
+                        param.put("detail_taxfree", "0");
+                    } else if ("비과세".equals(taxfree)) {
+                        param.put("detail_taxfree", "1");
+                    } else {
+                        continue;
+                    }
+
+                    param.put("detail_itemopt", row.getCell(7).getStringCellValue());
+                    param.put("detail_itemea", row.getCell(8).getStringCellValue());
+                    param.put("detail_itembuyprice", row.getCell(9).getStringCellValue());
+                    param.put("detail_itembuydlvprice", row.getCell(10).getStringCellValue());
+                    String itemgubun;
+
+                    itemgubun = row.getCell(11).getStringCellValue();
+                    if (StringUtils.isBlank(itemgubun)) {
+                        continue;
+                    } else if ("제조사출고상품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "1");
+                        param.put("detail_pristock", null);
+                        param.put("detail_itemsize", null);
+                        param.put("detail_cartonqty", null);
+                        param.put("detail_palletqty", null);
+                    } else if ("재고관리상품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "2");
+                        String whsname;
+                        whsname = row.getCell(12).getStringCellValue();
+                        if (StringUtils.isBlank(whsname)) {
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            continue;
+                        } else {
+                            param.put("detail_pristock", ""+whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", row.getCell(13).getStringCellValue());
+                        if (!isInteger(row.getCell(14).getStringCellValue())) {
+                            continue;
+                        }
+                        if (!isInteger(row.getCell(15).getStringCellValue())) {
+                            continue;
+                        }
+
+                        param.put("detail_cartonqty", row.getCell(14).getStringCellValue());
+                        param.put("detail_palletqty", row.getCell(15).getStringCellValue());
+
+
+                    } else if ("사은품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "3");
+                        String whsname;
+                        whsname = row.getCell(12).getStringCellValue();
+                        if (StringUtils.isBlank(whsname)) {
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            continue;
+                        } else {
+                            param.put("detail_pristock", ""+whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", row.getCell(13).getStringCellValue());
+                        if (!isInteger(row.getCell(14).getStringCellValue())) {
+                            continue;
+                        }
+                        if (!isInteger(row.getCell(15).getStringCellValue())) {
+                            continue;
+                        }
+
+                        param.put("detail_cartonqty", row.getCell(14).getStringCellValue());
+                        param.put("detail_palletqty", row.getCell(15).getStringCellValue());
+
+                        prd010Service.insertItem(param);
+                    } else {
+                        continue;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        } catch (FileNotFoundException fe) {
+            return "파일을 찾을 수 없습니다.";
+        } catch (IOException ie) {
+            return "잘못된 형식입니다.";
+        }
+
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("itemcode", "");
+        return resultMessage.toJSONString();
+    }
+
+    private boolean isInteger(String integerString) {
+        try {
+            int a = Integer.parseInt(integerString);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }
