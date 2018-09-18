@@ -98,7 +98,8 @@
     <update id="adj040DAO.updateItem07_03" parameterClass="java.util.HashMap">
         update ismadj040
         set
-        givesusuprice = #in1#
+        saleprice = #in0#
+        , givesusuprice = #in1#
         , policy = #in2#
         where cum010id = #adj060id#
         and closedt = #closedt#
@@ -133,6 +134,7 @@
         price1 = #in1#
         , price2 = #in2#
         , price3 = #in3#
+        , price33 = #in4#
         where closedt = #closedt#
     </update>
 

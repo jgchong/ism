@@ -76,6 +76,15 @@
             vertical-align: -2px;
         }
 
+        .muploadbtn {
+            margin: 5px;
+            padding: 3px 12px;
+            border: 0;
+            background: #45b6b6;
+            color: #fff;
+            font-size: 14px;
+        }
+
         form.searchArea .it {
             text-align: center;
             float: left;
@@ -112,6 +121,9 @@
         <div class="contentsWrap">
             <div class="contents">
                 <h2 class="pageTit">운영상품관리</h2>
+                <form id="prdfileform" name="prdfileform" action='/ism/prd/prd010batchup.do' enctype='multipart/form-data' method='post'>
+                    <input type="file" id="filePrd" name="file1" style="display:none" onchange="prdFileUpload()"/>
+                </form>
                 <form id="form1" name="form1" method="post" action="/ism/prd/prd010.do" class="searchArea">
                     <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_frCreateDt}" name="dtSearch_frCreateDt" placeHolder="시작등록일자"/>
                     <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_toCreateDt}" name="dtSearch_toCreateDt" placeHolder="종료등록일자"/>
@@ -124,7 +136,7 @@
                     <a href="javascript:;">정렬</a>
                     <a href="javascript:;" class="moreSearchBt">상세검색</a>
                     <ul style="margin-top: 10px; margin-bottom:10px;">
-                        <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
+                        <label for="filePrd" class="muploadbtn" style="margin-top: 30px;">운영상품 등록</label>
                         <a href="#" style="margin-top: 30px;">운영상품 일괄 업로드</a>
                         <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
                     </ul>
@@ -520,6 +532,22 @@
             }
         });
     });
+
+
+    function prdFileUpload() {
+        var options = {
+            success : function(data) {
+                alert("일괄 등록하였습니다.\n" + data)
+            },
+            error : function(xhr, status, error) {
+                alert("등록을 실패하였습니다." +
+                    "")
+            },
+            type : "POST"
+        };
+
+        $("#prdfileform").ajaxSubmit(options);
+    }
 
 
     $('#pageUnit').change(function () { //페이지 크기 변경

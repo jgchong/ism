@@ -20,8 +20,10 @@ import org.apache.poi.ss.usermodel.IndexedColors;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.util.CollectionUtils;
 
 public class ExcelManager {
     /**
@@ -45,6 +47,8 @@ public class ExcelManager {
     private Workbook mWorkbook;
 
     private String mSheetName = "sheet1";
+    private String mSheetName2;
+    private List<String> explainTextList;
 
     private List<Object> mHeader;
     private List<List<Object>> mData;
@@ -98,6 +102,14 @@ public class ExcelManager {
     	this.excelType = excelType;
     }
 
+    public void makeExpailnSheet(String sheetName) {
+        this.mSheetName2 = sheetName;
+    }
+
+    public void setExplainTextList(List<String> explainTextList) {
+        this.explainTextList = explainTextList;
+    }
+
     public byte[] makeExcel() {
 		
     	if ("xlsx".equals(excelType)) {
@@ -109,6 +121,21 @@ public class ExcelManager {
     	}
         Sheet sheet = mWorkbook.createSheet(mSheetName);
         Row headerRow = sheet.createRow(mStartRow);
+        if (mSheetName2 != null) {
+            Sheet explainSheet = mWorkbook.createSheet(mSheetName2);
+            if (!CollectionUtils.isEmpty(explainTextList)) {
+                int tempIndex = 0;
+                for(String explainText : explainTextList) {
+                    Row dataRow = explainSheet.createRow(tempIndex);
+                    Cell cell = dataRow.createCell(0);
+                    cell.setCellValue(explainText);
+                    tempIndex ++;
+                    explainSheet.addMergedRegion(new CellRangeAddress(tempIndex,tempIndex,0,1));
+                }
+            }
+            explainSheet.setColumnWidth(0, 50000);
+            explainSheet.setColumnWidth(1, 50000);
+        }
 
         int headerCount = mHeader.size();
 

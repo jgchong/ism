@@ -133,6 +133,16 @@ public class Adj040Result {
     private String namuge;
     private String sugumdate;
     private String sugumprice;
+
+    public Integer getSaleprice() {
+        return saleprice;
+    }
+
+    public void setSaleprice(Integer saleprice) {
+        this.saleprice = saleprice;
+    }
+
+    private Integer saleprice;
     private Integer givesusuprice;
     private String policy;
     private Integer exprice;

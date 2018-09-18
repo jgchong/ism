@@ -570,7 +570,7 @@ public class Adj010Controller {
 
     @ResponseBody
     @RequestMapping(value = "/ism/adj/adj070update1.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
-    public String mainList7_update1(ModelMap model, String closedt, String in1, String in2, String in3) throws Exception {
+    public String mainList7_update1(ModelMap model, String closedt, String in1, String in2, String in3, String in4) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
         if (!isAuthenticated) {
@@ -586,6 +586,7 @@ public class Adj010Controller {
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
         in3 = setStringToNull(in3);
+        in4 = setStringToNull(in4);
 
 
         Map<String, String> param = new HashMap<>();
@@ -593,6 +594,7 @@ public class Adj010Controller {
         param.put("in1", in1);
         param.put("in2", in2);
         param.put("in3", in3);
+        param.put("in4", in4);
         adj070DAO.updateItem07_01(param);
 
         JSONObject resultMessage = new JSONObject();
@@ -635,7 +637,7 @@ public class Adj010Controller {
 
     @ResponseBody
     @RequestMapping(value = "/ism/adj/adj070update3.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
-    public String mainList7_update3(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
+    public String mainList7_update3(ModelMap model, int adj060id, String closedt, String in0, String in1, String in2) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
         if (!isAuthenticated) {
@@ -648,6 +650,7 @@ public class Adj010Controller {
         } else {
             closedt = closedt.replaceAll("-", "");
         }
+        in0 = setStringToNull(in0);
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
 
@@ -655,6 +658,7 @@ public class Adj010Controller {
         Map<String, String> param = new HashMap<>();
         param.put("adj060id", String.valueOf(adj060id));
         param.put("closedt", closedt);
+        param.put("in0", in0);
         param.put("in1", in1);
         param.put("in2", in2);
         adj040DAO.updateItem07_03(param);

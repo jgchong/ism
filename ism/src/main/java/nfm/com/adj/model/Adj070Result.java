@@ -4,6 +4,16 @@ public class Adj070Result {
     private Integer price1;
     private Integer price2;
     private Integer price3;
+
+    public Integer getPrice33() {
+        return price33;
+    }
+
+    public void setPrice33(Integer price33) {
+        this.price33 = price33;
+    }
+
+    private Integer price33;
     private Integer price4;
     private Integer price5;
     private Integer price6;

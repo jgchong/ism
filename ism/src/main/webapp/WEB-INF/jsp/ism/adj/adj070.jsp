@@ -153,6 +153,11 @@
                                 <td><input type="text" class="it it2 adj070update1" value="${resultObject.price3}" name=""/></td>
                                 <c:set var="col_sum00" value="${col_sum00 + resultObject.price3}"/>
                             </tr>
+                            <tr>
+                                <td>파손,망실,분실 건</td>
+                                <td><input type="text" class="it it2 adj070update1" value="${resultObject.price33}" name=""/></td>
+                                <c:set var="col_sum00" value="${col_sum00 + resultObject.price33}"/>
+                            </tr>
                         </tbody>
                         <tfoot>
                         <tr class="total">
@@ -166,7 +171,7 @@
 
 
                 <div style="clear:right;float:right;width:50%;height:50%;background-Color:#FFF2FF">
-                    1) 타부서 사용금액
+                    2) 타부서 사용금액
                     <table cellpadding="0" cellspacing="0" class="" summary="">
                         <caption></caption>
                         <colgroup>
@@ -215,6 +220,7 @@
                             <col width="*"/>
                             <col width="18%"/>
                             <col width="18%"/>
+                            <col width="18%"/>
                             <col width="30%"/>
                             <col width="10%"/>
                         </colgroup>
@@ -222,6 +228,7 @@
                         <tr>
                             <th scope="col">매출처</th>
                             <th scope="col">매출액</th>
+                            <th scope="col">판매금액</th>
                             <th scope="col">지금수수료</th>
                             <th scope="col">정산정책</th>
                             <th scope="col"></th>
@@ -232,9 +239,11 @@
                             <tr>
                                 <td>${result.cum010name}</td>
                                 <td>${result.price}</td>
+                                <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.saleprice}" name=""/></td>
                                 <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.givesusuprice}" name=""/></td>
                                 <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.policy}" name=""/></td>
                                 <td><a href="javascript:" onclick="updateItem3(${result.cum010id})" class="btn">확인</a></td>
+                                <c:set var="col_sum0000" value="${col_sum0000 + result.saleprice}"/>
                                 <c:set var="col_sum01" value="${col_sum01 + result.price}"/>
                                 <c:set var="col_sum02" value="${col_sum02 + result.givesusuprice}"/>
                             </tr>
@@ -244,6 +253,7 @@
                         <tr class="total">
                             <td>합계</td>
                             <td>${col_sum01}</td>
+                            <td>${col_sum0000}</td>
                             <td>${col_sum02}</td>
                             <td></td>
                             <td></td>
@@ -261,7 +271,6 @@
                             <col width="*"/>
                             <col width="18%"/>
                             <col width="18%"/>
-                            <col width="30%"/>
                             <col width="10%"/>
                         </colgroup>
                         <thead>
@@ -269,7 +278,6 @@
                             <th scope="col">매출처</th>
                             <th scope="col">금액</th>
                             <th scope="col">메모</th>
-                            <th scope="col">정산정책</th>
                             <th scope="col"></th>
                         </tr>
                         </thead>
@@ -333,7 +341,8 @@
                 "closedt": $(".monthPicker").val(),
                 "in1": input[0],
                 "in2": input[1],
-                "in3": input[2]
+                "in3": input[2],
+                "in4": input[3]
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
@@ -421,8 +430,9 @@
             data: {
                 "adj060id": adj060id,
                 "closedt": $(".monthPicker").val(),
-                "in1": input[0],
-                "in2": input[1]
+                "in0": input[0],
+                "in1": input[1],
+                "in2": input[2]
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
