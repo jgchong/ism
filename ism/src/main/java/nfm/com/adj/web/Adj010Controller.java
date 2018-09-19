@@ -85,19 +85,57 @@ public class Adj010Controller {
 
         Adj020Result adj020ResultBYC0 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy00);
         Adj020Result adj020ResultBYC1 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy01);
-        List<Adj020Result> adj020ResultBYCList = new ArrayList<>();
-        for (String tempyyyymm : yyyymmList) {
-            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListBycAll(tempyyyymm);
-            adj020ResultBYCList.add(adj020Result);
-        }
 
         Adj020Result adj020ResultCUM0 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy00);
         Adj020Result adj020ResultCUM1 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy01);
+
+        List<Adj020Result> adj020ResultBYCList = new ArrayList<>();
         List<Adj020Result> adj020ResultCUMList = new ArrayList<>();
+        List<Adj010Result> adj010ResultList = new ArrayList<>();
         for (String tempyyyymm : yyyymmList) {
-            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListCumAll(tempyyyymm);
-            adj020ResultCUMList.add(adj020Result);
+            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListBycAll(tempyyyymm);
+            adj020ResultBYCList.add(adj020Result);
+
+            Adj020Result adj020ResultCUM = (Adj020Result) adj010Service.adj020selectListCumAll(tempyyyymm);
+            adj020ResultCUMList.add(adj020ResultCUM);
+
+            Adj010Result adj010Result00 = new Adj010Result();
+
+            Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(tempyyyymm);
+            Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(tempyyyymm);
+
+            adj010Result00.price3_1 = adj020ResultCUM.getPriceAll() - adj020Result.getPriceAll();
+            try {
+                adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price3_2 = 9999999L;
+            }
+
+            adj010Result00.price4_1 = adj040Result00.getExprice();
+            adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
+            adj010Result00.price4_3 = 0L;
+            adj010Result00.price4_4 = adj070Result00.getPrice1();
+            adj010Result00.price4_5 = adj070Result00.getPrice2();
+            adj010Result00.price4_6 = adj040Result00.getSaleprice();
+            adj010Result00.price4_7 = adj070Result00.getPrice3();
+            adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+            adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
+            try {
+                adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price5_2 = 9999999L;
+            }
+            adj010Result00.price6 = adj040Result00.getExprice();
+            adj010Result00.price7 = adj070Result00.getPrice33();
+            adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
+            try {
+                adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price9 = 9999999L;
+            }
+            adj010ResultList.add(adj010Result00);
         }
+
         model.addAttribute("yyyy00", yyyy00);
         model.addAttribute("yyyy01", yyyy01);
         model.addAttribute("yyyymmList", yyyymmList);
@@ -110,6 +148,87 @@ public class Adj010Controller {
         List<Adj020VO> top10bycList = (List<Adj020VO>) ord020DAO.adj020selectTop10List(adj010SearchVO.getDtSearch_frCreateDt());
         initData(top10bycList);
         model.addAttribute("top10bycList", top10bycList);
+
+
+        Adj010Result adj010Result00 = new Adj010Result();
+        Adj010Result adj010Result01 = new Adj010Result();
+
+
+        //전년도 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+        adj010Result00.price3_1 = adj020ResultCUM0.getPriceAll() - adj020ResultBYC0.getPriceAll();
+        try {
+            adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price3_2 = 9999999L;
+        }
+
+        Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
+        Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(yyyy00);
+
+        adj010Result00.price4_1 = adj040Result00.getExprice();
+        adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
+        adj010Result00.price4_3 = 0L;
+        adj010Result00.price4_4 = adj070Result00.getPrice1();
+        adj010Result00.price4_5 = adj070Result00.getPrice2();
+        adj010Result00.price4_6 = adj040Result00.getSaleprice();
+        adj010Result00.price4_7 = adj070Result00.getPrice3();
+        adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+        adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
+        try {
+            adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price5_2 = 9999999L;
+        }
+        adj010Result00.price6 = adj040Result00.getExprice();
+        adj010Result00.price7 = adj070Result00.getPrice33();
+        adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
+        try {
+            adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price9 = 9999999L;
+        }
+
+
+        // 전년도 끝
+
+        adj010Result01.price3_1 = adj020ResultCUM1.getPriceAll() - adj020ResultBYC1.getPriceAll();
+        try {
+            adj010Result01.price3_2 = adj010Result01.price3_1 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price3_2 = 9999999L;
+        }
+
+        Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
+        Adj070Result adj070Result01 = (Adj070Result) adj070DAO.selectObject(yyyy01);
+
+        adj010Result01.price4_1 = adj040Result01.getExprice();
+        adj010Result01.price4_2 = adj040Result01.getGivesusuprice();
+        adj010Result01.price4_3 = 0L;
+        adj010Result01.price4_4 = adj070Result01.getPrice1();
+        adj010Result01.price4_5 = adj070Result01.getPrice2();
+        adj010Result01.price4_6 = adj040Result01.getSaleprice();
+        adj010Result01.price4_7 = adj070Result01.getPrice3();
+        adj010Result01.price4_sum = adj010Result01.price4_1 + adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
+        adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
+        try {
+            adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price5_2 = 9999999L;
+        }
+        adj010Result01.price6 = adj040Result01.getExprice();
+        adj010Result01.price7 = adj070Result01.getPrice33();
+        adj010Result01.price8 = adj010Result01.price5_1 + adj010Result01.price6 - adj010Result01.price7;
+        try {
+            adj010Result01.price9 = adj010Result01.price8 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price9 = 9999999L;
+        }
+
+        model.addAttribute("adj010Result00", adj010Result00);
+        model.addAttribute("adj010Result01", adj010Result01);
+        model.addAttribute("adj010ResultList", adj010ResultList);
+
 
         adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj010";

@@ -1,6 +1,7 @@
 package nfm.com.adj.dao;
 
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
+import nfm.com.adj.model.Adj040Result;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,6 +12,11 @@ public class Adj040DAO extends EgovAbstractDAO {
     public List<?> selectList(String yyyymm) {
         return list("adj040DAO.selectList", yyyymm);
     }
+
+    public Object selectListSum(String yyyymm) {
+        return select("adj040DAO.selectListSum", yyyymm);
+    }
+
     public void insertInit(String yyyymm) {
         try {
             insert("adj040DAO.insertInit", yyyymm);

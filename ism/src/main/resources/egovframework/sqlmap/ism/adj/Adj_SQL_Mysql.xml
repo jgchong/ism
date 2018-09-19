@@ -84,6 +84,20 @@
         order by cum010id asc
     </select>
 
+    <select id="adj040DAO.selectListSum" parameterClass="String" resultClass="adj040Result">
+        select
+        sum(exprice) as exprice,
+        sum(givesusuprice) as givesusuprice,
+        (select
+        ifnull(sum(dlprice),0) +
+        ifnull(sum(retprice),0) + ifnull(sum(airprice),0) + ifnull(sum(doprice),0) + ifnull(sum(missprice),0) + ifnull(sum(saveprice),0) + ifnull(sum(moveprice),0)
+        + ifnull(sum(workprice),0) + ifnull(sum(subprice),0) + ifnull(sum(claim),0)
+        from ismadj060
+        where closedt LIKE '%' #yyyymm# '%') as saleprice
+        from ismadj040
+        where closedt LIKE '%' #yyyymm# '%'
+    </select>
+
     <update id="adj040DAO.updateItem" parameterClass="java.util.HashMap">
         update ismadj040
         set
@@ -122,10 +136,15 @@
 
     <select id="adj070DAO.selectList" parameterClass="String" resultClass="adj070Result">
         select
-        *
+        sum(price1) as price1,
+        sum(price2) as price2,
+        sum(price3) as price3,
+        sum(price33) as price33,
+        sum(price4) as price4,
+        sum(price5) as price5,
+        sum(price6) as price6
         from ismadj070
-        where closedt = #yyyymm#
-        limit 1
+        where closedt LIKE '%' #yyyymm# '%'
     </select>
 
     <update id="adj070DAO.updateItem07_01" parameterClass="java.util.HashMap">

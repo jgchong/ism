@@ -135,6 +135,9 @@ public class Adj020Result {
     }
 
     public Long getPriceAll() {
+        if (priceAll == null) {
+            priceAll = 0L;
+        }
         return priceAll;
     }
 

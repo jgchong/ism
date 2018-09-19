@@ -367,188 +367,188 @@
                         <tr class="col3">
                             <th scope="row">Ⅲ.매출총이익 <br/>(차월이월 제외)</th>
                             <td>(Ⅰ-Ⅱ)</td>
-                            <td class="redBold">2,835,913,616</td>
-                            <td class="redBold">33,087,994</td>
-                            <td class="r">33,087,994</td>
-                            <td>0</td>
-                            <td class="r">0</td>
+                            <td class="redBold">${adj010Result00.price3_1}</td>
+                            <td class="redBold">${adj010Result01.price3_1}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price3_1}</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col3">
                             <th scope="row">Ⅲ-Ⅰ.매출총이익율</th>
                             <td>(Ⅲ/Ⅰ)</td>
-                            <td>16.5%</td>
-                            <td>1.7%</td>
-                            <td>1.7%</td>
-                            <td>#DIV/0!</td>
-                            <td>#DIV/0!</td>
+                            <td class="redBold">${adj010Result00.price3_2}%</td>
+                            <td class="redBold">${adj010Result01.price3_2}%</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price3_2}%</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col1">
                             <th scope="row" rowspan="8"> Ⅳ.판관비</th>
                             <td>판관비 총액 (1+2+...+7-8-9)</td>
-                            <td>610,712,693</td>
-                            <td>105,667,944</td>
-                            <td class="r">105,667,944</td>
-                            <td>0</td>
-                            <td class="r">0</td>
+                            <td class="redBold">${adj010Result00.price4_sum}</td>
+                            <td class="redBold">${adj010Result01.price4_sum}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_sum}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>1.지급수수료 (고객사 선공제)</td>
-                            <td>409,940</td>
-                            <td>72,427</td>
-                            <td> 72,427</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_1}</td>
+                            <td class="redBold">${adj010Result01.price4_1}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_1}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>2.지급수수료 (영업사)</td>
-                            <td>2,290,888</td>
-                            <td>1,057,891</td>
-                            <td> 1,057,891</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_2}</td>
+                            <td class="redBold">${adj010Result01.price4_2}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_2}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>3.지급수수료 (PG 외)</td>
-                            <td>195,480,700</td>
-                            <td>15,122,235</td>
-                            <td> 15,122,235</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_3}</td>
+                            <td class="redBold">${adj010Result01.price4_3}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_3}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>4.광고선전비 (사은품,협찬)</td>
-                            <td>327,273</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_4}</td>
+                            <td class="redBold">${adj010Result01.price4_4}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_4}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>5.광고선전비 (샘플)</td>
-                            <td>1,936,509</td>
-                            <td>631,545</td>
-                            <td> 631,545</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_5}</td>
+                            <td class="redBold">${adj010Result01.price4_5}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_5}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>6.운반보관비</td>
-                            <td>402,728,483</td>
-                            <td>83,089,759</td>
-                            <td> 83,089,759</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_6}</td>
+                            <td class="redBold">${adj010Result01.price4_6}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_6}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>7.기타</td>
-                            <td>7,538,901</td>
-                            <td>5,694,085</td>
-                            <td> 5,694,085</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price4_7}</td>
+                            <td class="redBold">${adj010Result01.price4_7}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price4_7}</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col3">
                             <th scope="row">Ⅴ.영업손익</th>
                             <td>(Ⅲ-Ⅳ)</td>
-                            <td class="redBold">2,225,200,924</td>
-                            <td class="redBold">-72,579,950</td>
-                            <td class="r redBold">-72,579,950</td>
-                            <td>0</td>
-                            <td class="r">0</td>
+                            <td class="redBold">${adj010Result00.price5_1}</td>
+                            <td class="redBold">${adj010Result01.price5_1}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price5_1}</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col3">
                             <th scope="row">Ⅴ-Ⅰ.영업손익율</th>
                             <td>(Ⅴ/Ⅰ)</td>
-                            <td>13.0%</td>
-                            <td>-3.6%</td>
-                            <td>-3.6%</td>
-                            <td>#DIV/0!</td>
-                            <td>#DIV/0!</td>
+                            <td class="redBold">${adj010Result00.price5_2}%</td>
+                            <td class="redBold">${adj010Result01.price5_2}%</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price5_2}%</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <th scope="row">Ⅵ.영업외수익</th>
                             <td>(판매장려금 외)</td>
-                            <td>5,228,826</td>
-                            <td>668,190</td>
-                            <td> 668,190</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price6}</td>
+                            <td class="redBold">${adj010Result01.price6}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price6}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <th scope="row">Ⅶ.영업외비용</th>
                             <td>(파손,망실,분실 외)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">${adj010Result00.price7}</td>
+                            <td class="redBold">${adj010Result01.price7}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price7}</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <th scope="row" rowspan="6">웰스토어 내역</th>
                             <td>1. 웰스토어(포인트 지급액)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>2. 웰스토어(포인트 사용액)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col1">
                             <td>포인트 소계 (1-2)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>3. 웰스토어(적립금 지급액)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr>
                             <td>4. 웰스토어(적립금 지급액)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col1">
                             <td>적립금 소계 (3-4)</td>
-                            <td>0</td>
-                            <td>0</td>
-                            <td> -</td>
-                            <td>0</td>
-                            <td> -</td>
+                            <td class="redBold">0</td>
+                            <td class="redBold">0</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>0</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col3">
                             <th scope="row">Ⅷ.순손익</th>
                             <td>(Ⅴ+Ⅵ-Ⅶ)</td>
-                            <td class="redBold">2,230,429,750</td>
-                            <td class="redBold">-71,911,760</td>
-                            <td class="r redBold">-71,911,760</td>
-                            <td>0</td>
-                            <td class="r">0</td>
+                            <td class="redBold">${adj010Result00.price8}</td>
+                            <td class="redBold">${adj010Result01.price8}</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price8}</td>
+                            </c:forEach>
                         </tr>
                         <tr class="col3">
                             <th scope="row">Ⅷ-Ⅰ. 순손익율</th>
                             <td>(Ⅷ/Ⅰ)</td>
-                            <td>13.0%</td>
-                            <td>-3.6%</td>
-                            <td>-3.6%</td>
-                            <td>#DIV/0!</td>
-                            <td>#DIV/0!</td>
+                            <td class="redBold">${adj010Result00.price9}%</td>
+                            <td class="redBold">${adj010Result01.price9}%</td>
+                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
+                                <td>${adj010ResultList[status.index].price9}%</td>
+                            </c:forEach>
                         </tr>
                     </table>
                 </div>

@@ -136,8 +136,8 @@
                     <a href="javascript:;">정렬</a>
                     <a href="javascript:;" class="moreSearchBt">상세검색</a>
                     <ul style="margin-top: 10px; margin-bottom:10px;">
-                        <label for="filePrd" class="muploadbtn" style="margin-top: 30px;">운영상품 등록</label>
-                        <a href="#" style="margin-top: 30px;">운영상품 일괄 업로드</a>
+                        <label for="filePrd" class="muploadbtn" style="margin-top: 30px;">운영상품 일괄 등록</label>
+                        <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
                         <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
                     </ul>
                     <div class="searchMore">

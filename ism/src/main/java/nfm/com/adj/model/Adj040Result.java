@@ -81,11 +81,14 @@ public class Adj040Result {
         this.sugumprice = sugumprice;
     }
 
-    public Integer getGivesusuprice() {
+    public Long getGivesusuprice() {
+        if (givesusuprice == null) {
+            givesusuprice = 0L;
+        }
         return givesusuprice;
     }
 
-    public void setGivesusuprice(Integer givesusuprice) {
+    public void setGivesusuprice(Long givesusuprice) {
         this.givesusuprice = givesusuprice;
     }
 
@@ -97,11 +100,14 @@ public class Adj040Result {
         this.policy = policy;
     }
 
-    public Integer getExprice() {
+    public Long getExprice() {
+        if (exprice == null) {
+            exprice = 0L;
+        }
         return exprice;
     }
 
-    public void setExprice(Integer exprice) {
+    public void setExprice(Long exprice) {
         this.exprice = exprice;
     }
 
@@ -134,17 +140,20 @@ public class Adj040Result {
     private String sugumdate;
     private String sugumprice;
 
-    public Integer getSaleprice() {
+    public Long getSaleprice() {
+        if (saleprice == null) {
+            saleprice = 0L;
+        }
         return saleprice;
     }
 
-    public void setSaleprice(Integer saleprice) {
+    public void setSaleprice(Long saleprice) {
         this.saleprice = saleprice;
     }
 
-    private Integer saleprice;
-    private Integer givesusuprice;
+    private Long saleprice;
+    private Long givesusuprice;
     private String policy;
-    private Integer exprice;
+    private Long exprice;
     private String memo;
 }
