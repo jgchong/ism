@@ -10,6 +10,7 @@ import nfm.com.adj.dao.Adj060DAO;
 import nfm.com.adj.dao.Adj070DAO;
 import nfm.com.adj.model.*;
 import nfm.com.adj.service.*;
+import nfm.com.exl.util.ExcelManager;
 import nfm.com.ord.service.Adj020VO;
 import nfm.com.ord.service.impl.Ord020DAO;
 import nfm.com.prd.service.Prd010Service;
@@ -25,6 +26,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -681,7 +686,7 @@ public class Adj010Controller {
         List<Adj040Result> adj040Results = (List<Adj040Result>) adj040DAO.selectList(yyyymm);
         model.addAttribute("resultObject", adj070DAO.selectObject(yyyymm));
         model.addAttribute("resultList3", adj040Results);
-        model.addAttribute("resultList4", adj040Results);
+        model.addAttribute("resultList4", adj070DAO.selectAdj0702List(yyyymm));
 
         adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj070";
@@ -746,7 +751,7 @@ public class Adj010Controller {
         param.put("in1", in1);
         param.put("in2", in2);
         param.put("in3", in3);
-        adj070DAO.updateItem07_02(param);
+        adj070DAO.updateItem0702(param);
 
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
@@ -788,8 +793,8 @@ public class Adj010Controller {
     }
 
     @ResponseBody
-    @RequestMapping(value = "/ism/adj/adj070update4.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
-    public String mainList7_update4(ModelMap model, int adj060id, String closedt, String in1, String in2) throws Exception {
+    @RequestMapping(value = "/ism/adj/adj070insert4.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String adj070insert4(ModelMap model, String closedt, String in1, String in2, String ln3) throws Exception {
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
         if (!isAuthenticated) {
@@ -797,21 +802,49 @@ public class Adj010Controller {
             return "uat/uia/EgovLoginUsr";
         }
 
-        if (StringUtils.isBlank(closedt)) {
+        if (StringUtils.isBlank(closedt) || StringUtils.isBlank(in1)) {
             return "정상적으로 값을 입력해주세요.";
         } else {
             closedt = closedt.replaceAll("-", "");
         }
         in1 = setStringToNull(in1);
         in2 = setStringToNull(in2);
+        ln3 = setStringToNull(ln3);
 
 
         Map<String, String> param = new HashMap<>();
-        param.put("adj060id", String.valueOf(adj060id));
-        param.put("closedt", closedt);
+        param.put("yyyymm", closedt);
         param.put("in1", in1);
         param.put("in2", in2);
-        adj040DAO.updateItem07_04(param);
+        param.put("ln3", ln3);
+        adj070DAO.insertAdj0702(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update4.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update4(ModelMap model, int adj060id, String in0, String in1, String in2) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if (!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        in0 = setStringToNull(in0);
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj0702id", String.valueOf(adj060id));
+        param.put("in0", in0);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        adj070DAO.updateItem0702(param);
 
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
@@ -829,6 +862,689 @@ public class Adj010Controller {
 
 
         return "/ism/adj/adj080";
+    }
+
+
+    @RequestMapping(value = "/ism/adj/adj010ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj010ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+        String yyyy01 = yyyymm.substring(0, 4);
+        String yyyy00 = String.valueOf(Integer.valueOf(yyyy01) - 1);
+        List<String> yyyymmList = getAllyyyymmList(yyyymm);
+
+        Adj020Result adj020ResultBYC0 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy00);
+        Adj020Result adj020ResultBYC1 = (Adj020Result) adj010Service.adj020selectListBycAll(yyyy01);
+
+        Adj020Result adj020ResultCUM0 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy00);
+        Adj020Result adj020ResultCUM1 = (Adj020Result) adj010Service.adj020selectListCumAll(yyyy01);
+
+        List<Adj020Result> adj020ResultBYCList = new ArrayList<>();
+        List<Adj020Result> adj020ResultCUMList = new ArrayList<>();
+        List<Adj010Result> adj010ResultList = new ArrayList<>();
+        for (String tempyyyymm : yyyymmList) {
+            Adj020Result adj020Result = (Adj020Result) adj010Service.adj020selectListBycAll(tempyyyymm);
+            adj020ResultBYCList.add(adj020Result);
+
+            Adj020Result adj020ResultCUM = (Adj020Result) adj010Service.adj020selectListCumAll(tempyyyymm);
+            adj020ResultCUMList.add(adj020ResultCUM);
+
+            Adj010Result adj010Result00 = new Adj010Result();
+
+            Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(tempyyyymm);
+            Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(tempyyyymm);
+
+            adj010Result00.price3_1 = adj020ResultCUM.getPriceAll() - adj020Result.getPriceAll();
+            try {
+                adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price3_2 = 9999999L;
+            }
+
+            adj010Result00.price4_1 = adj040Result00.getExprice();
+            adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
+            adj010Result00.price4_3 = 0L;
+            adj010Result00.price4_4 = adj070Result00.getPrice1();
+            adj010Result00.price4_5 = adj070Result00.getPrice2();
+            adj010Result00.price4_6 = adj040Result00.getSaleprice();
+            adj010Result00.price4_7 = adj070Result00.getPrice3();
+            adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+            adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
+            try {
+                adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price5_2 = 9999999L;
+            }
+            adj010Result00.price6 = adj040Result00.getExprice();
+            adj010Result00.price7 = adj070Result00.getPrice33();
+            adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
+            try {
+                adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM.getPriceAll();
+            } catch (Exception e) {
+                adj010Result00.price9 = 9999999L;
+            }
+            adj010ResultList.add(adj010Result00);
+        }
+
+
+        List<Adj020VO> top10bycList = (List<Adj020VO>) ord020DAO.adj020selectTop10List(adj010SearchVO.getDtSearch_frCreateDt());
+        initData(top10bycList);
+
+
+        Adj010Result adj010Result00 = new Adj010Result();
+        Adj010Result adj010Result01 = new Adj010Result();
+
+
+        //전년도 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+
+        adj010Result00.price3_1 = adj020ResultCUM0.getPriceAll() - adj020ResultBYC0.getPriceAll();
+        try {
+            adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price3_2 = 9999999L;
+        }
+
+        Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
+        Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(yyyy00);
+
+        adj010Result00.price4_1 = adj040Result00.getExprice();
+        adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
+        adj010Result00.price4_3 = 0L;
+        adj010Result00.price4_4 = adj070Result00.getPrice1();
+        adj010Result00.price4_5 = adj070Result00.getPrice2();
+        adj010Result00.price4_6 = adj040Result00.getSaleprice();
+        adj010Result00.price4_7 = adj070Result00.getPrice3();
+        adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+        adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
+        try {
+            adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price5_2 = 9999999L;
+        }
+        adj010Result00.price6 = adj040Result00.getExprice();
+        adj010Result00.price7 = adj070Result00.getPrice33();
+        adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
+        try {
+            adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM0.priceAll;
+        } catch (Exception e) {
+            adj010Result00.price9 = 9999999L;
+        }
+
+
+        // 전년도 끝
+
+        adj010Result01.price3_1 = adj020ResultCUM1.getPriceAll() - adj020ResultBYC1.getPriceAll();
+        try {
+            adj010Result01.price3_2 = adj010Result01.price3_1 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price3_2 = 9999999L;
+        }
+
+        Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
+        Adj070Result adj070Result01 = (Adj070Result) adj070DAO.selectObject(yyyy01);
+
+        adj010Result01.price4_1 = adj040Result01.getExprice();
+        adj010Result01.price4_2 = adj040Result01.getGivesusuprice();
+        adj010Result01.price4_3 = 0L;
+        adj010Result01.price4_4 = adj070Result01.getPrice1();
+        adj010Result01.price4_5 = adj070Result01.getPrice2();
+        adj010Result01.price4_6 = adj040Result01.getSaleprice();
+        adj010Result01.price4_7 = adj070Result01.getPrice3();
+        adj010Result01.price4_sum = adj010Result01.price4_1 + adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
+        adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
+        try {
+            adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price5_2 = 9999999L;
+        }
+        adj010Result01.price6 = adj040Result01.getExprice();
+        adj010Result01.price7 = adj070Result01.getPrice33();
+        adj010Result01.price8 = adj010Result01.price5_1 + adj010Result01.price6 - adj010Result01.price7;
+        try {
+            adj010Result01.price9 = adj010Result01.price8 / adj020ResultCUM1.priceAll;
+        } catch (Exception e) {
+            adj010Result01.price9 = 9999999L;
+        }
+
+
+
+
+        adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("구분");
+        header.add("분류");
+        header.add(yyyy00 + "년도");
+        header.add(yyyy01 + "년도");
+        for (int i = 0; i < yyyymmList.size(); i++) {
+            header.add(yyyy01 + "년" + (i+1) + "월");
+        }
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add("매출총액");
+            obj01.add(decimalFormat.format(adj020ResultCUM0.priceAll));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.priceAll));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).priceAll));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(0).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price01));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price01));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price01));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(1).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price02));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price02));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price02));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(2).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price03));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price03));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price03));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(3).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price04));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price04));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price04));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(4).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price05));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price05));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price05));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(5).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price06));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price06));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price06));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(6).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price07));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price07));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price07));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(7).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price08));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price08));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price08));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(8).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price09));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price09));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price09));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add(top10bycList.get(9).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price10));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price10));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price10));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("1. 매출액");
+            obj01.add("기타");
+            obj01.add(decimalFormat.format(adj020ResultCUM0.price11));
+            obj01.add(decimalFormat.format(adj020ResultCUM1.price11));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultCUMList.get(i).price11));
+            }
+            data.add(obj01);
+        }
+
+        //MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add("매입총액");
+            obj01.add(decimalFormat.format(adj020ResultBYC0.priceAll));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.priceAll));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).priceAll));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(0).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price01));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price01));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price01));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(1).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price02));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price02));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price02));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(2).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price03));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price03));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price03));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(3).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price04));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price04));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price04));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(4).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price05));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price05));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price05));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(5).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price06));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price06));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price06));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(6).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price07));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price07));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price07));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(7).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price08));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price08));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price08));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(8).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price09));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price09));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price09));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add(top10bycList.get(9).getByc010name());
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price10));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price10));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price10));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("2. 매입액");
+            obj01.add("기타");
+            obj01.add(decimalFormat.format(adj020ResultBYC0.price11));
+            obj01.add(decimalFormat.format(adj020ResultBYC1.price11));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj020ResultBYCList.get(i).price11));
+            }
+            data.add(obj01);
+        }
+
+        model.addAttribute("yyyy00", yyyy00);
+        model.addAttribute("yyyy01", yyyy01);
+        model.addAttribute("yyyymmList", yyyymmList);
+        model.addAttribute("adj020ResultBYC0", adj020ResultBYC0);
+        model.addAttribute("adj020ResultBYC1", adj020ResultBYC1);
+        model.addAttribute("adj020ResultBYCList", adj020ResultBYCList);
+        model.addAttribute("adj020ResultCUM0", adj020ResultCUM0);
+        model.addAttribute("adj020ResultCUM1", adj020ResultCUM1);
+        model.addAttribute("adj020ResultCUMList", adj020ResultCUMList);
+        model.addAttribute("top10bycList", top10bycList);
+
+        model.addAttribute("adj010Result00", adj010Result00);
+        model.addAttribute("adj010Result01", adj010Result01);
+        model.addAttribute("adj010ResultList", adj010ResultList);
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("3.1 매출총이익");
+            obj01.add("(1 - 2)");
+            obj01.add(decimalFormat.format(adj010Result00.price3_1));
+            obj01.add(decimalFormat.format(adj010Result01.price3_1));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price3_1));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("3.2 매출총이익률");
+            obj01.add("3 / 1");
+            obj01.add(adj010Result00.price3_2 + "%");
+            obj01.add(adj010Result01.price3_2 + "%");
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(adj010ResultList.get(i).price3_2 + "%");
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("판관비 총액");
+            obj01.add(decimalFormat.format(adj010Result00.price4_sum));
+            obj01.add(decimalFormat.format(adj010Result01.price4_sum));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_sum));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("지급수수료(고객사 선공제)");
+            obj01.add(decimalFormat.format(adj010Result00.price4_1));
+            obj01.add(decimalFormat.format(adj010Result01.price4_1));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_1));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("지급수수료(영업사)");
+            obj01.add(decimalFormat.format(adj010Result00.price4_2));
+            obj01.add(decimalFormat.format(adj010Result01.price4_2));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_2));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("지급수수료(PG 외)");
+            obj01.add(decimalFormat.format(adj010Result00.price4_3));
+            obj01.add(decimalFormat.format(adj010Result01.price4_3));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_3));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("광고선전비(사은품, 협찬)");
+            obj01.add(decimalFormat.format(adj010Result00.price4_4));
+            obj01.add(decimalFormat.format(adj010Result01.price4_4));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_4));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("광고선전비(샘플)");
+            obj01.add(decimalFormat.format(adj010Result00.price4_5));
+            obj01.add(decimalFormat.format(adj010Result01.price4_5));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_5));
+            }
+            data.add(obj01);
+        }
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("운반보관비");
+            obj01.add(decimalFormat.format(adj010Result00.price4_6));
+            obj01.add(decimalFormat.format(adj010Result01.price4_6));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_6));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("4. 판관비");
+            obj01.add("기타");
+            obj01.add(decimalFormat.format(adj010Result00.price4_7));
+            obj01.add(decimalFormat.format(adj010Result01.price4_7));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_7));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("5.1 영업손익");
+            obj01.add("(3 - 4)");
+            obj01.add(decimalFormat.format(adj010Result00.price5_1));
+            obj01.add(decimalFormat.format(adj010Result01.price5_1));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price5_1));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("5.2 매출총이익률");
+            obj01.add("(5 / 1)");
+            obj01.add(adj010Result00.price5_2 + "%");
+            obj01.add(adj010Result01.price5_2 + "%");
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(adj010ResultList.get(i).price5_2 + "%");
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("6 영업외 수익");
+            obj01.add("판매장려금 외");
+            obj01.add(decimalFormat.format(adj010Result00.price6));
+            obj01.add(decimalFormat.format(adj010Result01.price6));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price6));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("7 영업외 수익");
+            obj01.add("파손, 망실, 분실 외");
+            obj01.add(decimalFormat.format(adj010Result00.price7));
+            obj01.add(decimalFormat.format(adj010Result01.price7));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price7));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("8.1 순손익");
+            obj01.add("(5 + 6 - 7)");
+            obj01.add(decimalFormat.format(adj010Result00.price8));
+            obj01.add(decimalFormat.format(adj010Result01.price8));
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(decimalFormat.format(adj010ResultList.get(i).price8));
+            }
+            data.add(obj01);
+        }
+
+        {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("8.2 순손익률");
+            obj01.add("(8 / 1)");
+            obj01.add(adj010Result00.price9 + "%");
+            obj01.add(adj010Result01.price9 + "%");
+            for (int i = 0; i < yyyymmList.size(); i++) {
+                obj01.add(adj010ResultList.get(i).price9 + "%");
+            }
+            data.add(obj01);
+        }
+
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("운영상품관리");
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xls");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ItemManagementExcel.xls");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
     }
 
 

@@ -4,6 +4,7 @@
     <typeAlias alias="adj060Result" type="nfm.com.adj.model.Adj060Result"/>
     <typeAlias alias="adj040Result" type="nfm.com.adj.model.Adj040Result"/>
     <typeAlias alias="adj070Result" type="nfm.com.adj.model.Adj070Result"/>
+    <typeAlias alias="adj0702Result" type="nfm.com.adj.model.Adj0702Result"/>
 
     <insert id="adj060DAO.insertInit" parameterClass="String">
         insert IGNORE into ismadj060 (adj060id, closedt, adj060name)
@@ -86,7 +87,10 @@
 
     <select id="adj040DAO.selectListSum" parameterClass="String" resultClass="adj040Result">
         select
-        sum(exprice) as exprice,
+        (select
+        sum(price)
+        from ismadj0702
+        where closedt LIKE '%' #yyyymm# '%') as exprice,
         sum(givesusuprice) as givesusuprice,
         (select
         ifnull(sum(dlprice),0) +
@@ -115,15 +119,6 @@
         saleprice = #in0#
         , givesusuprice = #in1#
         , policy = #in2#
-        where cum010id = #adj060id#
-        and closedt = #closedt#
-    </update>
-
-    <update id="adj040DAO.updateItem07_04" parameterClass="java.util.HashMap">
-        update ismadj040
-        set
-        exprice = #in1#
-        , memo = #in2#
         where cum010id = #adj060id#
         and closedt = #closedt#
     </update>
@@ -157,13 +152,25 @@
         where closedt = #closedt#
     </update>
 
-    <update id="adj070DAO.updateItem07_02" parameterClass="java.util.HashMap">
-        update ismadj070
-        set
-        price4 = #in1#
-        , price5 = #in2#
-        , price6 = #in3#
-        where closedt = #closedt#
-    </update>
+    <insert id="adj0702DAO.insert" parameterClass="java.util.HashMap">
+        insert into ismadj0702 (closedt,bycname,price,memo)
+        values
+        (#yyyymm#,#in1#,#in2#,#in3#)
+    </insert>
 
+    <select id="adj0702DAO.selectList" parameterClass="String" resultClass="Adj0702Result">
+        select
+        *
+        from ismadj0702
+        where closedt = #yyyymm#
+    </select>
+
+    <update id="adj0702DAO.update" parameterClass="java.util.HashMap">
+        update ismadj0702
+        set
+        bycname = #in0#
+        ,price = #in1#
+        , memo = #in2#
+        where adj0702id = #adj0702id#
+    </update>
 </sqlMap>

@@ -110,8 +110,8 @@
                 <li><a href="adj080.do">정산도움말</a></li>
             </ul>
             <ul class="topBt">
-                <li><a href="#">엑셀 다운로드</a></li>
-                <li><a href="#">프린트 출력</a></li>
+                <li><a id="excelDownbtn" href="#">엑셀 다운로드</a></li>
+                <li><a href="#" onclick="window.print()">프린트 출력</a></li>
             </ul>
             <div class="contents">
                 <h2 class="pageTit">상품수불부</h2>

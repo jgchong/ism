@@ -538,6 +538,7 @@
         var options = {
             success : function(data) {
                 alert("일괄 등록하였습니다.\n" + data)
+                location.href="/ism/prd/prd010.do";
             },
             error : function(xhr, status, error) {
                 alert("등록을 실패하였습니다." +

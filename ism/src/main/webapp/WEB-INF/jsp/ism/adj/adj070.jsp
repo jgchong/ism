@@ -282,13 +282,19 @@
                         </tr>
                         </thead>
                         <tbody>
+                        <tr>
+                            <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="매입처"/></td>
+                            <td><input type="number" class="it it2 adj070insert4" value="" name="" placeholder="금액"/></td>
+                            <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="메모"/></td>
+                            <td><a href="javascript:" onclick="insertItem4()" class="btn">추가하기</a></td>
+                        </tr>
                         <c:forEach var="result" items="${resultList4}" varStatus="status">
                             <tr>
-                                <td>${result.cum010name}</td>
-                                <td><input type="text" class="it it2 adj070update4${result.cum010id}" value="${result.exprice}" name=""/></td>
-                                <td><input type="text" class="it it2 adj070update4${result.cum010id}" value="${result.memo}" name=""/></td>
-                                <td><a href="javascript:" onclick="updateItem4(${result.cum010id})" class="btn">확인</a></td>
-                                <c:set var="col_sum03" value="${col_sum03 + result.exprice}"/>
+                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.bycname}" name=""/></td>
+                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.price}" name=""/></td>
+                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.memo}" name=""/></td>
+                                <td><a href="javascript:" onclick="updateItem4(${result.adj0702id})" class="btn">확인</a></td>
+                                <c:set var="col_sum03" value="${col_sum03 + result.price}"/>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -359,7 +365,7 @@
                 } else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
                 } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
                 } else if (exception === 'timeout') {
                     msg = 'Time out error.';
                 } else if (exception === 'abort') {
@@ -403,7 +409,7 @@
                 } else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
                 } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
                 } else if (exception === 'timeout') {
                     msg = 'Time out error.';
                 } else if (exception === 'abort') {
@@ -449,7 +455,51 @@
                 } else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
                 } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
+    function insertItem4() {
+        var input = new Array();
+
+
+        $('.adj070insert4').each(function (index, item) {
+            input[index] = $(this).val()
+        });
+        $.ajax({
+            url: "/ism/adj/adj070insert4.do",
+            type: "post",
+            data: {
+                "closedt": $(".monthPicker").val(),
+                "in1": input[0],
+                "in2": input[1],
+                "in3": input[2]
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("등록되었습니다.");
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
                 } else if (exception === 'timeout') {
                     msg = 'Time out error.';
                 } else if (exception === 'abort') {
@@ -475,8 +525,9 @@
             data: {
                 "adj060id": adj060id,
                 "closedt": $(".monthPicker").val(),
-                "in1": input[0],
-                "in2": input[1]
+                "in0": input[0],
+                "in1": input[1],
+                "in2": input[2]
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
@@ -493,7 +544,7 @@
                 } else if (jqXHR.status == 500) {
                     msg = 'Internal Server Error [500].';
                 } else if (exception === 'parsererror') {
-                    msg = 'Requested JSON parse failed.';
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
                 } else if (exception === 'timeout') {
                     msg = 'Time out error.';
                 } else if (exception === 'abort') {

@@ -498,7 +498,7 @@ public class Prd010Controller {
                     String byc010name;
                     String itemcrossType;
 
-                    itemcrossType = row.getCell(1).getStringCellValue();
+                    itemcrossType = getRowStringValue(row,1);
                     if (StringUtils.isBlank(itemcrossType) || "결합".equals(itemcrossType)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <결합여부 없음>\n";
                         continue;
@@ -509,7 +509,7 @@ public class Prd010Controller {
                         continue;
                     }
 
-                    byc010name = row.getCell(2).getStringCellValue();
+                    byc010name = getRowStringValue(row,2);
                     if (StringUtils.isBlank(byc010name)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <매입처 없음>\n";
                         continue;
@@ -522,7 +522,7 @@ public class Prd010Controller {
                         param.put("detail_byc", "" + bycMap.get(byc010name));
                     }
 
-                    itemname = row.getCell(4).getStringCellValue();
+                    itemname = getRowStringValue(row,4);
                     if (StringUtils.isBlank(itemname)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <상품이름 없음>\n";
                         continue;
@@ -538,7 +538,7 @@ public class Prd010Controller {
 
                     String itemCat1;
 
-                    itemCat1 = row.getCell(5).getStringCellValue();
+                    itemCat1 = getRowStringValue(row,5);
                     if (StringUtils.isBlank(itemCat1)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <카테고리 값 없음>\n";
                         continue;
@@ -562,7 +562,7 @@ public class Prd010Controller {
 
                     String taxfree;
 
-                    taxfree = row.getCell(6).getStringCellValue();
+                    taxfree = getRowStringValue(row,6);
                     if (StringUtils.isBlank(taxfree)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <면세 값 없음>\n";
                         continue;
@@ -575,13 +575,13 @@ public class Prd010Controller {
                         continue;
                     }
 
-                    param.put("detail_itemopt", emptyStringToNull(row.getCell(7).getStringCellValue()));
-                    param.put("detail_itemea", emptyStringToNull(row.getCell(8).getStringCellValue()));
-                    param.put("detail_itembuyprice", emptyStringToNull(row.getCell(9).getStringCellValue()));
-                    param.put("detail_itembuydlvprice", emptyStringToNull(row.getCell(10).getStringCellValue()));
+                    param.put("detail_itemopt", emptyStringToNull(getRowStringValue(row,7)));
+                    param.put("detail_itemea", emptyStringToNull(getRowStringValue(row,8)));
+                    param.put("detail_itembuyprice", emptyStringToNull(getRowStringValue(row,9)));
+                    param.put("detail_itembuydlvprice", emptyStringToNull(getRowStringValue(row,10)));
                     String itemgubun;
 
-                    itemgubun = row.getCell(11).getStringCellValue();
+                    itemgubun = getRowStringValue(row,11);
                     if (StringUtils.isBlank(itemgubun)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 구분 값 없음>\n";
                         continue;
@@ -594,7 +594,7 @@ public class Prd010Controller {
                     } else if ("재고관리상품".equals(itemgubun)) {
                         param.put("detail_itemgubun", "2");
                         String whsname;
-                        whsname = row.getCell(12).getStringCellValue();
+                        whsname = getRowStringValue(row,12);
                         if (StringUtils.isBlank(whsname)) {
                             result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
                             continue;
@@ -607,9 +607,9 @@ public class Prd010Controller {
                             param.put("detail_pristock", "" + whsMap.get(whsname));
                         }
 
-                        param.put("detail_itemsize", emptyStringToNull(row.getCell(13).getStringCellValue()));
-                        param.put("detail_cartonqty", emptyStringToNull(row.getCell(14).getStringCellValue()));
-                        param.put("detail_palletqty", emptyStringToNull(row.getCell(15).getStringCellValue()));
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row,13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row,14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row,15)));
                     } else if ("사은품".equals(itemgubun)) {
                         param.put("detail_itemgubun", "3");
                         String whsname;
@@ -626,9 +626,9 @@ public class Prd010Controller {
                             param.put("detail_pristock", "" + whsMap.get(whsname));
                         }
 
-                        param.put("detail_itemsize", emptyStringToNull(row.getCell(13).getStringCellValue()));
-                        param.put("detail_cartonqty", emptyStringToNull(row.getCell(14).getStringCellValue()));
-                        param.put("detail_palletqty", emptyStringToNull(row.getCell(15).getStringCellValue()));
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row,13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row,14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row,15)));
                     } else {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 구분 값 입력>\n";
                         continue;
@@ -651,6 +651,17 @@ public class Prd010Controller {
 
         return result;
     }
+
+    public String getRowStringValue(Row row, int i) {
+        String result = null;
+        try {
+            result = row.getCell(i).getStringCellValue();
+        } catch (Exception e) {
+
+        }
+        return result;
+    }
+
 
     private String emptyStringToNull(String getString) {
         if (StringUtils.isBlank(getString)) {

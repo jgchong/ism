@@ -32,8 +32,5 @@ public class Adj040DAO extends EgovAbstractDAO {
         update("adj040DAO.updateItem07_03", param);
     }
 
-    public void updateItem07_04(Map param) {
-        update("adj040DAO.updateItem07_04", param);
-    }
 }
 
