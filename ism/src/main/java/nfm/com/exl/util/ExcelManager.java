@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Locale;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FormulaEvaluator;
@@ -52,6 +53,9 @@ public class ExcelManager {
 
     private List<Object> mHeader;
     private List<List<Object>> mData;
+
+    private List<Integer> mRowColorList = new ArrayList<>();
+    private List<Integer> mColorList = new ArrayList<>();
     
     private InputStream mReadFile;
 
@@ -63,7 +67,11 @@ public class ExcelManager {
     }
     
     public ExcelManager() {
+    }
 
+    public void addRowColor(int row, int colorIndex) {
+        mRowColorList.add(row);
+        mColorList.add(colorIndex);
     }
     
     public ExcelManager(InputStream excelFile) {
@@ -181,9 +189,41 @@ public class ExcelManager {
                 }
 
                 setCell(dataCell, cellStr, mDataColor.getIndex(), cellStyle);
+
+                int colorIndex = 0;
+                for (Integer row : mRowColorList) {
+                    try {
+                        if (row == i) {
+                            CellStyle styleOfColorTest = mWorkbook.createCellStyle();
+                            styleOfColorTest.setFillBackgroundColor(Short.parseShort(String.valueOf(mColorList.get(colorIndex))));
+                            styleOfColorTest.setFillForegroundColor(Short.parseShort(String.valueOf(mColorList.get(colorIndex))));
+
+                            styleOfColorTest.setBorderBottom(CellStyle.BORDER_THICK);
+                            styleOfColorTest.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+
+                            styleOfColorTest.setBorderLeft(CellStyle.BORDER_THICK);
+                            styleOfColorTest.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+
+                            styleOfColorTest.setBorderRight(CellStyle.BORDER_THICK);
+                            styleOfColorTest.setRightBorderColor(IndexedColors.BLACK.getIndex());
+
+                            styleOfColorTest.setBorderTop(CellStyle.BORDER_THICK);
+                            styleOfColorTest.setTopBorderColor(IndexedColors.BLACK.getIndex());
+
+                            dataCell.setCellStyle(styleOfColorTest);
+                            break;
+                        }
+                    } catch (Exception ignore) {
+                        ignore.printStackTrace();
+                    }
+                    colorIndex ++;
+                }
                 sheet.setColumnWidth(i, mWidth);
             }
         }
+
+
+
         byte[] bytes = new byte[0];
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

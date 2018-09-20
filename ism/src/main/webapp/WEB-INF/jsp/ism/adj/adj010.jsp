@@ -121,6 +121,7 @@
             <ul class="topBt">
                 <li><a id="excelDownbtn" href="#">엑셀 다운로드</a></li>
                 <li><a href="#" onclick="window.print()">프린트 출력</a></li>
+                <li><a href="javascript:openPopAccount();">정산마감</a></li>
             </ul>
             <div class="contents">
                 <h2 class="pageTit">종합판매정산</h2>
@@ -584,6 +585,12 @@
         document.form1.submit();
         document.form1.action = "<c:url value='/ism/adj/adj010.do'/>";
     });
+
+
+    function openPopAccount() {
+        window.open("/ism/main/mainAccountClose.do","account close","width=700,height=350,menubar=no,resizable=no,scrollbars=no,toolbar=no");
+    }
+
 
 </script>
 <script type="text/javascript">

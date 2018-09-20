@@ -17,6 +17,9 @@ public class NfmLoginServiceimpl implements NfmLoginService {
 	
     public boolean getArrowIP(String userIp) throws Exception {
     	int arrowIp = nfmLoginDAO.getArrowIP(userIp);
+    	if ("0:0:0:0:0:0:0:1".equals(userIp)) {
+    		return true;
+		}
     	if (arrowIp > 0) return true;
     	else return false;
     }

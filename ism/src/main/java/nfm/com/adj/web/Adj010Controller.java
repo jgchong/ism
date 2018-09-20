@@ -1017,8 +1017,6 @@ public class Adj010Controller {
         }
 
 
-
-
         adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
 
 
@@ -1029,7 +1027,7 @@ public class Adj010Controller {
         header.add(yyyy00 + "년도");
         header.add(yyyy01 + "년도");
         for (int i = 0; i < yyyymmList.size(); i++) {
-            header.add(yyyy01 + "년" + (i+1) + "월");
+            header.add(yyyy01 + "년" + (i + 1) + "월");
         }
 
         DecimalFormat decimalFormat = new DecimalFormat("###,###");
@@ -1530,17 +1528,26 @@ public class Adj010Controller {
             data.add(obj01);
         }
 
-
         ExcelManager excelManager = new ExcelManager(header, data);
         excelManager.setSheetName("운영상품관리");
         excelManager.setWidth(6000);
         excelManager.setStartRow(0);
         excelManager.setStartCol(0);
-        excelManager.setExcelType("xls");
+        excelManager.setExcelType("xlsx");
+        excelManager.addRowColor(1, 31);
+        excelManager.addRowColor(13, 31);
+        excelManager.addRowColor(25, 29);
+        excelManager.addRowColor(26, 29);
+        excelManager.addRowColor(27, 31);
+        excelManager.addRowColor(35, 29);
+        excelManager.addRowColor(36, 29);
+        excelManager.addRowColor(39, 29);
+        excelManager.addRowColor(40, 29);
+
 
         byte[] bytes = excelManager.makeExcel();
 
-        response.setHeader("Content-Disposition", "attachment; filename=ItemManagementExcel.xls");
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel.xlsx");
         response.setContentLength(bytes.length);
         response.setContentType("application/vnd.ms-excel");
 
