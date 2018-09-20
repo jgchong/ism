@@ -69,6 +69,9 @@ li img {
 .itcs1 {
 	width:49%;display:none;float:right;text-align:center;
 }
+.rowPointer {
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -115,10 +118,10 @@ li img {
 							</thead>
 							<tbody>
 <c:forEach var="result" items="${resultList}" varStatus="status">
-								<tr>
+								<tr onclick="viewCumData('${result.cum010id}')" class="layerBt rowPointer" name="sales">
 									<!-- <td><input type="checkbox" value="" name=""/></td> -->
 									<td>${result.cotype1nm} > ${result.cotype2nm} > ${result.cotype3nm}</td>
-									<td><a href="javascript://" onclick="viewCumData('${result.cum010id}')" class="layerBt" name="sales"><c:out value="${result.coname}"/></a></td>
+									<td><c:out value="${result.coname}"/></td>
 									<td>${result.cogubunnm}</td>
 									<td>${result.cono}</td>
 									<td>${result.shopmallname}</td>
@@ -162,8 +165,8 @@ li img {
 		<p class="layerTit">매출처 등록 및 수정</p>
 		<div id="cumDetailData" class="layerContents"><div class="inner" style="height:900px;"></div></div>
 		<p class="layerFootBt">
-			<a href="javascript:saveCumAll();" class="confirm">확인</a>
-			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">취소</a>
+			<a href="javascript:saveCumAll();" class="confirm">저장</a>
+			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">닫기</a>
 		</p>
 		<a href="javascript://" onclick="closeLayerPop()" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
 	</div>

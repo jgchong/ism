@@ -130,7 +130,7 @@ public class Ord020Controller {
 	 * 팝업으로 변경하면서 미사용
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/ord/odo020SelectOrderOne.do")
+	@RequestMapping(value = "/ism/ord/odo020SelectOrderOne.do", produces="text/plain;charset=UTF-8")
 	public String orderDetail(@ModelAttribute("ord020SearchVO") Ord020SearchVO ord020SearchVO, ModelMap model) throws Exception {
 		// 미인증 사용자에 대한 보안처리
 		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();

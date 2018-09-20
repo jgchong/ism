@@ -96,7 +96,7 @@ public class Ord010Controller {
 	 * @throws Exception
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/ord/ord010batchup.do")
+	@RequestMapping(value = "/ism/ord/ord010batchup.do", produces="text/plain;charset=UTF-8")
 	public String upload(@RequestParam("files")List<MultipartFile> fileList) throws Exception {
 		return ord010Service.readExcelFile(fileList);
 	}
@@ -154,13 +154,13 @@ public class Ord010Controller {
 	 * 각 쇼핑몰 엑셀파일 개별업로드 처리 부분
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/ism/ord/odo010orderupfile.do")
+	@RequestMapping(value = "/ism/ord/odo010orderupfile.do", produces="text/plain;charset=UTF-8")
 	public String orderuploadfile(MultipartHttpServletRequest mtfrequest,
 			@RequestParam("filecum010id") int filecum010id, @RequestParam("filecum030id") int filecum030id) throws Exception {
 
 		MultipartFile mf = mtfrequest.getFile("file1");
 
-		return URLEncoder.encode(ord010Service.readOrderExcelFile(mf, filecum010id, filecum030id), "UTF-8");
+		return ord010Service.readOrderExcelFile(mf, filecum010id, filecum030id);
 	}
 	
 	/**

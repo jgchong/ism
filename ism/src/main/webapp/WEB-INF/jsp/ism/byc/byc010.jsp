@@ -62,6 +62,9 @@ li img {
 .layerTb .sel3 {
     width: 30%;
 }
+.rowPointer {
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -104,9 +107,9 @@ li img {
 							</thead>
 							<tbody>
 <c:forEach var="result" items="${resultList}" varStatus="status">
-								<tr>
+								<tr onclick="viewBycData('${result.byc010id}')" class="layerBt rowPointer" name="sales">
 									<td>${result.byctypenm}</td>
-									<td><a href="javascript://" onclick="viewBycData('${result.byc010id}')" class="layerBt" name="sales"><c:out value="${result.bycname}"/></a></td>
+									<td><c:out value="${result.bycname}"/></td>
 									<td>${result.cogubunnm}</td>
 									<td>${result.cono}</td>
 	<c:if test="${result.uploadgubun eq 'A'}">
@@ -133,8 +136,8 @@ li img {
 		<p class="layerTit">매입처 등록 및 수정</p>
 		<div id="bycDetailData" class="layerContents"><div class="inner" style="height:900px;"></div></div>
 		<p class="layerFootBt">
-			<a href="javascript:saveBycAll();" class="confirm">확인</a>
-			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">취소</a>
+			<a href="javascript:saveBycAll();" class="confirm">저장</a>
+			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">닫기</a>
 		</p>
 		<a href="javascript://" onclick="closeLayerPop()" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
 	</div>

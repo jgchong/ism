@@ -199,7 +199,7 @@ input.orderitemqty {
 
 				<div>
 					<ul id="listTit" class="listTit"></ul>
-					<div id="listData" class=""></div>
+					<div id="listData" class="listTb"></div>
 				</div>
 			</div>
 			<p class="layerFootBt">
@@ -796,7 +796,6 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
         async : false,
         data : { "keyid" : keyId, "pocotype" : PoType },
         dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	//담당자가 2이상일 경우 선택 option 추가
 			if (data.userlist.length == 0) {
@@ -842,7 +841,6 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
         async : false,
         data : { "poo010id" : keyId, "pocotype" : PoType },
         dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	//console.log(data);
 			retVal = data;
@@ -884,7 +882,6 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
         async : false,
         data : { "poo010id" : keyId, "pocotype" : PoType },
         dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	//console.log(data);
 
@@ -896,21 +893,16 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
             $.each(data, function(index, item){
                 $.each(retVal, function(index2, item2){
                 	if (index2 == 0) {
-                		setHtml += "<ul class='layerBt_v2 listData' name='poDetail'><input type='hidden' name='odm010id' value='"+item.odm010id+"' />";
+                		setHtml += "<ul class='layerBt_v2 listData' onclick='poDetailView(\""+item.odm010id+"\")' name='poDetail'><input type='hidden' name='odm010id' value='"+item.odm010id+"' />";
                 	}
                 	if (item2.isassign == "Y") {
-                		setHtml += "<li class='"+item2.orderfield+"' onclick='poDetailView(\""+item.odm010id+"\")'>&nbsp;"+decodeURIComponent(item[item2.orderfield].replace(Ca, " "))+"</li>";	
-//                		if ($.inArray(item2.orderfield, inputArr) != -1) {
-//                    		setHtml += "<li class='"+item2.orderfield+"'><input type='text' class='"+item2.orderfield+"' name='"+item2.orderfield+"' value='"+decodeURIComponent(item[item2.orderfield].replace(Ca, " "))+"' /></li>";	
-//                		}else{
-//                    		setHtml += "<li class='"+item2.orderfield+"'>&nbsp;"+decodeURIComponent(item[item2.orderfield].replace(Ca, " "))+"</li>";	
-//                		}
+                		setHtml += "<li class='"+item2.orderfield+"'>&nbsp;"+item[item2.orderfield]+"</li>";	
                 		$('#listData').append();
                 	}
                 	if (index2 == (total-1)) {
                 		setHtml += "<li class='delbtn' onclick='delRow(this)'>삭제</li></ul>";
                 	}
-                	console.log($('#listData').html());
+                	//console.log($('#listData').html());
                 });
             });
 
@@ -986,13 +978,15 @@ function saveApiDetailData() {
 }
 
 function poDetailView(odm010id) {
+	console.log("aaaaa");
 	$('#odm010id').val(odm010id);
+	console.log("bbbbb");
 	$.ajax({
         url : "/ism/ord/odo020SelectOrderOne.do",
         type: "post",
+        async : false,
         data : { "odm010id" : odm010id },
         dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
         	var html = " "+
         	"			<div class='layerTb'>"+
@@ -1005,19 +999,19 @@ function poDetailView(odm010id) {
         	"					<tbody>"+
         	"						<tr>"+
         	"							<th scope='row'>사업자구분</th>"+
-        	"							<td>"+decodeURIComponent(data.code_nm.replace(Ca, " "))+" / "+decodeURIComponent(data.cotype2nm.replace(Ca, " "))+ " / "+decodeURIComponent(data.cotype3nm.replace(Ca, " "))+"</td>"+
+        	"							<td>"+data.code_nm+" / "+data.cotype2nm+ " / "+data.cotype3nm+"</td>"+
         	"							<th scope='row'>쇼핑몰명</th>"+
-        	"							<td>"+decodeURIComponent(data.shopmallname.replace(Ca, " "))+"</td>"+
+        	"							<td>"+data.shopmallname+"</td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>매입처</th>"+
-        	"							<td>"+decodeURIComponent(data.bycname.replace(Ca, " "))+"</td>"+
+        	"							<td>"+data.bycname+"</td>"+
         	"							<th scope='row'>매입배송비</th>"+
         	"							<td>"+data.itembuydlvprice+" 원</td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>매출처</th>"+
-        	"							<td>"+decodeURIComponent(data.coname.replace(Ca, " "))+"</td>"+
+        	"							<td>"+data.coname+"</td>"+
         	"							<th scope='row'>공급배송비</th>"+
         	"							<td><input type='text' style='text-align:right;' name='dlvprice' value='"+data.dlvprice+"' /> 원</td>"+
         	"						</tr>"+
@@ -1031,27 +1025,27 @@ function poDetailView(odm010id) {
         	"							<th scope='row'>상품코드</th>"+
         	"							<td>"+data.orderitemid+"</td>"+
         	"							<th scope='row'>배송메모</th>"+
-        	"							<td><input type='text' name='dlvmemo' value='"+decodeURIComponent(data.dlvmemo.replace(Ca, " "))+"' /></td>"+
+        	"							<td><input type='text' name='dlvmemo' value='"+data.dlvmemo+"' /></td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>상품명</th>"+
-        	"							<td><textarea name='orderitemname' style='width:100%;'>"+decodeURIComponent(data.orderitemname.replace(Ca, " "))+"</textarea></td>"+
+        	"							<td><textarea name='orderitemname' style='width:100%;'>"+data.orderitemname+"</textarea></td>"+
         	"							<th scope='row'>주소(우편번호)</th>"+
         	"							<td>"+
-        	"								<input type='text' name='postno' value='"+data.postno+"' size='6' /> &nbsp;"+ 
-        	"                               <a href=''>우편번호찾기</a>"+
-        	"								<textarea name='address' style='width:100%;'>"+decodeURIComponent(data.address.replace(Ca, " "))+"</textarea>"+
+        	"								<input type='text' id='postno' name='postno' value='"+data.postno+"' size='6' /> &nbsp;"+ 
+        	"                               <a href='javascript:execDaumPostcode(\""+data.address+"\")'>우편번호찾기</a>"+
+        	"								<textarea name='address' style='width:100%;'>"+data.address+"</textarea>"+
 			"							</td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>옵션</th>"+
-        	"							<td><input type='text' name='orderitemopt' value='"+decodeURIComponent(data.orderitemopt.replace(Ca, " "))+"' /></td>"+
+        	"							<td><input type='text' name='orderitemopt' value='"+data.orderitemopt+"' /></td>"+
         	"							<th scope='row'>택배사</th>"+
-        	"							<td><input type='text' name='dlvco' value='"+decodeURIComponent(data.dlvco.replace(Ca, " "))+"' /></td>"+
+        	"							<td><input type='text' name='dlvco' value='"+data.dlvco+"' /></td>"+
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>수령자</th>"+
-        	"							<td><input type='text' name='rcvuser' value='"+decodeURIComponent(data.rcvuser.replace(Ca, " "))+"' /></td>"+
+        	"							<td><input type='text' name='rcvuser' value='"+data.rcvuser+"' /></td>"+
         	"							<th scope='row'>매입단가</th>"+
         	"							<td>"+data.itembuyprice+" 원</td>"+
         	"						</tr>"+
@@ -1069,7 +1063,7 @@ function poDetailView(odm010id) {
         	"						</tr>"+
         	"						<tr>"+
         	"							<th scope='row'>주문자</th>"+
-        	"							<td><input type='text' name='orderuser' value='"+decodeURIComponent(data.orderuser.replace(Ca, " "))+"' /></td>"+
+        	"							<td><input type='text' name='orderuser' value='"+data.orderuser+"' /></td>"+
         	"							<th scope='row'>처리일자</th>"+
         	"							<td>"+data.processdate+"</td>"+
         	"						</tr>"+
@@ -1335,4 +1329,19 @@ function downLoadFile(filename) {
 	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+filename;
 	T.submit();
 }
+</script>
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode(address) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postno').value = data.zonecode; //5자리 새우편번호 사용
+            }
+        }).open({
+        	q: address
+        });
+    }
 </script>

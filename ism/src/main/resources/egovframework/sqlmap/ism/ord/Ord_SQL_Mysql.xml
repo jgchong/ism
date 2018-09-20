@@ -34,7 +34,7 @@
            a.shopmallname LIKE '%' #search_key1# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="search_filename">
-           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M'
+           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M' and a.uploadtype != ''
         </isNotEmpty>
      order by $orderbyclause$
      limit #recordCountPerPage# OFFSET #firstIndex#

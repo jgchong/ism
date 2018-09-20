@@ -1,6 +1,5 @@
 package nfm.com.ord.service.impl;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,22 +57,22 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    	
 	    	jsonObject.put("orderno", vo.getOrderno());
 	    	jsonObject.put("orderdate", vo.getOrderdate());
-	    	jsonObject.put("orderuser", URLEncoder.encode(vo.getOrderuser(), "UTF-8"));
+	    	jsonObject.put("orderuser", vo.getOrderuser());
 	    	jsonObject.put("orderusercontact", vo.getOrderusercontact());
-	    	jsonObject.put("rcvuser", URLEncoder.encode(vo.getRcvuser(), "UTF-8"));
+	    	jsonObject.put("rcvuser", vo.getRcvuser());
 	    	jsonObject.put("rcvusercontact", vo.getRcvusercontact());
-	    	jsonObject.put("orderitemid", URLEncoder.encode(vo.getOrderitemid(), "UTF-8"));
-	    	jsonObject.put("orderitemopt", URLEncoder.encode(vo.getOrderitemopt(), "UTF-8"));
+	    	jsonObject.put("orderitemid", vo.getOrderitemid());
+	    	jsonObject.put("orderitemopt", vo.getOrderitemopt());
 	    	jsonObject.put("orderitemqty", vo.getOrderitemqty());
 	    	jsonObject.put("orderitembyprice", vo.getOrderitembyprice());
 	    	jsonObject.put("orderitemprice", vo.getOrderitemprice());
 	    	jsonObject.put("postno", vo.getPostno());
-	    	jsonObject.put("address", URLEncoder.encode(vo.getAddress(), "UTF-8"));
-	    	jsonObject.put("dlvmemo", URLEncoder.encode(vo.getDlvmemo(), "UTF-8"));
+	    	jsonObject.put("address", vo.getAddress());
+	    	jsonObject.put("dlvmemo", vo.getDlvmemo());
 	    	jsonObject.put("dlvbyprice", vo.getDlvbyprice());
 	    	jsonObject.put("dlvprice", vo.getDlvprice());
 	    	jsonObject.put("dlvno", vo.getDlvno());
-	    	jsonObject.put("dlvco", URLEncoder.encode(vo.getDlvco(), "UTF-8"));
+	    	jsonObject.put("dlvco", vo.getDlvco());
 	    	jsonObject.put("dlvstatus", vo.getDlvstatus());
 	    	jsonObject.put("processdate", vo.getProcessdate());
 	    	jsonObject.put("accountcum", vo.getAccountcum());
@@ -85,21 +84,21 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 			jsonObject.put("retstatus", vo.getRetstatus());
 			jsonObject.put("retqty", vo.getRetqty());
 			jsonObject.put("retprice", vo.getRetprice());
-	    	jsonObject.put("coname", URLEncoder.encode(vo.getConame(), "UTF-8"));
-	    	jsonObject.put("code_nm", URLEncoder.encode(vo.getCode_nm(), "UTF-8"));
-	    	jsonObject.put("itemname", URLEncoder.encode(vo.getItemname(), "UTF-8"));
-	    	jsonObject.put("bycname", URLEncoder.encode(vo.getBycname(), "UTF-8"));
+	    	jsonObject.put("coname", vo.getConame());
+	    	jsonObject.put("code_nm", vo.getCode_nm());
+	    	jsonObject.put("itemname", vo.getItemname());
+	    	jsonObject.put("bycname", vo.getBycname());
 	    	jsonObject.put("itemprice", vo.getItemprice());
 	    	jsonObject.put("itembuyprice", vo.getItembuyprice());
 	    	jsonObject.put("itemdlvprice", vo.getItemdlvprice());
 	    	jsonObject.put("itembuydlvprice", vo.getItembuydlvprice());
 	    	jsonObject.put("itembuydlvprice", vo.getItembuydlvprice());
-	    	jsonObject.put("orderitemname", URLEncoder.encode(vo.getOrderitemname(), "UTF-8"));
-	    	jsonObject.put("shopmallname", URLEncoder.encode(vo.getShopmallname(), "UTF-8"));
-	    	jsonObject.put("cotype2nm", URLEncoder.encode(vo.getCotype2nm(), "UTF-8"));
-	    	jsonObject.put("cotype3nm", URLEncoder.encode(vo.getCotype3nm(), "UTF-8"));
+	    	jsonObject.put("orderitemname", vo.getOrderitemname());
+	    	jsonObject.put("shopmallname", vo.getShopmallname());
+	    	jsonObject.put("cotype2nm", vo.getCotype2nm());
+	    	jsonObject.put("cotype3nm", vo.getCotype3nm());
 	    	jsonObject.put("rcvusercontacthp", vo.getRcvusercontacthp());
-	    	jsonObject.put("rcvuseremail", URLEncoder.encode(vo.getRcvuseremail(), "UTF-8"));
+	    	jsonObject.put("rcvuseremail", vo.getRcvuseremail());
 	    }
 
 	    //주문 메모 정보 가져옴.[s]
@@ -107,7 +106,7 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    ismCmm010VO.setBuss_key(""+ord020SearchVO.getOdm010id());
 	    ismCmm010VO.setBuss_type("OD");
 	    String strMemo = (String) cmm010Service.selectListMemo(ismCmm010VO);
-    	jsonObject.put("orderMemo", URLEncoder.encode(strMemo, "UTF-8"));
+    	jsonObject.put("orderMemo", strMemo);
     	//주문 메모 정보 가져옴.[e]
 	    
 	    return jsonObject.toString();
@@ -145,7 +144,7 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		String[] chgodm010idArray = chgodm010ids.split(",");
 		HashMap hm = new HashMap();
 		hm.put("chgodm010ids", chgodm010idArray);
-
+		
 		ord020DAO.ord020SelectDel(hm);
 	}
 
@@ -165,15 +164,15 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    List<List<Object>> data = new ArrayList<List<Object>>();
 
 	    header.add("사업자구분");
-		header.add("매출처");
-		header.add("쇼핑몰명");
-		header.add("매입처");
-		header.add("주문번호");
-		header.add("주문일자");
-		header.add("상품코드");
-		header.add("상품명");
-		header.add("상품옵션");
-		header.add("수량");
+	    header.add("매출처");
+	    header.add("쇼핑몰명");
+	    header.add("매입처");
+	    header.add("주문번호");
+	    header.add("주문일자");
+	    header.add("상품코드");
+	    header.add("상품명");
+	    header.add("상품옵션");
+	    header.add("수량");
 	    
 	    header.add("매입배송비");
 	    header.add("공급배송비");

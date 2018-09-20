@@ -80,6 +80,9 @@ form.searchArea .searchMore li select {
     height: 34px;
     color: #666;
 }
+.rowPointer {
+	cursor: pointer;
+}
 </style>
 
 </head>
@@ -226,34 +229,40 @@ form.searchArea .searchMore li select {
 	</c:if>
 								<tr ${rowClass}>
 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
-									<td><c:out value="${status.count}"/></td>
-									<td>${result.code_nm}</td>
-									<td><c:out value="${result.bycname}"/></td>
-									<td><c:out value="${result.coname}"/></td>
-									<td><c:out value="${result.dlvno}"/></td>
-									<td><c:out value="${result.dlvco}"/></td>
-									<td><a href="javascript:orderDetailView('<c:out value="${result.odm010id}"/>');"><c:out value="${result.orderno}"/></a></td>
-									<td><c:out value="${result.orderitemid}"/></td>
-									<td><c:out value="${result.orderitemname}"/></td>
-									<td><c:out value="${result.orderitemopt}"/></td>
-									<td><c:out value="${result.orderitemqty}"/></td>
-									<td><c:out value="${result.rcvuser}"/></td>
-									<td><c:out value="${result.rcvusercontacthp}"/></td>
-									<td><c:out value="${result.orderuser}"/></td>
-									<td><c:out value="${result.orderdate}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${status.count}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">${result.code_nm}</td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.bycname}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.coname}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.dlvno}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.dlvco}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderno}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemid}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemname}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemopt}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemqty}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.rcvuser}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.rcvusercontacthp}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderuser}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">
 	<c:choose>
     	<c:when test="${result.cstype eq 'C'}">
-									<td><c:out value="${result.claimstatusnm}"/></td>
+									<c:out value="${result.claimstatusnm}"/></td>
 		</c:when>
 		<c:when test="${result.cstype eq 'R'}">
-									<td><c:out value="${result.retstatusnm}"/></td>
+									<c:out value="${result.retstatusnm}"/></td>
 		</c:when>
 		<c:otherwise>
-									<td><c:out value="${result.ststusNm}"/></td>
+									<c:out value="${result.ststusNm}"/></td>
 		</c:otherwise>
 	</c:choose>
 								</tr>
 </c:forEach>
+<c:if test="${fn:length(resultList) eq 0}">
+								<tr>
+									<td scope="col" colspan="17">검색내용이 없습니다.</td>
+								</tr>
+</c:if>
 							</tbody>
 						</table>
 					</div>
@@ -301,7 +310,8 @@ $(document).ready(function() {
 	<c:if test="${ord020SearchVO.search_isdetail eq 1}">
 		$('.searchMore').slideToggle();
 	</c:if>
-	$('#pageUnit').change(function() { //매출처/쇼핑몰 변경시 처리
+	$('#pageUnit').change(function() { //목록 보여줄 수 50 100 500 변경시 처리
+		document.form1.pageIndex.value = 1;
 		$('#form1').submit();
 	});
 	//common.js 있는 부분을 여기서만 처리를 위해 common.js 빼고 추가
@@ -344,11 +354,13 @@ $(document).ready(function() {
         document.form1.action = "<c:url value='/ism/ord/ord020.do'/>";
     });
 
-	$("#dtSearch_frOrderDt").change(function() { 
+	$("#dtSearch_frOrderDt").change(function() {
+		document.form1.pageIndex.value = 1;
         document.form1.submit();
 	});
 
-	$("#dtSearch_toOrderDt").change(function() { 
+	$("#dtSearch_toOrderDt").change(function() {
+		document.form1.pageIndex.value = 1;
         document.form1.submit();
 	});
 });
@@ -401,6 +413,7 @@ function selectChgOrderStatus() {
         success : function(data){
         	if (data == "SUCCESS") {
             	alert("상태 변경되었습니다.");
+            	document.form1.pageIndex.value = 1;
         		$('#form1').submit();	
         	}else{
             	alert("상태 변경 중 오류가 발생했습니다.");	
@@ -450,6 +463,7 @@ function selectDel() {
 	        success : function(data){
 	        	if (data == "SUCCESS") {
 	            	alert("삭제 되었습니다.");
+	            	document.form1.pageIndex.value = 1;
 	        		$('#form1').submit();	
 	        	}else{
 	            	alert("삭제 중 오류가 발생했습니다.");	
@@ -492,6 +506,7 @@ function search_cstype(cstype) {
 	document.form1.reset();
 	$('#search_status').val("ALL");
 	$('#search_cstype').val(cstype);
+	document.form1.pageIndex.value = 1;
 	$('#form1').submit();	
 }
 

@@ -62,6 +62,9 @@ li img {
 .layerTb .sel3 {
     width: 30%;
 }
+.rowPointer {
+	cursor: pointer;
+}
 </style>
 </head>
 <body>
@@ -103,9 +106,9 @@ li img {
 							</thead>
 							<tbody>
 <c:forEach var="result" items="${resultList}" varStatus="status">
-								<tr>
+								<tr onclick="viewWhsData('${result.whs010id}')" class="layerBt rowPointer" name="whs">
 									<td>${result.whsgubunnm}</td>
-									<td><a href="javascript://" onclick="viewWhsData('${result.whs010id}')" class="layerBt" name="whs"><c:out value="${result.whsname}"/></a></td>
+									<td><c:out value="${result.whsname}"/></td>
 									<td>${result.whscotypenm}</td>
 									<td>${result.whscono}</td>
 									<td>${result.whsadress}</td>
@@ -127,8 +130,8 @@ li img {
 		<p class="layerTit">창고 등록 및 수정</p>
 		<div id="whsDetailData" class="layerContents"><div class="inner" style="height:900px;"></div></div>
 		<p class="layerFootBt">
-			<a href="javascript:saveWhsAll();" class="confirm">확인</a>
-			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">취소</a>
+			<a href="javascript:saveWhsAll();" class="confirm">저장</a>
+			<a href="javascript://" onclick="closeLayerPop()" class="cancel layerClose">닫기</a>
 		</p>
 		<a href="javascript://" onclick="closeLayerPop()" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
 	</div>

@@ -41,6 +41,9 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		return ord010DAO.selectListTotCnt(ord010SearchVO);
 	}
 
+	/**
+	 * 주문수집 목록
+	 */
 	@Override
 	public List<?> selectList(Ord010SearchVO ord010SearchVO) throws Exception {
 		List<?> result = ord010DAO.selectList(ord010SearchVO);
@@ -48,7 +51,8 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	}
 	
 	/**
-	 * 주문정보 수집을 위한 엑셀파일 읽기
+	 * 주문정보 일괄 수집을 위한 엑셀파일 읽기
+	 * return : 임시key값과 설정 저장했는지 여부로 안되어 있는 쇼핑몰명 return(구분자 : ^)
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@Override
@@ -64,11 +68,15 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         Date d = gc.getTime();
         String uploaddate = sf.format(d);
         
+        String noSetShopMallNames = "";
+        
 		for (MultipartFile mf : fileList) {
 
 			//파일명으로 매출처/쇼핑몰 정보 get [s]
 			int cum010id = 0;
 			int cum030id = 0;
+			String shopmallname = "";
+			String uploadtype = ""; //업로드 타입이 없으면 skip
 			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
 			ord010SearchVO.setRecordCountPerPage(1);
@@ -84,13 +92,19 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 				Ismcum030VO ismcum030VO = (Ismcum030VO) iterator.next();
 		    	cum010id = ismcum030VO.getCum010id();
 		    	cum030id = ismcum030VO.getCum030id();
+		    	shopmallname = ismcum030VO.getShopmallname();
+		    	uploadtype = ismcum030VO.getUploadtype();
 			}
 			//파일명으로 매출처/쇼핑몰 정보 get [e]
 			
 			File convFile = new File( mf.getOriginalFilename());
 			mf.transferTo(convFile);
 
-			setOrderDataFile(convFile, orderTempKey, cum010id, cum030id);
+			if ( (cum030id > 0) && (uploadtype != null) && (!"".equals(uploadtype)) ) {
+				if (setOrderDataFile(convFile, orderTempKey, cum010id, cum030id) == 0) {
+					noSetShopMallNames = noSetShopMallNames + "," + shopmallname;
+				}
+			}
 			
 		    convFile.delete();
 		    Ismodl010VO ismodl010VO = new Ismodl010VO();
@@ -101,40 +115,73 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    listIsmodl010VO.add(ismodl010VO);
 		}
 
-    	ord010DAO.insertOrderLogData(listIsmodl010VO);
+		if (listIsmodl010VO.size() > 0) {
+			ord010DAO.insertOrderLogData(listIsmodl010VO);
+		}
     	
-		return orderTempKey;
+		return orderTempKey+"^"+noSetShopMallNames;
 	}
-	
+
+	/**
+	 * 각 쇼핑몰 엑셀파일 개별업로드 처리 부분
+	 * return : 임시key값과 설정 저장했는지 여부 0이면 저장안되어 있는 경우임 (구분자 : ^)
+	 */
+	@SuppressWarnings("rawtypes")
 	@Override
 	public String readOrderExcelFile(MultipartFile mf, int filecum010id, int filecum030id) throws Exception {
+		
+		int retInt = 0;
+		int dbcum030id = 0;
+		
+		//파일명으로 매출처/쇼핑몰 정보 get [s]
+		Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
+		ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
+		ord010SearchVO.setRecordCountPerPage(1);
+		
+		List<?> result = ord010DAO.selectList(ord010SearchVO);
+		
+		if (result.size() <= 0) {
+			retInt = -1;
+		}else{
+			//파일명 패턴이 있는 경우 cum030id 가져온다.
+			Iterator iterator = result.iterator();
+			Ismcum030VO ismcum030VO = (Ismcum030VO) iterator.next();
+	    	dbcum030id = ismcum030VO.getCum030id();
+	    	if (dbcum030id != filecum030id) retInt = -1;
+		}
+		//파일명으로 매출처/쇼핑몰 정보 get [e]
 
-		List<Ismodl010VO> listIsmodl010VO = new ArrayList<Ismodl010VO>();
 		//저장 후 조회를 위한 임시 key 발급
 	    String orderTempKey = Ord010ServiceUtil.getOrderTempKey();
 
-	    //업로드 일자 setting 동일일자를 위해 loop 밖에서 setting
-		GregorianCalendar gc = new GregorianCalendar();
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d = gc.getTime();
-        String uploaddate = sf.format(d);
-	    
-		File convFile = new File( mf.getOriginalFilename());
-		mf.transferTo(convFile);
-
-		setOrderDataFile(convFile, orderTempKey, filecum010id, filecum030id);
-		
-	    convFile.delete();
-	    Ismodl010VO ismodl010VO = new Ismodl010VO();
-	    ismodl010VO.setCum010id(filecum010id);
-	    ismodl010VO.setCum030id(filecum030id);
-	    ismodl010VO.setUploaddate(uploaddate);
-	    ismodl010VO.setUploadviewkey(orderTempKey);
-	    listIsmodl010VO.add(ismodl010VO);
-	    
-	    ord010DAO.insertOrderLogData(listIsmodl010VO);
-	    
-		return orderTempKey;
+		//파일명 패턴으로 조회 안되는 skip
+		if (retInt == 0) {
+			List<Ismodl010VO> listIsmodl010VO = new ArrayList<Ismodl010VO>();
+	
+		    //업로드 일자 setting 동일일자를 위해 loop 밖에서 setting
+			GregorianCalendar gc = new GregorianCalendar();
+	        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	        Date d = gc.getTime();
+	        String uploaddate = sf.format(d);
+		    
+			File convFile = new File( mf.getOriginalFilename());
+			mf.transferTo(convFile);
+	
+			retInt = setOrderDataFile(convFile, orderTempKey, filecum010id, filecum030id);
+			
+		    convFile.delete();
+		    Ismodl010VO ismodl010VO = new Ismodl010VO();
+		    ismodl010VO.setCum010id(filecum010id);
+		    ismodl010VO.setCum030id(filecum030id);
+		    ismodl010VO.setUploaddate(uploaddate);
+		    ismodl010VO.setUploadviewkey(orderTempKey);
+		    listIsmodl010VO.add(ismodl010VO);
+		    
+		    if (listIsmodl010VO.size() > 0) {
+		    	ord010DAO.insertOrderLogData(listIsmodl010VO);
+		    }
+		}
+		return orderTempKey+"^"+retInt;
 	}
 
 	/**
@@ -159,19 +206,23 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         Iterator excelItem1 = excelContent1.iterator();
         
         String retStr = "";
-        int blankFielsCnt = 0;
+        int tmpBlankFielsCnt = 0; //임시로 빈 필드명이 있는것 카운트
+        int blankFielsCnt = 0; //실제 병합돼서 필드명 없는 수
 		Map<String, String> excelItemInfo = (Map<String, String>) excelItem1.next();
 	    for(String item : excelReadOption.getOutputColumns()){
 	    	String itemval = excelItemInfo.get(item);
+	        System.out.println("itemval = " + itemval);
 	    	if ( (itemval != null)&&(!"".equals(itemval)) ) {
 				retStr += (itemval + "^");
+				blankFielsCnt = tmpBlankFielsCnt; //빈행이 뒷부분에 나오면 무시하기 위해 중간에 병합돼서 다음 컬럼에 데이터가 있으면 실제 blankFielsCnt에 set(예 : 특판_SK플래닛(기프티콘))
 			}else{
-				if ("".equals(itemval) ) blankFielsCnt++;
+				if ("".equals(itemval)) tmpBlankFielsCnt++; //빈행인지 체크
 			}
 	    }
-        System.out.println("aaa = " + blankFielsCnt);
-        //두줄 병합된 경우 다음행의 컬럼 읽기위해서
-        if (blankFielsCnt > 0) {
+        //System.out.println("tmpBlankFielsCnt = " + tmpBlankFielsCnt);
+        //System.out.println("blankFielsCnt = " + blankFielsCnt);
+        //두줄 병합된 경우 다음행의 컬럼 읽기위해서 1개는 있을지 몰라 2개 이상인 경우만 체크 (예:신세계B2E)
+        if (blankFielsCnt > 1) {
 		    excelReadOption.setStartRow(rowCnt+1); //위에서 찾은 유효한 행으로 다시 setting 후 읽어서 타이틀 get
 	        List<Map<String, String>>excelContent2 =ExcelRead.read(excelReadOption);
 	        Iterator<Map<String, String>> excelItem2 = excelContent2.iterator();
@@ -190,6 +241,9 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    return retStr;
 	}
 
+	/**
+	 * 수동 수집 환경설정 저장
+	 */
 	@Override
 	public void saveManualDetailData(String cum030id, String userTitleNames, String sysmTitleNames, String assgTitleNames) throws Exception {
 		ord010DAO.deleteManualDetailData(cum030id);
@@ -247,6 +301,10 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		}
 	}
 
+
+	/**
+	 * 수동 수집 환경설정 쇼핑몰 선택시 데이터 조회
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public String selectManualDataDetail(String cum030id)
@@ -267,7 +325,10 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		return jsonArray.toString();
 	}
 
-	
+	/**
+	 * 실제 엑셀 파일 읽어서 주문데이터 생성
+	 * 반환값 int 해당 매출처가 주문필드 옵션 등록을 한경우는 0보다 크고 설정 안한 경우는 0으로 return
+	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public int setOrderDataFile(File convFile, String orderTempKey, int cum010id, int cum030id) {
 	    
@@ -300,7 +361,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 			}
 	    }
 	    //두줄 병합된 경우 다음행의 컬럼 읽기위해서
-        System.out.println("blankFielsCnt = " + blankFielsCnt);
+        //System.out.println("blankFielsCnt = " + blankFielsCnt);
         if (blankFielsCnt > 0) {
 		    excelReadOption.setStartRow(rowCnt+1); //위에서 찾은 유효한 행으로 다시 setting 후 읽어서 타이틀 get
 	        List<Map<String, String>>excelContentAdd1 =ExcelRead.read(excelReadOption);
@@ -317,6 +378,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    // 업로드 엑셀 컬럼타이틀 읽기 [e]
 	    
 	    // system field setting 타이틀 읽기 [s]
+        int isHaveSetting = 0;
 	    Map<String, String> dbHeader=new HashMap<String, String>();
 	    List<?> resultOdo010 = ord010DAO.selectManualDataDetail(cum030id+"");
 	    for (Object obj : resultOdo010) {
@@ -324,9 +386,15 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	if ("Y".equals(ismodo010VO.getIsassign())) {
 	    		dbHeader.put(ismodo010VO.getOrderfield(), ismodo010VO.getAdditem());
 	    	}
+	    	isHaveSetting++;
 	    }
+	    //System.out.println("jgc debug isHaveSetting = " + isHaveSetting);
 	    // system field setting 타이틀 읽기 [e]
-	    System.out.println("dbHeader = " + dbHeader.toString());
+	    
+	    //만약 설정 저장이 안되어 있으면 이후 작업 주문 저장 작업 중단
+	    if (isHaveSetting == 0) return 0;
+	    
+	    //System.out.println("dbHeader = " + dbHeader.toString());
 	    // 주문 데이터 읽어 저장 [s]
 	    if (blankFielsCnt > 0) {
 		    excelReadOption.setStartRow(rowCnt+2); //위에서 찾은 유효한 행으로 다시 setting 후 읽어서 타이틀 get 헤더는 제외
@@ -507,7 +575,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         	ismodm010VO.setCum030id(cum030id);
         	ord010DAO.insertOrderMainData(ismodm010VO);
         }
-        return 0;
+        return isHaveSetting;
     }
 	
 	private String chgContactNo(String contactno) {

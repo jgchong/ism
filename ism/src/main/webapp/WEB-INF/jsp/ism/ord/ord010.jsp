@@ -430,6 +430,8 @@ function uploadFile(){
             formData.append('files', fileList[uploadFileList[i]]);
         }
         
+        loadingBarOpen();
+        
         $.ajax({
             url:"/ism/ord/ord010batchup.do",
             data:formData,
@@ -439,10 +441,18 @@ function uploadFile(){
             contentType:false,
             cache:false,
             success:function(result){
-	            alert("성공");
-	            location.href="/ism/ord/ord020.do?search_key1="+result+"&search_status=TEMP";
+	            console.log(result);
+	            console.log(result.split("^")[0]);
+	            console.log(result.split("^")[1]);
+	            if (result.split("^")[1].length > 2) {
+		            alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+	            }else{
+		            alert("성공");	            	
+	            }
+	            location.href="/ism/ord/ord020.do?search_key1="+result.split("^")[0]+"&search_status=TEMP";
             },
             error: function (jqXHR, exception) {
+            	loadingBarClose();
                 var msg = '';
                 if (jqXHR.status === 0) {
                     msg = 'Not connect.\n Verify Network.';
@@ -504,6 +514,15 @@ function mfileonchange(files) {
 		</div>
 	</div>
 	<!-- 데이터 일괄 업로드 [e]-->
+	
+	<!-- 로딩바[s] -->
+	<div class="layerCont layerCont_v2 loadingbar" style="width:319px;">
+		<div class="inner" style="text-align:center;">
+			<img src="/images/custom/loading_bar.gif" style="height:191px;" />
+		</div>
+	</div>
+	</form>
+	<!-- 로딩바[e] -->
 </body>
 </html>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
@@ -560,13 +579,20 @@ $(document).ready(function() {
 	});
 });
 function titfileUpload() {
-	var selectval = $("#shopmallidmanual option:selected").val();
+	var selectval  = $("#shopmallidmanual option:selected").val();
+	var selectdata = $("#shopmallidmanual option:selected").attr('dataid');
 	if (selectval == "0") {
 		//$('#msgareamanual').text("매출처/쇼핑몰을 선택해주시기 바랍니다.");
 		alert("매출처/쇼핑몰을 선택해주시기 바랍니다.");
 		clearInputFile();
 		return;
 	}
+	if (selectdata == "") {
+		alert("업로드 타입이 등록되지 않았습니다.");
+		clearInputFile();
+		return;
+	}
+
     var Ca = /\+/g;
     var options = {
     	success : function(data) {
@@ -607,12 +633,28 @@ function titfileUpload() {
     $("#titfileform").ajaxSubmit(options);
 }
 function orderFileUpload(cum010id, cum030id) {
+	loadingBarOpen();
     var options = {
     	success : function(data) {
+            console.log(data.split("^")[0]);
+            console.log(data.split("^")[1]);
+
+            if (data.split("^")[1] == "-1") {
+            	loadingBarClose();
+	            alert("업로드 타입이 맞지 않는 파일입니다.");
+	            return;
+            }else if (data.split("^")[1] == "0") {
+            	loadingBarClose();
+	            alert("수동수집환경 설정이 안되어 있습니다.\n설정 후 다시 업로드해주시기 바랍니다.");
+	            return;
+            }else{
+	            alert("성공");	            	
+            }
         	//$("#formMain").submit();
-            location.href="/ism/ord/ord020.do?search_key1="+data+"&search_status=TEMP";
+            location.href="/ism/ord/ord020.do?search_key1="+data.split("^")[0]+"&search_status=TEMP";
         },
         error : function(xhr, status, error) {
+        	loadingBarClose();
         	console.log(error);
         },
         type : "POST"
@@ -840,5 +882,23 @@ function clearInputFile() {
 	} else { // other browser 일때 input[type=file] init.
 		$("#file").val("");
 	}
+}
+
+function loadingBarOpen() {
+	$('body').append('<div class="fade_v2" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:200; display:none;"></div>');
+	$('.fade_v2').fadeIn();
+	$('.loadingbar').css({
+		'margin':'-'+($('.loadingbar').height()/2)+'px 0 0 -'+($('.loadingbar').width()/2)+'px'
+	});
+	$('.loadingbar').fadeIn();
+	return false;
+}
+
+function loadingBarClose() {
+	$('.layerCont_v2').fadeOut();
+	$('.fade_v2').fadeOut(function(){
+		$('.fade_v2').remove();
+	})
+	return false;
 }
 </script>

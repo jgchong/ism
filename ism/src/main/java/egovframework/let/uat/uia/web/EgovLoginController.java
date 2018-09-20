@@ -102,10 +102,26 @@ public class EgovLoginController {
 		System.out.println("loginVO.ihidNum="+loginVO.getIhidNum());
 		System.out.println("session.isArrowIP="+request.getSession().getAttribute("isArrowIP"));
 		System.out.println("session.emailkey="+request.getSession().getAttribute("emailkey"));
-		boolean isArrowIP = (boolean) request.getSession().getAttribute("isArrowIP");
+
+		boolean isArrowIP = false;
+
+		if (request.getSession().getAttribute("isArrowIP") == null) { //세션값 없는 경우 다시 세션 set
+	        String clientIp1 = nfmLoginService.getRemoteIP(request); //jgc add id:ipv1 접속자 ip 가져오기
+			System.out.println("jgc1===>"+clientIp1); //jgc add id:ipv1 접속자 ip 가져오기
+			isArrowIP = nfmLoginService.getArrowIP(clientIp1);
+			request.getSession().setAttribute("isArrowIP", isArrowIP); //jgc add id:ipv1 접속자 ip 가져오기
+		}else{
+			isArrowIP = (boolean) request.getSession().getAttribute("isArrowIP");
+		}
+
 		if (!isArrowIP) {
 			String userInputStr = loginVO.getIhidNum();
 			String emailStr = (String) request.getSession().getAttribute("emailkey");
+			//session 값이 없어서 이메일 인증인지 아닌지 모름 그래서 다시 메세지와 함께 로그인 페이지 표시
+			if (emailStr == null) {
+				model.addAttribute("message", "허용된 IP가 아닙니다. 이메일인증을 해주시기 바랍니다.");
+				return "forward:/uat/uia/actionMain.do";
+			}
 			if (!emailStr.equals(userInputStr)) {
 				model.addAttribute("message", "이메일 인증번호와 일치하지 않습니다.");
 				return "uat/uia/EgovLoginUsr";
@@ -170,7 +186,7 @@ public class EgovLoginController {
 	@RequestMapping(value = "/uat/uia/actionMain.do")
 	public String actionMain(ModelMap model, HttpServletRequest request) throws Exception {
 
-		String clientIp1 = "127.0.0.1";
+        String clientIp1 = nfmLoginService.getRemoteIP(request); //jgc add id:ipv1 접속자 ip 가져오기
 		System.out.println("jgc1===>"+clientIp1); //jgc add id:ipv1 접속자 ip 가져오기
 		request.getSession().setAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기
 		model.addAttribute("isArrowIP", nfmLoginService.getArrowIP(clientIp1)); //jgc add id:ipv1 접속자 ip 가져오기

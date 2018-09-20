@@ -122,7 +122,7 @@ li img {
 							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
 							<th scope='row'>주소(우편번호)</th>
 							<td>
-								<input type='text' name='postno' value='${item.postno}' size="6" /> &nbsp; <a href=''>우편번호찾기</a>
+								<input type='text' id='postno' name='postno' value='${item.postno}' size="6" /> &nbsp; <a href='javascript:execDaumPostcode("${item.address}");'>우편번호찾기</a>
 								<textarea name='address' style='width:100%;'>${item.address}</textarea>
 							</td>
 						</tr>
@@ -426,4 +426,19 @@ function saveDetail() {
     	
 	$("#formorder").ajaxSubmit(options);
 }
+</script>
+
+<script src="http://dmaps.daum.net/map_js_init/postcode.v2.js"></script>
+<script>
+    function execDaumPostcode(address) {
+        new daum.Postcode({
+            oncomplete: function(data) {
+                // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분.
+                // 우편번호와 주소 정보를 해당 필드에 넣는다.
+                document.getElementById('postno').value = data.zonecode; //5자리 새우편번호 사용
+            }
+        }).open({
+        	q: address
+        });
+    }
 </script>
