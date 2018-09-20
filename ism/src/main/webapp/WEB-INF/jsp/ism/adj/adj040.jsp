@@ -254,6 +254,12 @@
         });
     }
 
+    $("#excelDownbtn").click(function () {
+        document.form1.action = "<c:url value='/ism/adj/adj040ExcelDownload.do'/>";
+        document.form1.submit();
+        document.form1.action = "<c:url value='/ism/adj/adj040.do'/>";
+    });
+
 
 </script>
 <script type="text/javascript">

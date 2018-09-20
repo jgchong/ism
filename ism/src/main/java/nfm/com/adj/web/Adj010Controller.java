@@ -10,6 +10,7 @@ import nfm.com.adj.dao.Adj060DAO;
 import nfm.com.adj.dao.Adj070DAO;
 import nfm.com.adj.model.*;
 import nfm.com.adj.service.*;
+import nfm.com.byc.service.Ismbyc010VO;
 import nfm.com.exl.util.ExcelManager;
 import nfm.com.ord.service.Adj020VO;
 import nfm.com.ord.service.impl.Ord020DAO;
@@ -1529,7 +1530,7 @@ public class Adj010Controller {
         }
 
         ExcelManager excelManager = new ExcelManager(header, data);
-        excelManager.setSheetName("운영상품관리");
+        excelManager.setSheetName("종합판매정산" + adj010SearchVO.getDtSearch_frCreateDt());
         excelManager.setWidth(6000);
         excelManager.setStartRow(0);
         excelManager.setStartCol(0);
@@ -1547,7 +1548,427 @@ public class Adj010Controller {
 
         byte[] bytes = excelManager.makeExcel();
 
-        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel.xlsx");
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel01.xlsx");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
+
+    @RequestMapping(value = "/ism/adj/adj020ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj020ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_adj020_01())) {
+            adj010SearchVO.setDtSearch_adj020_01("2");
+        }
+
+
+        List<Adj020Result> resultList;
+
+
+        List<Adj020VO> top10bycList = (List<Adj020VO>) ord020DAO.adj020selectTop10List(adj010SearchVO.getDtSearch_frCreateDt());
+        initData(top10bycList);
+        model.addAttribute("top10bycList", top10bycList);
+
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("구분");
+        header.add("매출처");
+        header.add("쇼핑몰");
+        header.add("합계");
+
+        for (Adj020VO adj020VO : top10bycList) {
+            header.add(adj020VO.getByc010name());
+        }
+        header.add("기타");
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+
+        resultList = adj010Service.adj020selectListCum(adj010SearchVO.getDtSearch_frCreateDt());
+        Collections.sort(resultList, new Ascending());
+
+        for (Adj020Result adj020Result : resultList) {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("매출액");
+            obj01.add(adj020Result.cum010name);
+            obj01.add(adj020Result.name);
+            obj01.add(decimalFormat.format(adj020Result.priceAll));
+            obj01.add(decimalFormat.format(adj020Result.price01));
+            obj01.add(decimalFormat.format(adj020Result.price02));
+            obj01.add(decimalFormat.format(adj020Result.price03));
+            obj01.add(decimalFormat.format(adj020Result.price04));
+            obj01.add(decimalFormat.format(adj020Result.price05));
+            obj01.add(decimalFormat.format(adj020Result.price06));
+            obj01.add(decimalFormat.format(adj020Result.price07));
+            obj01.add(decimalFormat.format(adj020Result.price08));
+            obj01.add(decimalFormat.format(adj020Result.price09));
+            obj01.add(decimalFormat.format(adj020Result.price10));
+            obj01.add(decimalFormat.format(adj020Result.price11));
+            data.add(obj01);
+        }
+
+        resultList = adj010Service.adj020selectListByc(adj010SearchVO.getDtSearch_frCreateDt());
+        Collections.sort(resultList, new Ascending());
+        int temp = data.size();
+        for (Adj020Result adj020Result : resultList) {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add("매입액");
+            obj01.add(adj020Result.cum010name);
+            obj01.add(adj020Result.name);
+            obj01.add(decimalFormat.format(adj020Result.priceAll));
+            obj01.add(decimalFormat.format(adj020Result.price01));
+            obj01.add(decimalFormat.format(adj020Result.price02));
+            obj01.add(decimalFormat.format(adj020Result.price03));
+            obj01.add(decimalFormat.format(adj020Result.price04));
+            obj01.add(decimalFormat.format(adj020Result.price05));
+            obj01.add(decimalFormat.format(adj020Result.price06));
+            obj01.add(decimalFormat.format(adj020Result.price07));
+            obj01.add(decimalFormat.format(adj020Result.price08));
+            obj01.add(decimalFormat.format(adj020Result.price09));
+            obj01.add(decimalFormat.format(adj020Result.price10));
+            obj01.add(decimalFormat.format(adj020Result.price11));
+            data.add(obj01);
+        }
+
+
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("상품별정산" + adj010SearchVO.getDtSearch_frCreateDt());
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xlsx");
+        excelManager.addRowColor(temp+1, 31);
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel02.xlsx");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
+    @RequestMapping(value = "/ism/adj/adj030ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj030ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        }
+
+        adj010SearchVO.setFirstIndex(0);
+        adj010SearchVO.setRecordCountPerPage(100000);
+
+
+//        Adj030AllResult adj030Result = adj010Service.getAdj030AllResult();
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("No");
+        header.add("매입처");
+        header.add("상품코드");
+        header.add("상품명");
+        header.add("이월재고");
+        header.add("입고");
+        header.add("출고");
+        header.add("파손");
+        header.add("재고");
+
+        List<Ismbyc010VO> ismbyc010VOList = (List<Ismbyc010VO>) prd010Service.selectBycAll();
+
+        int count = 1;
+        for (Ismbyc010VO ismbyc010VO : ismbyc010VOList) {
+            adj010SearchVO.setDtSearch_adj030_byc(String.valueOf(ismbyc010VO.getByc010id()));
+            List<Adj030Result> adj030ResultList = adj010Service.adj030selectList(adj010SearchVO);
+            for (Adj030Result adj030Result : adj030ResultList) {
+                List<Object> obj01 = new ArrayList<Object>();
+                obj01.add(count);
+                obj01.add(ismbyc010VO.getBycname());
+                obj01.add(adj030Result.getItemcode());
+                obj01.add(adj030Result.getItemname());
+                obj01.add(adj030Result.getItemeaEx());
+                obj01.add(adj030Result.getItemeaAll());
+                obj01.add(adj030Result.getItemeaOut());
+                obj01.add(adj030Result.getItemeaBroken());
+                obj01.add(adj030Result.getItemeaNamuge());
+                data.add(obj01);
+                count ++;
+            }
+        }
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("상품수불부" + adj010SearchVO.getDtSearch_frCreateDt());
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xlsx");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel03.xlsx");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
+    @RequestMapping(value = "/ism/adj/adj040ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj040ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+
+        List<Adj040Result> adj040ResultList = (List<Adj040Result>) adj040DAO.selectList(yyyymm);
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("업체명");
+        header.add("세금계산서발행여부");
+        header.add("과세");
+        header.add("면세");
+        header.add("공급가합계");
+        header.add("수수료");
+        header.add("기타");
+        header.add("수금일");
+        header.add("수금액");
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+
+        for (Adj040Result adj020Result : adj040ResultList) {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add(adj020Result.getCum010name());
+            if ("1".equals(adj020Result.getAccount())) {
+                obj01.add("정발행");
+            } else {
+                obj01.add("역발행");
+            }
+            obj01.add(decimalFormat.format(Long.parseLong(adj020Result.getTaxprice())));
+            obj01.add(decimalFormat.format(Long.parseLong(adj020Result.getTaxfreeprice())));
+            obj01.add(decimalFormat.format(adj020Result.getPrice()));
+            obj01.add(adj020Result.getSusuprice());
+            obj01.add(adj020Result.getNamuge());
+            obj01.add(adj020Result.getSugumdate());
+            obj01.add(adj020Result.getSugumprice());
+            data.add(obj01);
+        }
+
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("수금관리대장" + adj010SearchVO.getDtSearch_frCreateDt());
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xlsx");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel04.xlsx");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
+    @RequestMapping(value = "/ism/adj/adj060ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj060ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+        String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
+
+        List<Adj060Result> adj060ResultList = (List<Adj060Result>) adj060DAO.selectList(yyyymm);
+        Adj060ResultSum adj060ResultSum = new Adj060ResultSum();
+        for (Adj060Result adj060Result : adj060ResultList) {
+            try {
+                adj060ResultSum.a1 = adj060ResultSum.a1 + adj060Result.getDlprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a2 = adj060ResultSum.a2 + adj060Result.getRetprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a3 = adj060ResultSum.a3 + adj060Result.getAirprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a4 = adj060ResultSum.a4 + adj060Result.getDoprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a5 = adj060ResultSum.a5 + adj060Result.getMissprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a6 = adj060ResultSum.a6 + adj060Result.getSaveprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a7 = adj060ResultSum.a7 + adj060Result.getMoveprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a8 = adj060ResultSum.a8 + adj060Result.getWorkprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a9 = adj060ResultSum.a9 + adj060Result.getSubprice();
+            } catch (Exception ignored) {
+            }
+            try {
+                adj060ResultSum.a10 = adj060ResultSum.a10 + adj060Result.getClaim();
+            } catch (Exception ignored) {
+            }
+        }
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("구분");
+        header.add("정상택배비");
+        header.add("반품택배비");
+        header.add("항공료");
+        header.add("도선료");
+        header.add("오발송");
+        header.add("보관료");
+        header.add("상차비");
+        header.add("작업비");
+        header.add("부자재비");
+        header.add("클레임");
+        header.add("기타");
+        header.add("메모");
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+
+        for (Adj060Result adj060Result : adj060ResultList) {
+            List<Object> obj01 = new ArrayList<Object>();
+            obj01.add(adj060Result.getAdj060name());
+            obj01.add(adj060Result.getDlprice());
+            obj01.add(adj060Result.getRetprice());
+            obj01.add(adj060Result.getAirprice());
+            obj01.add(adj060Result.getDoprice());
+            obj01.add(adj060Result.getMissprice());
+            obj01.add(adj060Result.getSaveprice());
+            obj01.add(adj060Result.getMoveprice());
+            obj01.add(adj060Result.getWorkprice());
+            obj01.add(adj060Result.getSubprice());
+            obj01.add(adj060Result.getClaim());
+            obj01.add(adj060Result.getNamuge());
+            obj01.add(adj060Result.getMemo());
+            data.add(obj01);
+        }
+        List<Object> obj01 = new ArrayList<Object>();
+        obj01.add("합계");
+        obj01.add(decimalFormat.format(adj060ResultSum.a1));
+        obj01.add(decimalFormat.format(adj060ResultSum.a2));
+        obj01.add(decimalFormat.format(adj060ResultSum.a3));
+        obj01.add(decimalFormat.format(adj060ResultSum.a4));
+        obj01.add(decimalFormat.format(adj060ResultSum.a5));
+        obj01.add(decimalFormat.format(adj060ResultSum.a6));
+        obj01.add(decimalFormat.format(adj060ResultSum.a7));
+        obj01.add(decimalFormat.format(adj060ResultSum.a8));
+        obj01.add(decimalFormat.format(adj060ResultSum.a9));
+        obj01.add(decimalFormat.format(adj060ResultSum.a10));
+        obj01.add("");
+        obj01.add("");
+        data.add(obj01);
+
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("운송비대장" + adj010SearchVO.getDtSearch_frCreateDt());
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xlsx");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel06.xlsx");
+        response.setContentLength(bytes.length);
+        response.setContentType("application/vnd.ms-excel");
+
+        return bytes;
+    }
+
+    @RequestMapping(value = "/ism/adj/adj070ExcelDownload.do")
+    public @ResponseBody
+    byte[] adj070ExcelDownload(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model, HttpServletRequest request,
+                               HttpServletResponse response, HttpSession session) throws Exception {
+        if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.DATE, 0);
+            adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+
+
+        List<Object> header = new ArrayList<Object>();
+        List<List<Object>> data = new ArrayList<List<Object>>();
+        header.add("구분");
+        header.add("매출처");
+        header.add("쇼핑몰");
+        header.add("합계");
+
+
+        DecimalFormat decimalFormat = new DecimalFormat("###,###");
+
+//        for (Adj020Result adj020Result : resultList) {
+//            List<Object> obj01 = new ArrayList<Object>();
+//            obj01.add("매출액");
+//            obj01.add(adj020Result.cum010name);
+//            obj01.add(adj020Result.name);
+//            obj01.add(decimalFormat.format(adj020Result.priceAll));
+//            obj01.add(decimalFormat.format(adj020Result.price01));
+//
+//            data.add(obj01);
+//        }
+
+
+        ExcelManager excelManager = new ExcelManager(header, data);
+        excelManager.setSheetName("상품별정산" + adj010SearchVO.getDtSearch_frCreateDt());
+        excelManager.setWidth(6000);
+        excelManager.setStartRow(0);
+        excelManager.setStartCol(0);
+        excelManager.setExcelType("xlsx");
+
+        byte[] bytes = excelManager.makeExcel();
+
+        response.setHeader("Content-Disposition", "attachment; filename=ManagementExcel02.xlsx");
         response.setContentLength(bytes.length);
         response.setContentType("application/vnd.ms-excel");
 

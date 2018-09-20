@@ -1,5 +1,7 @@
 package nfm.com.adj.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class Adj040Result {
     public int getCum010id() {
         return cum010id;
@@ -26,6 +28,14 @@ public class Adj040Result {
     }
 
     public String getTaxprice() {
+        if (StringUtils.isBlank(taxprice)) {
+            return "0";
+        }
+        try {
+            Integer.parseInt(taxprice);
+        }catch (Exception ignore) {
+            return "0";
+        }
         return taxprice;
     }
 
@@ -34,6 +44,14 @@ public class Adj040Result {
     }
 
     public String getTaxfreeprice() {
+        if (StringUtils.isBlank(taxfreeprice)) {
+            return "0";
+        }
+        try {
+            Integer.parseInt(taxfreeprice);
+        }catch (Exception ignore) {
+            return "0";
+        }
         return taxfreeprice;
     }
 
@@ -41,11 +59,11 @@ public class Adj040Result {
         this.taxfreeprice = taxfreeprice;
     }
 
-    public Integer getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(Integer price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 
@@ -134,7 +152,7 @@ public class Adj040Result {
     private String account;
     private String taxprice;
     private String taxfreeprice;
-    private Integer price;
+    private Long price;
     private String susuprice;
     private String namuge;
     private String sugumdate;

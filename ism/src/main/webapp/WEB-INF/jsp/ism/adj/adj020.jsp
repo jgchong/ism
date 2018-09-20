@@ -196,6 +196,12 @@
         $('#form1').submit();
     });
 
+    $("#excelDownbtn").click(function () {
+        document.form1.action = "<c:url value='/ism/adj/adj020ExcelDownload.do'/>";
+        document.form1.submit();
+        document.form1.action = "<c:url value='/ism/adj/adj020.do'/>";
+    });
+
 </script>
 <script type="text/javascript">
     $(function () {
