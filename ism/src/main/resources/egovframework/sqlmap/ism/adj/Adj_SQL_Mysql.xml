@@ -56,6 +56,7 @@
         from ismodm010 oo
         left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
         where pp.taxfree = 0
+        and pp.itemcode is not null
         and oo.closedt = #yyyymm#
         and oo.cum010id = o.cum010id
         group by oo.cum010id
@@ -65,6 +66,7 @@
         from ismodm010 oo
         left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
         where pp.taxfree = 1
+        and pp.itemcode is not null
         and oo.closedt = #yyyymm#
         and oo.cum010id = o.cum010id
         group by oo.cum010id
@@ -73,6 +75,7 @@
         from ismodm010 o
         left outer join ismcum010 c on c.cum010id = o.cum010id
         where o.closedt = #yyyymm#
+        and c.cum010id is not null
         and c.account in ('1', '2')
         group by o.cum010id)
     </insert>

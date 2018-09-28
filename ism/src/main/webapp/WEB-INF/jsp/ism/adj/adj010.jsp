@@ -259,8 +259,8 @@
                         <!-- ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ -->
 
                         <tr class="col1">
-                            <th scope="row" rowspan="13">Ⅰ.매출액</th>
-                            <td>매출 원가</td>
+                            <th scope="row" rowspan="13">II. 매입액</th>
+                            <td>매입 원가</td>
                             <td class="redBold numberWithCommasHtml">${adj020ResultBYC0.priceAll}</td>
                             <td class="redBold numberWithCommasHtml">${adj020ResultBYC1.priceAll}</td>
                             <c:forEach var="result" items="${yyyymmList}" varStatus="status">

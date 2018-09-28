@@ -21,6 +21,7 @@
         from ismskd010 s1
         left outer join ismprd010 p on s1.itemcode = p.itemcode
         where s1.skd010id = #currentId#
+        and p.itemcode is not null
         order by s1.skd010id desc
     </select>
 
@@ -36,8 +37,9 @@
         s1.itemea as itemea
         from ismskd010 s1
         left outer join ismprd010 p on s1.itemcode = p.itemcode
+        where p.itemcode is not null
         <isNotEmpty property="dfSearch_itemname">
-            where p.itemname LIKE '%' #dfSearch_itemname# '%'
+            and p.itemname LIKE '%' #dfSearch_itemname# '%'
         </isNotEmpty>
         order by s1.skd010id desc
         limit #recordCountPerPage# OFFSET #firstIndex#
@@ -55,6 +57,7 @@
         from ismskd020 s2
         left outer join ismwhs010 w on s2.whs010id = w.whs010id
         where s2.skd010id = #skd010id#
+        and w.whs010id is not null
         order by w.whs010id asc
     </select>
 
@@ -72,6 +75,8 @@
         left outer join ismskd010 s1 on s2.skd010id = s1.skd010id
         left outer join ismprd010 p on s1.itemcode = p.itemcode
         where s2.whs010id = #whs010id#
+        and s1.skd010id is not null
+        and p.itemcode is not null
     </select>
 
     <insert id="skd010DAO.insertSkd010" parameterClass="java.util.HashMap">

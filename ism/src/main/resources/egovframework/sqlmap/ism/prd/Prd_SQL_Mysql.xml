@@ -76,6 +76,7 @@
         left outer join ismwhs010 w on p.pristock = w.whs010id
         where
             p.orderitemid > 0
+        and b.byc010id is not null
         <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
             <![CDATA[
         	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
@@ -142,6 +143,7 @@
         left outer join ismwhs010 w on p.pristock = w.whs010id
         where
             p.orderitemid > 0
+        and b.byc010id is not null
         <isNotEmpty prepend="AND" property="dtSearch_frCreateDt">
             <![CDATA[
         	IF(p.createdate = '', curdate(), p.createdate) >= #dtSearch_frCreateDt#
@@ -212,6 +214,7 @@
         left outer join ismprd020 p2 on p.itemcode = p2.itemcode
         where
         p.itemcrosstype in ('S')
+        and b.byc010id is not null
         and p2.crossitemcode = #itemcode#
     </select>
 
@@ -301,6 +304,7 @@
         left outer join ismskd010 s on s.itemcode = p.itemcode
         where s.createdate LIKE '%' #dtSearch_frCreateDt# '%'
         and p.byc010id = #dtSearch_adj030_byc#
+        and s.itemcode is not null
         group by itemcode
         union
         select
@@ -314,6 +318,7 @@
         where o.closedt = REPLACE(#dtSearch_frCreateDt#,'-','')
         and p.itemgubun = 1
         and p.byc010id = #dtSearch_adj030_byc#
+        and o.orderitemid is not null
         group by itemcode
         order by itemeaAll desc
         limit #recordCountPerPage# OFFSET #firstIndex#

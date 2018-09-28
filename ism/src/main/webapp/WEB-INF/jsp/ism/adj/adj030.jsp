@@ -183,7 +183,7 @@
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
                             <tr>
-                                <td>${result.no}</td>
+                                <td>${status.count}</td>
                                 <td>${result.itemcode}</td>
                                 <td>${result.itemname}</td>
                                 <td>${result.itemeaEx}</td>

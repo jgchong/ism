@@ -424,6 +424,10 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
+        and p.itemcode is not null
+        and b.byc010id is not null
+        and c1.cum010id is not null
+        and c3.cum030id is not null
         group by o1.cum030id, b.byc010id
         order by cum030id asc
     </select>
@@ -438,6 +442,8 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
+        and p.itemcode is not null
+        and b.byc010id is not null
         group by b.byc010id
         order by byc010id asc
     </select>
@@ -450,6 +456,8 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt is NULL
+        and p.itemcode is not null
+        and b.byc010id is not null
         and o1.orderdate LIKE '%' #yyyymm# '%'
     </select>
 
@@ -469,6 +477,10 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
+        and p.itemcode is not null
+        and b.byc010id is not null
+        and c1.cum010id is not null
+        and c3.cum030id is not null
         group by o1.cum030id, b.byc010id
         order by cum030id asc
     </select>
@@ -483,6 +495,8 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
+        and p.itemcode is not null
+        and b.byc010id is not null
         group by b.byc010id
         order by byc010id asc
     </select>
@@ -495,6 +509,8 @@
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt is null
+        and p.itemcode is not null
+        and b.byc010id is not null
         and o1.orderdate LIKE '%' #yyyymm# '%'
     </select>
 
@@ -506,7 +522,9 @@
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
-        where o1.closedt LIKE '%' #yyyymm# '%'
+        where
+        p.itemcode is not null
+        and b.byc010id is not null
         group by b.byc010id
         order by itemprice desc
         limit 10
