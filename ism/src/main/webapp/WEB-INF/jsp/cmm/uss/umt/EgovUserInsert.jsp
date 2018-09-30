@@ -220,7 +220,7 @@ table td input.hidden {
 				            </tr>
 
 				            <tr> 
-                                <th width="20%" height="23" class="required_text">조직코드
+                                <th width="20%" height="23" class="required_text">부서
                                     <img src="<c:url value='/'/>images/required.gif" width="15" height="15" alt="필수" />
                                 </th>
                                 <td width="30%" >

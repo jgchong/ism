@@ -9,7 +9,7 @@
 
     <select id="userManageDAO.selectUserList_S" parameterClass="userSearchVO" resultClass="egovMap">
 SELECT 
-    uniqId, userTy, userId , userNm, emailAdres, areaNo, middleTelno, endTelno, moblphonNo, groupId, sttus, sbscrbDe
+    uniqId, userTy, userId , userNm, emailAdres, areaNo, middleTelno, endTelno, moblphonNo, groupId, sttus, sbscrbDe, orgnztnm, ofcpsnm, insttCodenm
 FROM(
     SELECT
         ESNTL_ID               uniqId,
@@ -23,8 +23,13 @@ FROM(
         MBTLNUM           moblphonNo,
         GROUP_ID              groupId,
         EMPLYR_STTUS_CODE     sttus,
-        SBSCRB_DE             sbscrbDe
-    FROM    LETTNEMPLYRINFO
+        DATE_FORMAT(SBSCRB_DE,'%Y-%m-%d')  sbscrbDe,
+        OFCPS_NM  ofcpsnm,
+        ORGNZT_NM orgnztnm,
+        letc.CODE_NM insttCodenm
+        
+    FROM    LETTNEMPLYRINFO leta left outer join LETTNORGNZTINFO letb on leta.ORGNZT_ID = letb.ORGNZT_ID
+                                 left outer join LETTCCMMNDETAILCODE letc on leta.PSTINST_CODE = letc.CODE and letc.CODE_ID = 'COM025'
     ) A
         WHERE 1=1
         <isNotEqual prepend="AND" property="sbscrbSttus" compareValue="0">
@@ -166,13 +171,14 @@ FROM(
             EMAIL_ADRES       emailAdres        ,
             OFCPS_NM          ofcpsNm           ,
             GROUP_ID          groupId           ,
-            ORGNZT_ID         orgnztId          ,
+            leta.ORGNZT_ID         orgnztId          ,
             PSTINST_CODE        insttCode         ,
             EMPLYR_STTUS_CODE emplyrSttusCode   , 
             SBSCRB_DE         sbscrbDe          ,
             CRTFC_DN_VALUE            subDn,
-            USERPHOTOSRC      userphotosrc
-        FROM LETTNEMPLYRINFO
+            USERPHOTOSRC      userphotosrc,
+            ORGNZT_NM orgnztnm
+        FROM LETTNEMPLYRINFO leta left outer join LETTNORGNZTINFO letb on leta.ORGNZT_ID = letb.ORGNZT_ID
             WHERE ESNTL_ID=#uniqId#
         ]]>
     </select>

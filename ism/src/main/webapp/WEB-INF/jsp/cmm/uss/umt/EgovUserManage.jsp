@@ -171,19 +171,22 @@ function fnViewCheck(){
                     <table summary="사용자 목록을 제공한다." cellpadding="0" cellspacing="0">
                     <caption>사용자목록</caption>
 					<colgroup>
-						<col width="5%"/><col width="5%"/><col width="10%"/>
-						<col width="*"/><col width="8%"/><col width="13%"/>
-						<col width="8%"/><col width="8%"/><col width="10%"/>
-						<col width="5%"/><col width="8%"/><col width="10%"/>
+						<col width="3%"/><col width="3%"/><col width="10%"/>
+						<col width="10%"/><col width="8%"/><col width="13%"/>
+						<col width="8%"/><col width="8%"/><col width="*"/>
+						<col width="5%"/><col width="10%"/><col width="12%"/>
 					</colgroup>
                     <thead>
                     <tr>
                         <th scope="col" nowrap="nowrap"><strong>No.</strong></th>
                         <th scope="col" nowrap="nowrap"><input name="checkAll" type="checkbox" title="Check All" onclick="javascript:fnCheckAll();"/></th>
                         <th scope="col" nowrap="nowrap">아이디</th>
+                        <th scope="col" nowrap="nowrap">소속기관</th>
+                        <th scope="col" nowrap="nowrap">부서</th>
+                        <th scope="col" nowrap="nowrap">직위</th>
                         <th scope="col" nowrap="nowrap">사용자이름</th>
                         <th scope="col" nowrap="nowrap">사용자이메일</th>
-                        <th scope="col" nowrap="nowrap">전화번호</th>
+                        <th scope="col" nowrap="nowrap">핸드폰번호</th>
                         <th scope="col" nowrap="nowrap">등록일</th>
                         <th scope="col" nowrap="nowrap">가입상태</th>
                     </tr>
@@ -201,9 +204,12 @@ function fnViewCheck(){
 	                    <td nowrap style="cursor:pointer;cursor:hand" >
 	                        <span class="link"><a href="<c:url value='/uss/umt/user/EgovUserSelectUpdtView.do'/>?selectedId=<c:out value="${result.uniqId}"/>"  onclick="javascript:fnSelectUser('<c:out value="${result.userTy}"/>:<c:out value="${result.uniqId}"/>'); return false;"><c:out value="${result.userId}"/></a></span>
 	                    </td>
+	                    <td nowrap="nowrap"><c:out value="${result.insttCodenm}"/></td>
+	                    <td nowrap="nowrap"><c:out value="${result.orgnztnm}"/></td>
+	                    <td nowrap="nowrap"><c:out value="${result.ofcpsnm}"/></td>
 	                    <td nowrap="nowrap"><c:out value="${result.userNm}"/></td>
 	                    <td nowrap="nowrap"><c:out value="${result.emailAdres}"/></td>
-	                    <td nowrap="nowrap"><c:out value="${result.areaNo}"/>)<c:out value="${result.middleTelno}"/>-<c:out value="${result.endTelno}"/></td>
+	                    <td nowrap="nowrap"><c:out value="${result.moblphonNo}"/></td>
 	                    <td nowrap="nowrap"><c:out value="${result.sbscrbDe}"/></td>
 	                    <td nowrap="nowrap">
 	                        <c:forEach var="emplyrSttusCode_result" items="${emplyrSttusCode_result}" varStatus="status">

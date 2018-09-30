@@ -156,6 +156,13 @@ public class UserManageVO extends UserDefaultVO{
 	 * 사용자 사진 등록 jgc add
 	 */
 	private String userphotosrc;
+	private String orgnztnm;
+	public String getOrgnztnm() {
+		return orgnztnm;
+	}
+	public void setOrgnztnm(String orgnztnm) {
+		this.orgnztnm = orgnztnm;
+	}
 	public String getUserphotosrc() {
 		return userphotosrc;
 	}

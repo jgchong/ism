@@ -49,7 +49,7 @@ if(loginVO == null){
 		<strong>
 			<c:set var="loginName" value="<%= loginVO.getName()%>"/>
 			이름 : <c:out value="${loginName}"/>
-			<span>직급 : 대리 / 부서 : 회계팀</span>
+			<span>직위 : ${userOneSelect.ofcpsNm} / 부서 : ${userOneSelect.orgnztnm}</span>
 		</strong>
 	</p>
 </div>
