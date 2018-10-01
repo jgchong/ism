@@ -98,14 +98,16 @@ li img {
 							<caption></caption>
 							<colgroup>
 								<!--<col width="5%"/>//-->
+								<col width="3%"/>
 								<col width="13%"/><col width="18%"/>
 								<col width="8%"/><col width="8%"/>
-								<col width="26%"/><col width="10%"/><col width="5%"/>
+								<col width="*"/><col width="10%"/><col width="5%"/>
 								<col width="5%"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<!-- <th scope="col"><input type="checkbox" value="" name=""/></th> -->
+									<th scope="col">NO.</th>
 									<th scope="col">업체별분류</th>
 									<th scope="col">상호</th>
 									<th scope="col">사업자구분</th>
@@ -119,7 +121,7 @@ li img {
 							<tbody>
 <c:forEach var="result" items="${resultList}" varStatus="status">
 								<tr onclick="viewCumData('${result.cum010id}')" class="layerBt rowPointer" name="sales">
-									<!-- <td><input type="checkbox" value="" name=""/></td> -->
+									<td><strong><c:out value="${(cum010SearchVO.pageIndex - 1) * cum010SearchVO.pageSize + status.count}"/></strong></td>
 									<td>${result.cotype1nm} > ${result.cotype2nm} > ${result.cotype3nm}</td>
 									<td><c:out value="${result.coname}"/></td>
 									<td>${result.cogubunnm}</td>
@@ -133,26 +135,11 @@ li img {
 							</tbody>
 						</table>
 					</div>
-<!-- 
+
 					<div class="paging">
-						<a href="#">&lt;&lt;</a>
-						<a href="#">&lt;</a>
-						<span>
-							<a href="#" class="on">1</a>
-							<a href="#">2</a>
-							<a href="#">3</a>
-							<a href="#">4</a>
-							<a href="#">5</a>
-							<a href="#">6</a>
-							<a href="#">7</a>
-							<a href="#">8</a>
-							<a href="#">9</a>
-							<a href="#">10</a>
-						</span>
-						<a href="#">&gt;</a>
-						<a href="#">&gt;&gt;</a>
+						<ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
 					</div>
- -->
+
 				</div>
 			</div>
 	</div> <!-- container -->

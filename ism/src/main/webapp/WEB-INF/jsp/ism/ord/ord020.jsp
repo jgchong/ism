@@ -229,7 +229,7 @@ form.searchArea .searchMore li select {
 	</c:if>
 								<tr ${rowClass}>
 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
-									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${status.count}"/></td>
+									<td><strong><c:out value="${(ord020SearchVO.pageIndex - 1) * ord020SearchVO.pageUnit + status.count}"/></strong></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">${result.code_nm}</td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.bycname}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.coname}"/></td>
