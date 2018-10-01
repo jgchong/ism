@@ -16,6 +16,9 @@
 		<isNotEqual prepend="AND" property="cum010id" compareValue="0">
            a.cum010id = #cum010id#
         </isNotEqual>
+		<isNotEmpty prepend="AND" property="search_coname">
+           a.coname LIKE '%' #search_coname# '%'
+        </isNotEmpty>
     </select>
     
     <!-- 매출처 목록 select -->
@@ -43,6 +46,9 @@
 		<isEqual prepend="AND" property="accountamt" compareValue="3">
            a.accountamt = '3' AND a.accountamtdate = DATE_FORMAT(now(), '%Y-%m-%d')
         </isEqual>
+		<isNotEmpty prepend="AND" property="search_coname">
+           a.coname LIKE '%' #search_coname# '%'
+        </isNotEmpty>
      order by $orderbyclause$
      limit #recordCountPerPage# OFFSET #firstIndex#
     </select>

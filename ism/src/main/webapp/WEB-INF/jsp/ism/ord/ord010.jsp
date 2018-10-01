@@ -521,7 +521,6 @@ function mfileonchange(files) {
 			<img src="/images/custom/loading_bar.gif" style="height:191px;" />
 		</div>
 	</div>
-	</form>
 	<!-- 로딩바[e] -->
 </body>
 </html>

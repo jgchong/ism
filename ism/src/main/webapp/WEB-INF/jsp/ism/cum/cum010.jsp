@@ -93,6 +93,10 @@ li img {
 				</ul>
 				<div class="contents">
 					<h2 class="pageTit">매출처관리</h2>
+					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
+						<input type="text" class="it ml30" title="" value="${cum010SearchVO.search_coname}" id="search_coname" name="search_coname"/>
+						<button>검색</button>
+					</form>
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
 							<caption></caption>

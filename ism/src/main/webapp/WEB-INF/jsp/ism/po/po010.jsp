@@ -471,6 +471,7 @@ function uploadFile(){
     }
         
     if(confirm("등록 하시겠습니까?")){
+    	loadingBarOpen();
         // 등록할 파일 리스트를 formData로 데이터 입력
         var form = $('#uploadForm');
         var formData = new FormData(form);
@@ -508,6 +509,7 @@ function uploadFile(){
                     msg = 'Uncaught Error.<br>' + jqXHR.responseText;
                 }
                 alert("Error : "+msg);
+            	loadingBarClose();
             }
         });
     }
@@ -552,6 +554,14 @@ function mfileonchange(files) {
 		</div>
 	</div>
 	<!-- 송장 데이터 등록 [e] -->
+	
+	<!-- 로딩바[s] -->
+	<div class="layerCont layerCont_v2 loadingbar" style="width:319px;">
+		<div class="inner" style="text-align:center;">
+			<img src="/images/custom/loading_bar.gif" style="height:191px;" />
+		</div>
+	</div>
+	<!-- 로딩바[e] -->
 <!-- 레이어 팝업 [e] -->
 
 <form id="formatdn" name="formatdn" method="post"></form>
@@ -1030,8 +1040,12 @@ function poDetailView(odm010id) {
         	"						<tr>"+
         	"							<th scope='row'>상품명</th>"+
         	"							<td><textarea name='orderitemname' style='width:100%;'>"+data.orderitemname+"</textarea></td>"+
+        	"							<th scope='row'>주문수량</th>"+
+        	"							<td>"+data.orderitemqty+"</td>"+
+        	"						</tr>"+
+        	"						<tr>"+
         	"							<th scope='row'>주소(우편번호)</th>"+
-        	"							<td>"+
+        	"							<td colspan='3'>"+
         	"								<input type='text' id='postno' name='postno' value='"+data.postno+"' size='6' /> &nbsp;"+ 
         	"                               <a href='javascript:execDaumPostcode(\""+data.address+"\")'>우편번호찾기</a>"+
         	"								<textarea name='address' style='width:100%;'>"+data.address+"</textarea>"+
@@ -1298,7 +1312,7 @@ function confirmpo() {
 			return false;
 		}		
 	}
-	
+	loadingBarOpen();
     var options = {
         success : function(data) {
             console.log(data);
@@ -1312,10 +1326,12 @@ function confirmpo() {
             	location.href="/ism/po/po010.do";
             }else{
                	alert("저장 중 오류가 발생했습니다.");
+               	loadingBarClose();
             }
         },
         error : function(xhr, status, error) {
            	console.log(error);
+           	loadingBarClose();
         },
             type : "POST"
     };
@@ -1328,6 +1344,23 @@ function downLoadFile(filename) {
 	T.target	= "tr";
 	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+filename;
 	T.submit();
+}
+function loadingBarOpen() {
+	$('body').append('<div class="fade_v2" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:200; display:none;"></div>');
+	$('.fade_v2').fadeIn();
+	$('.loadingbar').css({
+		'margin':'-'+($('.loadingbar').height()/2)+'px 0 0 -'+($('.loadingbar').width()/2)+'px'
+	});
+	$('.loadingbar').fadeIn();
+	return false;
+}
+
+function loadingBarClose() {
+	$('.layerCont_v2').fadeOut();
+	$('.fade_v2').fadeOut(function(){
+		$('.fade_v2').remove();
+	})
+	return false;
 }
 </script>
 

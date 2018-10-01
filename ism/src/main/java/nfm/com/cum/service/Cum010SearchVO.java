@@ -13,6 +13,7 @@ public class Cum010SearchVO implements Serializable {
 
 	/** 검색조건*/
 	private int cum010id = 0;
+	private String search_coname = "";
 	private String accountamt = "0";
     private String orderbyclause = "a.coname";
 
@@ -35,6 +36,14 @@ public class Cum010SearchVO implements Serializable {
 
 	public void setCum010id(int cum010id) {
 		this.cum010id = cum010id;
+	}
+
+	public String getSearch_coname() {
+		return search_coname;
+	}
+
+	public void setSearch_coname(String search_coname) {
+		this.search_coname = search_coname;
 	}
 
 	public String getAccountamt() {

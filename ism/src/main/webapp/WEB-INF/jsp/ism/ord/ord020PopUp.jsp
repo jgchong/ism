@@ -120,8 +120,12 @@ li img {
 						<tr>
 							<th scope='row'>상품명</th>
 							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
+							<th scope='row'>주문수량</th>
+							<td>${item.orderitemqty}</td>
+						</tr>
+						<tr>
 							<th scope='row'>주소(우편번호)</th>
-							<td>
+							<td colspan="3">
 								<input type='text' id='postno' name='postno' value='${item.postno}' size="6" /> &nbsp; <a href='javascript:execDaumPostcode("${item.address}");'>우편번호찾기</a>
 								<textarea name='address' style='width:100%;'>${item.address}</textarea>
 							</td>
