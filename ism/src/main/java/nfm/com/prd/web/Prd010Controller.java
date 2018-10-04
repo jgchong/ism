@@ -655,9 +655,16 @@ public class Prd010Controller {
     public String getRowStringValue(Row row, int i) {
         String result = null;
         try {
-            result = row.getCell(i).getStringCellValue();
+            result = String.valueOf(row.getCell(i).getNumericCellValue());
         } catch (Exception e) {
 
+        }
+        if (StringUtils.isBlank(result)) {
+            try {
+                result = String.valueOf(row.getCell(i).getStringCellValue());
+            } catch (Exception e) {
+
+            }
         }
         return result;
     }

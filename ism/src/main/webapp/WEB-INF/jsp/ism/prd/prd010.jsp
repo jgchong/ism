@@ -417,9 +417,9 @@
                     </tr>
                     <tr class="detail_itemgubun_2">
                         <th scope="row">카톤수량</th>
-                        <td><input id="detail_cartonqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                        <td><input id="detail_cartonqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                         <th scope="row">파렛트수량</th>
-                        <td><input id="detail_palletqty" type="number" class="it detail_itemgubun_2" title="" value="" name=""/></td>
+                        <td><input id="detail_palletqty" type="text" class="it detail_itemgubun_2" title="" value="" name=""/></td>
                     </tr>
                     <tr class="detail_onlydetail">
                         <th scope="row">상품코드</th>

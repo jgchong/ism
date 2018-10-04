@@ -43,7 +43,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
     public Object selectList(Prd010SearchVO prd010SearchVO) throws Exception {
         List<Prd010VO> prd010VOList = (List<Prd010VO>) prd010DAO.selectList(prd010SearchVO);
         for (int i = 0; i < prd010VOList.size(); i++) {
-            prd010VOList.get(i).setListNo("" + (i + 1));
+            prd010VOList.get(i).setListNo("" + (i + 1 + prd010SearchVO.getFirstIndex()));
         }
         for (int i = 0; i < prd010VOList.size(); i++) {
             Prd010VO prd010VO = prd010VOList.get(i);

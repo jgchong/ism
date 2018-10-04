@@ -25,8 +25,8 @@ public class Prd010VO {
     private String itemcode;
     private Integer pristock;
     private String itemsize;
-    private Integer cartonqty;
-    private Integer palletqty;
+    private String cartonqty;
+    private String palletqty;
     private String crossitemcode;
     private String bycname;
     private String whsname;
@@ -196,19 +196,19 @@ public class Prd010VO {
         this.itemsize = itemsize;
     }
 
-    public Integer getCartonqty() {
+    public String getCartonqty() {
         return cartonqty;
     }
 
-    public void setCartonqty(Integer cartonqty) {
+    public void setCartonqty(String cartonqty) {
         this.cartonqty = cartonqty;
     }
 
-    public Integer getPalletqty() {
+    public String getPalletqty() {
         return palletqty;
     }
 
-    public void setPalletqty(Integer palletqty) {
+    public void setPalletqty(String palletqty) {
         this.palletqty = palletqty;
     }
 
