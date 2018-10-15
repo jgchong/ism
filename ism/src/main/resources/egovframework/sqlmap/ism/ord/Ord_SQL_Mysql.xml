@@ -102,6 +102,12 @@
 	</iterate>
     </insert>
 
+	<!-- 상품 미매칭 select cnt -->
+    <select id="ord010DAO.selectCntNoItem" parameterClass="String" resultClass="int">
+	select count(*) from ismodm010 a left outer join ismprd010 b on a.orderitemid = b.itemcode
+	 where uploadviewkey = #orderTempKey# and b.orderitemid is null;
+    </select>
+    
 	<!-- 주문 목록 select cnt -->
     <select id="ord020DAO.selectListTotCnt" parameterClass="ord020SearchVO" resultClass="int">
 	select count(1) totcnt
@@ -213,7 +219,8 @@
            i.code_nm as cotype3nm,
            IFNULL(j.code_nm,'') as claimstatusnm,
            IFNULL(k.code_nm,'') as claimreasonnm,
-           IFNULL(l.code_nm,'') as retstatusnm
+           IFNULL(l.code_nm,'') as retstatusnm,
+           IFNULL(d.orderitemid,'NOITEM') as chkprod
       from ismodm010 a
            left outer join ismprd010 d on a.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
