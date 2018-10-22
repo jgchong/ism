@@ -186,6 +186,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
         } else if ("3".equals(String.valueOf(param.get("detail_itemgubun")))) {
             makingCode = makingCode + "P";
         }
+        //나중에 기타도 상품코드 추가가 되야하면 추가하기
 
         param.put("itemcode", makingCode);
         try {
@@ -202,6 +203,18 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
         param.put("byccode", ismbyc010VO.getByccode());
         try {
             prd010DAO.updateItem(param);
+        } catch (Exception e) {
+            return "";
+        }
+        return String.valueOf(param.get("itemcode"));
+    }
+
+    @Override
+    public String updateItemForBatchUp(Map param) throws Exception {
+        Ismbyc010VO ismbyc010VO = (Ismbyc010VO) ismbyc010DAO.selectismbyc010VO(String.valueOf(param.get("detail_byc")));
+        param.put("byccode", ismbyc010VO.getByccode());
+        try {
+            prd010DAO.updateItemForBatchUp(param);
         } catch (Exception e) {
             return "";
         }

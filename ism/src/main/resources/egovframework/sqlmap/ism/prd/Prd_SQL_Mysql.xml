@@ -283,6 +283,12 @@
         where itemcode = #itemcode#
     </update>
 
+    <update id="prd010DAO.updateItemForBatchUp" parameterClass="java.util.HashMap">
+        update ismprd010
+        set itembuyprice = #detail_itembuyprice#
+        where itemcode = #itemcode#
+    </update>
+
 
     <delete id="prd010DAO.prd010SelectDel" parameterClass="java.util.HashMap">
         delete from ismprd010

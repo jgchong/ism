@@ -166,13 +166,16 @@
                                 <select name="dfSearch_itemgubun" title="">
                                     <option value="">상품 구분</option>
                                     <option value="1"
-                                            <c:if test="${prd010SearchVO.dfSearch_itemcat1 eq '1'}">selected</c:if> >제조사출고상품
+                                            <c:if test="${prd010SearchVO.dfSearch_itemgubun eq '1'}">selected</c:if> >제조사출고
                                     </option>
                                     <option value="2"
-                                            <c:if test="${prd010SearchVO.dfSearch_itemcat1 eq '2'}">selected</c:if> >재고관리상품
+                                            <c:if test="${prd010SearchVO.dfSearch_itemgubun eq '2'}">selected</c:if> >당사재고출고
                                     </option>
                                     <option value="3"
-                                            <c:if test="${prd010SearchVO.dfSearch_itemcat1 eq '3'}">selected</c:if> >사은품
+                                            <c:if test="${prd010SearchVO.dfSearch_itemgubun eq '3'}">selected</c:if> >사은품
+                                    </option>
+                                    <option value="4"
+                                            <c:if test="${prd010SearchVO.dfSearch_itemgubun eq '4'}">selected</c:if> >기타
                                     </option>
                                 </select>
                             </li>
@@ -231,7 +234,8 @@
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
                             <tr id="${result.itemcode}" value="off"
-                                <c:if test="${result.itemcrosstype eq 'C'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"</c:if>>
+                                <c:if test="${result.itemcrosstype eq 'C'}">class="<c:out value="${result.crossitemcode}"/>" style="display:none"
+                            </c:if>>
                                 <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.orderitemid}"/></td>
                                 <td>
                                     <c:out value="${result.listNo}"/>
@@ -247,7 +251,17 @@
                                         <c:otherwise>-</c:otherwise>
                                     </c:choose>
                                 </td>
-                                <td><c:out value="${result.bycname}"/></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${result.itemcrosstype eq 'S'}">
+                                            <c:out value="${result.bycname}"/>
+                                        </c:when>
+                                        <c:when test="${result.itemcrosstype eq 'F'}">
+                                            결합매입처
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td><c:out value="${result.itemcode}"/></td>
                                 <td>
                                     <a href="javascript:" onclick="openSingleItemDetail('${result.itemcode}');"><c:out value="${result.itemname}"/></a>
@@ -258,15 +272,28 @@
                                 <td>
                                     <c:out value="${result.itembuydlvprice}"/></td>
                                 <td>
-                                    <c:if test="${result.itemgubun eq ''}">구분없음</c:if>
-                                    <c:if test="${result.itemgubun eq '1'}">제조사출고상품</c:if>
-                                    <c:if test="${result.itemgubun eq '2'}">재고관리상품</c:if>
-                                    <c:if test="${result.itemgubun eq '3'}">사은품</c:if>
+                                    <c:choose>
+                                        <c:when test="${result.itemcrosstype eq 'S'}">
+                                            <c:if test="${result.itemgubun eq ''}">구분없음</c:if>
+                                            <c:if test="${result.itemgubun eq '1'}">제조사출고</c:if>
+                                            <c:if test="${result.itemgubun eq '2'}">당사재고출고</c:if>
+                                            <c:if test="${result.itemgubun eq '3'}">사은품</c:if>
+                                        </c:when>
+                                        <c:when test="${result.itemcrosstype eq 'F'}">
+                                            기타
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
                                 </td>
                                 <td>
-                                    <select class="dfChange_whs010id_select" dataid="${result.orderitemid}" <c:if test="${result.itemgubun eq '1'}">disabled</c:if>>
+                                    <select class="dfChange_whs010id_select" dataid="${result.orderitemid}"
+                                            <c:if test="${result.itemgubun eq '1'}">disabled</c:if>
+                                            <c:if test="${result.itemgubun eq '4'}">disabled</c:if> >
                                         <c:if test="${result.itemgubun eq '1'}">
-                                            <option value="">우선창고없음</option>
+                                            <option value=""></option>
+                                        </c:if>
+                                        <c:if test="${result.itemgubun eq '4'}">
+                                            <option value=""></option>
                                         </c:if>
                                         <c:forEach var="item" items="${whsList}" varStatus="status">
                                             <option value="${item.whs010id}"
@@ -385,16 +412,17 @@
                     <tr>
                         <th scope="row">면세여부</th>
                         <td colspan="3">
-                            <input id="detail_sel3_1" class="detail_update_no" type="radio" value="1" name="detail_sel3" onclick="radiobox03Click(1)"/><label for="detail_sel3_1">세금부과상품</label>
-                            <input id="detail_sel3_2" class="detail_update_no" type="radio" value="2" name="detail_sel3" onclick="radiobox03Click(2)"/><label for="detail_sel3_2">면세상품</label>
+                            <input id="detail_sel3_1" class="detail_update_no" type="radio" value="1" name="detail_sel3" onclick="radiobox03Click(1)"/><label for="detail_sel3_1">세금부과</label>
+                            <input id="detail_sel3_2" class="detail_update_no" type="radio" value="2" name="detail_sel3" onclick="radiobox03Click(2)"/><label for="detail_sel3_2">면세</label>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">구분</th>
                         <td colspan="3">
-                            <input id="detail_sel2_1" class="detail_update_no" type="radio" value="1" name="detail_sel2" onclick="radiobox02Click(1)"/><label for="detail_sel2_1">제조사 출고상품</label>
-                            <input id="detail_sel2_2" class="detail_update_no" type="radio" value="2" name="detail_sel2" onclick="radiobox02Click(2)"/><label for="detail_sel2_2">재고관리상품</label>
+                            <input id="detail_sel2_1" class="detail_update_no" type="radio" value="1" name="detail_sel2" onclick="radiobox02Click(1)"/><label for="detail_sel2_1">제조사출고</label>
+                            <input id="detail_sel2_2" class="detail_update_no" type="radio" value="2" name="detail_sel2" onclick="radiobox02Click(2)"/><label for="detail_sel2_2">당사재고출고</label>
                             <input id="detail_sel2_3" class="detail_update_no" type="radio" value="3" name="detail_sel2" onclick="radiobox02Click(3)"/><label for="detail_sel2_3">사은품</label>
+                            <input id="detail_sel2_4" class="detail_update_no" type="radio" value="4" name="detail_sel2" onclick="radiobox02Click(4)"/><label for="detail_sel2_4">기타</label>
                         </td>
                     </tr>
                     <tr>
@@ -536,15 +564,15 @@
 
     function prdFileUpload() {
         var options = {
-            success : function(data) {
+            success: function (data) {
                 alert("일괄 등록하였습니다.\n" + data)
-                location.href="/ism/prd/prd010.do";
+                location.href = "/ism/prd/prd010.do";
             },
-            error : function(xhr, status, error) {
+            error: function (xhr, status, error) {
                 alert("등록을 실패하였습니다." +
                     "")
             },
-            type : "POST"
+            type: "POST"
         };
 
         $("#prdfileform").ajaxSubmit(options);
@@ -608,7 +636,7 @@
     function selectDel() {
         if (confirm("선택 주문을 삭제하시겠습니까?")) {
             var orderitemids = "";
-            $('.chk_info').each(function() {
+            $('.chk_info').each(function () {
                 if ($(this).is(":checked")) {
                     orderitemids += ($(this).attr("dataid") + ",");
                 }
@@ -616,18 +644,18 @@
             if (orderitemids == "") {
                 alert("삭제 할 주문을 선택해주시기 바랍니다.");
                 return;
-            }else{
-                orderitemids = orderitemids.substring(0,orderitemids.length - 1);
+            } else {
+                orderitemids = orderitemids.substring(0, orderitemids.length - 1);
             }
             $.ajax({
-                url : "/ism/prd/prd010SelectDel.do",
+                url: "/ism/prd/prd010SelectDel.do",
                 type: "post",
-                data : { "orderitemids" : orderitemids },
-                success : function(data){
+                data: {"orderitemids": orderitemids},
+                success: function (data) {
                     if (data == "SUCCESS") {
                         alert("삭제 되었습니다.");
                         $('#form1').submit();
-                    }else{
+                    } else {
                         alert("삭제 중 오류가 발생했습니다.");
                     }
                 },
@@ -648,13 +676,11 @@
                     } else {
                         msg = 'Uncaught Error.<br>' + jqXHR.responseText;
                     }
-                    alert("Error : "+msg);
+                    alert("Error : " + msg);
                 }
             });
         }
     }
-
-
 
 
     //운영상품 디테일 설정 ----------------------------------------------------
@@ -702,6 +728,7 @@
         $('#detail_sel1_1').trigger('click');
         $('#detail_sel2_1').trigger('click');
         $('#detail_sel3_1').trigger('click');
+        $('#detail_sel2_4').prop('disabled', true);
         $('#detail_category').val('');
         $('#detail_byc').val('');
         $('#detail_itemname').val('');
@@ -731,7 +758,7 @@
             $.ajax({
                 url: "/ism/prd/prd010Detail.do",
                 type: "post",
-                data : { "currentItemcoed" : currentItemcoed },
+                data: {"currentItemcoed": currentItemcoed},
                 dataType: 'json',
                 contentType: "application/x-www-form-urlencoded; charset=UTF-8",
                 success: function (data) {
@@ -764,7 +791,7 @@
         $('#detail_category').val(data.itemcat1);
         if (data.itemcrosstype == 'F') {
             $('#detail_sel1_2').trigger('click');
-            $.each(data.childItemcode, function(index, item){
+            $.each(data.childItemcode, function (index, item) {
                 createSearchResult(item.itemcode, item.label);
             });
         } else {
@@ -812,7 +839,7 @@
             if (index == 0) {
                 detail_childItemcode = temp
             } else {
-                detail_childItemcode = detail_childItemcode +',' + temp;
+                detail_childItemcode = detail_childItemcode + ',' + temp;
             }
         });
 
@@ -822,8 +849,12 @@
         }
 
         if (detail_byc == '') {
-            alert("매입처를 선택해주세요.")
-            return;
+            if (detail_itemcrosstype == 'F') {
+
+            } else {
+                alert("매입처를 선택해주세요.")
+                return;
+            }
         }
 
         if (detail_itemname == '') {
@@ -837,27 +868,27 @@
                 return;
             }
         }
-        
+
         $.ajax({
             url: "/ism/prd/prd010DetailSave.do",
             type: "post",
-            data : {
-                "currentItemcoed" : currentItemcoed,
-                "detail_category" : $('#detail_category').val(),
-                "detail_itemcrosstype" : detail_itemcrosstype,
-                "detail_byc" : $('#detail_byc').val(),
-                "detail_itemname" : $('#detail_itemname').val(),
-                "detail_itemopt" : $('#detail_itemopt').val(),
-                "detail_itemea" : $('#detail_itemea').val(),
-                "detail_itembuyprice" : $('#detail_itembuyprice').val(),
-                "detail_itembuydlvprice" : $('#detail_itembuydlvprice').val(),
-                "detail_itemgubun" : detail_itemgubun,
-                "detail_pristock" : $('#detail_pristock').val(),
-                "detail_itemsize" : $('#detail_itemsize').val(),
-                "detail_cartonqty" : $('#detail_cartonqty').val(),
-                "detail_palletqty" : $('#detail_palletqty').val(),
-                "detail_childItemcode" : detail_childItemcode,
-                "detail_taxfree" : detail_taxfree
+            data: {
+                "currentItemcoed": currentItemcoed,
+                "detail_category": $('#detail_category').val(),
+                "detail_itemcrosstype": detail_itemcrosstype,
+                "detail_byc": $('#detail_byc').val(),
+                "detail_itemname": $('#detail_itemname').val(),
+                "detail_itemopt": $('#detail_itemopt').val(),
+                "detail_itemea": $('#detail_itemea').val(),
+                "detail_itembuyprice": $('#detail_itembuyprice').val(),
+                "detail_itembuydlvprice": $('#detail_itembuydlvprice').val(),
+                "detail_itemgubun": detail_itemgubun,
+                "detail_pristock": $('#detail_pristock').val(),
+                "detail_itemsize": $('#detail_itemsize').val(),
+                "detail_cartonqty": $('#detail_cartonqty').val(),
+                "detail_palletqty": $('#detail_palletqty').val(),
+                "detail_childItemcode": detail_childItemcode,
+                "detail_taxfree": detail_taxfree
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
@@ -949,9 +980,18 @@
     function radiobox01Click(myRadio) {
         if (myRadio == 'F') {
             $('#detail_itemsearch').show();
+            $('#detail_sel2_4').prop('disabled', false);
+            $('#detail_sel2_4').show()
+            $('#detail_sel2_4').trigger('click');
+            $('.detail_update_no').attr('disabled', true);
+            $('#detail_byc').hide()
             detail_itemcrosstype = 'F';
         } else if (myRadio == 'S') {
             $('#detail_itemsearch').hide();
+            $('#detail_sel2_4').prop('disabled', true);
+            $('#detail_sel2_4').hide()
+            $('#detail_byc').show()
+            $('.detail_update_no').attr('disabled', false);
             detail_itemcrosstype = 'S';
         }
     }
@@ -972,6 +1012,10 @@
             $('.detail_itemgubun_2').prop('disabled', false);
             $('.detail_itemgubun_2').show()
             detail_itemgubun = 3;
+        } else if (myRadio == 4) {
+            $('.detail_itemgubun_2').prop('disabled', true);
+            $('.detail_itemgubun_2').hide()
+            detail_itemgubun = 4;
         }
     }
 
@@ -991,7 +1035,6 @@
         document.form1.submit();
         document.form1.action = "<c:url value='/ism/prd/prd010.do'/>";
     });
-
 
 
 </script>

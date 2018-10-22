@@ -82,6 +82,10 @@ public class Prd010DAO extends EgovAbstractDAO {
 		update("prd010DAO.updateItem", param);
 	}
 
+	public void updateItemForBatchUp(Map param) {
+		update("prd010DAO.updateItemForBatchUp", param);
+	}
+
 	@SuppressWarnings("rawtypes")
 	public void prd010SelectDel(HashMap hm) {
 		delete("prd010DAO.prd010SelectDel", hm);

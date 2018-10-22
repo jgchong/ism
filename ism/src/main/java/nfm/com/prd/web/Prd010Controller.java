@@ -162,11 +162,16 @@ public class Prd010Controller {
     public String detailSave(ModelMap model, String currentItemcoed, String detail_category, String detail_itemcrosstype, String detail_byc, String detail_itemname, String detail_itemopt, String detail_itemea, String detail_itembuyprice,
                              String detail_itembuydlvprice, String detail_itemgubun, String detail_pristock, String detail_itemsize, String detail_cartonqty, String detail_palletqty, String detail_childItemcode, String detail_taxfree
     ) throws Exception {
+
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
         if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
+        }
+        if ("F".equals(detail_itemcrosstype)) {
+            List<Ismbyc010VO> ismbyc010VOList = (List<Ismbyc010VO>) prd010Service.selectBycAll();
+            detail_byc = ""+ismbyc010VOList.get(0).getByc010id();
         }
         if (StringUtils.isBlank(detail_category) || StringUtils.isBlank(detail_itemcrosstype) || StringUtils.isBlank(detail_taxfree) || StringUtils.isBlank(detail_byc) || StringUtils.isBlank(detail_itemname) || StringUtils.isBlank(detail_itemgubun)
                 || ("2".equals(detail_itemgubun) && StringUtils.isBlank(detail_pristock)) || ("3".equals(detail_itemgubun) && StringUtils.isBlank(detail_pristock))) {
@@ -405,9 +410,9 @@ public class Prd010Controller {
             obj.add(prd010VO.getItembuydlvprice());
 
             if ("1".equals(prd010VO.getItemgubun())) {
-                obj.add("제조사출고상품");
+                obj.add("제조사출고");
             } else if ("2".equals(prd010VO.getItemgubun())) {
-                obj.add("재고관리상품");
+                obj.add("당사재고출고");
             } else {
                 obj.add("사은품");
             }
@@ -427,8 +432,9 @@ public class Prd010Controller {
         explainText.add("3. 매입처가 없거나, 등록된 명칭의 매입처가 아닌경우, 해당 열은 등록되지 않습니다.");
         explainText.add("4. 상품카테고리가 없거나, 등록된 명칭의 상품카테고리가 아닌경우, 해당 열은 등록되지 않습니다.");
         explainText.add("5. 면세여부가 없거나, 과세 또는 비과세로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
-        explainText.add("6. 구분이 없거나, 재고관리상품 또는 제조사출고상품 또는 사은품 으로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
-        explainText.add("7. 재고관리상품 또는 사은품의 경우, 우선창고가 없거나, 등록된 명칭의 창고가 아닌경우, 해당 열은 등록되지 않습니다.");
+        explainText.add("6. 구분이 없거나, 제조사출고 또는 당사재고출고 또는 사은품 으로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
+        explainText.add("7. 당사재고출고 또는 사은품의 경우, 우선창고가 없거나, 등록된 명칭의 창고가 아닌경우, 해당 열은 등록되지 않습니다.");
+        explainText.add("8. 상품코드가 존재하는 경우, 해당 매입단가가 수정되도록 등록이 됩니다.");
         explainText.add("EX) 예를들어 매입단가에 null이라는 값이 들어간 경우 해당 열은 등록되지 않습니다.");
         explainText.add("EX) 예를들어 면세여부에 면세라는 값이 들어간경우 해당 열은 등록되지 않고 비과세라는 값이 들어가야 해당 열은 등록이 됩니다.");
         explainText.add("해당 규칙을 잘 지켜서 값을 입력해야 제대로 상품이 등록됩니다.");
@@ -481,9 +487,12 @@ public class Prd010Controller {
         }
 
         Map<String, Integer> prdMap = new HashMap<>();
+        Map<String, Integer> prdItemcodeMap = new HashMap<>();
         for (Prd010VO prd010VO : prd010VOList) {
             prdMap.put("" + prd010VO.getByc010id() + prd010VO.getItemname(), prd010VO.getByc010id());
+            prdItemcodeMap.put("" + prd010VO.getItemcode(), 0);
         }
+
         MultipartFile mf = mtfrequest.getFile("file1");
         String result = "";
         try {
@@ -498,18 +507,20 @@ public class Prd010Controller {
                     String byc010name;
                     String itemcrossType;
 
-                    itemcrossType = getRowStringValue(row,1);
+                    boolean isModify = false;
+
+                    itemcrossType = getRowStringValue(row, 1);
                     if (StringUtils.isBlank(itemcrossType) || "결합".equals(itemcrossType)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <결합여부 없음>\n";
                         continue;
                     } else if ("단품".equals(itemcrossType)) {
                         param.put("detail_itemcrosstype", "S");
                     } else {
-                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 결합여부 값( 단품 만 입력가능)>\n";
+                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 결합여부 값(단품만 입력가능)>\n";
                         continue;
                     }
 
-                    byc010name = getRowStringValue(row,2);
+                    byc010name = getRowStringValue(row, 2);
                     if (StringUtils.isBlank(byc010name)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <매입처 없음>\n";
                         continue;
@@ -522,7 +533,8 @@ public class Prd010Controller {
                         param.put("detail_byc", "" + bycMap.get(byc010name));
                     }
 
-                    itemname = getRowStringValue(row,4);
+
+                    itemname = getRowStringValue(row, 4);
                     if (StringUtils.isBlank(itemname)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <상품이름 없음>\n";
                         continue;
@@ -531,14 +543,24 @@ public class Prd010Controller {
                     if (prdMap.get("" + bycMap.get(byc010name) + itemname) == null) {
                         param.put("detail_itemname", itemname);
                     } else {
-                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <중복된 (상품,매입처)>\n";
-                        continue;
+                        if (prdItemcodeMap.containsKey("" + getRowStringValue(row, 3))) {
+                            param.put("itemcode", getRowStringValue(row, 3));
+                            isModify = true;
+                        } else {
+                            result = result + row.getRowNum() + "번째 열 수정을 실패하였습니다. <잘못된 상품코드>";
+                            continue;
+                        }
                     }
                     //상품명, 매입처, 결합여부 등록완료
+                    if (prdItemcodeMap.containsKey("" + getRowStringValue(row, 3))) {
+                        param.put("itemcode", getRowStringValue(row, 3));
+                        isModify = true;
+                    }
+
 
                     String itemCat1;
 
-                    itemCat1 = getRowStringValue(row,5);
+                    itemCat1 = getRowStringValue(row, 5);
                     if (StringUtils.isBlank(itemCat1)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <카테고리 값 없음>\n";
                         continue;
@@ -562,7 +584,7 @@ public class Prd010Controller {
 
                     String taxfree;
 
-                    taxfree = getRowStringValue(row,6);
+                    taxfree = getRowStringValue(row, 6);
                     if (StringUtils.isBlank(taxfree)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <면세 값 없음>\n";
                         continue;
@@ -575,26 +597,44 @@ public class Prd010Controller {
                         continue;
                     }
 
-                    param.put("detail_itemopt", emptyStringToNull(getRowStringValue(row,7)));
-                    param.put("detail_itemea", emptyStringToNull(getRowStringValue(row,8)));
-                    param.put("detail_itembuyprice", emptyStringToNull(getRowStringValue(row,9)));
-                    param.put("detail_itembuydlvprice", emptyStringToNull(getRowStringValue(row,10)));
+                    param.put("detail_itemopt", emptyStringToNull(getRowStringValue(row, 7)));
+                    param.put("detail_itemea", emptyStringToNull(getRowStringValue(row, 8)));
+                    param.put("detail_itembuyprice", emptyStringToNull(getRowStringValue(row, 9)));
+                    param.put("detail_itembuydlvprice", emptyStringToNull(getRowStringValue(row, 10)));
                     String itemgubun;
 
-                    itemgubun = getRowStringValue(row,11);
+                    itemgubun = getRowStringValue(row, 11);
                     if (StringUtils.isBlank(itemgubun)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 구분 값 없음>\n";
                         continue;
-                    } else if ("제조사출고상품".equals(itemgubun)) {
+                    } else if ("제조사출고".equals(itemgubun)) {
                         param.put("detail_itemgubun", "1");
                         param.put("detail_pristock", null);
                         param.put("detail_itemsize", null);
                         param.put("detail_cartonqty", null);
                         param.put("detail_palletqty", null);
-                    } else if ("재고관리상품".equals(itemgubun)) {
+                    } else if ("제조사 출고".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "1");
+                        param.put("detail_pristock", null);
+                        param.put("detail_itemsize", null);
+                        param.put("detail_cartonqty", null);
+                        param.put("detail_palletqty", null);
+                    } else if ("제조사 출고상품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "1");
+                        param.put("detail_pristock", null);
+                        param.put("detail_itemsize", null);
+                        param.put("detail_cartonqty", null);
+                        param.put("detail_palletqty", null);
+                    } else if ("제조사 출고 상품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "1");
+                        param.put("detail_pristock", null);
+                        param.put("detail_itemsize", null);
+                        param.put("detail_cartonqty", null);
+                        param.put("detail_palletqty", null);
+                    } else if ("당사재고출고".equals(itemgubun)) {
                         param.put("detail_itemgubun", "2");
                         String whsname;
-                        whsname = getRowStringValue(row,12);
+                        whsname = getRowStringValue(row, 12);
                         if (StringUtils.isBlank(whsname)) {
                             result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
                             continue;
@@ -607,10 +647,86 @@ public class Prd010Controller {
                             param.put("detail_pristock", "" + whsMap.get(whsname));
                         }
 
-                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row,13)));
-                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row,14)));
-                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row,15)));
-                    } else if ("사은품".equals(itemgubun)) {
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
+                    } else if ("당사 재고출고".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "2");
+                        String whsname;
+                        whsname = getRowStringValue(row, 12);
+                        if (StringUtils.isBlank(whsname)) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 창고이름(해당 이름으로 창고등록해주세요)>\n";
+                            continue;
+                        } else {
+                            param.put("detail_pristock", "" + whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
+                    } else if ("당사재고 출고".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "2");
+                        String whsname;
+                        whsname = getRowStringValue(row, 12);
+                        if (StringUtils.isBlank(whsname)) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 창고이름(해당 이름으로 창고등록해주세요)>\n";
+                            continue;
+                        } else {
+                            param.put("detail_pristock", "" + whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
+                    } else if ("당사 재고 출고".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "2");
+                        String whsname;
+                        whsname = getRowStringValue(row, 12);
+                        if (StringUtils.isBlank(whsname)) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 창고이름(해당 이름으로 창고등록해주세요)>\n";
+                            continue;
+                        } else {
+                            param.put("detail_pristock", "" + whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
+                    } else if ("재고관리상품".equals(itemgubun)) {
+                        param.put("detail_itemgubun", "2");
+                        String whsname;
+                        whsname = getRowStringValue(row, 12);
+                        if (StringUtils.isBlank(whsname)) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <우선창고 없음>\n";
+                            continue;
+                        }
+
+                        if (whsMap.get(whsname) == null) {
+                            result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 창고이름(해당 이름으로 창고등록해주세요)>\n";
+                            continue;
+                        } else {
+                            param.put("detail_pristock", "" + whsMap.get(whsname));
+                        }
+
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
+                    }else if ("사은품".equals(itemgubun)) {
                         param.put("detail_itemgubun", "3");
                         String whsname;
                         whsname = row.getCell(12).getStringCellValue();
@@ -626,19 +742,24 @@ public class Prd010Controller {
                             param.put("detail_pristock", "" + whsMap.get(whsname));
                         }
 
-                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row,13)));
-                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row,14)));
-                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row,15)));
+                        param.put("detail_itemsize", emptyStringToNull(getRowStringValue(row, 13)));
+                        param.put("detail_cartonqty", emptyStringToNull(getRowStringValue(row, 14)));
+                        param.put("detail_palletqty", emptyStringToNull(getRowStringValue(row, 15)));
                     } else {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 구분 값 입력>\n";
                         continue;
                     }
-                    String resultInsert = prd010Service.insertItem(param);
+                    String resultInsert = null;
+                    if (isModify) {
+                        resultInsert = prd010Service.updateItemForBatchUp(param);
+                    } else {
+                        resultInsert = prd010Service.insertItem(param);
+                    }
                     if (StringUtils.isBlank(resultInsert)) {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 형식의 값 입력>\n";
                     }
                 } catch (Exception e) {
-                    result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <알수없는 이유 : "+e.toString()+">\n";
+                    result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <알수없는 이유 : " + e.toString() + ">\n";
                     e.printStackTrace();
                 }
             }
@@ -665,6 +786,9 @@ public class Prd010Controller {
             } catch (Exception e) {
 
             }
+        }
+        if (4 != i && !StringUtils.isBlank(result)) {
+            result = result.replaceAll(",", "");
         }
         return result;
     }
