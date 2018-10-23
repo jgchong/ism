@@ -25,7 +25,7 @@ public interface Prd010Service {
 
     public String updateItemForBatchUp(Map param) throws Exception;
 
-    public String updateCross(String itemcode, String targetItemcodes) throws Exception;
+    public String updateCross(String itemcode, String targetItemcodes, String targetItemeas) throws Exception;
 
     public void prd010SelectDel(String chgodm010ids) throws Exception;
 }

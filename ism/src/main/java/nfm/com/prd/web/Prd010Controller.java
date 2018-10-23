@@ -160,7 +160,7 @@ public class Prd010Controller {
     @ResponseBody
     @RequestMapping(value = "/ism/prd/prd010DetailSave.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
     public String detailSave(ModelMap model, String currentItemcoed, String detail_category, String detail_itemcrosstype, String detail_byc, String detail_itemname, String detail_itemopt, String detail_itemea, String detail_itembuyprice,
-                             String detail_itembuydlvprice, String detail_itemgubun, String detail_pristock, String detail_itemsize, String detail_cartonqty, String detail_palletqty, String detail_childItemcode, String detail_taxfree
+                             String detail_itembuydlvprice, String detail_itemgubun, String detail_pristock, String detail_itemsize, String detail_cartonqty, String detail_palletqty, String detail_childItemcode, String detail_childItemea, String detail_taxfree, String detail_salecode
     ) throws Exception {
 
         // 미인증 사용자에 대한 보안처리
@@ -204,6 +204,11 @@ public class Prd010Controller {
         }
         param.put("detail_itembuydlvprice", detail_itembuydlvprice);
 
+        if (StringUtils.isBlank(detail_salecode)) {
+            detail_salecode = null;
+        }
+        param.put("detail_salecode", detail_salecode);
+
         //만약 "1".equals(detail_itemgubun)인경우 null을 넣을것
         param.put("detail_itemgubun", detail_itemgubun);
         if ("1".equals(detail_itemgubun)) {
@@ -246,8 +251,8 @@ public class Prd010Controller {
 
         //detail_itemcrosstype == "F"인경우, currentItemcoed을 부모로가지는 아이들의 부모코드를 전부 null로 수정 detail_childItemcode 들의 부모를 다시 설정
         if ("F".equals(detail_itemcrosstype)) {
-            if (!StringUtils.isBlank(detail_childItemcode)) {
-                prd010Service.updateCross(result, detail_childItemcode);
+            if (!StringUtils.isBlank(detail_childItemcode) && !StringUtils.isBlank(detail_childItemea)) {
+                prd010Service.updateCross(result, detail_childItemcode, detail_childItemea);
             }
         }
 

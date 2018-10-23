@@ -3,8 +3,11 @@ package nfm.com.prd.service.impl;
 import egovframework.rte.psl.dataaccess.EgovAbstractDAO;
 import nfm.com.adj.model.Adj010SearchVO;
 import nfm.com.prd.service.Prd010SearchVO;
+import nfm.com.prd.service.Prd010VO;
+import nfm.com.prd.service.Prd020VO;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,12 +69,23 @@ public class Prd010DAO extends EgovAbstractDAO {
 //		update("prd010DAO.updateCrossitemcodes", map);
 //	}
 
-	public void insertCrossitemcode(String itemcode, String targetItemcodes) {
+	public void insertCrossitemcode(String itemcode, String targetItemcodes, String targetItemeas) {
+		List<Prd020VO> prd020VOList = new ArrayList<>();
 		String[] targetItemcodesArr = targetItemcodes.split(",");
-		Map<String, Object> map = new HashMap<>();
-		map.put("itemcode", itemcode);
-		map.put("targetItemcodes", targetItemcodesArr);
-		insert("prd010DAO.insertCrossitemcode", map);
+		String[] targetItemeaArr = targetItemeas.split(",");
+
+		if (targetItemcodesArr.length != targetItemeaArr.length) {
+			return;
+		}
+
+		for(int i = 0; i < targetItemcodesArr.length; i++) {
+			Prd020VO prd020VO = new Prd020VO();
+			prd020VO.setItemcode(targetItemcodesArr[i]);
+			prd020VO.setCrossitemcode(itemcode);
+			prd020VO.setItemea(Integer.parseInt(targetItemeaArr[i]));
+			prd020VOList.add(prd020VO);
+		}
+		insert("prd010DAO.insertCrossitemcode", prd020VOList);
 	}
 
 	public void insertItem(Map param) {

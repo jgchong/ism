@@ -5,6 +5,7 @@
 
     <typeAlias alias="prd010SearchVO" type="nfm.com.prd.service.Prd010SearchVO"/>
     <typeAlias alias="prd010VO" type="nfm.com.prd.service.Prd010VO"/>
+    <typeAlias alias="prd020VO" type="nfm.com.prd.service.Prd020VO"/>
     <typeAlias alias="adj030Result" type="nfm.com.adj.model.Adj030Result"/>
     <typeAlias alias="adj010SearchVO" type="nfm.com.adj.model.Adj010SearchVO"/>
 
@@ -60,6 +61,7 @@
         p.itemsize,
         p.cartonqty,
         p.palletqty,
+        p.salecode,
         p2.crossitemcode,
         p.taxfree
         from ismprd010 p
@@ -206,6 +208,7 @@
         p.cartonqty,
         p.palletqty,
         p2.crossitemcode,
+        p2.itemea as childItemea,
         b.bycname,
         w.whsname
         from ismprd010 p
@@ -251,18 +254,18 @@
         <!--</iterate>-->
     <!--</update>-->
 
-    <insert id="prd010DAO.insertCrossitemcode" parameterClass="java.util.HashMap">
-        insert into ismprd020 (itemcode, crossitemcode)
+    <insert id="prd010DAO.insertCrossitemcode" parameterClass="java.util.List">
+        insert into ismprd020 (itemcode, crossitemcode, itemea)
         values
-        <iterate property="targetItemcodes" conjunction=",">
-            (#targetItemcodes[]#, #itemcode#)
+        <iterate conjunction=",">
+            (#[].itemcode#, #[].crossitemcode#, #[].itemea#)
         </iterate>
     </insert>
 
     <insert id="prd010DAO.insertItem" parameterClass="java.util.HashMap">
-        insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty, taxfree)
+        insert into ismprd010 (itemcat1, itemname, byc010id, itemcrosstype, itemopt, itemea, itembuyprice, itembuydlvprice, itemgubun, createdate, byccode, itemcode, pristock, itemsize, cartonqty, palletqty, taxfree, salecode)
         values (#detail_category#, #detail_itemname#, #detail_byc#, #detail_itemcrosstype#, #detail_itemopt#,
-        #detail_itemea#, #detail_itembuyprice#, #detail_itembuydlvprice#, #detail_itemgubun#, now(), #byccode#, #itemcode#, #detail_pristock#, #detail_itemsize#, #detail_cartonqty#, #detail_palletqty#, #detail_taxfree#)
+        #detail_itemea#, #detail_itembuyprice#, #detail_itembuydlvprice#, #detail_itemgubun#, now(), #byccode#, #itemcode#, #detail_pristock#, #detail_itemsize#, #detail_cartonqty#, #detail_palletqty#, #detail_taxfree#, #detail_salecode#)
     </insert>
 
     <update id="prd010DAO.updateItem" parameterClass="java.util.HashMap">
@@ -276,6 +279,7 @@
         , itemea = #detail_itemea#
         , itembuyprice = #detail_itembuyprice#
         , itembuydlvprice = #detail_itembuydlvprice#
+        , salecode = #detail_salecode#
         , pristock = #detail_pristock#
         , itemsize = #detail_itemsize#
         , cartonqty = #detail_cartonqty#

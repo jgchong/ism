@@ -374,7 +374,10 @@
                         <td>
                             <p class="memo">
                                 <input type="text" id="detail_autocomplete" class="it" placeholder=" 상품명 검색"/>
+                                <input type="number" id="detail_autosearch_ea" class="it" placeholder="수량"/>
+                                <input type="hidden" id="detail_autosearch_explain"/>
                                 <input type="hidden" id="detail_autosearch_name"/>
+                                <input type="hidden" id="detail_autosearch_itembuyprice"/>
                                 <input type="hidden" id="detail_autosearch_value"/>
                                 <a href="javascript:addCrossitemSearch();">추가</a>
                             </p>
@@ -428,6 +431,10 @@
                     <tr>
                         <th scope="row">매입배송비</th>
                         <td colspan="3"><input id="detail_itembuydlvprice" type="number" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">발주처코드</th>
+                        <td colspan="3"><input id="detail_salecode" type="text" class="it " title="" value="" name=""/></td>
                     </tr>
                     <!-- 자사상품 출고시 생성 -->
                     <tr class="detail_itemgubun_2">
@@ -498,6 +505,126 @@
 </div>
 
 
+<!-- 주문현황관리 결합상품에서 클릭할 경우 -->
+<div id="cross_layerCont" class="layerCont product">
+    <div class="inner">
+        <p class="layerTit">결합상품 - 상품상세보기</p>
+        <div class="layerContents">
+            <div class="layerTb mb10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">상품카테고리</th>
+                        <td colspan="3">
+                            <select id="cross_detail_category">
+                                <option value="">상품 카테고리</option>
+                                <c:forEach var="item" items="${ISM090}" varStatus="status">
+                                    <option value="${item.code}">${item.codeNm}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">매입처</th>
+                        <td colspan="3">
+                            <select id="cross_detail_byc">
+                                <option value="">매입처 선택</option>
+                                <c:forEach var="item" items="${bycList}" varStatus="status">
+                                    <option value="${item.byc010id}">${item.bycname}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="layerTb mt10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                        <col width="15%"/>
+                        <col width="35%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr>
+                        <th scope="row">상품명</th>
+                        <td><input id="cross_detail_itemname" type="text" class="it " title="" value="" name=""/></td>
+                        <th scope="row">옵션</th>
+                        <td><input id="cross_detail_itemopt" type="text" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">단위수량</th>
+                        <td><input id="cross_detail_itemea" type="number" class="it " title="" value="" name=""/></td>
+                        <th scope="row">매입단가</th>
+                        <td><input id="cross_detail_itembuyprice" type="number" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">면세여부</th>
+                        <td colspan="3">
+                            <input id="cross_detail_sel3_1" type="radio" value="1" name="detail_sel3"/><label for="detail_sel3_1">세금부과</label>
+                            <input id="cross_detail_sel3_2" type="radio" value="2" name="detail_sel3"/><label for="detail_sel3_2">면세</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">구분</th>
+                        <td colspan="3">
+                            <input id="cross_detail_sel2_1" type="radio" value="1" name="detail_sel2"/><label for="detail_sel2_1">제조사출고</label>
+                            <input id="cross_detail_sel2_2" type="radio" value="2" name="detail_sel2"/><label for="detail_sel2_2">당사재고출고</label>
+                            <input id="cross_detail_sel2_3" type="radio" value="3" name="detail_sel2"/><label for="detail_sel2_3">사은품</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">매입배송비</th>
+                        <td colspan="3"><input id="cross_detail_itembuydlvprice" type="number" class="it " title="" value="" name=""/></td>
+                    </tr>
+                    <!-- 자사상품 출고시 생성 -->
+                    <tr>
+                        <th scope="row">우선창고 설정</th>
+                        <td>
+                            <select id="cross_detail_pristock">
+                                <option value="">우선창고 선택</option>
+                                <c:forEach var="item" items="${whsList}" varStatus="status">
+                                    <option value="${item.whs010id}">${item.whsname}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <th scope="row">상품크기</th>
+                        <td><input id="cross_detail_itemsize" type="text" class="it" title="" value="" name=""/></td>
+                    </tr>
+                    <tr class="detail_itemgubun_2">
+                        <th scope="row">카톤수량</th>
+                        <td><input id="cross_detail_cartonqty" type="text" class="it" title="" value="" name=""/></td>
+                        <th scope="row">파렛트수량</th>
+                        <td><input id="cross_detail_palletqty" type="text" class="it" title="" value="" name=""/></td>
+                    </tr>
+                    <tr>
+                        <th scope="row">상품코드</th>
+                        <td><input id="cross_detail_itemcode" type="text" class="it" title="" value="" name=""/></td>
+                        <th scope="row">등록일짜</th>
+                        <td><input id="cross_detail_createdate" type="text" class="it" title="" value="" name=""/></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <p class="layerFootBt">
+            <a href="javascript:;" class="layerClose_v2 cancel">취소</a>
+        </p>
+        <a href="javascript:;" class="layerClose_v2 layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
+    </div>
+</div>
+
+
 </body>
 </html>
 <script type="text/javascript" src="/js/jquery.form.js"></script>
@@ -525,7 +652,9 @@
                     },
                     select: function (event, ui) {
                         $('#detail_autocomplete').val(ui.item.label);
+                        $('#detail_autosearch_explain').val(ui.item.explain);
                         $('#detail_autosearch_name').val(ui.item.label);
+                        $('#detail_autosearch_itembuyprice').val(ui.item.itembuyprice);
                         $('#detail_autosearch_value').val(ui.item.itemcode);
                         return false;
                     },
@@ -599,6 +728,14 @@
         $('.layerCont').fadeOut();
         $('.fade').fadeOut(function () {
             $('.fade').remove();
+        })
+        return false;
+    })
+
+    $('.layerClose_v2').on('click', function () {
+        $('#cross_layerCont').fadeOut();
+        $('.fade_v2').fadeOut(function () {
+            $('.fade_v2').remove();
         })
         return false;
     })
@@ -714,6 +851,86 @@
         return false;
     }
 
+
+    function openCrossSingleItemDetail(itemcode) {
+
+        $('#cross_detail_category').val('');
+        $('#cross_detail_byc').val('');
+        $('#cross_detail_itemname').val('');
+        $('#cross_detail_itemopt').val('');
+        $('#cross_detail_itemea').val('');
+        $('#cross_detail_itembuyprice').val('');
+        $('#cross_detail_itembuydlvprice').val('');
+        $('#cross_detail_pristock').val('');
+        $('#cross_detail_itemsize').val('');
+        $('#cross_detail_cartonqty').val('');
+        $('#cross_detail_palletqty').val('');
+        $('#cross_detail_itemcode').val('');
+        $('#cross_detail_createdate').val('');
+
+        $.ajax({
+            url: "/ism/prd/prd010Detail.do",
+            type: "post",
+            data: {"currentItemcoed": itemcode},
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                $('#cross_detail_category').val(data.itemcat1);
+                $('#cross_detail_sel1_1').trigger('click');
+                $('#cross_detail_byc').val(data.byc010id);
+                $('#cross_detail_itemname').val(data.itemname);
+                $('#cross_detail_itemopt').val(data.itemopt);
+                $('#cross_detail_itemea').val(data.itemea);
+                $('#cross_detail_itembuyprice').val(data.itembuyprice);
+                if (data.itemgubun == '3') {
+                    $('#cross_detail_sel2_3').trigger('click');
+                } else if (data.itemgubun == '2') {
+                    $('#cross_detail_sel2_2').trigger('click');
+                } else {
+                    $('#cross_detail_sel2_1').trigger('click');
+                }
+                $('#cross_detail_itembuydlvprice').val(data.itembuydlvprice);
+                $('#cross_detail_pristock').val(data.pristock);
+                $('#cross_detail_itemsize').val(data.itemsize);
+                $('#cross_detail_cartonqty').val(data.cartonqty);
+                $('#cross_detail_palletqty').val(data.palletqty);
+                if (data.taxfree == '0') {
+                    $('#cross_detail_sel3_1').trigger('click');
+                } else if (data.taxfree == '1') {
+                    $('#cross_detail_sel3_2').trigger('click');
+                }
+                $('#cross_detail_itemcode').val(data.itemcode);
+                $('#cross_detail_createdate').val(data.createdate);
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+        $('body').append('<div class="fade_v2" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:200; display:none;"></div>')
+        $('.fade_v2').fadeIn();
+        $('#cross_layerCont').css({
+            'margin': '-' + ($('#cross_layerCont').height() / 2) + 'px 0 0 -' + ($('#cross_layerCont').width() / 2) + 'px'
+        }).css('z-index', 300)
+        $('#cross_layerCont').fadeIn();
+        return false;
+    }
+
     //등록 또는 수정입력시
     //수정의 경우 currentItemcoed 값을 찾기
     //등록을 하는경우 currentItemcoed에 값을 입력하기
@@ -736,6 +953,7 @@
         $('#detail_itemea').val('');
         $('#detail_itembuyprice').val('');
         $('#detail_itembuydlvprice').val('');
+        $('#detail_salecode').val('');
         $('#detail_pristock').val('');
         $('#detail_itemsize').val('');
         $('#detail_cartonqty').val('');
@@ -744,6 +962,10 @@
         $('#detail_autocomplete').val('');
         $('#detail_autosearch_value').val('');
         $('#detail_autosearch_name').val('');
+        $('#detail_autosearch_itembuyprice').val('');
+
+        $('#detail_autosearch_explain').val('');
+        $('#detail_autosearch_ea').val('');
         $('#detail_itemcode').val('');
         $('#detail_createdate').val('');
         $('.detail_autosearch_regist').remove();
@@ -792,7 +1014,7 @@
         if (data.itemcrosstype == 'F') {
             $('#detail_sel1_2').trigger('click');
             $.each(data.childItemcode, function (index, item) {
-                createSearchResult(item.itemcode, item.label);
+                createSearchResult(item.itemcode, item.label, item.ea, '');
             });
         } else {
             $('#detail_sel1_1').trigger('click');
@@ -810,6 +1032,7 @@
             $('#detail_sel2_1').trigger('click');
         }
         $('#detail_itembuydlvprice').val(data.itembuydlvprice);
+        $('#detail_salecode').val(data.salecode);
         $('#detail_pristock').val(data.pristock);
         $('#detail_itemsize').val(data.itemsize);
         $('#detail_cartonqty').val(data.cartonqty);
@@ -830,16 +1053,20 @@
 
     function saveDetailData() {
         var detail_childItemcode = '';
+        var detail_childItemea = '';
         var detail_category = $('#detail_category').val();
         var detail_byc = $('#detail_byc').val()
         var detail_itemname = $('#detail_itemname').val();
         var detail_pristock = $('#detail_pristock').val()
         $('.detail_autosearch_regist').each(function (index, item) {
             var temp = $(this).attr("dataid");
+            var temp2 = $(this).attr("dataid2");
             if (index == 0) {
                 detail_childItemcode = temp
+                detail_childItemea = temp2
             } else {
                 detail_childItemcode = detail_childItemcode + ',' + temp;
+                detail_childItemea = detail_childItemea + ',' + temp2;
             }
         });
 
@@ -888,7 +1115,9 @@
                 "detail_cartonqty": $('#detail_cartonqty').val(),
                 "detail_palletqty": $('#detail_palletqty').val(),
                 "detail_childItemcode": detail_childItemcode,
-                "detail_taxfree": detail_taxfree
+                "detail_childItemea": detail_childItemea,
+                "detail_taxfree": detail_taxfree,
+                "detail_salecode": $('#detail_salecode').val()
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
@@ -938,8 +1167,11 @@
         var searchValue = $('#detail_autosearch_value').val();
         var searchLavel = $('#detail_autocomplete').val();
         var searchName = $('#detail_autosearch_name').val();
+        var searchItembuyprice = $('#detail_autosearch_itembuyprice').val();
+        var searchExplain = $('#detail_autosearch_explain').val();
+        var searchEa = $('#detail_autosearch_ea').val();
         var a = 0;
-        if (searchValue != null && searchValue != '' && searchLavel != null && searchLavel != '' && searchName != null && searchName != '') {
+        if (searchValue != null && searchValue != '' && searchLavel != null && searchLavel != '' && searchName != null && searchName != '' && searchEa != null && searchEa != '') {
             $('.detail_autosearch_regist').each(function () {
                 var temp = $(this).attr("dataid");
                 if (searchValue == temp) {
@@ -952,15 +1184,24 @@
                 $('#detail_autocomplete').val('');
                 $('#detail_autosearch_value').val('');
                 $('#detail_autosearch_name').val('');
-                createSearchResult(searchValue, searchName);
+                $('#detail_autosearch_itembuyprice').val('');
+                $('#detail_autosearch_explain').val('');
+                $('#detail_autosearch_ea').val('');
+                var myPrice = $('#detail_itembuyprice').val()
+                myPrice *= 1;
+                myPrice = (myPrice + (searchEa * searchItembuyprice))
+                $('#detail_itembuyprice').val(myPrice);
+                createSearchResult(searchValue, searchName, searchEa, searchExplain);
+
+
             }
         } else {
-            alert("상품명을 입력해주세요.")
+            alert("상품명과 수량을 제대로 입력해주세요.")
         }
     }
 
-    function createSearchResult(searchValue, searchName) {
-        $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "'><td colspan='1'>" + searchName + "(" + searchValue + ")</td><td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td></tr>");
+    function createSearchResult(searchValue, searchName, searchEa, searchExplain) {
+        $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "' dataid2='" + searchEa + "'><td colspan='1'><a href='javascript:' onclick='openCrossSingleItemDetail(\""+searchValue+"\");'>[" + searchValue + "]" + searchName + searchExplain + "[" + searchEa + "묶음]</a></td><td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td></tr>");
     }
 
     function delRow(obj) {

@@ -30,6 +30,24 @@ public class Prd010VO {
     private String crossitemcode;
     private String bycname;
     private String whsname;
+    private String childItemea;
+    private String salecode;
+
+    public String getSalecode() {
+        return salecode;
+    }
+
+    public void setSalecode(String salecode) {
+        this.salecode = salecode;
+    }
+
+    public String getChildItemea() {
+        return childItemea;
+    }
+
+    public void setChildItemea(String childItemea) {
+        this.childItemea = childItemea;
+    }
 
     public String getTaxfree() {
         return taxfree;

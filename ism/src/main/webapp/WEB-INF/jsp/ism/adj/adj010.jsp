@@ -484,55 +484,6 @@
                                 <td class="numberWithCommasHtml">${adj010ResultList[status.index].price7}</td>
                             </c:forEach>
                         </tr>
-                        <tr>
-                            <th scope="row" rowspan="6">웰스토어 내역</th>
-                            <td>1. 웰스토어(포인트 지급액)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
-                        <tr>
-                            <td>2. 웰스토어(포인트 사용액)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
-                        <tr class="col1">
-                            <td>포인트 소계 (1-2)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
-                        <tr>
-                            <td>3. 웰스토어(적립금 지급액)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
-                        <tr>
-                            <td>4. 웰스토어(적립금 지급액)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
-                        <tr class="col1">
-                            <td>적립금 소계 (3-4)</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <td class="redBold numberWithCommasHtml">0</td>
-                            <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                <td>0</td>
-                            </c:forEach>
-                        </tr>
                         <tr class="col3">
                             <th scope="row">Ⅷ.순손익</th>
                             <td>(Ⅴ+Ⅵ-Ⅶ)</td>

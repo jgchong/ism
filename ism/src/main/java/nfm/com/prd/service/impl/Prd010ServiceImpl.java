@@ -79,6 +79,9 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("itemcode", prd010VO.getItemcode());
             jsonObject.put("label", prd010VO.getItemname());
+            jsonObject.put("explain", "["+prd010VO.getItemea()+"개/"+prd010VO.getItemopt()+"/"+prd010VO.getItembuyprice()+"원"+"]");
+            jsonObject.put("itembuyprice", prd010VO.getItembuyprice());
+            //추가
             jsonArray.add(jsonObject);
         }
         return jsonArray.toJSONString();
@@ -118,6 +121,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("cartonqty", "");
             jsonObject.put("palletqty", "");
             jsonObject.put("taxfree", "");
+            jsonObject.put("salecode", "");
         } else {
             jsonObject.put("itemcode", getResult(originPrdVO.getItemcode()));
             jsonObject.put("orderitemid", getResult(String.valueOf(originPrdVO.getOrderitemid())));
@@ -137,6 +141,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             jsonObject.put("taxfree", getResult(originPrdVO.getTaxfree()));
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             jsonObject.put("createdate", getResult(formatter.format(originPrdVO.getCreatedate())));
+            jsonObject.put("salecode", getResult(originPrdVO.getSalecode()));
         }
         if ("F".equals(originPrdVO.getItemcrosstype())) {
             List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(originPrdVO.getItemcode());
@@ -144,7 +149,8 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
             for (Prd010VO tempPrdVO : prd010VOFusionList) {
                 JSONObject jsonTempObject = new JSONObject();
                 jsonTempObject.put("itemcode", tempPrdVO.getItemcode());
-                jsonTempObject.put("label", tempPrdVO.getItemname());
+                jsonTempObject.put("label", tempPrdVO.getItemname() + "["+tempPrdVO.getItemea()+"개/"+tempPrdVO.getItemopt()+"/"+tempPrdVO.getItembuyprice()+"원"+"]");
+                jsonTempObject.put("ea", tempPrdVO.getChildItemea());
                 jsonArray.add(jsonTempObject);
             }
             jsonObject.put("childItemcode", jsonArray);
@@ -222,11 +228,11 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
     }
 
     @Override
-    public String updateCross(String itemcode, String targetItemcodes) throws Exception {
+    public String updateCross(String itemcode, String targetItemcodes, String targetItemeas) throws Exception {
 //        prd010DAO.updateCrossitemcodeInit(targetItemcodes);
         prd010DAO.deleteCrossitemcode(itemcode);
 //        prd010DAO.updateCrossitemcodes(itemcode, targetItemcodes);
-        prd010DAO.insertCrossitemcode(itemcode, targetItemcodes);
+        prd010DAO.insertCrossitemcode(itemcode, targetItemcodes, targetItemeas);
         return null;
     }
 
