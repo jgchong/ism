@@ -41,7 +41,7 @@
         <isNotEmpty property="dfSearch_itemname">
             and p.itemname LIKE '%' #dfSearch_itemname# '%'
         </isNotEmpty>
-        order by s1.skd010id desc
+        order by s1.itemcode desc, s1.skd010id desc
         limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
 
@@ -97,9 +97,7 @@
 
     <update id="skd010DAO.updateOriginSkd020" parameterClass="java.util.HashMap">
         update ismskd020
-        set itemea = #itemea#,
-        createdate = #createdate#,
-        itemdlprice = #itemdlprice#
+        set itemea = #itemea#
         where skd010id = #skd010id#
         and whs010id = #whs010id#
     </update>
@@ -129,6 +127,10 @@
         </iterate>
     </delete>
 
-
-
+    <delete id="skd010DAO.skd020zeroDelete">
+        delete from ismskd020
+        <![CDATA[
+        	where itemea < 1
+        ]]>
+    </delete>
 </sqlMap>

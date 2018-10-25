@@ -5,13 +5,11 @@ public class Skd010VO {
     private String itemcode;
     private String itemname;
 
-
+    private String itemea;
     private String itemAllprice;
     private String itemAllbuyprice;
+
     private Integer itembuyprice;
-
-
-    private String itemea;
     private String createdate;
     private String expirationdate;
     private String itemdlprice;
@@ -26,6 +24,24 @@ public class Skd010VO {
     private String whs4itemname = "-";
     private String whsNamuge = "";
 
+    private String resultType = ""; // C는 자식, P는 부모
+    private String parentItemcode = ""; // 부모 itemcode
+
+    public String getResultType() {
+        return resultType;
+    }
+
+    public void setResultType(String resultType) {
+        this.resultType = resultType;
+    }
+
+    public String getParentItemcode() {
+        return parentItemcode;
+    }
+
+    public void setParentItemcode(String parentItemcode) {
+        this.parentItemcode = parentItemcode;
+    }
 
     public String getItemAllprice() {
         return itemAllprice;

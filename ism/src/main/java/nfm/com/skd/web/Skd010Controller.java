@@ -84,6 +84,58 @@ public class Skd010Controller {
         skd010SearchVO.setRecordCountPerPage(paginationInfo.getRecordCountPerPage());
         List<Skd010VO> skd010VOList = skd010Service.selectList(skd010SearchVO);
 
+
+        List<Skd010VO> skd010VOListReal = new ArrayList<>();
+
+        if (skd010VOList.size() > 0) {
+            String tempItemcode = "";
+            Skd010VO tempSkd010VO = null;
+            for (Skd010VO skd010VO : skd010VOList) {
+                if (!tempItemcode.equals(skd010VO.getItemcode())) {
+                    tempItemcode = skd010VO.getItemcode();
+                    tempSkd010VO = new Skd010VO();
+                    skd010VOListReal.add(tempSkd010VO);
+                    tempSkd010VO.setItemcode(tempItemcode);
+                    tempSkd010VO.setItemname(skd010VO.getItemname());
+                    tempSkd010VO.setResultType("P");
+                    tempSkd010VO.setWhsNamuge("");
+                }
+
+                long tempitemea = getLongValue(tempSkd010VO.getItemea());
+                long tempitemAllprice = getLongValue(tempSkd010VO.getItemAllprice());
+                long tempitemAllbuyprice = getLongValue(tempSkd010VO.getItemAllbuyprice());
+                long tempwhs1itemea1 = getLongValue(tempSkd010VO.getWhs1itemea());
+                long tempwhs1itemea2 = getLongValue(tempSkd010VO.getWhs2itemea());
+                long tempwhs1itemea3 = getLongValue(tempSkd010VO.getWhs3itemea());
+                long tempwhs1itemea4 = getLongValue(tempSkd010VO.getWhs4itemea());
+
+                long itemea = getLongValue(skd010VO.getItemea());
+                long itemAllprice = getLongValue(skd010VO.getItemAllprice());
+                long itemAllbuyprice = getLongValue(skd010VO.getItemAllbuyprice());
+                long whs1itemea1 = getLongValue(skd010VO.getWhs1itemea());
+                long whs1itemea2 = getLongValue(skd010VO.getWhs2itemea());
+                long whs1itemea3 = getLongValue(skd010VO.getWhs3itemea());
+                long whs1itemea4 = getLongValue(skd010VO.getWhs4itemea());
+
+                tempSkd010VO.setItemea(String.valueOf(tempitemea + itemea));
+                tempSkd010VO.setItemAllprice(String.valueOf(tempitemAllprice + itemAllprice));
+                tempSkd010VO.setItemAllbuyprice(String.valueOf(tempitemAllbuyprice + itemAllbuyprice));
+                tempSkd010VO.setWhs1itemea(String.valueOf(tempwhs1itemea1 + whs1itemea1));
+                tempSkd010VO.setWhs2itemea(String.valueOf(tempwhs1itemea2 + whs1itemea2));
+                tempSkd010VO.setWhs3itemea(String.valueOf(tempwhs1itemea3 + whs1itemea3));
+                tempSkd010VO.setWhs4itemea(String.valueOf(tempwhs1itemea4 + whs1itemea4));
+                skd010VO.setResultType("C");
+                skd010VO.setParentItemcode(tempSkd010VO.getItemcode());
+                skd010VOListReal.add(skd010VO);
+            }
+
+
+        }
+
+
+
+
+
         int totCnt = skd010VOList.size();
         paginationInfo.setTotalRecordCount(totCnt);
         model.addAttribute("paginationInfo", paginationInfo);
@@ -91,7 +143,7 @@ public class Skd010Controller {
 //
 //
 //
-        model.addAttribute("resultList", skd010VOList);
+        model.addAttribute("resultList", skd010VOListReal);
 //
 //        ComDefaultCodeVO vo = new ComDefaultCodeVO();
 //        vo.setCodeId("ISM090");	//주문상태필드
@@ -126,6 +178,16 @@ public class Skd010Controller {
         //
 
         return "/ism/skd/skd010";
+    }
+
+    private long getLongValue(String stringValue) {
+        long itemea;
+        if (StringUtils.isBlank(stringValue)) {
+            itemea = 0;
+        } else {
+            itemea = Long.parseLong(stringValue.replaceAll(",", ""));
+        }
+        return itemea;
     }
 
 
@@ -216,6 +278,10 @@ public class Skd010Controller {
             return "정상적으로 값을 입력해주세요.";
         }
 
+        //로직 생각
+        //1. 각각의 키쌍에 맞는 창고에서 차감을 한다. (만약 0보다 작으면 빠꾸한다)
+        //2. 옮겨지는 창고가 있다면 업데이트 없다면 인서트 한다.
+
         if (StringUtils.isBlank(skd020save_itemdlprice)) {
             skd020save_itemdlprice = null;
         }
@@ -226,56 +292,39 @@ public class Skd010Controller {
         if (skd020save_skd010idsArr.length != skd020save_itemeasArr.length && skd020save_skd010idsArr.length != skd020save_itemea_updatesArr.length  && skd020save_skd010idsArr.length != skd020save_whs010id_updatesArr.length) {
             return "제대로 된 이관서식을 입력해주세요.";
         }
-        Map<String, Integer> itemOrginEaMap = new HashMap<>();
-        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
-            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
-                continue;
-            }
-            //A창고 A상품을 B창고에 옮긴다.
 
-            itemOrginEaMap.put(skd020save_skd010idsArr[i], Integer.parseInt(skd020save_itemeasArr[i]));
+        List<Integer> skd020save_itemeaList = new ArrayList<>();
+        List<Integer> skd020save_itemea_updateList = new ArrayList<>();
+
+        try {
+            for(int i = 0; i < skd020save_itemeasArr.length; i ++) {
+                Integer itemea = Integer.parseInt(skd020save_itemeasArr[i]);
+                Integer itemea_update = Integer.parseInt(skd020save_itemea_updatesArr[i]);
+                if (itemea - itemea_update < 0) {
+                    return "재고가 없습니다.";
+                }
+                itemea = itemea - itemea_update;
+                skd020save_itemeaList.add(itemea);
+                skd020save_itemea_updateList.add(itemea_update);
+            }
+        }
+        catch (Exception e) {
+            return "수량을 제대로 입력해주세요.";
         }
 
-        boolean isPass = true;
-        List<String> updateSkdids = new ArrayList<>();
-        List<String> updateWhsids = new ArrayList<>();
-        List<Integer> updateItemea = new ArrayList<>();
-
-        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
-            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
-                continue;
-            }
-            updateSkdids.add(skd020save_skd010idsArr[i]);
-            updateWhsids.add(skd020save_whs010id_updatesArr[i]);
-            updateItemea.add(Integer.parseInt(skd020save_itemea_updatesArr[i]));
-
-            Integer currentEa = itemOrginEaMap.get(skd020save_skd010idsArr[i]);
-            Integer newEa = currentEa - Integer.parseInt(skd020save_itemea_updatesArr[i]);
-            if (newEa < 0) {
-                isPass = false;
-            }
-            itemOrginEaMap.put(skd020save_skd010idsArr[i], newEa);
-        }
-        if (!isPass) {
-            return "재고가 남아있지 않습니다. 다시입력해주세요.";
-        }
-
-        for (String originIds : itemOrginEaMap.keySet()) {
+        for (int i = 0; i < skd020save_itemeaList.size(); i ++) {
             Map<String, Object> param = new HashMap<>();
-            param.put("skd010id", originIds);
-                param.put("whs010id", skd020save_whs010id);
-                param.put("itemea", itemOrginEaMap.get(originIds));
-                param.put("createdate", skd020save_createdate);
-            param.put("itemdlprice", skd020save_itemdlprice);
+            param.put("skd010id", skd020save_skd010idsArr[i]);
+            param.put("whs010id", skd020save_whs010id_updatesArr[i]);
+            param.put("itemea", skd020save_itemeaList.get(i));
             skd010DAO.updateOriginSkd020(param);
         }
 
-
-        for (int i = 0; i < updateSkdids.size(); i ++) {
+        for (int i = 0; i < skd020save_itemeaList.size(); i ++) {
             Map<String, Object> param = new HashMap<>();
-            param.put("skt010id", updateSkdids.get(i));
-            param.put("skd010save_whs010id", updateWhsids.get(i));
-            param.put("skd010save_itemea", updateItemea.get(i));
+            param.put("skt010id", skd020save_skd010idsArr[i]);
+            param.put("skd010save_whs010id", skd020save_whs010id);
+            param.put("skd010save_itemea", skd020save_itemea_updateList.get(i));
             param.put("skd010save_createdate", skd020save_createdate);
             param.put("skd010save_itemdlprice", skd020save_itemdlprice);
             int result = skd010DAO.insertSkd020(param);
@@ -283,6 +332,65 @@ public class Skd010Controller {
                 skd010DAO.updateSkd020(param);
             }
         }
+
+        skd010DAO.skd020zeroDelete();
+//        Map<String, Integer> itemOrginEaMap = new HashMap<>();
+//        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
+//            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
+//                continue;
+//            }
+//            //A창고 A상품을 B창고에 옮긴다.
+//
+//            itemOrginEaMap.put(skd020save_skd010idsArr[i], Integer.parseInt(skd020save_itemeasArr[i]));
+//        }
+//
+//        boolean isPass = true;
+//        List<String> updateSkdids = new ArrayList<>();
+//        List<String> updateWhsids = new ArrayList<>();
+//        List<Integer> updateItemea = new ArrayList<>();
+//
+//        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
+//            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
+//                continue;
+//            }
+//            updateSkdids.add(skd020save_skd010idsArr[i]);
+//            updateWhsids.add(skd020save_whs010id_updatesArr[i]);
+//            updateItemea.add(Integer.parseInt(skd020save_itemea_updatesArr[i]));
+//
+//            Integer currentEa = itemOrginEaMap.get(skd020save_skd010idsArr[i]);
+//            Integer newEa = currentEa - Integer.parseInt(skd020save_itemea_updatesArr[i]);
+//            if (newEa < 0) {
+//                isPass = false;
+//            }
+//            itemOrginEaMap.put(skd020save_skd010idsArr[i], newEa);
+//        }
+//        if (!isPass) {
+//            return "재고가 남아있지 않습니다. 다시입력해주세요.";
+//        }
+//
+//        for (String originIds : itemOrginEaMap.keySet()) {
+//            Map<String, Object> param = new HashMap<>();
+//            param.put("skd010id", originIds);
+//                param.put("whs010id", skd020save_whs010id);
+//                param.put("itemea", itemOrginEaMap.get(originIds));
+//                param.put("createdate", skd020save_createdate);
+//            param.put("itemdlprice", skd020save_itemdlprice);
+//            skd010DAO.updateOriginSkd020(param);
+//        }
+//
+//
+//        for (int i = 0; i < updateSkdids.size(); i ++) {
+//            Map<String, Object> param = new HashMap<>();
+//            param.put("skt010id", updateSkdids.get(i));
+//            param.put("skd010save_whs010id", updateWhsids.get(i));
+//            param.put("skd010save_itemea", updateItemea.get(i));
+//            param.put("skd010save_createdate", skd020save_createdate);
+//            param.put("skd010save_itemdlprice", skd020save_itemdlprice);
+//            int result = skd010DAO.insertSkd020(param);
+//            if (result == 0) {
+//                skd010DAO.updateSkd020(param);
+//            }
+//        }
 
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");

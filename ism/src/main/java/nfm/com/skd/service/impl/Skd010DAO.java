@@ -70,6 +70,11 @@ public class Skd010DAO extends EgovAbstractDAO {
         delete("skd010DAO.skd020SelectDel", hm);
     }
 
+    @SuppressWarnings("rawtypes")
+    public void skd020zeroDelete() {
+        delete("skd010DAO.skd020zeroDelete");
+    }
+
 
 }
 

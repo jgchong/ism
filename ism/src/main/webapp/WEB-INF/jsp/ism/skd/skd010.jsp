@@ -108,7 +108,9 @@
                 <h2 class="pageTit">재고관리</h2>
 
                 <form id="form1" name="form1" method="post" action="/ism/skd/skd010.do" class="searchArea">
+                    <!--
                     <a href="javascript:selectDel();" class="ml30">선택삭제</a>
+                    -->
                     <a id="excelDownbtn" href="javascript:;">엑셀저장</a>
                     <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
                     <button>검색</button>
@@ -117,7 +119,6 @@
                     <table cellpadding="0" cellspacing="0" class="" summary="">
                         <caption></caption>
                         <colgroup>
-                            <col width="3%"/>
                             <col width="8%"/>
                             <col width="*"/>
                             <col width="8%"/>
@@ -131,7 +132,6 @@
                         </colgroup>
                         <thead>
                         <tr>
-                            <th scope="col" rowspan="3"><a href="javascript:chkall();">V</a></th>
                             <th scope="col" rowspan="3">상품코드</th>
                             <th scope="col" rowspan="3">상품명</th>
                             <th scope="col" colspan="5">보관장소</th>
@@ -140,29 +140,49 @@
                             <th scope="col" colspan="1" rowspan="2">총재고금액(VAT포함)</th>
                         </tr>
                         <tr>
-                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3" step="1" varStatus="status">
                                 <th scope="col">${item.whsname} 합계</th>
                             </c:forEach>
                             <th scope="col">기타</th>
                         </tr>
                         <tr>
-                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3" step="1" varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
-                            <c:forEach var="item" items="${whsListForTop}" begin="4" end="5"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="4" end="5" step="1" varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
-                            <c:forEach var="item" items="${whsListForTop}" begin="6" end="7"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="6" end="7" step="1" varStatus="status">
                                 <th scope="col">${item.whsname}</th>
                             </c:forEach>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
-                            <tr>
-                                <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.skd010id}"/></td>
-                                <td><a href="javascript:" onclick="openSingleItemDetail3('${result.skd010id}')">${result.itemcode}</a></td>
-                                <td>${result.itemname} (${result.createdate})</td>
+                            <tr id="${result.itemcode}" value="off"
+                                <c:if test="${result.resultType eq 'C'}">class="<c:out value="${result.parentItemcode}"/>" style="display:none"
+                            </c:if>>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${result.resultType eq 'C'}">
+                                        </c:when>
+                                        <c:when test="${result.resultType eq 'P'}">
+                                            ${result.itemcode}
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${result.resultType eq 'C'}">
+                                        <a href="javascript:" onclick="openSingleItemDetail3('${result.skd010id}')">${result.createdate}</a>
+                                        </c:when>
+                                        <c:when test="${result.resultType eq 'P'}">
+                                            <a href="javascript:showChildItem('${result.itemcode}');">${result.itemname}</a>
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs1itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs1itemea}</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs2itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs2itemea}</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs3itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs3itemea}</td>
@@ -176,8 +196,8 @@
                                     </c:if>
                                 </td>
                                 <td>${result.itemea}</td>
-                                <td>${result.itemAllprice}</td>
-                                <td>${result.itemAllbuyprice}</td>
+                                <td <c:if test="${result.resultType eq 'P'}">class="numberWithCommasHtml"</c:if>>${result.itemAllprice}</td>
+                                <td <c:if test="${result.resultType eq 'P'}">class="numberWithCommasHtml"</c:if>>${result.itemAllbuyprice}</td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -252,13 +272,51 @@
 </div>
 
 
-
-
 <!-- 이관등록 -->
 <div id="skd020save" class="layerCont stock2">
     <div class="inner">
         <p class="layerTit">이관등록</p>
         <div class="layerContents">
+            <div class="layerTb scrollTb mt10">
+                <table cellpadding="0" cellspacing="0" class="" summary="">
+                    <caption></caption>
+                    <colgroup>
+                        <col width="20%"/>
+                        <col width="*"/>
+                        <col width="15%"/>
+                        <col width="15%"/>
+                        <col width="8%"/>
+                    </colgroup>
+                    <tbody>
+                    <tr id="skd020save_autosearch">
+                        <td>
+                            <select id="skd020save_autosearch_whs010id">
+                                <option value="">창고 선택</option>
+                                <c:forEach var="item" items="${whsList}" varStatus="status">
+                                    <option value="${item.whs010id}">${item.whsname}</option>
+                                </c:forEach>
+                            </select>
+                        </td>
+                        <td>
+                            <input type="text" id="skd020save_autosearch_input" class="it" placeholder=" 상품명 검색"/>
+                            <input type="hidden" id="skd020save_autosearch_name"/>
+                            <input type="hidden" id="skd020save_autosearch_value"/>
+                        </td>
+                        <td>
+                            <input id="skd020save_autosearch_itemea" type="text" class="it c" title="" value="" name="" placeholder="재고 수량" readonly/>
+                        </td>
+
+                        <td>
+                            <input id="skd020save_autosearch_itemea_update" type="number" class="it c" title="" value="" name="" placeholder="이관 수량"/>
+                        </td>
+                        <td>
+                            <a href="javascript:addSkd020save_autosearch();" class="celPlus">+</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
             <div class="layerTb mt10">
                 <table cellpadding="0" cellspacing="0" class="" summary="">
                     <caption></caption>
@@ -291,47 +349,6 @@
                     </tbody>
                 </table>
             </div>
-
-            <div class="layerTb scrollTb mt10">
-                <table cellpadding="0" cellspacing="0" class="" summary="">
-                    <caption></caption>
-                    <colgroup>
-                        <col width="*"/>
-                        <col width="15%"/>
-                        <col width="20%"/>
-                        <col width="15%"/>
-                        <col width="8%"/>
-                    </colgroup>
-                    <tbody>
-                    <tr id="skd020save_autosearch">
-                        <td>
-                            <input type="text" id="skd020save_autosearch_input" class="it" placeholder=" 상품명 검색"/>
-                            <input type="hidden" id="skd020save_autosearch_name"/>
-                            <input type="hidden" id="skd020save_autosearch_value"/>
-                        </td>
-                        <td>
-                            <input id="skd020save_autosearch_itemea" type="text" class="it c" title="" value="" name="" placeholder="재고 수량" readonly/>
-                        </td>
-                        <td>
-                            <select id="skd020save_autosearch_whs010id">
-                                <option value="">창고 선택</option>
-                                <c:forEach var="item" items="${whsList}" varStatus="status">
-                                    <option value="${item.whs010id}">${item.whsname}</option>
-                                </c:forEach>
-                            </select>
-                        </td>
-                        <td>
-                            <input id="skd020save_autosearch_itemea_update" type="number" class="it c" title="" value="" name="" placeholder="이관 수량"/>
-                        </td>
-                        <td>
-                            <a href="javascript:addSkd020save_autosearch();" class="celPlus">+</a>
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-
         </div>
         <p class="layerFootBt">
             <a href="javascript:saveDetailData2();" class="layerBt_v2 confirm" name="claim">확인</a>
@@ -417,7 +434,6 @@
 </div>
 
 
-
 <div id="layer_hidden1">게시물 본문 미리 보기</div>
 </body>
 </html>
@@ -428,12 +444,34 @@
 <script type="text/javascript">
     var Ca = /\+/g;
 
+    //결합상품 결합상품들 열기
+    function showChildItem(itemcode) {
+        var elementId = '#' + itemcode;
+        var elementClass = '.' + itemcode;
+
+        if ($(elementId).val() == 'on') {
+            $(elementId).val('off');
+            $(elementClass).hide();
+        } else {
+            $(elementId).val('on');
+            $(elementClass).show();
+        }
+    }
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
     //각종 초기화
     $(document).ready(function () {
 
+        $('.numberWithCommasHtml').each(function (index, item) {
+            var numberCommas = $(this).text()
+            $(this).text(numberWithCommas(numberCommas))
+        });
+
         //디테일창 닫기 초기화
         $('.layerClose').on('click', function () {
-            g_currentId =''
+            g_currentId = ''
             $('.layerCont').fadeOut();
             $('.fade').fadeOut(function () {
                 $('.fade').remove();
@@ -812,12 +850,12 @@
     }
 
 
-    $('#skd020save_autosearch_input').prop('disabled', true);
-    $('#skd020save_whs010id').change(function () { //이관될 창고 설정 변경 (//자기자신은 클릭하면 안되도록 변경하기)
+    // $('#skd020save_autosearch_input').prop('disabled', true);
+    $('#skd020save_autosearch_whs010id').change(function () { //이관될 창고 설정 변경 (//자기자신은 클릭하면 안되도록 변경하기)
         var a = $(this).val();
         if (a != '') {
-            $('#skd020save_autosearch_input').prop('disabled', false);
-            $('#skd020save_whs010id').prop('disabled', true);
+            // $('#skd020save_autosearch_input').prop('disabled', false);
+            // $('#skd020save_whs010id').prop('disabled', true);
             $.ajax({
                 url: "/ism/skd/skd020seletWhsitem.do",
                 type: "post",
@@ -863,13 +901,13 @@
                     } else {
                         msg = 'Uncaught Error.<br>' + jqXHR.responseText;
                     }
-                    $('#skd020save_whs010id').prop('disabled', false);
+                    // $('#skd020save_whs010id').prop('disabled', false);
                     alert("Error : " + msg);
                 }
             });
         } else {
-            $('#skd020save_whs010id').prop('disabled', false);
-            $('#skd020save_autosearch_input').prop('disabled', true);
+            // $('#skd020save_whs010id').prop('disabled', false);
+            // $('#skd020save_autosearch_input').prop('disabled', true);
         }
     });
 
@@ -910,7 +948,7 @@
     function createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname, itemea) {
         $('#skd020save_autosearch').after("" +
             "<tr class='skd020save_autosearch_regist' dataid01='" + searchValue + "' dataid02='" + whs010id + "' dataid03='" + itemea_update + "' dataid04='" + itemea + "'>" +
-            "<td colspan='4'>" + searchName + " ( 재고 : " + itemea + " | " + whsname + " 로 " + itemea_update + "개 이동" + ")</td>" +
+            "<td colspan='4'>" + searchName + " ( 재고 : " + itemea + " | " + whsname + "에서 " + itemea_update + "개 이동" + ")</td>" +
             "<td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td>" +
             "</tr>");
     }
@@ -918,8 +956,6 @@
     function delRow(obj) {
         $(obj).parent().parent().remove();
     }
-
-
 
 
     ////////////////////////////////////////////////////////// 상세화면
@@ -947,7 +983,7 @@
         $.ajax({
             url: "/ism/skd/skd010Detail.do",
             type: "post",
-            data : { "currentId" : currentId },
+            data: {"currentId": currentId},
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             success: function (data) {
@@ -956,19 +992,19 @@
                 $('#skd010Detail_createdate').val(data.createdate)
                 $('#skd010Detail_expirationdate').val(data.expirationdate)
                 $('#skd010Detail_itemdlprice').val(data.itemdlprice)
-                $.each(data.skd020, function(index, item){
+                $.each(data.skd020, function (index, item) {
                     $('#skd010Detail_lasttr').after("<tr class=\"skd020Detail\">\n" +
                         "                        <td colspan=\"1\">\n" +
-                        "                            <input value='"+item.whsname+"' type=\"text\" class=\"it \" placeholder=\"창고\" readonly/>\n" +
+                        "                            <input value='" + item.whsname + "' type=\"text\" class=\"it \" placeholder=\"창고\" readonly/>\n" +
                         "                        </td>\n" +
                         "                        <td colspan=\"1\">\n" +
-                        "                            <input value='"+item.itemea+"' type=\"text\" class=\"it\" placeholder=\"재고수량\" readonly/>\n" +
+                        "                            <input value='" + item.itemea + "' type=\"text\" class=\"it\" placeholder=\"재고수량\" readonly/>\n" +
                         "                        </td>\n" +
                         "                        <td colspan=\"1\">\n" +
-                        "                            <input value='"+item.createdate+"' type=\"text\" class=\"it\" placeholder=\"이관날짜\" readonly/>\n" +
+                        "                            <input value='" + item.createdate + "' type=\"text\" class=\"it\" placeholder=\"이관날짜\" readonly/>\n" +
                         "                        </td>\n" +
                         "                        <td colspan=\"1\">\n" +
-                        "                            <input value='"+item.itemdlprice+"' type=\"text\" class=\"it\" placeholder=\"물류비\" readonly/>\n" +
+                        "                            <input value='" + item.itemdlprice + "' type=\"text\" class=\"it\" placeholder=\"물류비\" readonly/>\n" +
                         "                        </td>\n" +
                         "                    </tr>")
                 });
