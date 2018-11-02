@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 <meta http-equiv="content-language" content="ko">
-<title>eGovFrame 템플릿</title>
+<title>KTI ISM</title>
 
 <link href="<c:url value='/'/>css/common.css" rel="stylesheet" type="text/css" >
 
@@ -50,9 +50,7 @@ function fncGoAfterErrorPage(){
                 <td><br />
                   <br /></td>
               </tr>
-              <tr>
-                <td align="center"><a href="javascript:fncGoAfterErrorPage();"><img src="<c:url value='/images/egovframework/com/cmm/go_history.jpg' />" width="90" height="29" /></a></td>
-              </tr>
+              
             </table>
               <br /></td>
           </tr>

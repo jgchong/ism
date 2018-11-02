@@ -133,7 +133,7 @@ function press() {
                 <ul id="search_second_ul">
                     <li>
                         <div class="buttons" style="float:right;">
-                            <a href="<c:url value='/sec/gmt/EgovGroupSearchList.do'/>" onclick="javascript:fncSelectGroupList('1'); return false;"><img src="<c:url value='/images/img_search.gif' />" alt="search" />조회 </a>
+                            <a href="<c:url value='/sec/gmt/EgovGroupSearchList.do'/>" onclick="javascript:fncSelectGroupList('1'); return false;"><img src="<c:url value='/images/img_search.gif' />" alt="search" />조회</a>
                             <a href="#LINK" onclick="javascript:fncSelectGroupConfirm()" style="selector-dummy:expression(this.hideFocus=false);">확인</a>
                         </div>                              
                     </li>

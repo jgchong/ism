@@ -19,22 +19,6 @@
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
-	<style type="text/css">
-div.searchArea		{ display:block; text-align:right; margin:0 0 20px; }
-div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; border-radius:4px; text-decoration:none; }
-div.searchArea .it	{ width:200px; height:30px; }
-div.searchArea select				{ width:160px; height:34px; font-size:14px; }
-div.searchArea button				{ padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom; border-radius:4px; }
-div.searchArea .ml30					{ margin-left:30px; }
-
-div.searchArea .searchMore		{ border:1px solid #ebebeb; padding:5px; box-sizing:border-box; margin:10px 0 0; background:#f7f7f7; display:none; }
-div.searchArea .searchMore ul	{ width:100%; display:inline-block; }
-div.searchArea .searchMore li	{ float:left; width:20%; text-align:center; padding:5px; box-sizing:border-box; }
-div.searchArea .searchMore li input			{ width:100%; box-sizing:border-box; text-align:center; font-size:14px; height:34px; }
-div.searchArea .searchMore p	{ padding:10px 5px; }
-
-.paging a.on {background-color:#457cac;color:#fff;}
-	</style>
 
 <script type="text/javaScript" language="javascript" defer="defer">
 <!--
@@ -176,7 +160,7 @@ function press() {
                 <!-- 검색 필드 박스 시작 -->
                 <div class="searchArea">
                     <input class="it ml30" id="searchKeyword" name="searchKeyword" type="text" value="<c:out value='${groupManageVO.searchKeyword}'/>" size="25" placeholder="그룹 명" onkeypress="press();" />
-                    <a href="#LINK" onclick="javascript:fncSelectGroupList('1')" style="selector-dummy:expression(this.hideFocus=false);">조회 </a>
+                    <a href="#LINK" onclick="javascript:fncSelectGroupList('1')" style="selector-dummy:expression(this.hideFocus=false);">조회</a>
                     <a href="#LINK" onclick="javascript:fncAddGroupInsert()" style="selector-dummy:expression(this.hideFocus=false);">등록</a>
                     <a href="#LINK" onclick="javascript:fncGroupListDelete()" style="selector-dummy:expression(this.hideFocus=false);">삭제</a>
                 </div>

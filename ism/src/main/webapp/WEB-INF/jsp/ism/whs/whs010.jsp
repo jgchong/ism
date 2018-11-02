@@ -81,7 +81,7 @@ li img {
 
 			<div class="contentsWrap">
 				<ul class="topBt">
-					<li><a href="">재고관리 바로가기</a></li>
+					<li><a href="/ism/skd/skd010.do">재고관리 바로가기</a></li>
 					<li><a href="javascript://" onclick="viewWhsData('-1')" class="layerBt" name="whs">창고 신규등록</a></li>
 				</ul>
 				<div class="contents">
@@ -214,7 +214,8 @@ function viewWhsData(whs010id) {
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
 			"				<td colspan='3' style='text-align:left;'>"+
 			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+data.orgfilename+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
-			"                   <label for='attachfile'>파일선택</label>"+
+			"                   <label for='attachfile'>파일선택</label> &nbsp;  &nbsp; "+
+			"                   <label><a href='javascript:delAttchFile();'>파일삭제</a></label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/>"+
 			"                   <input type='hidden' value='"+data.cmm020id+"' id='cmm020id' name='cmm020id' />"+
 			"               </td>"+
@@ -531,6 +532,20 @@ function downLoadFile(cmm020id) {
 		T.submit();
 		//T.target	= t;
 		//T.action	= a;	
+	}
+}
+
+function delAttchFile() {
+	$('#attachfilename').val('');
+	$('#cmm020id').val('0');
+	
+	var agent = navigator.userAgent.toLowerCase();
+	if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ){
+	    // ie 일때 input[type=file] init.
+	    $("#attachfile").replaceWith( $("#excelFile").clone(true) );
+	} else {
+	    //other browser 일때 input[type=file] init.
+	    $("#attachfile").val("");
 	}
 }
 </script>

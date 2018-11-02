@@ -115,6 +115,7 @@
             </ul>
             <div class="contents">
                 <h2 class="pageTit">상품수불부</h2>
+                <%--
                 <form id="form1" name="form1" method="post" action="/ism/adj/adj030.do" class="searchArea">
 
                     <table cellpadding="0" cellspacing="0" class="" summary="" >
@@ -154,6 +155,52 @@
                         </c:forEach>
                     </select>
                     <a href="javascript:$('#form1').submit();">확인</a>
+                </form>
+                --%>
+                
+                 <form id="form1" name="form1" method="post" action="/ism/adj/adj030.do" class="searchArea" style="text-align:left; margin-top:-20px;">
+                     <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
+                    <select id="dtSearch_adj030_byc" name="dtSearch_adj030_byc">
+                        <option value="">매입처 선택</option>
+                        <c:forEach var="item" items="${bycList}" varStatus="status">
+                            <option value="${item.byc010id}" <c:if test="${item.byc010id eq adj010SearchVO.dtSearch_adj030_byc}">selected</c:if>>${item.bycname}</option>
+                        </c:forEach>
+                    </select>
+                    <a href="javascript:$('#form1').submit();" style="margin-left:-4px;">확인</a>
+                    
+                    
+                    
+                    <table cellpadding="0" cellspacing="0" class="" summary="" style="width:calc(100% - 580px); float:right; text-align:center; font-size:12px;">
+                        <caption></caption>
+                        <colgroup>
+                            <col width="5%"/>
+                            <col width="5%"/>
+                            <col width="5%"/>
+                            <col width="5%"/>
+                            <col width="5%"/>
+                        </colgroup>
+                        <thead>
+                        <tr>
+                            <th scope="col">총이월재고</th>
+                            <th scope="col">총입고</th>
+                            <th scope="col">총출고</th>
+                            <th scope="col">총파손</th>
+                            <th scope="col">총재고</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>${resultAllCount.a}</td>
+                            <td>${resultAllCount.b}</td>
+                            <td>${resultAllCount.c}</td>
+                            <td>${resultAllCount.d}</td>
+                            <td>${resultAllCount.e}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    
+                    
                 </form>
                 <div class="listTb">
                     <table cellpadding="0" cellspacing="0" class="" summary="" >

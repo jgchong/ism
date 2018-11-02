@@ -113,7 +113,7 @@
                     -->
                     <a id="excelDownbtn" href="javascript:;">엑셀저장</a>
                     <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
-                    <button>검색</button>
+                    <button style="margin-left:-4px;">검색</button>
                 </form>
                 <div class="listTb">
                     <table cellpadding="0" cellspacing="0" class="" summary="">
@@ -264,8 +264,8 @@
             </div>
         </div>
         <p class="layerFootBt">
-            <a href="javascript:saveDetailData();" class="layerBt_v2 confirm" name="claim">확인</a>
-            <a href="javascript:;" class="layerClose cancel">취소</a>
+            <a href="javascript:saveDetailData();" class="layerBt_v2 confirm" name="claim">저장</a>
+            <a href="javascript:;" class="layerClose cancel">닫기</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>
     </div>
@@ -309,8 +309,8 @@
                         <td>
                             <input id="skd020save_autosearch_itemea_update" type="number" class="it c" title="" value="" name="" placeholder="이관 수량"/>
                         </td>
-                        <td>
-                            <a href="javascript:addSkd020save_autosearch();" class="celPlus">+</a>
+                        <td style="text-align:center;">
+                            <a href="javascript:addSkd020save_autosearch();" style="font-size:12px;">추가</a>
                         </td>
                     </tr>
                     </tbody>
@@ -351,8 +351,8 @@
             </div>
         </div>
         <p class="layerFootBt">
-            <a href="javascript:saveDetailData2();" class="layerBt_v2 confirm" name="claim">확인</a>
-            <a href="javascript:;" class="layerClose cancel">취소</a>
+            <a href="javascript:saveDetailData2();" class="layerBt_v2 confirm" name="claim">저장</a>
+            <a href="javascript:;" class="layerClose cancel">닫기</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>
     </div>
@@ -427,7 +427,7 @@
 
         </div>
         <p class="layerFootBt">
-            <a href="javascript:;" class="layerClose cancel">취소</a>
+            <a href="javascript:;" class="layerClose cancel">닫기</a>
         </p>
         <a href="javascript:;" class="layerClose layerTopClose"><img src="img/closePop.png" alt=""/></a>
     </div>

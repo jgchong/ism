@@ -53,8 +53,11 @@
 				<div class="contents">
 					<h2 class="pageTit">주문수집목록</h2>
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
-						<a href="javascript:;" class="layerBt" name="upload">데이터 일괄 업로드</a>
+						<a href="javascript:;" class="layerBt" style="background:#45b6b6;" name="upload">데이터 일괄 업로드</a>
+						<%--
 						<input type="text" class="it ml30" title="" value="${ord010SearchVO.search_key1}" id="search_key1" name="search_key1"/>
+						--%>
+						<select style="margin:0 -4px 0 10px;"></select>
 						<button>검색</button>
 					</form>
 
@@ -64,7 +67,7 @@
 							<colgroup>
 								<col width="5%"/><col width="15%"/><col width="*"/>
 								<col width="10%"/><col width="10%"/><col width="10%"/>
-								<col width="8%"/><col width="10%"/><col width="12%"/>
+								<col width="12%"/><col width="15%"/><col width="12%"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -85,7 +88,7 @@
 								<tr>
 									<td><c:out value="${status.count}"/></td>
 									<td><c:out value="${result.shopmallname}"/></td>
-									<td><a href="${result.shopurl}"><c:out value="${result.shopurl}"/></a></td>
+									<td><a href="javascript:window.open('${result.shopurl}','_blank');"><c:out value="${result.shopurl}"/></a></td>
 									<td><c:out value="${result.shopuid}"/></td>
 									<td><c:out value="${result.shoppwd}"/></td>
 <c:if test="${result.uploadgubun eq 'A'}">
@@ -133,7 +136,7 @@
 		<div class="inner">
 			<p class="layerTit">수동수집 환경설정</p>
 			<div class="layerContents">
-				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm">
+				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm" style="padding:10px 0 0;">
 					<div class="lfl">
 						<select id="shopmallidmanual" name="shopmallidmanual" title="">
 							<option value="0" dataid="">쇼핑몰선택</option>
@@ -143,18 +146,21 @@
 	</c:if>
 </c:forEach>
 						</select>
-						<span id="uploadtypeinfo" style="margin-left:20px;"></span>
+						<span id="uploadtypeinfo" style="margin-left:20px;">
+						    <span class="tit" style="width:100px; padding:8px 5px; background:#3a5199; margin:0 5px; color:#fff; text-align:center; cursor:pointer; font-size:14px;display:inline-block;">주문수집 파일 명</span>
+						    <span class="txt" style="padding:7px 5px; border:1px solid #ccc; font-size:14px; margin-left:-9px; display:inline-block;">_파일명표시*</span>
+						</span>
 						<!-- <button>매출처 선택</button> -->
 					</div>
 					<div id="titfile" class="lfr">
-						<label for="file" class="file">+</label>
+						<label for="file" class="file" style="width:160px; padding:8px 5px; background:#3a5199; float:left; margin:0 5px; color:#fff; text-align:center; cursor:pointer; font-size:14px;">엑셀파일을 선택해주세요.</label>
 						<input type="file" id="file" name="file" onchange="titfileUpload()" class="hidden"/>
 					</div>
 				</form>
 
 				<div class="sortableDrag">
 					<ul id="sortable1" class="connectedSortable">
-						<li class="ui-state-default" style="width:200px;">엑셀파일을 선택해주세요.</li>
+						
 					</ul>
 <c:forEach var="result" items="${orderField}" varStatus="status">
 	<c:set var="maxheightval" value="max-height:69px;"/>
@@ -164,8 +170,8 @@
 	<c:if test="${result.code eq 'address'}">
 		<c:set var="maxheightval" value=""/>
 	</c:if>
-					<div class="targetField" style="float:left;">
-						<span style="position:absolute;" dataid="${result.code}">${result.codeNm}</span>
+					<div class="targetField" style="float:left; position:relative;">
+						<span style="position:absolute; font-size:12px; background:#fff; display:inline-block; top:6px; left:10px; padding:0 4px;" dataid="${result.code}">${result.codeNm}</span>
 						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:133px;min-height:69px;${maxheightval}height:100%;margin:15px 3px;"></ul>
 					</div>
 </c:forEach>
@@ -444,10 +450,19 @@ function uploadFile(){
 	            console.log(result);
 	            console.log(result.split("^")[0]);
 	            console.log(result.split("^")[1]);
+	            console.log(result.split("^")[2]);
 	            if (result.split("^")[1].length > 2) {
 		            alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+
+		            if (parseInt(result.split("^")[2]) > 0) {
+		            	alert(result.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
+		            }
 	            }else{
-		            alert("성공");	            	
+		            if (parseInt(result.split("^")[2]) > 0) {
+		            	alert(result.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
+		            }else{
+			            alert("성공");
+		            }	            	
 	            }
 	            location.href="/ism/ord/ord020.do?search_key1="+result.split("^")[0]+"&search_status=TEMP";
             },
@@ -487,17 +502,17 @@ function mfileonchange(files) {
 		<div class="inner">
 			<p class="layerTit">데이터 일괄 업로드</p>
 			<div class="layerContents">
-				<div style="float:right;margin:10px 0;">
-    				<label for="mfile" class="muploadbtn">업로드</label>
+				<div style="text-align:left; height:26px; padding:10px 0;">
+    				<label for="mfile" class="muploadbtn" style="margin:0;">파일찾기</label>
         			<input multiple="multiple" type="file" id="mfile" name="mfile" onchange="javascript:mfileonchange(this.files);" style="display:none;"/>
         		</div>
-			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post" style="display:block;">
 				    <div id="dropZone">
-				        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
+				        <table id="mfilelisttable" class="table" width="100%" height="100" border="1px" class="connectedSortableLeft js-multiselect">
 				            <tbody id="fileTableTbody">
 				                <tr>
-				                    <td colspan="2">
-				                        파일을 선택 하세요
+				                    <td colspan="2" style="padding:20px;">
+				                        + 주문업로드파일을 이곳에 끌어다 놓으세요
 				                    </td>
 				                </tr>
 				            </tbody>
@@ -637,6 +652,7 @@ function orderFileUpload(cum010id, cum030id) {
     	success : function(data) {
             console.log(data.split("^")[0]);
             console.log(data.split("^")[1]);
+            console.log(data.split("^")[2]);
 
             if (data.split("^")[1] == "-1") {
             	loadingBarClose();
@@ -647,7 +663,11 @@ function orderFileUpload(cum010id, cum030id) {
 	            alert("수동수집환경 설정이 안되어 있습니다.\n설정 후 다시 업로드해주시기 바랍니다.");
 	            return;
             }else{
-	            alert("성공");	            	
+	            if (parseInt(data.split("^")[2]) > 0) {
+	            	alert(data.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
+	            }else{
+		            alert("성공");
+	            }	            	
             }
         	//$("#formMain").submit();
             location.href="/ism/ord/ord020.do?search_key1="+data.split("^")[0]+"&search_status=TEMP";

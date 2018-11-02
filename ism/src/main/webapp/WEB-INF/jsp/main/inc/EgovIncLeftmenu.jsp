@@ -36,7 +36,7 @@ if(loginVO == null){
 <%
 }else{
 %>
-	<h1 class="logo">넷케이티아이</h1>
+	<h1 class="logo">netKTI EDAS</h1>
 	<p class="user" onclick="javascript:location.href='<c:url value='/uss/umt/user/EgovUserSelectUpdtView.do'/>'" style="cursor:pointer;">
 		<span class="img">
 <c:if test="${userOneSelect.userphotosrc eq null}">
@@ -49,12 +49,12 @@ if(loginVO == null){
 		<strong>
 			<c:set var="loginName" value="<%= loginVO.getName()%>"/>
 			이름 : <c:out value="${loginName}"/>
-			<span>직위 : ${userOneSelect.ofcpsNm} / 부서 : ${userOneSelect.orgnztnm}</span>
+			<span>직위 : ${userOneSelect.ofcpsNm} <br/> 부서 : ${userOneSelect.orgnztnm}</span>
 		</strong>
 	</p>
 </div>
 <div style="text-align:center;padding-top:10px;padding-bottom:10px;border-bottom:1px solid #38373d;">
-<a href="<c:url value='/uat/uia/actionLogout.do'/>"><img src="<c:url value='/images/leftmenu/logout.jpg' />" alt="로그아웃" /></a>
+<a href="<c:url value='/uat/uia/actionLogout.do'/>" style="background:#3a5199; font-size:14px; color:#fff; display:inline-block; width:80px; height:30px; line-height:30px; text-align:center;">로그아웃</a>
 </div>
 <ul class="menu">
 	<li><a href="<c:url value='/uat/uia/actionMain.do'/>">DASHBOARD</a></li>

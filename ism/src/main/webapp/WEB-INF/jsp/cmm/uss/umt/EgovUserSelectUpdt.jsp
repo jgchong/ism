@@ -126,10 +126,10 @@ table td input.hidden {
                     <div class="layerTb" >
                         <table>
                             <tr> 
-                                <th width="20%" height="23" class="required_text"  >사진</th>
+                                <th width="20%" height="23" class="required_text">사진</th>
 				                <td width="80%" colspan="3">
 				                	<div>
-				                		<div class="img_wrap">
+				                		<div class="img_wrap" style="margin:0;">
 				                			<img id="userphoto" src="${userManageVO.userphotosrc}"/>
 				                		</div>
 				                	</div>

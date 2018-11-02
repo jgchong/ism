@@ -91,7 +91,8 @@ function fnInit() {
 
 	<div class="login">
 		<p class="tit">
-			<img src="<c:url value='/'/>images/custom/logo.png" alt=""/>
+			<%--<img src="<c:url value='/'/>images/custom/logo.png" alt=""/>--%>
+			<span style="font-size:40px; padding:0; color:#1f3d74; font-weight:900;">netKTI EDAS</span><br/>
 			<span>로그인</span>
 		</p>
 		<form:form id="loginForm" name="loginForm" method="post">

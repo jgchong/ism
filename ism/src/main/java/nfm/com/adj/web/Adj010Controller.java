@@ -78,7 +78,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
             adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
@@ -270,7 +270,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
             adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
@@ -348,7 +348,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         }
 
@@ -396,7 +396,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
             adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
@@ -538,7 +538,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
             adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
@@ -675,7 +675,7 @@ public class Adj010Controller {
         if (StringUtils.isBlank(adj010SearchVO.getDtSearch_frCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
             Calendar calender = Calendar.getInstance();
-            calender.add(Calendar.DATE, 0);
+            calender.add(Calendar.MONTH, -1);
             adj010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
         } else {
             adj010SearchVO.setDtSearch_frCreateDt(adj010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));

@@ -117,9 +117,9 @@
             <div class="contents">
                 <h2 class="pageTit">재고관리</h2>
 
-                <form id="form1" name="form1" method="post" action="/ism/adj/adj050.do" class="searchArea">
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj050.do" class="searchArea" style="margin-top:-20px;">
                     <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
-                    <button>검색</button>
+                    <button style="margin-left:-4px;">검색</button>
                 </form>
                 <div class="listTb">
                     <table cellpadding="0" cellspacing="0" class="" summary="">

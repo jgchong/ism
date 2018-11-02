@@ -18,7 +18,7 @@
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
 	<style type="text/css">
 div.searchArea		{ display:block; text-align:right; margin:0 0 20px; }
-div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; border-radius:4px; text-decoration:none; }
+div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; text-decoration:none; }
 div.searchArea .it	{ width:200px; height:30px; }
 div.searchArea select				{ width:160px; height:34px; font-size:14px; }
 div.searchArea button				{ padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom; border-radius:4px; }
@@ -30,7 +30,6 @@ div.searchArea .searchMore li	{ float:left; width:20%; text-align:center; paddin
 div.searchArea .searchMore li input			{ width:100%; box-sizing:border-box; text-align:center; font-size:14px; height:34px; }
 div.searchArea .searchMore p	{ padding:10px 5px; }
 
-.paging a.on {background-color:#457cac;color:#fff;}
 	</style>
 
 <script type="text/javaScript" language="javascript" defer="defer">
@@ -161,7 +160,7 @@ function fnViewCheck(){
                 </select>
                 <input name="searchKeyword" title="검색어" type="text" value="<c:out value="${userSearchVO.searchKeyword}"/>" class="it ml30"/>
 
-                <a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" onclick="javascript:fnSearch(); return false;">조회 </a>
+                <a href="<c:url value='/uss/umt/user/EgovUserManage.do'/>" onclick="javascript:fnSearch(); return false;" style="margin-left:-4px;">조회</a>
                 <a href="#LINK" onclick="javascript:fnDeleteUser(); return false;"><spring:message code="button.delete" /></a>
                 <a href="<c:url value='/uss/umt/user/EgovUserInsertView.do'/>" onclick="fnAddUserView(); return false;"><spring:message code="button.create" /></a>
                 </div>

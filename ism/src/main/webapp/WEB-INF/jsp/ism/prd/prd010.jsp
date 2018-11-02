@@ -125,24 +125,14 @@
                     <input type="file" id="filePrd" name="file1" style="display:none" onchange="prdFileUpload()"/>
                 </form>
                 <form id="form1" name="form1" method="post" action="/ism/prd/prd010.do" class="searchArea">
-                    <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_frCreateDt}" name="dtSearch_frCreateDt" placeHolder="시작등록일자"/>
-                    <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_toCreateDt}" name="dtSearch_toCreateDt" placeHolder="종료등록일자"/>
-                    <a href="javascript:selectDel();">선택삭제</a>
-                    <select id="pageUnit" name="pageUnit" title="" class="ml30">
-                        <option value="50" <c:if test="${prd010SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
-                        <option value="100" <c:if test="${prd010SearchVO.pageUnit eq '100'}"><c:out value="selected"/></c:if>>100개</option>
-                        <option value="500" <c:if test="${prd010SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
-                    </select>
-                    <a href="javascript:;">정렬</a>
-                    <a href="javascript:;" class="moreSearchBt">상세검색</a>
-                    <ul style="margin-top: 10px; margin-bottom:10px;">
-                        <label for="filePrd" class="muploadbtn" style="margin-top: 30px;">운영상품 일괄 등록</label>
-                        <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
-                        <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
-                    </ul>
+                   
                     <div class="searchMore">
                         <ul>
-                            <li>
+                            <li style="width:100%; text-align:left;">
+                                <strong style="font-size:12px;">상품등록일</strong>
+                                <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_frCreateDt}" name="dtSearch_frCreateDt" placeHolder="시작등록일자" style="width:120px; float:none;"/> ~ <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_toCreateDt}" name="dtSearch_toCreateDt" placeHolder="종료등록일자" style="width:120px; float:none;"/>
+                            </li>
+                            <li style="width:25%;">
                                 <select name="dfSearch_itemcat1" title="">
                                     <option value="">상품 카테고리</option>
                                     <c:forEach var="item" items="${ISM090}" varStatus="status">
@@ -151,7 +141,7 @@
                                     </c:forEach>
                                 </select>
                             </li>
-                            <li>
+                            <li style="width:25%;">
                                 <select name="dfSearch_itemcrosstype" title="">
                                     <option value=''>결합여부</option>
                                     <option value='S'
@@ -162,9 +152,9 @@
                                     </option>
                                 </select>
                             </li>
-                            <li>
+                            <li style="width:25%;">
                                 <select name="dfSearch_itemgubun" title="">
-                                    <option value="">상품 구분</option>
+                                    <option value="">상품구분</option>
                                     <option value="1"
                                             <c:if test="${prd010SearchVO.dfSearch_itemgubun eq '1'}">selected</c:if> >제조사출고
                                     </option>
@@ -179,20 +169,32 @@
                                     </option>
                                 </select>
                             </li>
-                            <li><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_bycname}" name="dfSearch_bycname" placeHolder="매입처"/></li>
-                            <li><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
-                            <li><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
-                            <li><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>
-                            <li><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_whsname}" name="dfSearch_whsname" placeHolder="우선창고명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_bycname}" name="dfSearch_bycname" placeHolder="매입처"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_whsname}" name="dfSearch_whsname" placeHolder="우선창고명"/></li>
                         </ul>
-                        <p><a href="javascript:$('#search_isdetail').val(1);$('#form1').submit();">검색</a></p>
+                        <p><a href="javascript:$('#search_isdetail').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
                     </div>
-                    <script type="text/javascript">
-                        $('.moreSearchBt').on('click', function () {
-                            $('.searchMore').slideToggle();
-                            return false;
-                        })
-                    </script>
+                    
+                    <div style="width:100%; display:inline-block;">
+                        <div style="float:left; height:34px;">
+                            <a href="#">엑셀예시(향후반영예정)</a>
+                            <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
+                        </div>
+                        <div style="float:right; height:34px;">
+                            <label for="filePrd" class="muploadbtn" style="display:inline-block; padding:7px 12px; margin:0;">운영상품 일괄 등록</label>
+                            <a href="javascript:;" class="layerBt" onclick="openSingleItemDetail()" name="product" style="margin-top: 30px;">운영상품 등록</a>
+                           <a href="javascript:selectDel();" class="selDel">선택삭제</a>
+                            <select id="pageUnit" name="pageUnit" title="" class="ml30" style="margin-top:1px;">
+                                <option value="50" <c:if test="${prd010SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
+                                <option value="100" <c:if test="${prd010SearchVO.pageUnit eq '100'}"><c:out value="selected"/></c:if>>100개</option>
+                                <option value="500" <c:if test="${prd010SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
+                            </select>
+                            <a href="javascript:;" style="margin-left:-4px;">정렬</a>
+                        </div>
+                    </div>
                     <input type="hidden" id="search_isdetail" name="search_isdetail" value="0"/><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
                     <input type="hidden" id="dfChange_whs010id" name="dfChange_whs010id" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
                     <input type="hidden" id="dfChange_orderitemid" name="dfChange_orderitemid" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
@@ -202,23 +204,25 @@
                     <table cellpadding="0" cellspacing="0" class="" summary="">
                         <caption></caption>
                         <colgroup>
-                            <col width="4%"/>
-                            <col width="4%"/>
+                            <col width="3%"/>
                             <col width="8%"/>
-                            <col width="10%"/>
+                            <col width="3%"/>
+                            <col width="8%"/>
+                            <col width="9%"/>
                             <col width="8%"/>
                             <col width="*"/>
                             <col width="8%"/>
                             <col width="8%"/>
-                            <col width="10%"/>
-                            <col width="5%"/>
-                            <col width="10%"/>
-                            <col width="10%"/>
+                            <col width="9%"/>
+                            <col width="4%"/>
+                            <col width="9%"/>
+                            <col width="9%"/>
                         </colgroup>
                         <thead>
                         <tr>
                             <th scope="col"><a href="javascript:chkall();">V</a></th>
                             <th scope="col">NO.</th>
+                            <th scope="col">카테고리</th>
                             <th scope="col">결합여부</th>
                             <th scope="col">매입처</th>
                             <th scope="col">상품코드</th>
@@ -239,6 +243,11 @@
                                 <td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.orderitemid}"/></td>
                                 <td>
                                     <c:out value="${result.listNo}"/>
+                                </td>
+                                <td>
+                                    <c:forEach var="item" items="${ISM090}" varStatus="status">
+                                        <c:if test="${result.itemcat1 eq item.code}">${item.codeNm}</c:if>
+                                    </c:forEach>
                                 </td>
                                 <td>
                                     <c:choose>
@@ -373,8 +382,8 @@
                     <tr id="detail_autosearch">
                         <td>
                             <p class="memo">
-                                <input type="text" id="detail_autocomplete" class="it" placeholder=" 상품명 검색"/>
-                                <input type="number" id="detail_autosearch_ea" class="it" placeholder="수량"/>
+                                <input type="text" id="detail_autocomplete" class="it" placeholder=" 상품명 검색" style="width:78%;"/>
+                                <input type="number" id="detail_autosearch_ea" class="it" placeholder="수량" style="width:20%; border:1px solid #ddd;"/>
                                 <input type="hidden" id="detail_autosearch_explain"/>
                                 <input type="hidden" id="detail_autosearch_name"/>
                                 <input type="hidden" id="detail_autosearch_itembuyprice"/>
@@ -433,7 +442,7 @@
                         <td colspan="3"><input id="detail_itembuydlvprice" type="number" class="it " title="" value="" name=""/></td>
                     </tr>
                     <tr>
-                        <th scope="row">발주처코드</th>
+                        <th scope="row">매입처상품코드</th>
                         <td colspan="3"><input id="detail_salecode" type="text" class="it " title="" value="" name=""/></td>
                     </tr>
                     <!-- 자사상품 출고시 생성 -->
@@ -634,9 +643,9 @@
 <script type="text/javascript">
     var Ca = /\+/g;
     $(document).ready(function () {
-        <c:if test="${prd010SearchVO.search_isdetail eq 1}">
-        $('.searchMore').slideToggle();
-        </c:if>
+        <%--<c:if test="${prd010SearchVO.search_isdetail eq 1}">--%>
+        <%--$('.searchMore').slideToggle();--%>
+        <%--</c:if>--%>
 
         $.ajax({
             url: "/ism/cum/prd010selectAll.do",

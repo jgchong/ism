@@ -139,15 +139,7 @@ public class Skd010Controller {
         int totCnt = skd010VOList.size();
         paginationInfo.setTotalRecordCount(totCnt);
         model.addAttribute("paginationInfo", paginationInfo);
-        /** pageing [e]*/
-//
-//
-//
         model.addAttribute("resultList", skd010VOListReal);
-//
-//        ComDefaultCodeVO vo = new ComDefaultCodeVO();
-//        vo.setCodeId("ISM090");	//주문상태필드
-//        model.addAttribute("ISM090", egovCmmUseService.selectCmmCodeDetail(vo));
         model.addAttribute("whsList", prd010Service.selectWhsAll());
         List <Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
         for (int i = 0; i < 4; i ++) {
@@ -237,17 +229,6 @@ public class Skd010Controller {
             return "등록을 실패하였습니다. 다시 시도하여주세요.";
         }
 
-//        if (StringUtils.isBlank(result)) {
-//            return "등록을 실패하였습니다. 다시 시도하여주세요.";
-//        }
-
-//        //detail_itemcrosstype == "F"인경우, currentItemcoed을 부모로가지는 아이들의 부모코드를 전부 null로 수정 detail_childItemcode 들의 부모를 다시 설정
-//        if ("F".equals(detail_itemcrosstype)) {
-//            if (!StringUtils.isBlank(detail_childItemcode)) {
-//                prd010Service.updateCross(result, detail_childItemcode);
-//            }
-//        }
-
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
         return resultMessage.toJSONString();
@@ -293,7 +274,10 @@ public class Skd010Controller {
             return "제대로 된 이관서식을 입력해주세요.";
         }
 
+        //옮김 당하는 재고 수량
         List<Integer> skd020save_itemeaList = new ArrayList<>();
+
+        //옮기는 재고 수량 (해당 정수값만큼 이관이 되어진다)
         List<Integer> skd020save_itemea_updateList = new ArrayList<>();
 
         try {
@@ -334,64 +318,6 @@ public class Skd010Controller {
         }
 
         skd010DAO.skd020zeroDelete();
-//        Map<String, Integer> itemOrginEaMap = new HashMap<>();
-//        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
-//            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
-//                continue;
-//            }
-//            //A창고 A상품을 B창고에 옮긴다.
-//
-//            itemOrginEaMap.put(skd020save_skd010idsArr[i], Integer.parseInt(skd020save_itemeasArr[i]));
-//        }
-//
-//        boolean isPass = true;
-//        List<String> updateSkdids = new ArrayList<>();
-//        List<String> updateWhsids = new ArrayList<>();
-//        List<Integer> updateItemea = new ArrayList<>();
-//
-//        for (int i = 0; i < skd020save_skd010idsArr.length; i++) {
-//            if (skd020save_whs010id.equals(skd020save_whs010id_updatesArr[i])) {
-//                continue;
-//            }
-//            updateSkdids.add(skd020save_skd010idsArr[i]);
-//            updateWhsids.add(skd020save_whs010id_updatesArr[i]);
-//            updateItemea.add(Integer.parseInt(skd020save_itemea_updatesArr[i]));
-//
-//            Integer currentEa = itemOrginEaMap.get(skd020save_skd010idsArr[i]);
-//            Integer newEa = currentEa - Integer.parseInt(skd020save_itemea_updatesArr[i]);
-//            if (newEa < 0) {
-//                isPass = false;
-//            }
-//            itemOrginEaMap.put(skd020save_skd010idsArr[i], newEa);
-//        }
-//        if (!isPass) {
-//            return "재고가 남아있지 않습니다. 다시입력해주세요.";
-//        }
-//
-//        for (String originIds : itemOrginEaMap.keySet()) {
-//            Map<String, Object> param = new HashMap<>();
-//            param.put("skd010id", originIds);
-//                param.put("whs010id", skd020save_whs010id);
-//                param.put("itemea", itemOrginEaMap.get(originIds));
-//                param.put("createdate", skd020save_createdate);
-//            param.put("itemdlprice", skd020save_itemdlprice);
-//            skd010DAO.updateOriginSkd020(param);
-//        }
-//
-//
-//        for (int i = 0; i < updateSkdids.size(); i ++) {
-//            Map<String, Object> param = new HashMap<>();
-//            param.put("skt010id", updateSkdids.get(i));
-//            param.put("skd010save_whs010id", updateWhsids.get(i));
-//            param.put("skd010save_itemea", updateItemea.get(i));
-//            param.put("skd010save_createdate", skd020save_createdate);
-//            param.put("skd010save_itemdlprice", skd020save_itemdlprice);
-//            int result = skd010DAO.insertSkd020(param);
-//            if (result == 0) {
-//                skd010DAO.updateSkd020(param);
-//            }
-//        }
-
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
         return resultMessage.toJSONString();
@@ -504,6 +430,26 @@ public class Skd010Controller {
         return bytes;
     }
 
+    /**
+     * 상품 상세 저장
+     *
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @ResponseBody
+    @RequestMapping(value = "/ism/skd/skd010Add.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String detailSave(ModelMap model, String itemcode, String whs010id, String itemea) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if (!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
 
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
 
 }

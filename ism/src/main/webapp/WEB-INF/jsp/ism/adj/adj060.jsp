@@ -115,7 +115,12 @@
             </ul>
             <div class="contents">
                 <h2 class="pageTit">운송비대장</h2>
+                <%--
                 <form id="form1" name="form1" method="post" action="/ism/adj/adj060.do" class="searchArea">
+                    <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
+                </form>
+                --%>
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj060.do" class="searchArea" style="text-align:left; margin-top:-20px;">
                     <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
                 </form>
                 <div class="listTb">

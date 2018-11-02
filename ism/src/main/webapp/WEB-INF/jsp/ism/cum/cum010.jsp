@@ -94,8 +94,9 @@ li img {
 				<div class="contents">
 					<h2 class="pageTit">매출처관리</h2>
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
+						<a href="javascript:;" class="" style="background:#45b6b6;">매출처 다운로드</a>
 						<input type="text" class="it ml30" title="" value="${cum010SearchVO.search_coname}" id="search_coname" name="search_coname"/>
-						<button>검색</button>
+						<button style="margin-left:-4px;">검색</button>
 					</form>
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
@@ -260,7 +261,8 @@ function viewCumData(cum010id) {
 			"				<th scope='row'>파일첨부<br/>(구비서류)</th>"+
 			"				<td colspan='3' style='text-align:left;'>"+
 			"                   <input type='text' class='it' style='width: 80%;' onclick='downLoadFile("+data.cmm020id+")' value='"+decodeURIComponent(data.orgfilename.replace(Ca, " "))+"' id='attachfilename' name='attachfilename' readonly /> &nbsp; "+
-			"                   <label for='attachfile'>파일선택</label>"+
+			"                   <label for='attachfile'>파일선택</label> &nbsp;  &nbsp; "+
+			"                   <label><a href='javascript:delAttchFile();'>파일삭제</a></label>"+
 			"                   <input type='file' id='attachfile' name='attachfile' onchange='FileUpload(this)' class='hidden'/>"+
 			"                   <input type='hidden' value='"+data.cmm020id+"' id='cmm020id' name='cmm020id' />"+
 			"               </td>"+
@@ -682,6 +684,20 @@ function downLoadFile(cmm020id) {
 		T.submit();
 		//T.target	= t;
 		//T.action	= a;	
+	}
+}
+
+function delAttchFile() {
+	$('#attachfilename').val('');
+	$('#cmm020id').val('0');
+	
+	var agent = navigator.userAgent.toLowerCase();
+	if ( (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1) || (agent.indexOf("msie") != -1) ){
+	    // ie 일때 input[type=file] init.
+	    $("#attachfile").replaceWith( $("#excelFile").clone(true) );
+	} else {
+	    //other browser 일때 input[type=file] init.
+	    $("#attachfile").val("");
 	}
 }
 </script>

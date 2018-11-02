@@ -120,193 +120,211 @@
             </ul>
             <div class="contents">
                 <h2 class="pageTit">판매관리비</h2>
+                <%--
                 <form id="form1" name="form1" method="post" action="/ism/adj/adj070.do" class="searchArea">
                     <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
                 </form>
-                <div style="float:left;width:50%;height:50%;background-Color:#F2FFFF">
-                    1) 부서 사용금액
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="50%"/>
-                            <col width="50%"/>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="col">구분</th>
-                            <th scope="col">금액</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>사용품/협찬</td>
-                                <td><input type="text" class="it it2 adj070update1" value="${resultObject.price1}" name=""/></td>
-                                <c:set var="col_sum00" value="${col_sum00 + resultObject.price1}"/>
-                            </tr>
-                            <tr>
-                                <td>샘플사용</td>
-                                <td><input type="text" class="it it2 adj070update1" value="${resultObject.price2}" name=""/></td>
-                                <c:set var="col_sum00" value="${col_sum00 + resultObject.price2}"/>
-                            </tr>
-                            <tr>
-                                <td>영업용</td>
-                                <td><input type="text" class="it it2 adj070update1" value="${resultObject.price3}" name=""/></td>
-                                <c:set var="col_sum00" value="${col_sum00 + resultObject.price3}"/>
-                            </tr>
-                            <tr>
-                                <td>파손,망실,분실 건</td>
-                                <td><input type="text" class="it it2 adj070update1" value="${resultObject.price33}" name=""/></td>
-                                <c:set var="col_sum00" value="${col_sum00 + resultObject.price33}"/>
-                            </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="total">
-                            <td>합계</td>
-                            <td>${col_sum00}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <a href="javascript:" onclick="updateItem1()" class="btn">확인</a>
+                --%>
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj070.do" class="searchArea" style="text-align:left; margin-top:-20px;">
+                    <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
+                </form>
+                <div style="display:inline-block; width:100%; height:260px;" class="listTb">
+                    <div style="float:left; width:calc(50% - 10px);">
+                        <table cellpadding="0" cellspacing="0" class="" summary="">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="30%"/>
+                                <col width="70%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="2">1) 부서 사용금액</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="total">
+                                    <td>합계</td>
+                                    <td>${col_sum00}</td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <td>사용품/협찬</td>
+                                    <td><input type="text" class="it it2 adj070update1" value="${resultObject.price1}" name=""/></td>
+                                    <c:set var="col_sum00" value="${col_sum00 + resultObject.price1}"/>
+                                </tr>
+                                <tr>
+                                    <td>샘플사용</td>
+                                    <td><input type="text" class="it it2 adj070update1" value="${resultObject.price2}" name=""/></td>
+                                    <c:set var="col_sum00" value="${col_sum00 + resultObject.price2}"/>
+                                </tr>
+                                <tr>
+                                    <td>영업용</td>
+                                    <td><input type="text" class="it it2 adj070update1" value="${resultObject.price3}" name=""/></td>
+                                    <c:set var="col_sum00" value="${col_sum00 + resultObject.price3}"/>
+                                </tr>
+                                <tr>
+                                    <td>파손,망실,분실 건</td>
+                                    <td><input type="text" class="it it2 adj070update1" value="${resultObject.price33}" name=""/></td>
+                                    <c:set var="col_sum00" value="${col_sum00 + resultObject.price33}"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="display:inline-block; text-align:right; padding:10px 0; width:100%;">
+                            <a href="javascript:" onclick="updateItem1()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
+                        </p>
+                        
+                    </div>
+                    
+                    <div style="float:right; width:calc(50% - 10px);">
+                        <table cellpadding="0" cellspacing="0" class="" summary="">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="30%"/>
+                                <col width="70%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="2"> 2) 타부서 사용금액</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="total">
+                                    <td>합계</td>
+                                    <td>${col_sum001}</td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <td>선장품(경영지원실)</td>
+                                    <td><input type="text" class="it it2 adj070update2" value="${resultObject.price4}" name=""/></td>
+                                    <c:set var="col_sum001" value="${col_sum001 + resultObject.price4}"/>
+                                </tr>
+                                <tr>
+                                    <td>선장품(타부서)</td>
+                                    <td><input type="text" class="it it2 adj070update2" value="${resultObject.price5}" name=""/></td>
+                                    <c:set var="col_sum001" value="${col_sum001 + resultObject.price5}"/>
+                                </tr>
+                                <tr>
+                                    <td>기타(타부서)</td>
+                                    <td><input type="text" class="it it2 adj070update2" value="${resultObject.price6}" name=""/></td>
+                                    <c:set var="col_sum001" value="${col_sum001 + resultObject.price6}"/>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <p style="display:inline-block; text-align:right; padding:10px 0; width:100%;">
+                            <a href="javascript:" onclick="updateItem2()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
+                        </p>
+                    </div>
                 </div>
-
-
-                <div style="clear:right;float:right;width:50%;height:50%;background-Color:#FFF2FF">
-                    2) 타부서 사용금액
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="50%"/>
-                            <col width="50%"/>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="col">구분</th>
-                            <th scope="col">금액</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>선장품(경영지원실)</td>
-                            <td><input type="text" class="it it2 adj070update2" value="${resultObject.price4}" name=""/></td>
-                            <c:set var="col_sum001" value="${col_sum001 + resultObject.price4}"/>
-                        </tr>
-                        <tr>
-                            <td>선장품(타부서)</td>
-                            <td><input type="text" class="it it2 adj070update2" value="${resultObject.price5}" name=""/></td>
-                            <c:set var="col_sum001" value="${col_sum001 + resultObject.price5}"/>
-                        </tr>
-                        <tr>
-                            <td>기타(타부서)</td>
-                            <td><input type="text" class="it it2 adj070update2" value="${resultObject.price6}" name=""/></td>
-                            <c:set var="col_sum001" value="${col_sum001 + resultObject.price6}"/>
-                        </tr>
-                        </tbody>
-                        <tfoot>
-                        <tr class="total">
-                            <td>합계</td>
-                            <td>${col_sum001}</td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                    <a href="javascript:" onclick="updateItem2()" class="btn">확인</a>
-                </div>
-
-
-                <div style="float:left;width:50%;height:50%;background-Color:#FFFFF2">
-                    3) 영업사수수료
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="*"/>
-                            <col width="18%"/>
-                            <col width="18%"/>
-                            <col width="18%"/>
-                            <col width="30%"/>
-                            <col width="10%"/>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="col">매출처</th>
-                            <th scope="col">매출액</th>
-                            <th scope="col">판매금액</th>
-                            <th scope="col">지금수수료</th>
-                            <th scope="col">정산정책</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <c:forEach var="result" items="${resultList3}" varStatus="status">
-                            <tr>
-                                <td>${result.cum010name}</td>
-                                <td>${result.price}</td>
-                                <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.saleprice}" name=""/></td>
-                                <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.givesusuprice}" name=""/></td>
-                                <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.policy}" name=""/></td>
-                                <td><a href="javascript:" onclick="updateItem3(${result.cum010id})" class="btn">확인</a></td>
-                                <c:set var="col_sum0000" value="${col_sum0000 + result.saleprice}"/>
-                                <c:set var="col_sum01" value="${col_sum01 + result.price}"/>
-                                <c:set var="col_sum02" value="${col_sum02 + result.givesusuprice}"/>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr class="total">
-                            <td>합계</td>
-                            <td>${col_sum01}</td>
-                            <td>${col_sum0000}</td>
-                            <td>${col_sum02}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
-                </div>
-
-
-                <div style="clear:right;float:right;width:50%;height:50%;background-Color:#EFEFEF">
-                    4) 영업외수익
-                    <table cellpadding="0" cellspacing="0" class="" summary="">
-                        <caption></caption>
-                        <colgroup>
-                            <col width="*"/>
-                            <col width="18%"/>
-                            <col width="18%"/>
-                            <col width="10%"/>
-                        </colgroup>
-                        <thead>
-                        <tr>
-                            <th scope="col">매출처</th>
-                            <th scope="col">금액</th>
-                            <th scope="col">메모</th>
-                            <th scope="col"></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="매입처"/></td>
-                            <td><input type="number" class="it it2 adj070insert4" value="" name="" placeholder="금액"/></td>
-                            <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="메모"/></td>
-                            <td><a href="javascript:" onclick="insertItem4()" class="btn">추가하기</a></td>
-                        </tr>
-                        <c:forEach var="result" items="${resultList4}" varStatus="status">
-                            <tr>
-                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.bycname}" name=""/></td>
-                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.price}" name=""/></td>
-                                <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.memo}" name=""/></td>
-                                <td><a href="javascript:" onclick="updateItem4(${result.adj0702id})" class="btn">확인</a></td>
-                                <c:set var="col_sum03" value="${col_sum03 + result.price}"/>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                        <tfoot>
-                        <tr class="total">
-                            <td>합계</td>
-                            <td>${col_sum03}</td>
-                            <td></td>
-                            <td></td>
-                        </tr>
-                        </tfoot>
-                    </table>
+                
+                
+                <div style="display:inline-block; width:100%;" class="listTb">
+                    <div style="float:left; width:calc(50% - 10px);">
+                         <table cellpadding="0" cellspacing="0" class="" summary="">
+                            <caption></caption>
+                             <colgroup>
+                                <col width="*"/>
+                                <col width="18%"/>
+                                <col width="18%"/>
+                                <col width="18%"/>
+                                <col width="30%"/>
+                                <col width="10%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="6">3) 영업사원수수료</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">매출처</th>
+                                    <th scope="col">매출액</th>
+                                    <th scope="col">판매금액</th>
+                                    <th scope="col">지금수수료</th>
+                                    <th scope="col">정산정책</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="total">
+                                    <td>합계</td>
+                                    <td>${col_sum01}</td>
+                                    <td>${col_sum0000}</td>
+                                    <td>${col_sum02}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                 <c:forEach var="result" items="${resultList3}" varStatus="status">
+                                    <tr>
+                                        <td>${result.cum010name}</td>
+                                        <td>${result.price}</td>
+                                        <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.saleprice}" name=""/></td>
+                                        <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.givesusuprice}" name=""/></td>
+                                        <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.policy}" name=""/></td>
+                                        <td><a href="javascript:" onclick="updateItem3(${result.cum010id})" class="btn">확인</a></td>
+                                        <c:set var="col_sum0000" value="${col_sum0000 + result.saleprice}"/>
+                                        <c:set var="col_sum01" value="${col_sum01 + result.price}"/>
+                                        <c:set var="col_sum02" value="${col_sum02 + result.givesusuprice}"/>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <p style="display:inline-block; text-align:right; padding:10px 0; width:100%;">
+                            <a href="javascript:" onclick="updateItem2()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
+                        </p>
+                    </div>
+                    
+                    <div style="float:right; width:calc(50% - 10px);">
+                         <table cellpadding="0" cellspacing="0" class="" summary="">
+                            <caption></caption>
+                             <colgroup>
+                                <col width="*"/>
+                                <col width="18%"/>
+                                <col width="18%"/>
+                                <col width="16%"/>
+                            </colgroup>
+                            <thead>
+                                <tr>
+                                    <th scope="col" colspan="4">4) 영업외수익</th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">매출처</th>
+                                    <th scope="col">금액</th>
+                                    <th scope="col">메모</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="total">
+                                    <td>합계</td>
+                                    <td>${col_sum03}</td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr>
+                                    <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="매입처"/></td>
+                                    <td><input type="number" class="it it2 adj070insert4" value="" name="" placeholder="금액"/></td>
+                                    <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="메모"/></td>
+                                    <td><a href="javascript:" onclick="insertItem4()" class="btn">추가하기</a></td>
+                                </tr>
+                                <c:forEach var="result" items="${resultList4}" varStatus="status">
+                                    <tr>
+                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.bycname}" name=""/></td>
+                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.price}" name=""/></td>
+                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.memo}" name=""/></td>
+                                        <td><a href="javascript:" onclick="updateItem4(${result.adj0702id})" class="btn">확인</a></td>
+                                        <c:set var="col_sum03" value="${col_sum03 + result.price}"/>
+                                    </tr>
+                                </c:forEach>
+                            </tbody>
+                        </table>
+                        <p style="display:inline-block; text-align:right; padding:10px 0; width:100%;">
+                            <a href="javascript:" onclick="updateItem2()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
+                        </p>
+                    </div>
                 </div>
             </div>
 
