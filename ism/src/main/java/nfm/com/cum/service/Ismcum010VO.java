@@ -37,6 +37,7 @@ public class Ismcum010VO implements Serializable {
     private String orgfilename = "";
     private String savefilename = "";
     private String cogubunnm = "";
+    private String cum030id = ""; //수정 1810
 
 	public String getCum010id() {
 		return cum010id;
@@ -295,6 +296,16 @@ public class Ismcum010VO implements Serializable {
 
 	public void setCogubunnm(String cogubunnm) {
 		this.cogubunnm = cogubunnm;
+	}
+
+
+	public String getCum030id() {
+		return cum030id;
+	}
+
+
+	public void setCum030id(String cum030id) {
+		this.cum030id = cum030id;
 	}
 
 
