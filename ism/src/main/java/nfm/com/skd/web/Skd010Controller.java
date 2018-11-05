@@ -15,6 +15,7 @@ import nfm.com.skd.service.impl.Skd010DAO;
 import nfm.com.whs.service.Ismwhs010VO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
+import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
@@ -445,6 +446,12 @@ public class Skd010Controller {
         if (!isAuthenticated) {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
+        }
+
+        if ('F' == (itemcode.charAt(0))) {
+
+        } else {
+
         }
 
         JSONObject resultMessage = new JSONObject();

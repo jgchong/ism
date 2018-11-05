@@ -424,7 +424,7 @@
                     <tr>
                         <th scope="row">면세여부</th>
                         <td colspan="3">
-                            <input id="detail_sel3_1" class="detail_update_no" type="radio" value="1" name="detail_sel3" onclick="radiobox03Click(1)"/><label for="detail_sel3_1">세금부과</label>
+                            <input id="detail_sel3_1" class="detail_update_no" type="radio" value="1" name="detail_sel3" onclick="radiobox03Click(1)"/><label for="detail_sel3_1">과세</label>
                             <input id="detail_sel3_2" class="detail_update_no" type="radio" value="2" name="detail_sel3" onclick="radiobox03Click(2)"/><label for="detail_sel3_2">면세</label>
                         </td>
                     </tr>
