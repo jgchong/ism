@@ -7,6 +7,7 @@
     <typeAlias  alias="ismcum010VO" type = "nfm.com.cum.service.Ismcum010VO"/>
     <typeAlias  alias="ismcum020VO" type = "nfm.com.cum.service.Ismcum020VO"/>
     <typeAlias  alias="ismcum030VO" type = "nfm.com.cum.service.Ismcum030VO"/>
+    <typeAlias  alias="ismcum040VO" type = "nfm.com.cum.service.Ismcum040VO"/>
 
 	<!-- 매출처 목록 select cnt -->
     <select id="cum010DAO.selectListTotCnt" parameterClass="cum010SearchVO" resultClass="int">
@@ -152,4 +153,28 @@
 	delete from ismcum030
      where cum010id = #cum010id#
     </delete>
+    
+    <!-- 매출처 상품코드 목록 select -->
+    <select id="cum020DAO.selectListCumProdList" parameterClass="int" resultClass="ismcum040VO">
+	select a.itemcode, a.itemname, ifnull(b.cumprodcode,'')
+	  from ismprd010 a left outer join ismcum040 b on a.itemcode = b.orderitemid
+    </select>
+
+	<!-- 매출처 상품코드 등록 -->
+    <insert id="cum020DAO.insertCum040" parameterClass="ismcum040VO">
+    insert into ismcum040 (cum030id, orderitemid, cumprodcode)
+                   values (#cum030id#, #itemcode#, #cumprodcode#)
+    </insert>
+    
+    <!-- 매출처 상품코드 목록 select -->
+    <select id="cum020DAO.selectList040" parameterClass="java.util.HashMap" resultClass="ismcum040VO">
+	select c.coname, b.shopmallname, d.itemcode, d.itemname, a.cumprodcode
+	  from ismcum040 a,  ismcum030 b, ismcum010 c, ismprd010 d
+	 where a.cum030id = b.cum030id
+     and b.cum010id = c.cum010id
+     and a.orderitemid = d.itemcode
+	<isNotEqual prepend="AND" property="cum030id" compareValue="0">
+          a.cum030id = #cum030id#
+       </isNotEqual>
+    </select>
 </sqlMap>
