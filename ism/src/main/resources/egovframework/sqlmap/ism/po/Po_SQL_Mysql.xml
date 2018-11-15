@@ -23,8 +23,12 @@
     <select id="po010DAO.selectBycList" resultClass="ismbyc010VO">
 	select a.*,
            (select max(subb.uploaddate) from ismpol010 subb where subb.poo010id = a.byc010id and subb.pocotype = 'B') as uploaddate,
-           (select count(*) from ismodm010 suba, ismprd010 subb 
-             where suba.orderitemid = subb.itemcode and subb.byc010id = a.byc010id and suba.status = 1 and IFNULL(subb.itemgubun,'1') in ('1','3')) pocnt
+           (select count(*) from ismodm010 suba, ismcum040 subb, ismprd010 subc
+             where suba.orderitemid = subb.cumprodcode 
+               and suba.cum030id = subb.cum030id
+               and subb.orderitemid = subc.itemcode
+               and subc.byc010id = a.byc010id 
+               and suba.status = 1 and IFNULL(subc.itemgubun,'1') in ('1','3')) pocnt
       from ismbyc010 a
      where 1 = 1
      order by a.bycname

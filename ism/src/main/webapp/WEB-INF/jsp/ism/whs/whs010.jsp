@@ -81,7 +81,7 @@ li img {
 
 			<div class="contentsWrap">
 				<ul class="topBt">
-					<li><a href="/ism/skd/skd010.do">재고관리 바로가기</a></li>
+					<li><a href="">재고관리 바로가기</a></li>
 					<li><a href="javascript://" onclick="viewWhsData('-1')" class="layerBt" name="whs">창고 신규등록</a></li>
 				</ul>
 				<div class="contents">

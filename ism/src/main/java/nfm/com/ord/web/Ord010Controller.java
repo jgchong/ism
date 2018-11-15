@@ -88,18 +88,6 @@ public class Ord010Controller {
 				
 		return "ism/ord/ord010";
 	}
-	
-	/**
-	 * 주문 데이터 일괄 업로드
-	 * @param fileList
-	 * @return
-	 * @throws Exception
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/ism/ord/ord010batchup.do", produces="text/plain;charset=UTF-8")
-	public String upload(@RequestParam("files")List<MultipartFile> fileList) throws Exception {
-		return ord010Service.readExcelFile(fileList);
-	}
 
 	/**
 	 * 수동 수집 환경설정 쇼핑몰 선택시 데이터 조회
@@ -150,6 +138,18 @@ public class Ord010Controller {
 		return URLEncoder.encode(ord010Service.readExcelFile(mf), "UTF-8");
 	}
 
+	/**
+	 * 주문 데이터 일괄 업로드
+	 * @param fileList
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ism/ord/ord010batchup.do", produces="text/plain;charset=UTF-8")
+	public String upload(@RequestParam("files")List<MultipartFile> fileList) throws Exception {
+		return ord010Service.readExcelFile(fileList);
+	}
+	
 	/**
 	 * 각 쇼핑몰 엑셀파일 개별업로드 처리 부분
 	 */

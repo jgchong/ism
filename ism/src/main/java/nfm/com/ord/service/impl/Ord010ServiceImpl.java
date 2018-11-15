@@ -118,8 +118,10 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		if (listIsmodl010VO.size() > 0) {
 			ord010DAO.insertOrderLogData(listIsmodl010VO);
 		}
-    	
-		return orderTempKey+"^"+noSetShopMallNames;
+    	//상품코드 제대로 등록 안된 갯수
+		int cnt = ord010DAO.selectCntNoItem(orderTempKey);
+		
+		return orderTempKey+"^"+noSetShopMallNames+"^"+cnt;
 	}
 
 	/**
@@ -181,7 +183,9 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    	ord010DAO.insertOrderLogData(listIsmodl010VO);
 		    }
 		}
-		return orderTempKey+"^"+retInt;
+    	//상품코드 제대로 등록 안된 갯수
+		int cnt = ord010DAO.selectCntNoItem(orderTempKey);
+		return orderTempKey+"^"+retInt+"^"+cnt;
 	}
 
 	/**

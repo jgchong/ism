@@ -71,7 +71,7 @@ public class Ord020Controller {
 			if ( (ord020SearchVO.getDtSearch_frOrderDt() == null) || ("".equals(ord020SearchVO.getDtSearch_frOrderDt()) ) ) {
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				Calendar calender = Calendar.getInstance();
-				calender.add(Calendar.DATE, -30);
+				calender.add(Calendar.DATE, -180);
 				ord020SearchVO.setDtSearch_frOrderDt(formatter.format(calender.getTime()));
 			}
 			if ( (ord020SearchVO.getDtSearch_toOrderDt() == null) || ("".equals(ord020SearchVO.getDtSearch_toOrderDt()) ) ) {
@@ -81,7 +81,7 @@ public class Ord020Controller {
 			}
 		}else{
 			if (!"".equals(ord020SearchVO.getSearch_key1())) {
-				pageUnit = 10000;
+				pageUnit = 100000;
 			}
 		}
 		

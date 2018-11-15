@@ -78,6 +78,8 @@ public class Cum020ServiceImpl extends EgovAbstractServiceImpl implements Cum020
         List<Map<String, String>>excelContent1 =ExcelRead.read(excelReadOption);
         Iterator excelItem1 = excelContent1.iterator();
 
+        cum020DAO.deleteCum040(cum030id);
+        
         while (excelItem1.hasNext()) {
         	Map<String, String> excelItemInfo = (Map<String, String>) excelItem1.next();
 
@@ -86,12 +88,14 @@ public class Cum020ServiceImpl extends EgovAbstractServiceImpl implements Cum020
         	System.out.println("excel B = " + excelItemInfo.get("B"));
         	System.out.println("excel C = " + excelItemInfo.get("C"));
 
-        	Ismcum040VO ismcum040VO = new Ismcum040VO();
-        	ismcum040VO.setCum030id(cum030id);
-        	ismcum040VO.setItemcode(excelItemInfo.get("A"));
-        	ismcum040VO.setCumprodcode(excelItemInfo.get("C"));
-
-        	cum020DAO.insertCum040(ismcum040VO);
+        	if ( (excelItemInfo.get("A") != null) && (!"".equals(excelItemInfo.get("A"))) ) {
+	        	Ismcum040VO ismcum040VO = new Ismcum040VO();
+	        	ismcum040VO.setCum030id(cum030id);
+	        	ismcum040VO.setItemcode(excelItemInfo.get("A"));
+	        	ismcum040VO.setCumprodcode(excelItemInfo.get("C"));
+	
+	        	cum020DAO.insertCum040(ismcum040VO);
+        	}
         }
 	    
 	    convFile.delete();

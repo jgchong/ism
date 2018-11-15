@@ -54,10 +54,7 @@
 					<h2 class="pageTit">주문수집목록</h2>
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
 						<a href="javascript:;" class="layerBt" style="background:#45b6b6;" name="upload">데이터 일괄 업로드</a>
-						<%--
 						<input type="text" class="it ml30" title="" value="${ord010SearchVO.search_key1}" id="search_key1" name="search_key1"/>
-						--%>
-						<select style="margin:0 -4px 0 10px;"></select>
 						<button>검색</button>
 					</form>
 
@@ -67,7 +64,7 @@
 							<colgroup>
 								<col width="5%"/><col width="15%"/><col width="*"/>
 								<col width="10%"/><col width="10%"/><col width="10%"/>
-								<col width="12%"/><col width="15%"/><col width="12%"/>
+								<col width="8%"/><col width="10%"/><col width="12%"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -136,7 +133,7 @@
 		<div class="inner">
 			<p class="layerTit">수동수집 환경설정</p>
 			<div class="layerContents">
-				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm" style="padding:10px 0 0;">
+				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm">
 					<div class="lfl">
 						<select id="shopmallidmanual" name="shopmallidmanual" title="">
 							<option value="0" dataid="">쇼핑몰선택</option>
@@ -146,21 +143,18 @@
 	</c:if>
 </c:forEach>
 						</select>
-						<span id="uploadtypeinfo" style="margin-left:20px;">
-						    <span class="tit" style="width:100px; padding:8px 5px; background:#3a5199; margin:0 5px; color:#fff; text-align:center; cursor:pointer; font-size:14px;display:inline-block;">주문수집 파일 명</span>
-						    <span class="txt" style="padding:7px 5px; border:1px solid #ccc; font-size:14px; margin-left:-9px; display:inline-block;">_파일명표시*</span>
-						</span>
+						<span id="uploadtypeinfo" style="margin-left:20px;"></span>
 						<!-- <button>매출처 선택</button> -->
 					</div>
 					<div id="titfile" class="lfr">
-						<label for="file" class="file" style="width:160px; padding:8px 5px; background:#3a5199; float:left; margin:0 5px; color:#fff; text-align:center; cursor:pointer; font-size:14px;">엑셀파일을 선택해주세요.</label>
+						<label for="file" class="file">+</label>
 						<input type="file" id="file" name="file" onchange="titfileUpload()" class="hidden"/>
 					</div>
 				</form>
 
 				<div class="sortableDrag">
 					<ul id="sortable1" class="connectedSortable">
-						
+						<li class="ui-state-default" style="width:200px;">엑셀파일을 선택해주세요.</li>
 					</ul>
 <c:forEach var="result" items="${orderField}" varStatus="status">
 	<c:set var="maxheightval" value="max-height:69px;"/>
@@ -170,8 +164,8 @@
 	<c:if test="${result.code eq 'address'}">
 		<c:set var="maxheightval" value=""/>
 	</c:if>
-					<div class="targetField" style="float:left; position:relative;">
-						<span style="position:absolute; font-size:12px; background:#fff; display:inline-block; top:6px; left:10px; padding:0 4px;" dataid="${result.code}">${result.codeNm}</span>
+					<div class="targetField" style="float:left;">
+						<span style="position:absolute;" dataid="${result.code}">${result.codeNm}</span>
 						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:133px;min-height:69px;${maxheightval}height:100%;margin:15px 3px;"></ul>
 					</div>
 </c:forEach>
@@ -502,17 +496,17 @@ function mfileonchange(files) {
 		<div class="inner">
 			<p class="layerTit">데이터 일괄 업로드</p>
 			<div class="layerContents">
-				<div style="text-align:left; height:26px; padding:10px 0;">
-    				<label for="mfile" class="muploadbtn" style="margin:0;">파일찾기</label>
+				<div style="float:right;margin:10px 0;">
+    				<label for="mfile" class="muploadbtn">업로드</label>
         			<input multiple="multiple" type="file" id="mfile" name="mfile" onchange="javascript:mfileonchange(this.files);" style="display:none;"/>
         		</div>
-			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post" style="display:block;">
+			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
 				    <div id="dropZone">
-				        <table id="mfilelisttable" class="table" width="100%" height="100" border="1px" class="connectedSortableLeft js-multiselect">
+				        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
 				            <tbody id="fileTableTbody">
 				                <tr>
-				                    <td colspan="2" style="padding:20px;">
-				                        + 주문업로드파일을 이곳에 끌어다 놓으세요
+				                    <td colspan="2">
+				                        파일을 선택 하세요
 				                    </td>
 				                </tr>
 				            </tbody>

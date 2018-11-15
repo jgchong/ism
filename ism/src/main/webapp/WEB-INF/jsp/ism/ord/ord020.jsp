@@ -150,9 +150,9 @@ form.searchArea .searchMore li select {
 								<li>
 									<select name="dtSearch_status">
 										<option value="0">주문상태 선택</option>
-                                        <c:forEach var="item" items="${ISM050}" varStatus="status">
+<c:forEach var="item" items="${ISM050}" varStatus="status">
 										<option value="${item.code}">${item.codeNm}</option>
-                                        </c:forEach>
+</c:forEach>
 									</select>
 								</li>
 								<li><select name="dtSearch_crtype"><option value="0">클레임/반품 선택</option><option value="C">클레임</option><option value="R">반품</option></select></li>
@@ -163,22 +163,22 @@ form.searchArea .searchMore li select {
 						
                         <div style="width:100%; display:inline-block;">
                             <div style="float:left;">
-                                <a id="excelDownbtn" href="javascript:;" style="width:120px; display:inline-block; text-align:center;">엑셀다운로드</a>
-                                <a id="" href="javascript:;" style="width:120px; display:inline-block; text-align:center;">엑셀업로드(개발중)</a>
+                                <a id="excelDownbtn" href="javascript:;" style="width:78px; display:inline-block;">엑셀다운로드</a>
+                                <a id="" href="javascript:;" style="width:78px; display:inline-block; text-align:center;">엑셀업로드</a>
                             </div>
                             <div style="float:right;">
                                 <select id="chgOrderStatus" name="chgOrderStatus" title="">
                                     <option value="0">상태값</option>
-                                    <c:forEach var="item" items="${ISM050}" varStatus="status">
+        <c:forEach var="item" items="${ISM050}" varStatus="status">
                                     <option value="${item.code}">${item.codeNm}</option>
-                                   </c:forEach>
+        </c:forEach>
                                 </select>
                                 <a href="javascript:selectChgOrderStatus();" style="margin-left:-4px;">선택수정</a>
                                 <a href="javascript:selectDel();" class="selDel">선택삭제</a>
                                 <select id="pageUnit" name="pageUnit" title="" class="ml30">
-									<option value="50" <c:if test="${ord020SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
+                                    <option value="50" <c:if test="${ord020SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
                                     <option value="100" <c:if test="${ord020SearchVO.pageUnit eq '100'}"><c:out value="selected"/></c:if>>100개</option>
-									<option value="500" <c:if test="${ord020SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
+                                    <option value="500" <c:if test="${ord020SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
                                 </select>
                                 <button style="margin-left:-4px;">정렬</button>
                                 <%--<a id="excelDownbtn" href="javascript:;">엑셀저장</a>--%>
@@ -186,13 +186,12 @@ form.searchArea .searchMore li select {
                         </div>
 						<input type="hidden" id="search_status" name="search_status" value="${ord020SearchVO.search_status}" />
 						<input type="hidden" id="search_cstype" name="search_cstype" value="${ord020SearchVO.search_cstype}" />
-						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" />
-						<!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
+						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" /><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
 					</form>
 
 					<ul class="tbTab">
-						<li><a href="javascript:search_status('TEMP');" <c:if test="${ord020SearchVO.search_status eq 'TEMP'}"><c:out value="class=on"/></c:if>>임시</a></li>
 						<li><a href="javascript:search_status('ALL');" <c:if test="${ord020SearchVO.search_status eq 'ALL'}"><c:out value="class=on"/></c:if>>전체</a></li>
+						<li><a href="javascript:search_status('TEMP');" <c:if test="${ord020SearchVO.search_status eq 'TEMP'}"><c:out value="class=on"/></c:if>>임시</a></li>
 						<li><a href="javascript:search_status('1');" <c:if test="${ord020SearchVO.search_status eq '1'}"><c:out value="class=on"/></c:if>>출고전</a></li>
 						<li><a href="javascript:search_status('2');" <c:if test="${ord020SearchVO.search_status eq '2'}"><c:out value="class=on"/></c:if>>출고대기</a></li>
 						<li><a href="javascript:search_status('3');" <c:if test="${ord020SearchVO.search_status eq '3'}"><c:out value="class=on"/></c:if>>출고완료</a></li>

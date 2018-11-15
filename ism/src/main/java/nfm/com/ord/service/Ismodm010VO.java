@@ -14,7 +14,7 @@ public class Ismodm010VO implements Serializable {
 	/** 검색조건*/
     private int odm010id = 0;
     private String orderno = "";
-    private String orderdate = "1999-01-01";
+    private String orderdate;
     private int cum010id = 0;
     private int cum030id = 0;
     private int byc010id = 0;
@@ -65,6 +65,7 @@ public class Ismodm010VO implements Serializable {
     private String retstatusnm = "";
     private String rcvusercontacthp = "";
     private String rcvuseremail = "";
+    private String chkprod = "";
 
 	public int getOdm010id() {
 		return odm010id;
@@ -488,6 +489,14 @@ public class Ismodm010VO implements Serializable {
 
 	public void setRcvuseremail(String rcvuseremail) {
 		this.rcvuseremail = rcvuseremail;
+	}
+
+	public String getChkprod() {
+		return chkprod;
+	}
+
+	public void setChkprod(String chkprod) {
+		this.chkprod = chkprod;
 	}
 
 	/**

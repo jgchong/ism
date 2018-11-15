@@ -177,4 +177,10 @@
           a.cum030id = #cum030id#
        </isNotEqual>
     </select>
+    
+    <!-- 매출처 상품코드 삭제 select -->
+    <delete id="cum020DAO.deleteCum040" parameterClass="int">
+	delete from ismcum040
+     where cum030id = #cum030id#
+    </delete>
 </sqlMap>

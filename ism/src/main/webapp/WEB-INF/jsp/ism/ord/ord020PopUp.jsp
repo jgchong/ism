@@ -89,59 +89,39 @@ li img {
 					<tbody>
 						<tr>
 							<th scope='row'>사업자구분</th>
-							<td colspan="3">${item.code_nm} / ${item.cotype2nm} / ${item.cotype3nm}</td>
-						</tr>
-						<tr>
-						    <th scope='row'>쇼핑몰명</th>
+							<td>${item.code_nm} / ${item.cotype2nm} / ${item.cotype3nm}</td>
+							<th scope='row'>쇼핑몰명</th>
 							<td>${item.shopmallname}</td>
-							<th scope='row'>판매채널</th>
-							<td></td>
 						</tr>
 						<tr>
-						    <th scope='row'>매입처</th>
+							<th scope='row'>매입처</th>
 							<td>${item.bycname}</td>
+							<th scope='row'>매입배송비</th>
+							<td>${item.itembuydlvprice} 원</td>
+						</tr>
+						<tr>
 							<th scope='row'>매출처</th>
 							<td>${item.coname}</td>
+							<th scope='row'>공급배송비</th>
+							<td><input type='text' style='text-align:right;' name='dlvprice' value='${item.dlvprice}' /> 원</td>
 						</tr>
 						<tr>
-						   <th scope='row'>상품코드</th>
-							<td>${item.orderitemid}</td>
 							<th scope='row'>주문번호</th>
 							<td>${item.orderno}</td>
-						</tr>
-						<tr>
-						    <th scope='row'>택배사</th>
-							<td><input type='text' name='dlvco' value='${item.dlvco}' /></td>
 							<th scope='row'>송장번호</th>
 							<td><input type='text' name='dlvno' value='${item.dlvno}' /></td>
 						</tr>
 						<tr>
-							<th scope='row'>상품명</th>
-							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
-							<th scope='row'>수량</th>
-							<td>${item.orderitemqty}</td>
-						</tr>
-						<tr>
-							<th scope='row'>옵션</th>
-							<td><input type='text' name='orderitemopt' value='${item.orderitemopt}' /></td>
+							<th scope='row'>상품코드</th>
+							<td>${item.orderitemid}</td>
 							<th scope='row'>배송메모</th>
 							<td><input type='text' name='dlvmemo' value='${item.dlvmemo}' /></td>
 						</tr>
 						<tr>
-						    <th scope='row'>주문자</th>
-							<td><input type='text' name='orderuser' value='${item.orderuser}' /></td>
-							<th scope='row'>주문자 연락처</th>
-							<td><input type='text' name='orderusercontact' value='${item.orderusercontact}' /></td>
-						</tr>
-						<tr>
-							<th scope='row' rowspan="2">수령자</th>
-							<td rowspan="2"><input type='text' name='rcvuser' value='${item.rcvuser}' /></td>
-							<th scope='row'>수령자 TEL</th>
-							<td><input type='text' name='rcvusercontact' value='${item.rcvusercontact}' /></td>
-						</tr>
-						<tr>
-							<th scope='row'>수령자 H.P</th>
-							<td><input type='text' name='rcvusercontacthp' value='${item.rcvusercontacthp}' /></td>
+							<th scope='row'>상품명</th>
+							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
+							<th scope='row'>주문수량</th>
+							<td>${item.orderitemqty}</td>
 						</tr>
 						<tr>
 							<th scope='row'>주소(우편번호)</th>
@@ -151,30 +131,40 @@ li img {
 							</td>
 						</tr>
 						<tr>
+							<th scope='row'>옵션</th>
+							<td><input type='text' name='orderitemopt' value='${item.orderitemopt}' /></td>
+							<th scope='row'>택배사</th>
+							<td><input type='text' name='dlvco' value='${item.dlvco}' /></td>
+						</tr>
+						<tr>
+							<th scope='row'>수령자</th>
+							<td><input type='text' name='rcvuser' value='${item.rcvuser}' /></td>
 							<th scope='row'>매입단가</th>
 							<td>${item.itembuyprice} 원</td>
-							<th scope='row'>매입배송비</th>
-							<td>${item.itembuydlvprice} 원</td>
 						</tr>
 						<tr>
-							<th scope='row'>공급단가</th>
+							<th scope='row'>수령자연락처</th>
+							<td><input type='text' name='rcvusercontact' value='${item.rcvusercontact}' /></td>
+							<th scope='row'>공급가</th>
 							<td><input type='text' style='text-align:right;' name='orderitemprice' value='${item.orderitemprice}' /> 원</td>
-							<th scope='row'>공급배송비</th>
-							<td><input type='text' style='text-align:right;' name='dlvprice' value='${item.dlvprice}' /> 원</td>
 						</tr>
 						<tr>
-							<th scope='row'>판매단가</th>
-							<td></td>
-							<th scope='row'>창고선택</th>
-							<td>
-							    <select></select>
-							</td>
+							<th scope='row'>수령자연락처 HP</th>
+							<td><input type='text' name='rcvusercontacthp' value='${item.rcvusercontacthp}' /></td>
+							<th scope='row'>수령자 이메일</th>
+							<td><input type='text' name='rcvuseremail' value='${item.rcvuseremail}' /></td>
 						</tr>
 						<tr>
-							<th scope='row'>주문일자</th>
-							<td>${item.orderdate}</td>
+							<th scope='row'>주문자</th>
+							<td><input type='text' name='orderuser' value='${item.orderuser}' /></td>
 							<th scope='row'>처리일자</th>
 							<td>${item.processdate}</td>
+						</tr>
+						<tr>
+							<th scope='row'>주문자 연락처</th>
+							<td><input type='text' name='orderusercontact' value='${item.orderusercontact}' /></td>
+							<th scope='row'>주문일자</th>
+							<td>${item.orderdate}</td>
 						</tr>
 					</tbody>
 				</table>

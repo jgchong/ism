@@ -86,11 +86,6 @@ li img {
 				</ul>
 				<div class="contents">
 					<h2 class="pageTit">매입처관리</h2>
-					
-					<div class="searchArea">
-						<a href="javascript:;" class="" style="background:#45b6b6;">매입처 다운로드</a>
-					</div>
-					
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
 							<caption></caption>

@@ -53,4 +53,8 @@ public class Ord010DAO extends EgovAbstractDAO {
 	public void insertOrderLogData(List<Ismodl010VO> listIsmodl010VO) {
     	insert("ord010DAO.insertOrderLogData", listIsmodl010VO);	
 	}
+
+	public int selectCntNoItem(String orderTempKey) {
+		return (Integer)select("ord010DAO.selectCntNoItem", orderTempKey);
+	}
 }
