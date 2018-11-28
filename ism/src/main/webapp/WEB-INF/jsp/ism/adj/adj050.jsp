@@ -98,10 +98,12 @@
         </div>
         <!-- //좌측메뉴 끝 -->
         <!-- 이부부까지가 기본 -->
+
+
         <div class="contentsWrap">
             <ul class="contentsMenu">
-                <li><a href="adj010.do" >종합판매정산</a></li>
-                <li><a href="adj020.do" >상품별정산</a></li>
+                <li><a href="adj010.do">종합판매정산</a></li>
+                <li><a href="adj020.do">상품별정산</a></li>
                 <li><a href="adj030.do">상품수불부</a></li>
                 <li><a href="adj040.do">수금관리대장</a></li>
                 <li><a href="adj050.do" class="on">재고관리대장</a></li>
@@ -110,14 +112,19 @@
                 <li><a href="adj080.do">정산도움말</a></li>
             </ul>
             <ul class="topBt">
-                <li><a id="excelDownbtn" href="javascript:;">엑셀 다운로드</a></li>
+                <li><a id="excelDownbtn" href="#">엑셀 다운로드</a></li>
                 <li><a href="#" onclick="window.print()">프린트 출력</a></li>
             </ul>
 
+
+            <!-- 하단 메인화면 -->
             <div class="contents">
                 <h2 class="pageTit">재고관리</h2>
 
-                <form id="form1" name="form1" method="post" action="/ism/adj/adj050.do" class="searchArea" style="margin-top:-20px;">
+                <form id="form1" name="form1" method="post" action="/ism/skd/skd010.do" class="searchArea">
+                    <!--
+                    <a href="javascript:selectDel();" class="ml30">선택삭제</a>
+                    -->
                     <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
                     <button style="margin-left:-4px;">검색</button>
                 </form>
@@ -146,28 +153,49 @@
                             <th scope="col" colspan="1" rowspan="2">총재고금액(VAT포함)</th>
                         </tr>
                         <tr>
-                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3" step="1" varStatus="status">
                                 <th scope="col">${item.whsname} 합계</th>
                             </c:forEach>
                             <th scope="col">기타</th>
                         </tr>
                         <tr>
-                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="0" end="3" step="1" varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
-                            <c:forEach var="item" items="${whsListForTop}" begin="4" end="5"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="4" end="5" step="1" varStatus="status">
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
-                            <c:forEach var="item" items="${whsListForTop}" begin="6" end="7"  step="1"   varStatus="status">
+                            <c:forEach var="item" items="${whsListForTop}" begin="6" end="7" step="1" varStatus="status">
                                 <th scope="col">${item.whsname}</th>
                             </c:forEach>
                         </tr>
                         </thead>
                         <tbody>
                         <c:forEach var="result" items="${resultList}" varStatus="status">
-                            <tr>
-                                <td>${result.itemcode}</td>
-                                <td>${result.itemname} (${result.createdate})</td>
+                            <tr id="${result.itemcode}" value="off"
+                                <c:if test="${result.resultType eq 'C'}">class="<c:out value="${result.parentItemcode}"/>" style="display:none"
+                            </c:if>>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${result.resultType eq 'C'}">
+                                        </c:when>
+                                        <c:when test="${result.resultType eq 'P'}">
+                                            ${result.itemcode}
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
+                                </td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${result.resultType eq 'C'}">
+                                            <a href="javascript:" onclick="openSingleItemDetail3('${result.skd010id}')">${result.createdate}</a>
+                                        </c:when>
+                                        <c:when test="${result.resultType eq 'P'}">
+                                            <a href="javascript:showChildItem('${result.itemcode}');">${result.itemname}</a>
+                                        </c:when>
+                                        <c:otherwise>-</c:otherwise>
+                                    </c:choose>
+                                </td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs1itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs1itemea}</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs2itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs2itemea}</td>
                                 <td onmouseover="showlayer('layer_hidden1', '${result.whs3itemname}');" onmouseout="hidelayer('layer_hidden1');">${result.whs3itemea}</td>
@@ -181,8 +209,8 @@
                                     </c:if>
                                 </td>
                                 <td>${result.itemea}</td>
-                                <td>${result.itemAllprice}</td>
-                                <td>${result.itemAllbuyprice}</td>
+                                <td <c:if test="${result.resultType eq 'P'}">class="numberWithCommasHtml"</c:if>>${result.itemAllprice}</td>
+                                <td <c:if test="${result.resultType eq 'P'}">class="numberWithCommasHtml"</c:if>>${result.itemAllbuyprice}</td>
                             </tr>
                         </c:forEach>
                         </tbody>
@@ -193,14 +221,9 @@
                     <ui:pagination paginationInfo="${paginationInfo}" type="image" jsFunction="fnLinkPage"/>
                 </div>
             </div>
-
-
         </div>
-
-
     </div> <!-- container -->
 </div> <!-- wrap -->
-
 
 
 <div id="layer_hidden1">게시물 본문 미리 보기</div>

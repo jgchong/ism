@@ -1,10 +1,7 @@
 package nfm.com.skd.service.impl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import nfm.com.skd.service.Skd010SearchVO;
-import nfm.com.skd.service.Skd010Service;
-import nfm.com.skd.service.Skd010VO;
-import nfm.com.skd.service.Skd020VO;
+import nfm.com.skd.service.*;
 import nfm.com.whs.service.Ismwhs010VO;
 import nfm.com.whs.service.impl.Whs010DAO;
 import org.apache.commons.lang3.StringUtils;
@@ -21,83 +18,44 @@ import java.util.Map;
 @Service("skd010Service")
 public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010Service {
 
-    /**
-     * ord010DAO
-     */
     @Resource(name = "skd010DAO")
     private Skd010DAO skd010DAO;
 
     @Resource(name = "whs010DAO")
     private Whs010DAO ismwhs010DAO;
 
-    public int itemeaSum01 = 0;
-    public int itemeaSum02 = 0;
-    public int itemeaSum03 = 0;
-    public int itemeaSum04 = 0;
-    public int itemeaSum05 = 0;
-    public int itemeaSum06 = 0;
-    public int itemeaSum07 = 0;
-    public int itemeaSum08 = 0;
-    public String resultSumA = "";
-    public String resultSumB = "";
-
-    @Override
-    public String getResultSumB(int i) {
-        if (i == 6) {
-            return resultSumA;
-        } else if (i == 7) {
-            return resultSumB;
-        }
-        return "";
-    }
-
-    @Override
-    public int getSumItemea(int i) {
-        if (i == 0) {
-            return itemeaSum01;
-        } else if (i == 1) {
-            return itemeaSum02;
-        } else if (i == 2) {
-            return itemeaSum03;
-        } else if (i == 3) {
-            return itemeaSum04;
-        } else if (i == 4) {
-            return itemeaSum05;
-        } else if (i == 5) {
-            return itemeaSum06;
-        } else if (i == 6) {
-            return itemeaSum07;
-        } else if (i == 7) {
-            return itemeaSum08;
-        }
-        return 0;
-    }
-
     @Override
     public String selectWithSkd010id(String currentId) {
-        Skd010VO skd010VO = (Skd010VO) skd010DAO.selectWithSkd010id(currentId);
+        List<Skd030VO> skd030VOList = (List<Skd030VO>) skd010DAO.selectskd030VOForDetail(currentId);
+
         JSONObject jsonObject = new JSONObject();
-        if (skd010VO == null || StringUtils.isBlank(skd010VO.getItemcode())) {
+        if (skd030VOList == null || skd030VOList.size() == 0 || StringUtils.isBlank(skd030VOList.get(0).getItemname())) {
             jsonObject.put("itemname", "");
-            jsonObject.put("itemea", "");
-            jsonObject.put("createdate", "");
-            jsonObject.put("expirationdate", "");
-            jsonObject.put("itemdlprice", "");
         } else {
-            jsonObject.put("itemname", getResult(skd010VO.getItemname()));
-            jsonObject.put("itemea", getResult(skd010VO.getItemea()));
-            jsonObject.put("createdate", getResult(skd010VO.getCreatedate()));
-            jsonObject.put("expirationdate", getResult(skd010VO.getExpirationdate()));
-            jsonObject.put("itemdlprice", getResult(skd010VO.getItemdlprice()));
+            jsonObject.put("itemname", getResult(skd030VOList.get(0).getItemname()));
         }
-        List<Skd020VO> skd020VOList = (List<Skd020VO>) skd010DAO.selectWhsNameList(skd010VO.getSkd010id());
+
         JSONArray jsonArray = new JSONArray();
-        for (Skd020VO skd020VO : skd020VOList) {
+        for (Skd030VO skd030VO : skd030VOList) {
             JSONObject jsonTempObject = new JSONObject();
-            jsonTempObject.put("whsname", getResult(skd020VO.getWhsname()));
-            jsonTempObject.put("itemea", getResult(skd020VO.getItemea()));
-            jsonTempObject.put("createdate", getResult(skd020VO.getCreatedate()));
-            jsonTempObject.put("itemdlprice", getResult(skd020VO.getItemdlprice()));
+            jsonTempObject.put("itembuyprice", "");
+            jsonTempObject.put("itembuyAllprice", "");
+            jsonTempObject.put("expirationdate", "");
+            if (skd030VO.getSkd010type() == 1) {
+                jsonTempObject.put("gubun", "입고");
+                jsonTempObject.put("itembuyprice", getResult(skd030VO.getItembuyprice()));
+                jsonTempObject.put("itembuyAllprice", getResult(skd030VO.getItembuyprice() * skd030VO.getItemea()));
+                jsonTempObject.put("expirationdate", getResult(skd030VO.getItembuyprice()));
+            } else if (skd030VO.getSkd010type() == 2) {
+                jsonTempObject.put("gubun", "이관");
+            } else if (skd030VO.getSkd010type() == 3) {
+                jsonTempObject.put("gubun", "출고");
+            }
+            jsonTempObject.put("createdate", getResult(skd030VO.getCreatedate()));
+            jsonTempObject.put("sourcewhsname", getResult(skd030VO.getSourcewhsname()));
+            jsonTempObject.put("destinationwhsname", getResult(skd030VO.getDestinationwhsname()));
+            jsonTempObject.put("itemea", getResult(skd030VO.getItemea()));
+            jsonTempObject.put("itemdlprice", getResult(skd030VO.getItemdlprice()));
             jsonArray.add(jsonTempObject);
         }
         jsonObject.put("skd020", jsonArray);
@@ -126,18 +84,10 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
 
     @Override
     public List<Skd010VO> selectList(Skd010SearchVO skd010SearchVO) throws Exception {
-        itemeaSum01 = 0;
-        itemeaSum02 = 0;
-        itemeaSum03 = 0;
-        itemeaSum04 = 0;
-        itemeaSum05 = 0;
-        itemeaSum06 = 0;
-        itemeaSum07 = 0;
-        itemeaSum08 = 0;
-        resultSumA = "";
-        resultSumB = "";
-
         List<Skd010VO> skd010VOList = (List<Skd010VO>) skd010DAO.selectList(skd010SearchVO);
+        // 상품코드로 이관된 수량 불러오기. (현재 날짜까지)
+        // 해당 아이템의 총 재고 수량을 제외하기.
+
         List<Ismwhs010VO> ismwhs010VOList = (List<Ismwhs010VO>) ismwhs010DAO.selectAll();
         for (int i = 0; i < 4; i++) {
             if (ismwhs010VOList.size() < 4) {
@@ -154,60 +104,34 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
             for (Skd020VO skd020VO : skd020VOList) {
                 if (i < 4) {
                     if (ismwhs010VOList.get(0).getWhs010id() == skd020VO.getWhs010id()) {
-                        itemeaSum01 = itemeaSum01 + Integer.parseInt(skd020VO.getItemea());
                         skd010VO.setWhs1itemea(skd020VO.getItemea());
                         skd010VO.setWhs1itemname(skd020VO.getWhsname());
+                        skd010VO.setWhs1id(skd020VO.getWhs010id());
                     } else if (ismwhs010VOList.get(1).getWhs010id() == skd020VO.getWhs010id()) {
-                        itemeaSum02 = itemeaSum02 + Integer.parseInt(skd020VO.getItemea());
                         skd010VO.setWhs2itemea(skd020VO.getItemea());
                         skd010VO.setWhs2itemname(skd020VO.getWhsname());
+                        skd010VO.setWhs2id(skd020VO.getWhs010id());
                     } else if (ismwhs010VOList.get(2).getWhs010id() == skd020VO.getWhs010id()) {
-                        itemeaSum03 = itemeaSum03 + Integer.parseInt(skd020VO.getItemea());
                         skd010VO.setWhs3itemea(skd020VO.getItemea());
                         skd010VO.setWhs3itemname(skd020VO.getWhsname());
+                        skd010VO.setWhs3id(skd020VO.getWhs010id());
                     } else if (ismwhs010VOList.get(3).getWhs010id() == skd020VO.getWhs010id()) {
-                        itemeaSum04 = itemeaSum04 + Integer.parseInt(skd020VO.getItemea());
                         skd010VO.setWhs4itemea(skd020VO.getItemea());
                         skd010VO.setWhs4itemname(skd020VO.getWhsname());
+                        skd010VO.setWhs4id(skd020VO.getWhs010id());
                     } else {
-                        String tempNamuge = skd010VO.getWhsNamuge();
-                        tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + " | 재고 : " + skd020VO.getItemea() + " | ";
-                        skd010VO.setWhsNamuge(tempNamuge);
+                        skd010VO.getNamugeMap().put(skd010VO.getItemcode() + skd020VO.getWhs010id(), Integer.parseInt(skd020VO.getItemea()));
+                        skd010VO.getNamugeList().add(skd020VO);
+                        skd010VO.getNamugeWhsNameMap().put(skd010VO.getItemcode() + skd020VO.getWhs010id(), skd020VO.getWhsname());
                     }
                 } else {
-                    String tempNamuge = skd010VO.getWhsNamuge();
-                    tempNamuge = tempNamuge + "창고명 : " + skd020VO.getWhsname() + " | 재고 : " + skd020VO.getItemea() + " | ";
-                    skd010VO.setWhsNamuge(tempNamuge);
+                    skd010VO.getNamugeMap().put(skd010VO.getItemcode() + skd020VO.getWhs010id(), Integer.parseInt(skd020VO.getItemea()));
+                    skd010VO.getNamugeList().add(skd020VO);
+                    skd010VO.getNamugeWhsNameMap().put(skd010VO.getItemcode() + skd020VO.getWhs010id(), skd020VO.getWhsname());
                 }
                 i++;
             }
-            Integer buyPrice = skd010VO.getItembuyprice();
-            if (buyPrice == null) {
-                buyPrice = 0;
-            }
-            long buyPriceToLong = buyPrice;
-
-            try {
-                long allBuyPrice = buyPriceToLong * Long.parseLong(skd010VO.getItemea());
-                long allPrice = (allBuyPrice * 10) / 11;
-                skd010VO.setItemAllbuyprice(String.format("%,3d", allBuyPrice));
-                skd010VO.setItemAllprice(String.format("%,3d", allPrice));
-
-                itemeaSum08 = itemeaSum08 + (buyPrice * Integer.parseInt(skd010VO.getItemea()));
-                long b = itemeaSum08;
-                long a = b * 10 / 11;
-                itemeaSum07 = (int) a;
-                resultSumA = String.format("%,3d", itemeaSum07);
-                resultSumB = String.format("%,3d", itemeaSum08);
-
-            } catch (Exception e) {
-                skd010VO.setItemAllbuyprice("액수가 너무 큽니다.");
-                skd010VO.setItemAllprice("액수가 너무 큽니다.");
-            }
-
-            itemeaSum06 = itemeaSum06 + Integer.parseInt(skd010VO.getItemea());
         }
-        itemeaSum05 = itemeaSum06 - (itemeaSum01 + itemeaSum02 + itemeaSum03 + itemeaSum04);
         return skd010VOList;
     }
 

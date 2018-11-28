@@ -6,6 +6,14 @@
     <typeAlias alias="skd010SearchVO" type="nfm.com.skd.service.Skd010SearchVO"/>
     <typeAlias alias="skd010VO" type="nfm.com.skd.service.Skd010VO"/>
     <typeAlias alias="skd020VO" type="nfm.com.skd.service.Skd020VO"/>
+    <typeAlias alias="skd030VO" type="nfm.com.skd.service.Skd030VO"/>
+
+    <select id="skd010DAO.selectSkd010Itemcode" parameterClass="String" resultClass="String">
+        select
+        itemcode
+        from ismskd010
+        where skd010id = #skd010id#
+    </select>
 
     <!-- 메인화면 selectList -->
     <select id="skd010DAO.selectWithSkd010id" parameterClass="String" resultClass="skd010VO">
@@ -25,6 +33,96 @@
         order by s1.skd010id desc
     </select>
 
+    <select id="skd010DAO.selectskd030VOForList" resultClass="skd030VO">
+        select
+        itemcode,
+        skd010type,
+        sourcewhs010id,
+        destinationwhs010id,
+        sum(itemea) as itemea,
+        createdate,
+        expirationdate
+        from ismskd030
+        where skd010type = 3
+        group by itemcode, sourcewhs010id
+        order by itemcode desc
+    </select>
+
+    <select id="skd010DAO.selectskd030VOForAdj" parameterClass="String" resultClass="skd030VO">
+        select
+        itemcode,
+        skd010type,
+        sourcewhs010id,
+        destinationwhs010id,
+        sum(itemea) as itemea,
+        createdate,
+        expirationdate
+        from ismskd030
+        where skd010type = 3
+        <![CDATA[
+        and createdate <= #lastMonth#
+        ]]>
+        group by itemcode, sourcewhs010id
+        order by itemcode desc
+    </select>
+
+    <select id="skd010DAO.selectskd030VOForAdjDestination" parameterClass="String" resultClass="skd030VO">
+        select
+        itemcode,
+        skd010type,
+        sourcewhs010id,
+        destinationwhs010id,
+        sum(itemea) as itemea,
+        createdate,
+        expirationdate
+        from ismskd030
+        where skd010type != 3
+        <![CDATA[
+        and createdate > #lastMonth#
+        ]]>
+        group by itemcode, destinationwhs010id
+        order by itemcode desc
+    </select>
+
+    <select id="skd010DAO.selectskd030VOForAdjSource" parameterClass="String" resultClass="skd030VO">
+        select
+        itemcode,
+        skd010type,
+        sourcewhs010id,
+        destinationwhs010id,
+        sum(itemea) as itemea,
+        createdate,
+        expirationdate
+        from ismskd030
+        where skd010type != 3
+        <![CDATA[
+        and createdate > #lastMonth#
+        ]]>
+        group by itemcode, sourcewhs010id
+        order by itemcode desc
+    </select>
+
+    <select id="skd010DAO.selectskd030VOForDetail" parameterClass="String" resultClass="skd030VO">
+        select
+        s3.skd010type,
+        s3.sourcewhs010id,
+        s3.destinationwhs010id,
+        s3.itemea,
+        s3.createdate,
+        s3.expirationdate,
+        s3.itemdlprice,
+        p.itemname as itemname,
+        p.itembuyprice as itembuyprice,
+        w1.whsname as sourcewhsname,
+        w2.whsname as destinationwhsname
+        from ismskd030 s3
+        left outer join ismprd010 p on s3.itemcode = p.itemcode
+        left outer join ismwhs010 w1 on s3.sourcewhs010id = w1.whs010id
+        left outer join ismwhs010 w2 on s3.destinationwhs010id = w2.whs010id
+        where s3.itemcode = #itemcode#
+        order by s3.createdate asc
+    </select>
+
 
     <!-- 메인화면 selectList -->
     <select id="skd010DAO.selectList" parameterClass="skd010SearchVO" resultClass="skd010VO">
@@ -41,7 +139,7 @@
         <isNotEmpty property="dfSearch_itemname">
             and p.itemname LIKE '%' #dfSearch_itemname# '%'
         </isNotEmpty>
-        order by s1.itemcode desc, s1.skd010id desc
+        order by s1.itemcode desc, s1.skd010id asc
         limit #recordCountPerPage# OFFSET #firstIndex#
     </select>
 
@@ -93,6 +191,11 @@
         <selectKey keyProperty="skd010id" resultClass="int">
             SELECT skd010id from ismskd010 order by skd010id desc limit 1
         </selectKey>
+    </insert>
+
+    <insert id="skd010DAO.insertSkd030" parameterClass="java.util.HashMap">
+        insert into ismskd030 (itemcode, skd010type, sourcewhs010id, destinationwhs010id, itemea, createdate, expirationdate, itemdlprice)
+        values (#itemcode#, #skd010type#, #sourcewhs010id#, #destinationwhs010id#, #itemea#, #createdate#, #expirationdate#, #itemdlprice#)
     </insert>
 
     <update id="skd010DAO.updateOriginSkd020" parameterClass="java.util.HashMap">

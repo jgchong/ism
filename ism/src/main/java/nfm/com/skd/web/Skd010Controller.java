@@ -8,9 +8,9 @@ import egovframework.rte.fdl.security.userdetails.util.EgovUserDetailsHelper;
 import egovframework.rte.ptl.mvc.tags.ui.pagination.PaginationInfo;
 import nfm.com.exl.util.ExcelManager;
 import nfm.com.prd.service.Prd010Service;
-import nfm.com.skd.service.Skd010SearchVO;
-import nfm.com.skd.service.Skd010Service;
-import nfm.com.skd.service.Skd010VO;
+import nfm.com.prd.service.Prd010VO;
+import nfm.com.prd.service.impl.Prd010DAO;
+import nfm.com.skd.service.*;
 import nfm.com.skd.service.impl.Skd010DAO;
 import nfm.com.whs.service.Ismwhs010VO;
 import org.apache.commons.lang3.StringUtils;
@@ -24,10 +24,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Controller
 public class Skd010Controller {
@@ -88,18 +86,18 @@ public class Skd010Controller {
 
         List<Skd010VO> skd010VOListReal = new ArrayList<>();
 
+        //기존의 입고날짜별 재고들을 묶어준다.
         if (skd010VOList.size() > 0) {
             String tempItemcode = "";
             Skd010VO tempSkd010VO = null;
-            for (Skd010VO skd010VO : skd010VOList) {
-                if (!tempItemcode.equals(skd010VO.getItemcode())) {
-                    tempItemcode = skd010VO.getItemcode();
+            for (Skd010VO skd010VOIterate : skd010VOList) {
+                if (!tempItemcode.equals(skd010VOIterate.getItemcode())) {
+                    tempItemcode = skd010VOIterate.getItemcode();
                     tempSkd010VO = new Skd010VO();
                     skd010VOListReal.add(tempSkd010VO);
                     tempSkd010VO.setItemcode(tempItemcode);
-                    tempSkd010VO.setItemname(skd010VO.getItemname());
+                    tempSkd010VO.setItemname(skd010VOIterate.getItemname());
                     tempSkd010VO.setResultType("P");
-                    tempSkd010VO.setWhsNamuge("");
                 }
 
                 long tempitemea = getLongValue(tempSkd010VO.getItemea());
@@ -110,32 +108,114 @@ public class Skd010Controller {
                 long tempwhs1itemea3 = getLongValue(tempSkd010VO.getWhs3itemea());
                 long tempwhs1itemea4 = getLongValue(tempSkd010VO.getWhs4itemea());
 
-                long itemea = getLongValue(skd010VO.getItemea());
-                long itemAllprice = getLongValue(skd010VO.getItemAllprice());
-                long itemAllbuyprice = getLongValue(skd010VO.getItemAllbuyprice());
-                long whs1itemea1 = getLongValue(skd010VO.getWhs1itemea());
-                long whs1itemea2 = getLongValue(skd010VO.getWhs2itemea());
-                long whs1itemea3 = getLongValue(skd010VO.getWhs3itemea());
-                long whs1itemea4 = getLongValue(skd010VO.getWhs4itemea());
+                long itemea = getLongValue(skd010VOIterate.getItemea());
+                long itemAllprice = getLongValue(skd010VOIterate.getItemAllprice());
+                long itemAllbuyprice = getLongValue(skd010VOIterate.getItemAllbuyprice());
+                long whs1itemea1 = getLongValue(skd010VOIterate.getWhs1itemea());
+                long whs1itemea2 = getLongValue(skd010VOIterate.getWhs2itemea());
+                long whs1itemea3 = getLongValue(skd010VOIterate.getWhs3itemea());
+                long whs1itemea4 = getLongValue(skd010VOIterate.getWhs4itemea());
 
+                tempSkd010VO.setItembuyprice(skd010VOIterate.getItembuyprice());
                 tempSkd010VO.setItemea(String.valueOf(tempitemea + itemea));
                 tempSkd010VO.setItemAllprice(String.valueOf(tempitemAllprice + itemAllprice));
                 tempSkd010VO.setItemAllbuyprice(String.valueOf(tempitemAllbuyprice + itemAllbuyprice));
+                if (skd010VOIterate.getWhs1id() != 0) {
+                    tempSkd010VO.setWhs1id(skd010VOIterate.getWhs1id());
+                }
+
+                if (skd010VOIterate.getWhs2id() != 0) {
+                    tempSkd010VO.setWhs2id(skd010VOIterate.getWhs2id());
+                }
+
+                if (skd010VOIterate.getWhs3id() != 0) {
+                    tempSkd010VO.setWhs3id(skd010VOIterate.getWhs3id());
+                }
+
+                if (skd010VOIterate.getWhs4id() != 0) {
+                    tempSkd010VO.setWhs4id(skd010VOIterate.getWhs4id());
+                }
                 tempSkd010VO.setWhs1itemea(String.valueOf(tempwhs1itemea1 + whs1itemea1));
                 tempSkd010VO.setWhs2itemea(String.valueOf(tempwhs1itemea2 + whs1itemea2));
                 tempSkd010VO.setWhs3itemea(String.valueOf(tempwhs1itemea3 + whs1itemea3));
                 tempSkd010VO.setWhs4itemea(String.valueOf(tempwhs1itemea4 + whs1itemea4));
-                skd010VO.setResultType("C");
-                skd010VO.setParentItemcode(tempSkd010VO.getItemcode());
-                skd010VOListReal.add(skd010VO);
+
+                for (String stringKeyset : skd010VOIterate.getNamugeMap().keySet()) {
+                    int skd010Count = skd010VOIterate.getNamugeMap().containsKey(stringKeyset) ? skd010VOIterate.getNamugeMap().get(stringKeyset) : 0;
+                    int tempSkd010Count = tempSkd010VO.getNamugeMap().containsKey(stringKeyset) ? tempSkd010VO.getNamugeMap().get(stringKeyset) : 0;
+                    tempSkd010VO.getNamugeMap().put(stringKeyset, tempSkd010Count + skd010Count);
+                    tempSkd010VO.getNamugeWhsNameMap().put(stringKeyset, skd010VOIterate.getNamugeWhsNameMap().get(stringKeyset));
+                }
+            }
+        }
+
+        //아이템코드, 창고아이디 int map 만들기
+        List<Skd030VO> skd030VOList = (List<Skd030VO>) skd010DAO.selectskd030VOForList();
+        Map<String, Integer> skd030VOMap = new HashMap<>();
+
+        for (Skd030VO skd030VO : skd030VOList) {
+            skd030VOMap.put(skd030VO.getItemcode() + skd030VO.getSourcewhs010id(), skd030VO.getItemea());
+        }
+
+        long[] temp = new long[8];
+
+        //출고된 것들을 차감한다.
+        for (Skd010VO skd010VOIterate : skd010VOListReal) {
+            long itemea = getLongValue(skd010VOIterate.getItemea());
+            Integer buyPrice = skd010VOIterate.getItembuyprice();
+            if (buyPrice == null) {
+                buyPrice = 0;
+            }
+
+            long whs1itemea1 = getLongValue(skd010VOIterate.getWhs1itemea());
+            long whs1itemea2 = getLongValue(skd010VOIterate.getWhs2itemea());
+            long whs1itemea3 = getLongValue(skd010VOIterate.getWhs3itemea());
+            long whs1itemea4 = getLongValue(skd010VOIterate.getWhs4itemea());
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs1id()));
+            whs1itemea1 = whs1itemea1 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs1id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs2id()));
+            whs1itemea2 = whs1itemea2 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs2id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs3id()));
+            whs1itemea3 = whs1itemea3 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs3id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs4id()));
+            whs1itemea4 = whs1itemea4 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs4id()));
+
+            long buyPriceToLong = buyPrice;
+            skd010VOIterate.setItemea(String.valueOf(itemea));
+            skd010VOIterate.setWhs1itemea(String.valueOf(whs1itemea1));
+            skd010VOIterate.setWhs2itemea(String.valueOf(whs1itemea2));
+            skd010VOIterate.setWhs3itemea(String.valueOf(whs1itemea3));
+            skd010VOIterate.setWhs4itemea(String.valueOf(whs1itemea4));
+            temp[5] = temp[5] + itemea;
+            temp[0] = temp[0] + whs1itemea1;
+            temp[1] = temp[1] + whs1itemea2;
+            temp[2] = temp[2] + whs1itemea3;
+            temp[3] = temp[3] + whs1itemea4;
+            temp[4] = temp[5] - temp[0] - temp[1] - temp[2] - temp[3];
+            try {
+                long allBuyPrice = buyPriceToLong * itemea;
+                long allPrice = (allBuyPrice * 10) / 11;
+                skd010VOIterate.setItemAllbuyprice(String.format("%,3d", allBuyPrice));
+                skd010VOIterate.setItemAllprice(String.format("%,3d", allPrice));
+                temp[6] = temp[6] + allPrice;
+                temp[7] = temp[7] + allBuyPrice;
+            } catch (Exception e) {
+                skd010VOIterate.setItemAllbuyprice("액수가 너무 큽니다.");
+                skd010VOIterate.setItemAllprice("액수가 너무 큽니다.");
+            }
+
+            for (String stringKeyset : skd010VOIterate.getNamugeMap().keySet()) {
+                int skd010Count = skd010VOIterate.getNamugeMap().containsKey(stringKeyset) ? skd010VOIterate.getNamugeMap().get(stringKeyset) : 0;
+                int minusCount = getIntValue(skd030VOMap.get(stringKeyset));
+                skd010VOIterate.getNamugeMap().put(stringKeyset, skd010Count - minusCount);
             }
 
 
         }
-
-
-
-
 
         int totCnt = skd010VOList.size();
         paginationInfo.setTotalRecordCount(totCnt);
@@ -151,24 +231,21 @@ public class Skd010Controller {
             }
         }
         for (int i = 0; i < 4; i ++) {
-            whsListForTop.get(i).setCmm020id(skd010Service.getSumItemea(i));
+            whsListForTop.get(i).setCmm020id(Integer.parseInt(String.valueOf(temp[i])));
         }
-        for (int i = 4; i < 8; i ++) {
+        for (int i = 4; i < 6; i ++) {
             Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
-            ismwhs010VO.setCmm020id(skd010Service.getSumItemea(i));
-            ismwhs010VO.setWhsname(skd010Service.getResultSumB(i));
+            ismwhs010VO.setCmm020id(Integer.parseInt(String.valueOf(temp[i])));
             whsListForTop.add(ismwhs010VO);
         }
 
-
-
+        for (int i = 6; i < 8; i ++) {
+            Ismwhs010VO ismwhs010VO = new Ismwhs010VO();
+            ismwhs010VO.setWhsname(String.valueOf(temp[i]));
+            whsListForTop.add(ismwhs010VO);
+        }
         model.addAttribute("whsListForTop", whsListForTop);
 
-        //입고등록 만들기 (save)만 (입고할 경우, 최초 창고 이관하기)
-
-        //삭제의 경우 입고, 이관 삭제
-
-        //
 
         return "/ism/skd/skd010";
     }
@@ -183,9 +260,29 @@ public class Skd010Controller {
         return itemea;
     }
 
+    private long getLongValue(Integer intValue) {
+        long itemea;
+        if (intValue == null) {
+            itemea = 0;
+        } else {
+            itemea = intValue;
+        }
+        return itemea;
+    }
+
+    private int getIntValue(Integer intValue) {
+        int itemea;
+        if (intValue == null) {
+            itemea = 0;
+        } else {
+            itemea = intValue;
+        }
+        return itemea;
+    }
+
 
     /**
-     * 상품 상세 저장
+     * 상품 입고
      *
      * @param model
      * @return
@@ -229,6 +326,17 @@ public class Skd010Controller {
         if (skt020id == 0) {
             return "등록을 실패하였습니다. 다시 시도하여주세요.";
         }
+
+        Map<String, Object> param2 = new HashMap<>();
+        param2.put("itemcode", skd010save_itemcode);
+        param2.put("skd010type", 1);
+        param2.put("sourcewhs010id", -1);
+        param2.put("destinationwhs010id", skd010save_whs010id);
+        param2.put("itemea", skd010save_itemea);
+        param2.put("createdate", skd010save_createdate);
+        param2.put("itemdlprice", skd010save_itemdlprice);
+        param2.put("expirationdate", skd010save_expirationdate);
+        skd010DAO.insertSkd030(param2);
 
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
@@ -286,7 +394,7 @@ public class Skd010Controller {
                 Integer itemea = Integer.parseInt(skd020save_itemeasArr[i]);
                 Integer itemea_update = Integer.parseInt(skd020save_itemea_updatesArr[i]);
                 if (itemea - itemea_update < 0) {
-                    return "재고가 없습니다.";
+//                    return "재고가 없습니다.";
                 }
                 itemea = itemea - itemea_update;
                 skd020save_itemeaList.add(itemea);
@@ -316,9 +424,21 @@ public class Skd010Controller {
             if (result == 0) {
                 skd010DAO.updateSkd020(param);
             }
+
+            Map<String, Object> param2 = new HashMap<>();
+            param2.put("itemcode", skd010DAO.selectSkd010Itemcode(skd020save_skd010idsArr[i]));
+            param2.put("skd010type", 2);
+            param2.put("sourcewhs010id", skd020save_whs010id_updatesArr[i]);
+            param2.put("destinationwhs010id",  skd020save_whs010id);
+            param2.put("itemea", skd020save_itemea_updateList.get(i));
+            param2.put("createdate", skd020save_createdate);
+            param2.put("itemdlprice", skd020save_itemdlprice);
+            skd010DAO.insertSkd030(param2);
         }
 
-        skd010DAO.skd020zeroDelete();
+
+
+//        skd010DAO.skd020zeroDelete();
         JSONObject resultMessage = new JSONObject();
         resultMessage.put("success", "success");
         return resultMessage.toJSONString();
@@ -431,8 +551,12 @@ public class Skd010Controller {
         return bytes;
     }
 
+
+    @Resource(name = "prd010DAO")
+    private Prd010DAO prd010DAO;
+
     /**
-     * 상품 상세 저장
+     * 상품 출고를 담당합니다.
      *
      * @param model
      * @return
@@ -448,10 +572,48 @@ public class Skd010Controller {
             return "uat/uia/EgovLoginUsr";
         }
 
+        Integer itemeaParent = 0;
+        // 숫자가 아닌 경우, 전부 실패처리한다.
+        try {
+            itemeaParent = Integer.parseInt(itemea);
+        } catch (Exception e) {
+            JSONObject resultMessage = new JSONObject();
+            resultMessage.put("failed", "failed");
+            return resultMessage.toJSONString();
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calender = Calendar.getInstance();
+        calender.add(Calendar.MONTH, 0);
+        String today = formatter.format(calender.getTime());
+
         if ('F' == (itemcode.charAt(0))) {
-
+            //결합상품의 경우 우선창고에 있는 창고에서 빠지게 된다.
+            List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(itemcode);
+            for (Prd010VO prd010VO : prd010VOFusionList) {
+                if (prd010VO.getPristock() == null) {
+                    continue;
+                }
+                Map<String, Object> param = new HashMap<>();
+                param.put("itemcode", prd010VO.getItemcode());
+                param.put("skd010type", 3);
+                param.put("sourcewhs010id", prd010VO.getPristock());
+                param.put("destinationwhs010id", -1);
+                Integer itemeaChild = Integer.valueOf(prd010VO.getChildItemea());
+                param.put("itemea", itemeaChild * itemeaParent);
+                param.put("createdate", today);
+                skd010DAO.insertSkd030(param);
+            }
         } else {
-
+            //일반 상품은 다음과 같이 빠지게 된다.
+            Map<String, Object> param = new HashMap<>();
+            param.put("itemcode", itemcode);
+            param.put("skd010type", 3);
+            param.put("sourcewhs010id", whs010id);
+            param.put("destinationwhs010id", -1);
+            param.put("itemea", itemea);
+            param.put("createdate", today);
+            skd010DAO.insertSkd030(param);
         }
 
         JSONObject resultMessage = new JSONObject();

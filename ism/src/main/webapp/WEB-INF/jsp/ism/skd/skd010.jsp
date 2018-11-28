@@ -153,7 +153,7 @@
                                 <th scope="col">${item.cmm020id}</th>
                             </c:forEach>
                             <c:forEach var="item" items="${whsListForTop}" begin="6" end="7" step="1" varStatus="status">
-                                <th scope="col">${item.whsname}</th>
+                                <th scope="col" class="numberWithCommasHtml">${item.whsname}</th>
                             </c:forEach>
                         </tr>
                         </thead>
@@ -174,11 +174,8 @@
                                 </td>
                                 <td>
                                     <c:choose>
-                                        <c:when test="${result.resultType eq 'C'}">
-                                        <a href="javascript:" onclick="openSingleItemDetail3('${result.skd010id}')">${result.createdate}</a>
-                                        </c:when>
                                         <c:when test="${result.resultType eq 'P'}">
-                                            <a href="javascript:showChildItem('${result.itemcode}');">${result.itemname}</a>
+                                            <a href="javascript:" onclick="openSingleItemDetail3('${result.itemcode}')">${result.itemname}</a>
                                         </c:when>
                                         <c:otherwise>-</c:otherwise>
                                     </c:choose>
@@ -283,7 +280,9 @@
                     <colgroup>
                         <col width="20%"/>
                         <col width="*"/>
+                        <!--
                         <col width="15%"/>
+                        -->
                         <col width="15%"/>
                         <col width="8%"/>
                     </colgroup>
@@ -301,10 +300,14 @@
                             <input type="text" id="skd020save_autosearch_input" class="it" placeholder=" 상품명 검색"/>
                             <input type="hidden" id="skd020save_autosearch_name"/>
                             <input type="hidden" id="skd020save_autosearch_value"/>
+                            <input type="hidden" id="skd020save_autosearch_itemea"/>
                         </td>
+                        <!--
+
                         <td>
                             <input id="skd020save_autosearch_itemea" type="text" class="it c" title="" value="" name="" placeholder="재고 수량" readonly/>
                         </td>
+                        -->
 
                         <td>
                             <input id="skd020save_autosearch_itemea_update" type="number" class="it c" title="" value="" name="" placeholder="이관 수량"/>
@@ -368,30 +371,34 @@
                 <table cellpadding="0" cellspacing="0" class="" summary="">
                     <caption></caption>
                     <colgroup>
+                        <col width="8%"/>
                         <col width="15%"/>
-                        <col width="35%"/>
                         <col width="15%"/>
-                        <col width="35%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="10%"/>
+                        <col width="12%"/>
                     </colgroup>
                     <tbody>
                     <tr>
-                        <td colspan="4">
+                        <th scope="row">상품명</th>
+                        <td colspan="8">
                             <input type="text" id="skd010Detail_itemname" class="it" placeholder="상품명 검색" readonly/>
                         </td>
                     </tr>
-                    <tr>
-                        <th scope="row">수량</th>
-                        <td><input type="text" id="skd010Detail_itemea" type="text" class="it " title="" value="" name="" readonly/></td>
-                        <th scope="row">입고날짜</th>
-                        <td><input id="skd010Detail_createdate" type="text" class="it" title="" value="" name="" placeHolder="입고날짜" readonly/></td>
-                    </tr>
                     <tr id="skd010Detail_lasttr">
-                        <th scope="row">유통기한설정</th>
-                        <td><input id="skd010Detail_expirationdate" type="text" class="it " title="" value="" name="" readonly/></td>
+                        <th scope="row">구분</th>
+                        <th scope="row">시행일자</th>
+                        <th scope="row">출고창고</th>
+                        <th scope="row">입고창고</th>
+                        <th scope="row">수량</th>
                         <th scope="row">물류비</th>
-                        <td><input type="text" id="skd010Detail_itemdlprice" type="text" class="it " title="" value="" name="" readonly/></td>
+                        <th scope="row">입고단가</th>
+                        <th scope="row">입고총액</th>
+                        <th scope="row">유통기한</th>
                     </tr>
-
                     </tbody>
                 </table>
             </div>
@@ -948,7 +955,7 @@
     function createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname, itemea) {
         $('#skd020save_autosearch').after("" +
             "<tr class='skd020save_autosearch_regist' dataid01='" + searchValue + "' dataid02='" + whs010id + "' dataid03='" + itemea_update + "' dataid04='" + itemea + "'>" +
-            "<td colspan='4'>" + searchName + " ( 재고 : " + itemea + " | " + whsname + "에서 " + itemea_update + "개 이동" + ")</td>" +
+            "<td colspan='3'>" + searchName + " ( " + whsname + "에서 " + itemea_update + "개 이동" + ")</td>" +
             "<td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td>" +
             "</tr>");
     }
@@ -988,25 +995,32 @@
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",
             success: function (data) {
                 $('#skd010Detail_itemname').val(data.itemname)
-                $('#skd010Detail_itemea').val(data.itemea)
-                $('#skd010Detail_createdate').val(data.createdate)
-                $('#skd010Detail_expirationdate').val(data.expirationdate)
-                $('#skd010Detail_itemdlprice').val(data.itemdlprice)
                 $.each(data.skd020, function (index, item) {
                     $('#skd010Detail_lasttr').after("<tr class=\"skd020Detail\">\n" +
-                        "                        <td colspan=\"1\">\n" +
-                        "                            <input value='" + item.whsname + "' type=\"text\" class=\"it \" placeholder=\"창고\" readonly/>\n" +
+                        "                        <td colspan=\"1\">\n" +item.gubun +
                         "                        </td>\n" +
-                        "                        <td colspan=\"1\">\n" +
-                        "                            <input value='" + item.itemea + "' type=\"text\" class=\"it\" placeholder=\"재고수량\" readonly/>\n" +
+                        "                        <td colspan=\"1\">\n" +item.createdate +
                         "                        </td>\n" +
-                        "                        <td colspan=\"1\">\n" +
-                        "                            <input value='" + item.createdate + "' type=\"text\" class=\"it\" placeholder=\"이관날짜\" readonly/>\n" +
+                        "                        <td colspan=\"1\">\n" +item.sourcewhsname +
                         "                        </td>\n" +
-                        "                        <td colspan=\"1\">\n" +
-                        "                            <input value='" + item.itemdlprice + "' type=\"text\" class=\"it\" placeholder=\"물류비\" readonly/>\n" +
+                        "                        <td colspan=\"1\">\n" +item.destinationwhsname +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\">\n" +item.itemea +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\" class=\"numberWithCommasHtml\">\n" +item.itemdlprice +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\" class=\"numberWithCommasHtml\">\n" +item.itembuyprice +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\" class=\"numberWithCommasHtml\">\n" +item.itembuyAllprice +
+                        "                        </td>\n" +
+                        "                        <td colspan=\"1\">\n" +item.expirationdate +
                         "                        </td>\n" +
                         "                    </tr>")
+                });
+
+                $('.numberWithCommasHtml').each(function (index, item) {
+                    var numberCommas = $(this).text()
+                    $(this).text(numberWithCommas(numberCommas))
                 });
             },
             error: function (jqXHR, exception) {

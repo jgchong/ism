@@ -1,5 +1,10 @@
 package nfm.com.skd.service;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Skd010VO {
     private int skd010id;
     private String itemcode;
@@ -13,35 +18,49 @@ public class Skd010VO {
     private String createdate;
     private String expirationdate;
     private String itemdlprice;
-    private String whs1itemea = "0";
 
+
+    private int whs1id = 0;
+    private String whs1itemea = "0";
     private String whs1itemname = "-";
+    private int whs2id = 0;
     private String whs2itemea = "0";
     private String whs2itemname = "-";
+    private int whs3id = 0;
     private String whs3itemea = "0";
     private String whs3itemname = "-";
+    private int whs4id = 0;
     private String whs4itemea = "0";
     private String whs4itemname = "-";
-    private String whsNamuge = "";
+    private String resultType;
+    List<Skd020VO> namugeList = new ArrayList<>();
+    Map<String, Integer> namugeMap = new HashMap<>();
+    Map<String, String> namugeWhsNameMap = new HashMap<>();
 
-    private String resultType = ""; // C는 자식, P는 부모
-    private String parentItemcode = ""; // 부모 itemcode
-
-    public String getResultType() {
-        return resultType;
+    public Map<String, String> getNamugeWhsNameMap() {
+        return namugeWhsNameMap;
     }
 
-    public void setResultType(String resultType) {
-        this.resultType = resultType;
+    public void setNamugeWhsNameMap(Map<String, String> namugeWhsNameMap) {
+        this.namugeWhsNameMap = namugeWhsNameMap;
     }
 
-    public String getParentItemcode() {
-        return parentItemcode;
+    public Map<String, Integer> getNamugeMap() {
+        return namugeMap;
     }
 
-    public void setParentItemcode(String parentItemcode) {
-        this.parentItemcode = parentItemcode;
+    public void setNamugeMap(Map<String, Integer> namugeMap) {
+        this.namugeMap = namugeMap;
     }
+
+    public List<Skd020VO> getNamugeList() {
+        return namugeList;
+    }
+
+    public void setNamugeList(List<Skd020VO> namugeList) {
+        this.namugeList = namugeList;
+    }
+
 
     public String getItemAllprice() {
         return itemAllprice;
@@ -191,10 +210,51 @@ public class Skd010VO {
     }
 
     public String getWhsNamuge() {
-        return whsNamuge;
+        String namugeInfo = "";
+        for (String stringKeyset : getNamugeMap().keySet()) {
+            int skd010Count = getNamugeMap().containsKey(stringKeyset) ? getNamugeMap().get(stringKeyset) : 0;
+            namugeInfo = namugeInfo + "창고명 : " + getNamugeWhsNameMap().get(stringKeyset) + " | 재고 : " + skd010Count + " | ";
+        }
+        return namugeInfo;
     }
 
-    public void setWhsNamuge(String whsNamuge) {
-        this.whsNamuge = whsNamuge;
+    public int getWhs1id() {
+        return whs1id;
+    }
+
+    public void setWhs1id(int whs1id) {
+        this.whs1id = whs1id;
+    }
+
+    public int getWhs2id() {
+        return whs2id;
+    }
+
+    public void setWhs2id(int whs2id) {
+        this.whs2id = whs2id;
+    }
+
+    public int getWhs3id() {
+        return whs3id;
+    }
+
+    public void setWhs3id(int whs3id) {
+        this.whs3id = whs3id;
+    }
+
+    public int getWhs4id() {
+        return whs4id;
+    }
+
+    public void setWhs4id(int whs4id) {
+        this.whs4id = whs4id;
+    }
+
+    public void setResultType(String resultType) {
+        this.resultType = resultType;
+    }
+
+    public String getResultType() {
+        return resultType;
     }
 }

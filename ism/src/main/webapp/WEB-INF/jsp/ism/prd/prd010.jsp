@@ -169,7 +169,14 @@
                                     </option>
                                 </select>
                             </li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_bycname}" name="dfSearch_bycname" placeHolder="매입처"/></li>
+                            <li style="width:25%;">
+                                <select name="dfSearch_bycname" title="">
+                                    <option value="">매입처 선택</option>
+                                    <c:forEach var="item" items="${bycList}" varStatus="status">
+                                        <option value="${item.bycname}">${item.bycname}</option>
+                                    </c:forEach>
+                                </select>
+                            </li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>

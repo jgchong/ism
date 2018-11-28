@@ -19,6 +19,29 @@ public class Skd010DAO extends EgovAbstractDAO {
         return list("skd010DAO.selectList", skd010SearchVO);
     }
 
+    public List<?> selectskd030VOForList() {
+        return list("skd010DAO.selectskd030VOForList");
+    }
+    public List<?> selectskd030VOForAdj(String lastMonth) {
+        return list("skd010DAO.selectskd030VOForAdj", lastMonth);
+    }
+    public List<?> selectskd030VOForAdjDestination(String lastMonth) {
+        return list("skd010DAO.selectskd030VOForAdjDestination", lastMonth);
+    }
+    public List<?> selectskd030VOForAdjSource(String lastMonth) {
+        return list("skd010DAO.selectskd030VOForAdjSource", lastMonth);
+    }
+
+
+    public List<?> selectskd030VOForDetail(String itemcode) {
+        return list("skd010DAO.selectskd030VOForDetail", itemcode);
+    }
+
+    public String selectSkd010Itemcode(String skd010id) {
+        return (String) select("skd010DAO.selectSkd010Itemcode", skd010id);
+    }
+
+
     public Object selectWithSkd010id(String currentId) {
         return select("skd010DAO.selectWithSkd010id", currentId);
     }
@@ -45,6 +68,10 @@ public class Skd010DAO extends EgovAbstractDAO {
             return result;
         }
         return result;
+    }
+
+    public void insertSkd030(Map param) throws Exception {
+        insert("skd010DAO.insertSkd030", param);
     }
 
     public void updateOriginSkd020(Map param) throws Exception {
