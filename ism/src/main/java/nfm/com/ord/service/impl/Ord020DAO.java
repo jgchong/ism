@@ -61,6 +61,23 @@ public class Ord020DAO extends EgovAbstractDAO {
 	public List<?> adj020selectTop10List(String yyyymm) {
 		return list("adj020DAO.selectTop10List", yyyymm);
 	}
+	
+	// LDC - 임시 통계 정보 읽어오기.
+	public List<?> selectStattList(Ord020SearchVO ord020SearchVO) {
+		return list("ord020DAO.selectStattList", ord020SearchVO);
+	}
+	
+	public List<?> selectCompList(Ord020SearchVO ord020SearchVO) {
+		return list("ord020DAO.selectCompList", ord020SearchVO);
+	}
 
+	public List<?> selectProdList(Ord020SearchVO ord020SearchVO) {
+		// TODO Auto-generated method stub
+		return list("ord020DAO.selectProdList", ord020SearchVO);
+	}
+	@SuppressWarnings("rawtypes")
+	public void ord020InsertProd(Ismodm010VO ismodm010vo) {
+		insert("ord020DAO.ord020InsertProd", ismodm010vo);
+	}
 
 }

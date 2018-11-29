@@ -23,6 +23,8 @@ public class Ismcum030VO implements Serializable {
     private String uploadgubun = "";
     private int uploadCnt = 0; //주문수짐목록에 업로드 횟수 추가필드
     private String lastUploadDate = ""; //주문수짐목록에 최근 반영일 추가필드
+    // LDC 주문 수집 수동 관리에서 정산가 매입가 표시.
+    private String account2 = "";
 
 
 	public int getCum030id() {
@@ -153,6 +155,16 @@ public class Ismcum030VO implements Serializable {
 
 	public void setLastUploadDate(String lastUploadDate) {
 		this.lastUploadDate = lastUploadDate;
+	}
+
+	
+	// LDC
+	public String getAccount2() {
+		return account2;
+	}
+
+	public void setAccount2(String account2) {
+		this.account2 = account2;
 	}
 
 

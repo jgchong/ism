@@ -53,10 +53,11 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	/**
 	 * 주문정보 일괄 수집을 위한 엑셀파일 읽기
 	 * return : 임시key값과 설정 저장했는지 여부로 안되어 있는 쇼핑몰명 return(구분자 : ^)
+	 * 2018-11 LDC 상단에서 받아오기.
 	 */
 	@SuppressWarnings({ "rawtypes" })
 	@Override
-	public String readExcelFile(List<MultipartFile> fileList) throws Exception {
+	public String readExcelFile(List<MultipartFile> fileList, List<String> dataInfoList) throws Exception {
 
 	    List<Ismodl010VO> listIsmodl010VO = new ArrayList<Ismodl010VO>();
 		//저장 후 조회를 위한 임시 key 발급
@@ -67,7 +68,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d = gc.getTime();
         String uploaddate = sf.format(d);
-        
+        int idx = 0;
         String noSetShopMallNames = "";
         
 		for (MultipartFile mf : fileList) {
@@ -77,6 +78,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 			int cum030id = 0;
 			String shopmallname = "";
 			String uploadtype = ""; //업로드 타입이 없으면 skip
+			/* LDC 화면에서 정보를 넘겨서 이부분은 제외 함.
 			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
 			ord010SearchVO.setRecordCountPerPage(1);
@@ -95,6 +97,14 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    	shopmallname = ismcum030VO.getShopmallname();
 		    	uploadtype = ismcum030VO.getUploadtype();
 			}
+			*/
+			
+			String arrDataInbfo[] = dataInfoList.get(idx).split(";");
+			cum030id     = Integer.parseInt(arrDataInbfo[0]);
+			cum010id     = Integer.parseInt(arrDataInbfo[1]);
+	    	shopmallname = arrDataInbfo[2];
+	    	uploadtype   = arrDataInbfo[3];    	
+	    	
 			//파일명으로 매출처/쇼핑몰 정보 get [e]
 			
 			File convFile = new File( mf.getOriginalFilename());
@@ -113,15 +123,14 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    ismodl010VO.setUploaddate(uploaddate);
 		    ismodl010VO.setUploadviewkey(orderTempKey);
 		    listIsmodl010VO.add(ismodl010VO);
+		    idx++;
 		}
 
 		if (listIsmodl010VO.size() > 0) {
 			ord010DAO.insertOrderLogData(listIsmodl010VO);
 		}
-    	//상품코드 제대로 등록 안된 갯수
-		int cnt = ord010DAO.selectCntNoItem(orderTempKey);
-		
-		return orderTempKey+"^"+noSetShopMallNames+"^"+cnt;
+    	
+		return orderTempKey+"^"+noSetShopMallNames;
 	}
 
 	/**
@@ -183,9 +192,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    	ord010DAO.insertOrderLogData(listIsmodl010VO);
 		    }
 		}
-    	//상품코드 제대로 등록 안된 갯수
-		int cnt = ord010DAO.selectCntNoItem(orderTempKey);
-		return orderTempKey+"^"+retInt+"^"+cnt;
+		return orderTempKey+"^"+retInt;
 	}
 
 	/**
@@ -249,7 +256,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	 * 수동 수집 환경설정 저장
 	 */
 	@Override
-	public void saveManualDetailData(String cum030id, String userTitleNames, String sysmTitleNames, String assgTitleNames) throws Exception {
+	public void saveManualDetailData(String cum030id, String userTitleNames, String sysmTitleNames, String assgTitleNames, String priceopts) throws Exception {
 		ord010DAO.deleteManualDetailData(cum030id);
 		String[] userTitleNameArray = userTitleNames.split("\\^");
 		String[] sysmTitleNameArray = sysmTitleNames.split("\\^");
@@ -268,11 +275,20 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	Ismodo010VO ismodo010VO = new Ismodo010VO();
 	    	ismodo010VO.setCum030id(Integer.parseInt(cum030id));
 	    	ismodo010VO.setAdditem(assgTitleNameArray[i]);
+	    	// LDC 옵션 추가.
+	    	if("orderitemprice".equals(sysmTitleNameArray[i])){
+	    		String[] priceoptsArray = priceopts.split("\\^");
+	    		ismodo010VO.setAdditemopt1(priceoptsArray[0]);
+	    		ismodo010VO.setAdditemopt2(priceoptsArray[1]);
+	    	}
+	    	
+	    	
 	    	if ("NONE".equals(assgTitleNameArray[i])) {
 	    		ismodo010VO.setIsassign("N");
 	    	}else{
 	    		ismodo010VO.setIsassign("Y");
 	    	}
+	    	
 	    	ismodo010VO.setOrderfield(sysmTitleNameArray[i]);
 	    	
 	    	ord010DAO.insertManualDetailData(ismodo010VO);
@@ -323,6 +339,8 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	jsonObject.put("additem", URLEncoder.encode(vo.getAdditem(), "UTF-8"));
 	    	jsonObject.put("isassign", vo.getIsassign());
 	    	jsonObject.put("orderfield", vo.getOrderfield());
+	    	jsonObject.put("additemopt1", vo.getAdditemopt1());
+	    	jsonObject.put("additemopt2", vo.getAdditemopt2());
 
 	    	jsonArray.add(jsonObject);
 	    }
@@ -382,6 +400,10 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    // 업로드 엑셀 컬럼타이틀 읽기 [e]
 	    
 	    // system field setting 타이틀 읽기 [s]
+        // LDC 추가.
+        String strPriceOpt = "1";
+        String strVatOpt = "1";
+        
         int isHaveSetting = 0;
 	    Map<String, String> dbHeader=new HashMap<String, String>();
 	    List<?> resultOdo010 = ord010DAO.selectManualDataDetail(cum030id+"");
@@ -389,6 +411,14 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	Ismodo010VO ismodo010VO = (Ismodo010VO) obj;
 	    	if ("Y".equals(ismodo010VO.getIsassign())) {
 	    		dbHeader.put(ismodo010VO.getOrderfield(), ismodo010VO.getAdditem());
+	    		if("orderitemprice".equals(ismodo010VO.getOrderfield())){
+	    			if(ismodo010VO.getAdditemopt1() != null){
+	    				strPriceOpt = ismodo010VO.getAdditemopt1();
+	    			}
+	    			if(ismodo010VO.getAdditemopt2() != null){
+	    				strVatOpt = ismodo010VO.getAdditemopt2();
+	    			}
+	    		}
 	    	}
 	    	isHaveSetting++;
 	    }
@@ -445,7 +475,16 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	if (orderitemname != null) orderitemname = fileHeader.get(orderitemname);
     	
     	String orderitemopt = dbHeader.get("orderitemopt");
-    	if (orderitemopt != null) orderitemopt = fileHeader.get(orderitemopt);
+    	//if (orderitemopt != null) orderitemopt = fileHeader.get(orderitemopt);
+    	List<String> listOrderitemopt = new ArrayList();
+    	if (orderitemopt != null) {
+    		String[] orderitemopts = orderitemopt.split("#");
+
+    		for (String optSplit : orderitemopts ){
+    			listOrderitemopt.add(fileHeader.get(optSplit));
+            }
+    	}
+    	
     	
     	String orderitemqty = dbHeader.get("orderitemqty");
     	if (orderitemqty != null) orderitemqty = fileHeader.get(orderitemqty);
@@ -477,7 +516,8 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	String dlvprice = dbHeader.get("dlvprice");
     	if (dlvprice != null) dlvprice = fileHeader.get(dlvprice);
     	//필드 추가시 여기 추가 1/2
-
+    	// LDC  추가
+    	int nQty = 1;
         while (excelItem2.hasNext()) {
         	Ismodm010VO ismodm010VO = new Ismodm010VO();
         	Map<String, String> excelItemInfo = (Map<String, String>) excelItem2.next();
@@ -525,12 +565,27 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         	if (orderitemname != null) {
         		ismodm010VO.setOrderitemname(excelItemInfo.get(orderitemname));
         	}
-
-        	if (orderitemopt != null) {
-        		ismodm010VO.setOrderitemopt(excelItemInfo.get(orderitemopt));
+        	
+        	// LDC 옵션도 다중으로. 옵션이 존재하지 않을 경우 상품명으로 옵션처리.
+        	//if (orderitemopt != null) {
+        	//	ismodm010VO.setOrderitemopt(excelItemInfo.get(orderitemopt));
+        	//}
+        	if (listOrderitemopt.size() > 0) {
+        		String setOrdOpt = "";
+        		for(String str : listOrderitemopt) {
+        			setOrdOpt += excelItemInfo.get(str) + ", ";
+        		}
+        		
+        		ismodm010VO.setOrderitemopt(setOrdOpt.substring(0, setOrdOpt.length()-2));
+        	}
+        	else{
+        		if (orderitemname != null) {
+            		ismodm010VO.setOrderitemopt(excelItemInfo.get(orderitemname));
+            	}
         	}
 
         	if (orderitemqty != null) {
+        		nQty = Integer.parseInt(excelItemInfo.get(orderitemqty));
         		ismodm010VO.setOrderitemqty(excelItemInfo.get(orderitemqty));
         	}
 
@@ -566,14 +621,25 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         	}
 
         	if (orderitemprice != null) {
-        		ismodm010VO.setOrderitemprice(excelItemInfo.get(orderitemprice));
+        		// LDC 추가
+        		int nOrdPrice = Integer.parseInt(excelItemInfo.get(orderitemprice));
+
+        		if("2".equals(strPriceOpt)){
+        			nOrdPrice = nOrdPrice/nQty;
+        		}
+        		if("2".equals(strVatOpt)){
+        			nOrdPrice = nOrdPrice*11/10;
+        		}
+        		//ismodm010VO.setOrderitemprice(excelItemInfo.get(orderitemprice));
+        		ismodm010VO.setOrderitemprice(String.valueOf(nOrdPrice));
         	}
 
         	if (dlvprice != null) {
         		ismodm010VO.setDlvprice(excelItemInfo.get(dlvprice));
         	}
         	//필드 추가시 여기 추가 2/2
-        	
+        	// LDC 추가 
+        	ismodm010VO.setUploadfilename(convFile.getName());
         	ismodm010VO.setUploadviewkey(orderTempKey);
         	ismodm010VO.setCum010id(cum010id);
         	ismodm010VO.setCum030id(cum030id);

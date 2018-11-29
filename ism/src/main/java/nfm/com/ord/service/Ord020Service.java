@@ -17,4 +17,12 @@ public interface Ord020Service  {
 	public byte[] ord020ExcelDownload(Ord020SearchVO ord020SearchVO) throws Exception;
 
 	public String selectListMemo(Ord020SearchVO ord020SearchVO) throws Exception;
+
+	public Object selectStattList(Ord020SearchVO ord020SearchVO) throws Exception;
+
+	public Object selectCompList(Ord020SearchVO ord020SearchVO) throws Exception;
+
+	public String selectProdList(Ord020SearchVO ord020SearchVO) throws Exception;
+
+	public void ord020InsertProd(Ismodm010VO ismodm010vo) ;
 }

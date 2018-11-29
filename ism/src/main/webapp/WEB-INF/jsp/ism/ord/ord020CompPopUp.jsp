@@ -73,12 +73,14 @@ li img {
 <!-- 전체 레이어 끝 -->
 
 <!-- 주문현황관리 -->
-<form id="formorder" name="formorder" method="post" action="/ism/ord/updateOrderDetailData.do">
-<c:forEach var="item" items="${result}" varStatus="status">
+
 <div class="layerCont order">
 	<div class="inner">
+	
 		<p class="layerTit">주문현황관리</p>
-		<div id="orderDetil" class="layerContents">
+<form id="formorder" name="formorder" method="post" action="/ism/ord/updateOrderDetailData.do">
+<c:forEach var="item" items="${result}" varStatus="status">
+		<div id="orderDetil" class="layerContents" style="width:705px;float:left;padding-right:8px;">
 			<div class='layerTb'>
 				<table cellpadding='0' cellspacing='0' class='' summary='' >
 					<caption></caption>
@@ -179,99 +181,8 @@ li img {
 					</tbody>
 				</table>
 			</div>
-			<div class='layerTb mt10'>
-				<table cellpadding='0' cellspacing='0' class='' summary='' >
-					<caption></caption>
-					<colgroup>
-						<col width='50%'/><col width='50%'/>
-					</colgroup>
-					<tbody>
-						<tr>
-							<th scope='row'>정산(매출처)</th>
-							<th scope='row'>정산(매입처)</th>
-						</tr>
-						<tr>
-							<td>
-								<input type='radio' value='1' name='accountcum' id='accountcum_1'/><label for='sel1_1'>정산확정대기</label>
-								<input type='radio' value='2' name='accountcum' id='accountcum_2'/><label for='sel1_2'>매출이월</label>
-							</td>
-							<td>
-								<input type='radio' value='1' name='accountbuy' id='accountbuy_1'/><label for='sel2_1'>정산확정대기</label>
-								<input type='radio' value='2' name='accountbuy' id='accountbuy_2'/><label for='sel2_2'>매입이월</label>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			<div id='statusset' class='layerTb mt10'>
-				<table cellpadding='0' cellspacing='0' class='' summary='' >
-					<caption></caption>
-					<colgroup>
-						<col width='100%'/>
-					</colgroup>
-					<tbody>
-						<tr>
-							<th scope='row'>상태값 변경</th>
-						</tr>
-						<tr>
-							<td>
-<c:forEach var="codeItem" items="${ISM050}" varStatus="status1">
-								<input type='radio' value='${codeItem.code}' name='status' id='status_${codeItem.code}'/><label for='sel3_1'>${codeItem.codeNm}</label>
-</c:forEach>
-							</td>
-						</tr>
-						<tr>
-							<th scope='row'>CS 구분</th>
-						</tr>
-						<tr>
-							<td>
-								<input type='radio' value='0' name='cstype' onclick='setCR(0)' id='sel4_1' checked/><label for='sel4_1'>없음</label>
-								<input type='radio' value='C' name='cstype' onclick='setCR(1)' id='sel4_1'/><label for='sel4_1'>클레임 접수</label>
-								<input type='radio' value='R' name='cstype' onclick='setCR(2)' id='sel4_2'/><label for='sel4_2'>반품 접수</label>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-			
-			<div id='statusset1' class='layerTb mt10'></div>
-			<div id='statusset2' class='layerTb mt10'></div>
-			<div class='layerTb mt10'>
-				<table cellpadding='0' cellspacing='0' class='' summary='' >
-					<caption></caption>
-					<colgroup>
-						<col width='100%'/>
-					</colgroup>
-					<tbody>
-						<tr>
-							<th id='memotitle' scope='row'>메모내용</th>
-						</tr>
-						<tr>
-							<td>
-								<div class='memoTxt'><ul id='memoul'>${memoListHtml}</ul></div>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								<p class='memo'>
-									<input type='text' class='it' title='' value='' id='inputmemo' name='inputmemo'/>
-									<a onclick="inputmemodata('OD','${item.odm010id}')">입력</a>
-								</p>
-							</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
 		</div>
-		<p class="layerFootBt">
-			<a href="javascript:saveDetail();" class="confirm">확인</a>
-			<a href="javascript:window.close();" class="cancel">취소</a>
-		</p>
-		<a href="javascript:window.close();" class="layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
-	</div>
-</div>
-
-<input type="hidden" id="odm010id" name="odm010id" value="${item.odm010id}" />
+		<input type="hidden" id="odm010id" name="odm010id" value="${item.odm010id}" />
 <c:set var="cstype" value="${item.cstype}" />
 <c:set var="accountcum" value="${item.accountcum}" />
 <c:set var="accountbuy" value="${item.accountbuy}" />
@@ -283,6 +194,119 @@ li img {
 <c:set var="retprice" value="${item.retprice}" />
 </c:forEach>
 </form>
+<c:forEach var="item" items="${resultComp}" varStatus="status">
+		<div id="orderDetil" class="layerContents" style="width:705px;float:left;padding-right:8px;">
+			<div class='layerTb'>
+				<table cellpadding='0' cellspacing='0' class='' summary='' >
+					<caption></caption>
+					<colgroup>
+						<col width='15%'/><col width='35%'/>
+						<col width='15%'/><col width='35%'/>
+					</colgroup>
+					<tbody>
+						<tr>
+							<th scope='row'>사업자구분</th>
+							<td colspan="3">${item.code_nm} / ${item.cotype2nm} / ${item.cotype3nm}</td>
+						</tr>
+						<tr>
+						    <th scope='row'>쇼핑몰명</th>
+							<td>${item.shopmallname}</td>
+							<th scope='row'>판매채널</th>
+							<td></td>
+						</tr>
+						<tr>
+						    <th scope='row'>매입처</th>
+							<td>${item.bycname}</td>
+							<th scope='row'>매출처</th>
+							<td>${item.coname}</td>
+						</tr>
+						<tr>
+						   <th scope='row'>상품코드</th>
+							<td>${item.orderitemid}</td>
+							<th scope='row'>주문번호</th>
+							<td>${item.orderno}</td>
+						</tr>
+						<tr>
+						    <th scope='row'>택배사</th>
+							<td><input type='text' name='compdlvco' value='${item.dlvco}' /></td>
+							<th scope='row'>송장번호</th>
+							<td><input type='text' name='compdlvno' value='${item.dlvno}' /></td>
+						</tr>
+						<tr>
+							<th scope='row'>상품명</th>
+							<td><textarea name='comporderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
+							<th scope='row'>수량</th>
+							<td>${item.orderitemqty}</td>
+						</tr>
+						<tr>
+							<th scope='row'>옵션</th>
+							<td><input type='text' name='comporderitemopt' value='${item.orderitemopt}' /></td>
+							<th scope='row'>배송메모</th>
+							<td><input type='text' name='compdlvmemo' value='${item.dlvmemo}' /></td>
+						</tr>
+						<tr>
+						    <th scope='row'>주문자</th>
+							<td><input type='text' name='comporderuser' value='${item.orderuser}' /></td>
+							<th scope='row'>주문자 연락처</th>
+							<td><input type='text' name='comporderusercontact' value='${item.orderusercontact}' /></td>
+						</tr>
+						<tr>
+							<th scope='row' rowspan="2">수령자</th>
+							<td rowspan="2"><input type='text' name='comprcvuser' value='${item.rcvuser}' /></td>
+							<th scope='row'>수령자 TEL</th>
+							<td><input type='text' name='comprcvusercontact' value='${item.rcvusercontact}' /></td>
+						</tr>
+						<tr>
+							<th scope='row'>수령자 H.P</th>
+							<td><input type='text' name='comprcvusercontacthp' value='${item.rcvusercontacthp}' /></td>
+						</tr>
+						<tr>
+							<th scope='row'>주소(우편번호)</th>
+							<td colspan="3">
+								<input type='text' id='comppostno' name='comppostno' value='${item.postno}' size="6" /> &nbsp; <a href='javascript:execDaumPostcode("${item.address}");'>우편번호찾기</a>
+								<textarea name='compaddress' style='width:100%;'>${item.address}</textarea>
+							</td>
+						</tr>
+						<tr>
+							<th scope='row'>매입단가</th>
+							<td>${item.itembuyprice} 원</td>
+							<th scope='row'>매입배송비</th>
+							<td>${item.itembuydlvprice} 원</td>
+						</tr>
+						<tr>
+							<th scope='row'>공급단가</th>
+							<td><input type='text' style='text-align:right;' name='comporderitemprice' value='${item.orderitemprice}' /> 원</td>
+							<th scope='row'>공급배송비</th>
+							<td><input type='text' style='text-align:right;' name='compdlvprice' value='${item.dlvprice}' /> 원</td>
+						</tr>
+						<tr>
+							<th scope='row'>판매단가</th>
+							<td></td>
+							<th scope='row'>창고선택</th>
+							<td>
+							    <select></select>
+							</td>
+						</tr>
+						<tr>
+							<th scope='row'>주문일자</th>
+							<td>${item.orderdate}</td>
+							<th scope='row'>처리일자</th>
+							<td>${item.processdate}</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+</c:forEach>
+		<p class="layerFootBt">
+			<a href="javascript:saveDetail();" class="confirm">확인</a>
+			<a href="javascript:window.close();" class="cancel">취소</a>
+		</p>
+		<a href="javascript:window.close();" class="layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
+	</div>
+</div>
+
+
 </body>
 </html>
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -426,7 +450,7 @@ function saveDetail() {
             console.log(data);
             if (data == 'SUCCESS') {
             	alert("저장되었습니다.");
-            	opener.opener_search();
+            	opener.opener_tempsearch();
             	window.close();
             }else{
             	alert("저장 중 오류가 발생했습니다.");

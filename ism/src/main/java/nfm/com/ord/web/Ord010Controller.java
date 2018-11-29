@@ -117,9 +117,10 @@ public class Ord010Controller {
 			@RequestParam("cum030id") String cum030id,
 			@RequestParam("userTitleNames") String userTitleNames,
 			@RequestParam("sysmTitleNames") String sysmTitleNames,
-			@RequestParam("assgTitleNames") String assgTitleNames
+			@RequestParam("assgTitleNames") String assgTitleNames,
+			@RequestParam("priceopts") String priceopts
 			) throws Exception {
-		ord010Service.saveManualDetailData(cum030id, userTitleNames, sysmTitleNames, assgTitleNames);
+		ord010Service.saveManualDetailData(cum030id, userTitleNames, sysmTitleNames, assgTitleNames, priceopts);
 		return "SUCCESS";
 	}
 
@@ -143,11 +144,14 @@ public class Ord010Controller {
 	 * @param fileList
 	 * @return
 	 * @throws Exception
+	 * 2018-11 LDC 상단에서 받아오기.
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/ism/ord/ord010batchup.do", produces="text/plain;charset=UTF-8")
-	public String upload(@RequestParam("files")List<MultipartFile> fileList) throws Exception {
-		return ord010Service.readExcelFile(fileList);
+	public String upload(@RequestParam("files")List<MultipartFile> fileList 
+			, @RequestParam("dataInfo")List<String> dataInfoList) throws Exception {
+		
+		return ord010Service.readExcelFile(fileList, dataInfoList);
 	}
 	
 	/**
