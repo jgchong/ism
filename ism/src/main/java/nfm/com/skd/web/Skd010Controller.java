@@ -494,6 +494,140 @@ public class Skd010Controller {
         skd010SearchVO.setRecordCountPerPage(100000);
         List<Skd010VO> skd010VOList = skd010Service.selectList(skd010SearchVO);
 
+        List<Skd010VO> skd010VOListReal = new ArrayList<>();
+
+        //기존의 입고날짜별 재고들을 묶어준다.
+        if (skd010VOList.size() > 0) {
+            String tempItemcode = "";
+            Skd010VO tempSkd010VO = null;
+            for (Skd010VO skd010VOIterate : skd010VOList) {
+                if (!tempItemcode.equals(skd010VOIterate.getItemcode())) {
+                    tempItemcode = skd010VOIterate.getItemcode();
+                    tempSkd010VO = new Skd010VO();
+                    skd010VOListReal.add(tempSkd010VO);
+                    tempSkd010VO.setItemcode(tempItemcode);
+                    tempSkd010VO.setItemname(skd010VOIterate.getItemname());
+                    tempSkd010VO.setResultType("P");
+                }
+
+                long tempitemea = getLongValue(tempSkd010VO.getItemea());
+                long tempitemAllprice = getLongValue(tempSkd010VO.getItemAllprice());
+                long tempitemAllbuyprice = getLongValue(tempSkd010VO.getItemAllbuyprice());
+                long tempwhs1itemea1 = getLongValue(tempSkd010VO.getWhs1itemea());
+                long tempwhs1itemea2 = getLongValue(tempSkd010VO.getWhs2itemea());
+                long tempwhs1itemea3 = getLongValue(tempSkd010VO.getWhs3itemea());
+                long tempwhs1itemea4 = getLongValue(tempSkd010VO.getWhs4itemea());
+
+                long itemea = getLongValue(skd010VOIterate.getItemea());
+                long itemAllprice = getLongValue(skd010VOIterate.getItemAllprice());
+                long itemAllbuyprice = getLongValue(skd010VOIterate.getItemAllbuyprice());
+                long whs1itemea1 = getLongValue(skd010VOIterate.getWhs1itemea());
+                long whs1itemea2 = getLongValue(skd010VOIterate.getWhs2itemea());
+                long whs1itemea3 = getLongValue(skd010VOIterate.getWhs3itemea());
+                long whs1itemea4 = getLongValue(skd010VOIterate.getWhs4itemea());
+
+                tempSkd010VO.setItembuyprice(skd010VOIterate.getItembuyprice());
+                tempSkd010VO.setItemea(String.valueOf(tempitemea + itemea));
+                tempSkd010VO.setItemAllprice(String.valueOf(tempitemAllprice + itemAllprice));
+                tempSkd010VO.setItemAllbuyprice(String.valueOf(tempitemAllbuyprice + itemAllbuyprice));
+                if (skd010VOIterate.getWhs1id() != 0) {
+                    tempSkd010VO.setWhs1id(skd010VOIterate.getWhs1id());
+                }
+
+                if (skd010VOIterate.getWhs2id() != 0) {
+                    tempSkd010VO.setWhs2id(skd010VOIterate.getWhs2id());
+                }
+
+                if (skd010VOIterate.getWhs3id() != 0) {
+                    tempSkd010VO.setWhs3id(skd010VOIterate.getWhs3id());
+                }
+
+                if (skd010VOIterate.getWhs4id() != 0) {
+                    tempSkd010VO.setWhs4id(skd010VOIterate.getWhs4id());
+                }
+                tempSkd010VO.setWhs1itemea(String.valueOf(tempwhs1itemea1 + whs1itemea1));
+                tempSkd010VO.setWhs2itemea(String.valueOf(tempwhs1itemea2 + whs1itemea2));
+                tempSkd010VO.setWhs3itemea(String.valueOf(tempwhs1itemea3 + whs1itemea3));
+                tempSkd010VO.setWhs4itemea(String.valueOf(tempwhs1itemea4 + whs1itemea4));
+
+                for (String stringKeyset : skd010VOIterate.getNamugeMap().keySet()) {
+                    int skd010Count = skd010VOIterate.getNamugeMap().containsKey(stringKeyset) ? skd010VOIterate.getNamugeMap().get(stringKeyset) : 0;
+                    int tempSkd010Count = tempSkd010VO.getNamugeMap().containsKey(stringKeyset) ? tempSkd010VO.getNamugeMap().get(stringKeyset) : 0;
+                    tempSkd010VO.getNamugeMap().put(stringKeyset, tempSkd010Count + skd010Count);
+                    tempSkd010VO.getNamugeWhsNameMap().put(stringKeyset, skd010VOIterate.getNamugeWhsNameMap().get(stringKeyset));
+                }
+            }
+        }
+
+        //아이템코드, 창고아이디 int map 만들기
+        List<Skd030VO> skd030VOList = (List<Skd030VO>) skd010DAO.selectskd030VOForList();
+        Map<String, Integer> skd030VOMap = new HashMap<>();
+
+        for (Skd030VO skd030VO : skd030VOList) {
+            skd030VOMap.put(skd030VO.getItemcode() + skd030VO.getSourcewhs010id(), skd030VO.getItemea());
+        }
+
+        long[] temp = new long[8];
+
+        //출고된 것들을 차감한다.
+        for (Skd010VO skd010VOIterate : skd010VOListReal) {
+            long itemea = getLongValue(skd010VOIterate.getItemea());
+            Integer buyPrice = skd010VOIterate.getItembuyprice();
+            if (buyPrice == null) {
+                buyPrice = 0;
+            }
+
+            long whs1itemea1 = getLongValue(skd010VOIterate.getWhs1itemea());
+            long whs1itemea2 = getLongValue(skd010VOIterate.getWhs2itemea());
+            long whs1itemea3 = getLongValue(skd010VOIterate.getWhs3itemea());
+            long whs1itemea4 = getLongValue(skd010VOIterate.getWhs4itemea());
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs1id()));
+            whs1itemea1 = whs1itemea1 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs1id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs2id()));
+            whs1itemea2 = whs1itemea2 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs2id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs3id()));
+            whs1itemea3 = whs1itemea3 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs3id()));
+
+            itemea = itemea - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs4id()));
+            whs1itemea4 = whs1itemea4 - getLongValue(skd030VOMap.get(skd010VOIterate.getItemcode() + skd010VOIterate.getWhs4id()));
+
+            long buyPriceToLong = buyPrice;
+            skd010VOIterate.setItemea(String.valueOf(itemea));
+            skd010VOIterate.setWhs1itemea(String.valueOf(whs1itemea1));
+            skd010VOIterate.setWhs2itemea(String.valueOf(whs1itemea2));
+            skd010VOIterate.setWhs3itemea(String.valueOf(whs1itemea3));
+            skd010VOIterate.setWhs4itemea(String.valueOf(whs1itemea4));
+            temp[5] = temp[5] + itemea;
+            temp[0] = temp[0] + whs1itemea1;
+            temp[1] = temp[1] + whs1itemea2;
+            temp[2] = temp[2] + whs1itemea3;
+            temp[3] = temp[3] + whs1itemea4;
+            temp[4] = temp[5] - temp[0] - temp[1] - temp[2] - temp[3];
+            try {
+                long allBuyPrice = buyPriceToLong * itemea;
+                long allPrice = (allBuyPrice * 10) / 11;
+                skd010VOIterate.setItemAllbuyprice(String.format("%,3d", allBuyPrice));
+                skd010VOIterate.setItemAllprice(String.format("%,3d", allPrice));
+                temp[6] = temp[6] + allPrice;
+                temp[7] = temp[7] + allBuyPrice;
+            } catch (Exception e) {
+                skd010VOIterate.setItemAllbuyprice("액수가 너무 큽니다.");
+                skd010VOIterate.setItemAllprice("액수가 너무 큽니다.");
+            }
+
+            for (String stringKeyset : skd010VOIterate.getNamugeMap().keySet()) {
+                int skd010Count = skd010VOIterate.getNamugeMap().containsKey(stringKeyset) ? skd010VOIterate.getNamugeMap().get(stringKeyset) : 0;
+                int minusCount = getIntValue(skd030VOMap.get(stringKeyset));
+                skd010VOIterate.getNamugeMap().put(stringKeyset, skd010Count - minusCount);
+            }
+
+
+        }
+
+
         List <Ismwhs010VO> whsListForTop = (List<Ismwhs010VO>) prd010Service.selectWhsAll();
         for (int i = 0; i < 4; i ++) {
             if (whsListForTop.size() < 4) {
@@ -517,7 +651,7 @@ public class Skd010Controller {
         header.add("총재고금액(VAT불포함)");
         header.add("총재고금액(VAT포함)");
 
-        for (Skd010VO skd010VO : skd010VOList) {
+        for (Skd010VO skd010VO : skd010VOListReal) {
             List<Object> obj = new ArrayList<Object>();
             obj.add(skd010VO.getItemcode());
             obj.add(skd010VO.getItemname());

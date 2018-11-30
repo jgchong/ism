@@ -424,6 +424,7 @@
 
     <select id="adj020DAO.selectList" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
         o1.cum010id as cum010id,
         c1.coname as cum010name,
         o1.cum030id as cum030id,
@@ -431,7 +432,8 @@
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.closedt as closedt
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
@@ -448,10 +450,12 @@
 
     <select id="adj020DAO.selectListAll" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.closedt as closedt
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -464,8 +468,11 @@
 
     <select id="adj020DAO.selectListAllNull" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
+        o1.orderdate as orderdate,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.orderdate as closedt
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -477,6 +484,7 @@
 
     <select id="adj020DAO.selectListBYC" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
         o1.cum010id as cum010id,
         c1.coname as cum010name,
         o1.cum030id as cum030id,
@@ -484,7 +492,8 @@
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.bycclosedt as bycclosedt
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
@@ -501,10 +510,12 @@
 
     <select id="adj020DAO.selectListBYCAll" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.bycclosedt as bycclosedt
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -517,8 +528,10 @@
 
     <select id="adj020DAO.selectListBYCAllNull" parameterClass="String" resultClass="adj020VO">
         select
+        o1.odm010id as odm010id,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+        sum(p.itembuyprice) as itembuyprice,
+        o1.orderdate as bycclosedt
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id

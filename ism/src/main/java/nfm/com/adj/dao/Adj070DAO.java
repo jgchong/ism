@@ -33,5 +33,17 @@ public class Adj070DAO extends EgovAbstractDAO {
     public void updateItem0702(Map param) {
         update("adj0702DAO.update", param);
     }
+
+    public List<?> selectAdj0703List(String yyyymm) {
+        return list("adj0703DAO.selectList", yyyymm);
+    }
+
+    public void insertAdj0703(Map param) {
+        insert("adj0703DAO.insert", param);
+    }
+
+    public void updateItem0703(Map param) {
+        update("adj0703DAO.update", param);
+    }
 }
 

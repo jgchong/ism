@@ -390,7 +390,7 @@
                                 </c:forEach>
                             </tr>
                             <tr class="col1">
-                                <th scope="row" rowspan="8"> Ⅳ.판관비</th>
+                                <th scope="row" rowspan="7"> Ⅳ.판관비</th>
                                 <td>판관비 총액 (1+2+...+7-8-9)</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_sum}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_sum}</td>
@@ -399,15 +399,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>1.지급수수료 (고객사 선공제)</td>
-                                <td class="redBold numberWithCommasHtml">${adj010Result00.price4_1}</td>
-                                <td class="redBold numberWithCommasHtml">${adj010Result01.price4_1}</td>
-                                <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td class="numberWithCommasHtml">${adj010ResultList[status.index].price4_1}</td>
-                                </c:forEach>
-                            </tr>
-                            <tr>
-                                <td>2.지급수수료 (영업사)</td>
+                                <td>1.지급수수료 (영업사)</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_2}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_2}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
@@ -415,7 +407,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>3.지급수수료 (PG 외)</td>
+                                <td>2.지급수수료 (PG 외)</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_3}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_3}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
@@ -423,7 +415,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>4.광고선전비 (사은품,협찬)</td>
+                                <td>3.광고선전비 (사은품,협찬)</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_4}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_4}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
@@ -431,7 +423,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>5.광고선전비 (샘플)</td>
+                                <td>4.광고선전비 (샘플)</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_5}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_5}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
@@ -439,7 +431,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>6.운반보관비</td>
+                                <td>5.운반보관비</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_6}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_6}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
@@ -447,7 +439,7 @@
                                 </c:forEach>
                             </tr>
                             <tr>
-                                <td>7.기타</td>
+                                <td>6.기타</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result00.price4_7}</td>
                                 <td class="redBold numberWithCommasHtml">${adj010Result01.price4_7}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">

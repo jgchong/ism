@@ -12,14 +12,19 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import nfm.com.adj.dao.Adj010DAO;
 import nfm.com.main.service.Ismadj090VO;
 import nfm.com.main.service.Ismdbo010VO;
 import nfm.com.main.service.MainGraphRetVO;
 import nfm.com.main.service.MainSearchVO;
 import nfm.com.main.service.MainService;
 
+import nfm.com.ord.service.Adj020VO;
+import nfm.com.ord.service.impl.Ord020DAO;
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("mainService")
@@ -271,9 +276,47 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 		return "SUCCESS";
 	}
 
+	@Resource(name = "ord020DAO")
+	private Ord020DAO ord020DAO;
+
+	@Autowired
+	private Adj010DAO adj010DAO;
+
 	@Override
 	public void accountCloseAct(Ismadj090VO ismadj090vo) throws Exception {
-		mainDAO.accountCloseActSP(ismadj090vo);
+//		mainDAO.accountCloseActSP(ismadj090vo);
+		List<Adj020VO> adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectList(ismadj090vo.getClosemonth());
+		for (Adj020VO adj020VO : adj020VOList) {
+			adj010DAO.insertadj0201(adj020VO);
+		}
+
+		adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectListAll(ismadj090vo.getClosemonth());
+		for (Adj020VO adj020VO : adj020VOList) {
+			adj010DAO.insertadj0202(adj020VO);
+		}
+
+		Adj020VO adj020VONamuge = (Adj020VO) ord020DAO.adj020selectListAllNull(ismadj090vo.getClosemonth());
+		if (adj020VONamuge != null) {
+			if (!StringUtils.isBlank(adj020VONamuge.getItemcode()) && !StringUtils.isBlank(adj020VONamuge.getClosedt()))
+				adj010DAO.insertadj0203(adj020VONamuge);
+		}
+
+		adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectListBYC(ismadj090vo.getClosemonth());
+		for (Adj020VO adj020VO : adj020VOList) {
+			adj010DAO.insertadj0204(adj020VO);
+		}
+
+		adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectListBYCAll(ismadj090vo.getClosemonth());
+		for (Adj020VO adj020VO : adj020VOList) {
+			adj010DAO.insertadj0205(adj020VO);
+		}
+
+		adj020VONamuge = (Adj020VO) ord020DAO.adj020selectListBYCAllNull(ismadj090vo.getClosemonth());
+		if (adj020VONamuge != null) {
+			if (!StringUtils.isBlank(adj020VONamuge.getItemcode()) && !StringUtils.isBlank(adj020VONamuge.getClosedt()))
+				adj010DAO.insertadj0206(adj020VONamuge);
+		}
+
 	}
 
 	@SuppressWarnings({ "unchecked" })

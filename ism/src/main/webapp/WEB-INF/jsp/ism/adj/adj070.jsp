@@ -201,7 +201,7 @@
                                     <c:set var="col_sum001" value="${col_sum001 + resultObject.price4}"/>
                                 </tr>
                                 <tr>
-                                    <td>선장품(타부서)</td>
+                                    <td>선장품(사내반찬)</td>
                                     <td><input type="text" class="it it2 adj070update2" value="${resultObject.price5}" name=""/></td>
                                     <c:set var="col_sum001" value="${col_sum001 + resultObject.price5}"/>
                                 </tr>
@@ -229,18 +229,16 @@
                                 <col width="18%"/>
                                 <col width="18%"/>
                                 <col width="30%"/>
-                                <col width="10%"/>
                             </colgroup>
                             <thead>
                                 <tr>
-                                    <th scope="col" colspan="6">3) 영업사원수수료</th>
+                                    <th scope="col" colspan="6">3)지급수수료 (수수료정산 매출처)</th>
                                 </tr>
                                 <tr>
                                     <th scope="col">매출처</th>
                                     <th scope="col">매출액</th>
-                                    <th scope="col">판매금액</th>
+                                    <th scope="col">정산금액</th>
                                     <th scope="col">지금수수료</th>
-                                    <th scope="col">정산정책</th>
                                     <th scope="col"></th>
                                 </tr>
                             </thead>
@@ -251,7 +249,6 @@
                                     <td>${col_sum0000}</td>
                                     <td>${col_sum02}</td>
                                     <td></td>
-                                    <td></td>
                                 </tr>
                             </tfoot>
                             <tbody>
@@ -261,7 +258,6 @@
                                         <td>${result.price}</td>
                                         <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.saleprice}" name=""/></td>
                                         <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.givesusuprice}" name=""/></td>
-                                        <td><input type="text" class="it it2 adj070update3${result.cum010id}" value="${result.policy}" name=""/></td>
                                         <td><a href="javascript:" onclick="updateItem3(${result.cum010id})" class="btn">확인</a></td>
                                         <c:set var="col_sum0000" value="${col_sum0000 + result.saleprice}"/>
                                         <c:set var="col_sum01" value="${col_sum01 + result.price}"/>
@@ -274,57 +270,120 @@
                             <a href="javascript:" onclick="updateItem2()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
                         </p>
                     </div>
-                    
+
                     <div style="float:right; width:calc(50% - 10px);">
-                         <table cellpadding="0" cellspacing="0" class="" summary="">
+                        <table cellpadding="0" cellspacing="0" class="" summary="">
                             <caption></caption>
-                             <colgroup>
+                            <colgroup>
                                 <col width="*"/>
                                 <col width="18%"/>
                                 <col width="18%"/>
                                 <col width="16%"/>
                             </colgroup>
                             <thead>
-                                <tr>
-                                    <th scope="col" colspan="4">4) 영업외수익</th>
-                                </tr>
-                                <tr>
-                                    <th scope="col">매출처</th>
-                                    <th scope="col">금액</th>
-                                    <th scope="col">메모</th>
-                                    <th scope="col"></th>
-                                </tr>
+                            <tr>
+                                <th scope="col" colspan="4">4) 영업외수익</th>
+                            </tr>
+                            <tr>
+                                <th scope="col">매입처</th>
+                                <th scope="col">금액</th>
+                                <th scope="col">메모</th>
+                                <th scope="col"></th>
+                            </tr>
                             </thead>
                             <tfoot>
-                                <tr class="total">
-                                    <td>합계</td>
-                                    <td>${col_sum03}</td>
-                                    <td></td>
-                                    <td></td>
-                                </tr>
+                            <tr class="total">
+                                <td>합계</td>
+                                <td>${col_sum03}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
                             </tfoot>
                             <tbody>
+                            <tr>
+                                <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="매입처"/></td>
+                                <td><input type="number" class="it it2 adj070insert4" value="" name="" placeholder="금액"/></td>
+                                <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="메모"/></td>
+                                <td><a href="javascript:" onclick="insertItem4()" class="btn">추가하기</a></td>
+                            </tr>
+                            <c:forEach var="result" items="${resultList4}" varStatus="status">
                                 <tr>
-                                    <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="매입처"/></td>
-                                    <td><input type="number" class="it it2 adj070insert4" value="" name="" placeholder="금액"/></td>
-                                    <td><input type="text" class="it it2 adj070insert4" value="" name="" placeholder="메모"/></td>
-                                    <td><a href="javascript:" onclick="insertItem4()" class="btn">추가하기</a></td>
+                                    <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.bycname}" name=""/></td>
+                                    <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.price}" name=""/></td>
+                                    <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.memo}" name=""/></td>
+                                    <td><a href="javascript:" onclick="updateItem4(${result.adj0702id})" class="btn">확인</a></td>
+                                    <c:set var="col_sum03" value="${col_sum03 + result.price}"/>
                                 </tr>
-                                <c:forEach var="result" items="${resultList4}" varStatus="status">
-                                    <tr>
-                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.bycname}" name=""/></td>
-                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.price}" name=""/></td>
-                                        <td><input type="text" class="it it2 adj070update4${result.adj0702id}" value="${result.memo}" name=""/></td>
-                                        <td><a href="javascript:" onclick="updateItem4(${result.adj0702id})" class="btn">확인</a></td>
-                                        <c:set var="col_sum03" value="${col_sum03 + result.price}"/>
-                                    </tr>
-                                </c:forEach>
+                            </c:forEach>
                             </tbody>
                         </table>
-                        <p style="display:inline-block; text-align:right; padding:10px 0; width:100%;">
-                            <a href="javascript:" onclick="updateItem2()" class="btn" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">확인</a>
-                        </p>
                     </div>
+
+
+
+
+
+
+                    <div style="float:right; width:calc(50% - 10px);">
+                        <table cellpadding="0" cellspacing="0" class="" summary="">
+                            <caption></caption>
+                            <colgroup>
+                                <col width="*"/>
+                                <col width="18%"/>
+                                <col width="18%"/>
+                                <col width="18%"/>
+                                <col width="16%"/>
+                            </colgroup>
+                            <thead>
+                            <tr>
+                                <th scope="col" colspan="5">5) 영업사원수수료</th>
+                            </tr>
+                            <tr>
+                                <th scope="col">매출처</th>
+                                <th scope="col">매출액</th>
+                                <th scope="col">지급수수료</th>
+                                <th scope="col">정산정책</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tfoot>
+                            <tr class="total">
+                                <td>합계</td>
+                                <td></td>
+                                <td>${col_sum05}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            </tfoot>
+                            <tbody>
+                            <tr>
+                                <td><input type="text" class="it it2 adj070insert5" value="" name="" placeholder="매출처"/></td>
+                                <td><input type="number" class="it it2 adj070insert5" value="" name="" placeholder="매출액"/></td>
+                                <td><input type="number" class="it it2 adj070insert5" value="" name="" placeholder="지급수수료"/></td>
+                                <td><input type="text" class="it it2 adj070insert5" value="" name="" placeholder="정산정책"/></td>
+                                <td><a href="javascript:" onclick="insertItem5()" class="btn">추가하기</a></td>
+                            </tr>
+                            <c:forEach var="result" items="${resultList5}" varStatus="status">
+                                <tr>
+                                    <td><input type="text" class="it it2 adj070update5${result.adj0703id}" value="${result.bycname}" name=""/></td>
+                                    <td><input type="text" class="it it2 adj070update5${result.adj0703id}" value="${result.price1}" name=""/></td>
+                                    <td><input type="text" class="it it2 adj070update5${result.adj0703id}" value="${result.price2}" name=""/></td>
+                                    <td><input type="text" class="it it2 adj070update5${result.adj0703id}" value="${result.memo}" name=""/></td>
+                                    <td><a href="javascript:" onclick="updateItem5(${result.adj0703id})" class="btn">확인</a></td>
+                                    <c:set var="col_sum05" value="${col_sum05 + result.price2}"/>
+                                </tr>
+                            </c:forEach>
+                            </tbody>
+                        </table>
+                    </div>
+
+
+
+
+
+
+
+
                 </div>
             </div>
 
@@ -546,6 +605,97 @@
                 "in0": input[0],
                 "in1": input[1],
                 "in2": input[2]
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("등록되었습니다.");
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
+    function insertItem5() {
+        var input = new Array();
+
+
+        $('.adj070insert5').each(function (index, item) {
+            input[index] = $(this).val()
+        });
+        $.ajax({
+            url: "/ism/adj/adj070insert5.do",
+            type: "post",
+            data: {
+                "closedt": $(".monthPicker").val(),
+                "in1": input[0],
+                "in2": input[1],
+                "in3": input[2],
+                "in4": input[3]
+            },
+            dataType: 'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success: function (data) {
+                alert("등록되었습니다.");
+                $('#form1').submit();
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    alert("Error : " + "제대로된 값을 입력해주세요.");
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                alert("Error : " + msg);
+            }
+        });
+    }
+
+    function updateItem5(adj060id) {
+        var input = new Array();
+
+
+        $('.adj070update5' + adj060id).each(function (index, item) {
+            input[index] = $(this).val()
+        });
+        $.ajax({
+            url: "/ism/adj/adj070update5.do",
+            type: "post",
+            data: {
+                "adj060id": adj060id,
+                "closedt": $(".monthPicker").val(),
+                "in0": input[0],
+                "in1": input[1],
+                "in2": input[2],
+                "in3": input[3]
             },
             dataType: 'json',
             contentType: "application/x-www-form-urlencoded; charset=UTF-8",

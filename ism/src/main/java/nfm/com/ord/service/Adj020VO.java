@@ -1,6 +1,7 @@
 package nfm.com.ord.service;
 
 public class Adj020VO {
+    private String odm010id;
     private int cum010id;
     private String cum010name;
     private int cum030id;
@@ -9,6 +10,17 @@ public class Adj020VO {
     private String byc010name;
     private Long itemprice;
     private Long itembuyprice;
+
+    private String closedt;
+    private String bycclosedt;
+
+    public String getItemcode() {
+        return odm010id;
+    }
+
+    public void setItemcode(String itemcode) {
+        this.odm010id = itemcode;
+    }
 
     public int getCum010id() {
         return cum010id;
@@ -72,5 +84,21 @@ public class Adj020VO {
 
     public void setItembuyprice(Long itembuyprice) {
         this.itembuyprice = itembuyprice;
+    }
+
+    public String getClosedt() {
+        return closedt;
+    }
+
+    public void setClosedt(String closedt) {
+        this.closedt = closedt;
+    }
+
+    public String getBycclosedt() {
+        return bycclosedt;
+    }
+
+    public void setBycclosedt(String bycclosedt) {
+        this.bycclosedt = bycclosedt;
     }
 }

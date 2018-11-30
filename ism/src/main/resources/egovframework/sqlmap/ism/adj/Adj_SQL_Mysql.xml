@@ -5,6 +5,8 @@
     <typeAlias alias="adj040Result" type="nfm.com.adj.model.Adj040Result"/>
     <typeAlias alias="adj070Result" type="nfm.com.adj.model.Adj070Result"/>
     <typeAlias alias="adj0702Result" type="nfm.com.adj.model.Adj0702Result"/>
+    <typeAlias alias="adj0703Result" type="nfm.com.adj.model.Adj0703Result"/>
+    <typeAlias  alias="adj020VO" type = "nfm.com.ord.service.Adj020VO"/>
 
     <insert id="adj060DAO.insertInit" parameterClass="String">
         insert IGNORE into ismadj060 (adj060id, closedt, adj060name)
@@ -96,6 +98,10 @@
         where closedt LIKE '%' #yyyymm# '%') as exprice,
         sum(givesusuprice) as givesusuprice,
         (select
+        sum(price2)
+        from ismadj0703
+        where closedt LIKE '%' #yyyymm# '%') as givesusuprice2,
+        (select
         ifnull(sum(dlprice),0) +
         ifnull(sum(retprice),0) + ifnull(sum(airprice),0) + ifnull(sum(doprice),0) + ifnull(sum(missprice),0) + ifnull(sum(saveprice),0) + ifnull(sum(moveprice),0)
         + ifnull(sum(workprice),0) + ifnull(sum(subprice),0) + ifnull(sum(claim),0)
@@ -176,4 +182,84 @@
         , memo = #in2#
         where adj0702id = #adj0702id#
     </update>
+
+
+
+
+
+
+
+
+    <insert id="adj0703DAO.insert" parameterClass="java.util.HashMap">
+        insert into ismadj0703 (closedt,bycname,price1,price2,memo)
+        values
+        (#yyyymm#,#in1#,#in2#,#in3#,#in4#)
+    </insert>
+
+    <select id="adj0703DAO.selectList" parameterClass="String" resultClass="adj0703Result">
+        select
+        *
+        from ismadj0703
+        where closedt = #yyyymm#
+    </select>
+
+    <update id="adj0703DAO.update" parameterClass="java.util.HashMap">
+        update ismadj0703
+        set
+        bycname = #in0#
+        ,price1 = #in1#
+        ,price2 = #in2#
+        , memo = #in3#
+        where adj0703id = #adj0703id#
+    </update>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <insert id="adj010DAO.insertadj0201" parameterClass="adj020VO">
+        insert IGNORE into ismadj0201 (odm010id, cum010id, cum010name, cum030id, cum030name, byc010id, byc010name, itemprice, itembuyprice, closedt)
+        values
+        (#odm010id#,#cum010id#,#cum010name#,#cum030id#,#cum030name#,#byc010id#,#byc010name#,#itemprice#,#itembuyprice#,#closedt#)
+    </insert>
+
+    <insert id="adj010DAO.insertadj0202" parameterClass="adj020VO">
+        insert IGNORE into ismadj0202 (odm010id,byc010id, byc010name, itemprice, itembuyprice, closedt)
+        values
+        (#odm010id#,#byc010id#,#byc010name#,#itemprice#,#itembuyprice#,#closedt#)
+    </insert>
+
+    <insert id="adj010DAO.insertadj0203" parameterClass="adj020VO">
+        insert IGNORE into ismadj0203 (odm010id, itemprice, itembuyprice, closedt)
+        values
+        (#odm010id#,#itemprice#,#itembuyprice#,#closedt#)
+    </insert>
+
+    <insert id="adj010DAO.insertadj0204" parameterClass="adj020VO">
+        insert IGNORE into ismadj0204 (odm010id, cum010id, cum010name, cum030id, cum030name, byc010id, byc010name, itemprice, itembuyprice, bycclosedt)
+        values
+        (#odm010id#,#cum010id#,#cum010name#,#cum030id#,#cum030name#,#byc010id#,#byc010name#,#itemprice#,#itembuyprice#,#bycclosedt#)
+    </insert>
+
+    <insert id="adj010DAO.insertadj0205" parameterClass="adj020VO">
+        insert IGNORE into ismadj0205 (odm010id,byc010id, byc010name, itemprice, itembuyprice, bycclosedt)
+        values
+        (#odm010id#,#byc010id#,#byc010name#,#itemprice#,#itembuyprice#,#bycclosedt#)
+    </insert>
+
+    <insert id="adj010DAO.insertadj0206" parameterClass="adj020VO">
+        insert IGNORE into ismadj0206 (odm010id, itemprice, itembuyprice, bycclosedt)
+        values
+        (#odm010id#,#itemprice#,#itembuyprice#,#bycclosedt#)
+    </insert>
+
 </sqlMap>

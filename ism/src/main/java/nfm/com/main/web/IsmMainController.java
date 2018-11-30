@@ -200,9 +200,7 @@ public class IsmMainController {
 	public String mainAccountCloseAct(@ModelAttribute("ismadj090VO") Ismadj090VO ismadj090VO, ModelMap model, HttpSession session) throws Exception {
 
 		mainService.accountCloseAct(ismadj090VO);
-		
 		model.addAttribute("resultMsg", "마감처리되었습니다.");
-		
 		return "forward:/ism/main/mainAccountClose.do";
 	}
 }

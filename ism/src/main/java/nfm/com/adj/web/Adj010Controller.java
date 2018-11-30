@@ -119,14 +119,13 @@ public class Adj010Controller {
                 adj010Result00.price3_2 = 9999999L;
             }
 
-            adj010Result00.price4_1 = adj040Result00.getExprice();
             adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
-            adj010Result00.price4_3 = 0L;
+            adj010Result00.price4_3 = adj040Result00.getGivesusuprice2();
             adj010Result00.price4_4 = adj070Result00.getPrice1();
             adj010Result00.price4_5 = adj070Result00.getPrice2();
             adj010Result00.price4_6 = adj040Result00.getSaleprice();
             adj010Result00.price4_7 = adj070Result00.getPrice3();
-            adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+            adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
             adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
             try {
                 adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
@@ -174,22 +173,21 @@ public class Adj010Controller {
         Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
         Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(yyyy00);
 
-        adj010Result00.price4_1 = adj040Result00.getExprice();
-        adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
-        adj010Result00.price4_3 = 0L;
-        adj010Result00.price4_4 = adj070Result00.getPrice1();
-        adj010Result00.price4_5 = adj070Result00.getPrice2();
-        adj010Result00.price4_6 = adj040Result00.getSaleprice();
-        adj010Result00.price4_7 = adj070Result00.getPrice3();
-        adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+        adj010Result00.price4_2 = adj040Result00.getGivesusuprice();//판관비 수수료 정산 매출처의 지급 수수료
+        adj010Result00.price4_3 = adj040Result00.getGivesusuprice2();
+        adj010Result00.price4_4 = adj070Result00.getPrice1();//광고선전비 = 사은품/협찬
+        adj010Result00.price4_5 = adj070Result00.getPrice2();//광고선전비 = 샘플사용
+        adj010Result00.price4_6 = adj040Result00.getSaleprice();//운송비대장 끌어옴
+        adj010Result00.price4_7 = adj070Result00.getPrice3();//기타 = 영업용
+        adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
         adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
         try {
             adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
         } catch (Exception e) {
             adj010Result00.price5_2 = 9999999L;
         }
-        adj010Result00.price6 = adj040Result00.getExprice();
-        adj010Result00.price7 = adj070Result00.getPrice33();
+        adj010Result00.price6 = adj040Result00.getExprice();//영업외수익(잡이익)
+        adj010Result00.price7 = adj070Result00.getPrice33();//파손,망실,분실
         adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
         try {
             adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM0.priceAll;
@@ -210,14 +208,13 @@ public class Adj010Controller {
         Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
         Adj070Result adj070Result01 = (Adj070Result) adj070DAO.selectObject(yyyy01);
 
-        adj010Result01.price4_1 = adj040Result01.getExprice();
         adj010Result01.price4_2 = adj040Result01.getGivesusuprice();
-        adj010Result01.price4_3 = 0L;
+        adj010Result01.price4_3 = adj040Result00.getGivesusuprice2();
         adj010Result01.price4_4 = adj070Result01.getPrice1();
         adj010Result01.price4_5 = adj070Result01.getPrice2();
         adj010Result01.price4_6 = adj040Result01.getSaleprice();
         adj010Result01.price4_7 = adj070Result01.getPrice3();
-        adj010Result01.price4_sum = adj010Result01.price4_1 + adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
+        adj010Result01.price4_sum = adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
         adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
         try {
             adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
@@ -947,6 +944,7 @@ public class Adj010Controller {
         model.addAttribute("resultObject", adj070DAO.selectObject(yyyymm));
         model.addAttribute("resultList3", adj040Results);
         model.addAttribute("resultList4", adj070DAO.selectAdj0702List(yyyymm));
+        model.addAttribute("resultList5", adj070DAO.selectAdj0703List(yyyymm));
 
         adj010SearchVO.setDtSearch_frCreateDt(new StringBuilder(yyyymm).insert(4, "-").toString());
         return "/ism/adj/adj070";
@@ -1111,6 +1109,71 @@ public class Adj010Controller {
         return resultMessage.toJSONString();
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070insert5.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String adj070insert5(ModelMap model, String closedt, String in1, String in2, String in3, String in4) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if (!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        if (StringUtils.isBlank(closedt) || StringUtils.isBlank(in1)) {
+            return "정상적으로 값을 입력해주세요.";
+        } else {
+            closedt = closedt.replaceAll("-", "");
+        }
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+        in4 = setStringToNull(in4);
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("yyyymm", closedt);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        param.put("in4", in4);
+        adj070DAO.insertAdj0703(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/ism/adj/adj070update5.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+    public String mainList7_update5(ModelMap model, int adj060id, String in0, String in1, String in2, String in3) throws Exception {
+        // 미인증 사용자에 대한 보안처리
+        Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+        if (!isAuthenticated) {
+            model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+            return "uat/uia/EgovLoginUsr";
+        }
+
+        in0 = setStringToNull(in0);
+        in1 = setStringToNull(in1);
+        in2 = setStringToNull(in2);
+        in3 = setStringToNull(in3);
+
+
+        Map<String, String> param = new HashMap<>();
+        param.put("adj0703id", String.valueOf(adj060id));
+        param.put("in0", in0);
+        param.put("in1", in1);
+        param.put("in2", in2);
+        param.put("in3", in3);
+        adj070DAO.updateItem0703(param);
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
+    }
+
+
+
     @RequestMapping(value = "/ism/adj/adj080.do")
     public String mainList8(@ModelAttribute("adj010SearchVO") Adj010SearchVO adj010SearchVO, ModelMap model) throws Exception {
         // 미인증 사용자에 대한 보안처리
@@ -1171,14 +1234,14 @@ public class Adj010Controller {
                 adj010Result00.price3_2 = 9999999L;
             }
 
-            adj010Result00.price4_1 = adj040Result00.getExprice();
+
             adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
-            adj010Result00.price4_3 = 0L;
+            adj010Result00.price4_3 = adj040Result00.getGivesusuprice2();
             adj010Result00.price4_4 = adj070Result00.getPrice1();
             adj010Result00.price4_5 = adj070Result00.getPrice2();
             adj010Result00.price4_6 = adj040Result00.getSaleprice();
             adj010Result00.price4_7 = adj070Result00.getPrice3();
-            adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+            adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
             adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
             try {
                 adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
@@ -1217,14 +1280,14 @@ public class Adj010Controller {
         Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
         Adj070Result adj070Result00 = (Adj070Result) adj070DAO.selectObject(yyyy00);
 
-        adj010Result00.price4_1 = adj040Result00.getExprice();
+
         adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
-        adj010Result00.price4_3 = 0L;
+        adj010Result00.price4_3 = adj040Result00.getGivesusuprice2();
         adj010Result00.price4_4 = adj070Result00.getPrice1();
         adj010Result00.price4_5 = adj070Result00.getPrice2();
         adj010Result00.price4_6 = adj040Result00.getSaleprice();
         adj010Result00.price4_7 = adj070Result00.getPrice3();
-        adj010Result00.price4_sum = adj010Result00.price4_1 + adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
+        adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
         adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
         try {
             adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
@@ -1253,14 +1316,13 @@ public class Adj010Controller {
         Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
         Adj070Result adj070Result01 = (Adj070Result) adj070DAO.selectObject(yyyy01);
 
-        adj010Result01.price4_1 = adj040Result01.getExprice();
         adj010Result01.price4_2 = adj040Result01.getGivesusuprice();
-        adj010Result01.price4_3 = 0L;
+        adj010Result01.price4_3 = adj040Result00.getGivesusuprice2();
         adj010Result01.price4_4 = adj070Result01.getPrice1();
         adj010Result01.price4_5 = adj070Result01.getPrice2();
         adj010Result01.price4_6 = adj040Result01.getSaleprice();
         adj010Result01.price4_7 = adj070Result01.getPrice3();
-        adj010Result01.price4_sum = adj010Result01.price4_1 + adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
+        adj010Result01.price4_sum = adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
         adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
         try {
             adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
@@ -1636,18 +1698,6 @@ public class Adj010Controller {
         {
             List<Object> obj01 = new ArrayList<Object>();
             obj01.add("4. 판관비");
-            obj01.add("지급수수료(고객사 선공제)");
-            obj01.add(decimalFormat.format(adj010Result00.price4_1));
-            obj01.add(decimalFormat.format(adj010Result01.price4_1));
-            for (int i = 0; i < yyyymmList.size(); i++) {
-                obj01.add(decimalFormat.format(adj010ResultList.get(i).price4_1));
-            }
-            data.add(obj01);
-        }
-
-        {
-            List<Object> obj01 = new ArrayList<Object>();
-            obj01.add("4. 판관비");
             obj01.add("지급수수료(영업사)");
             obj01.add(decimalFormat.format(adj010Result00.price4_2));
             obj01.add(decimalFormat.format(adj010Result01.price4_2));
@@ -1799,8 +1849,8 @@ public class Adj010Controller {
         excelManager.addRowColor(25, 29);
         excelManager.addRowColor(26, 29);
         excelManager.addRowColor(27, 31);
+        excelManager.addRowColor(34, 29);
         excelManager.addRowColor(35, 29);
-        excelManager.addRowColor(36, 29);
         excelManager.addRowColor(39, 29);
         excelManager.addRowColor(40, 29);
 
