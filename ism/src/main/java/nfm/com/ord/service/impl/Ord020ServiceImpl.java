@@ -12,9 +12,11 @@ import nfm.com.cmm.service.IsmCmm010VO;
 import nfm.com.cmm.service.impl.Cmm010DAO;
 import nfm.com.exl.util.ExcelManager;
 import nfm.com.ord.service.Ismodm010VO;
+import nfm.com.ord.service.Ismodo020ProdVO;
 import nfm.com.ord.service.Ord020SearchVO;
 import nfm.com.ord.service.Ord020Service;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.springframework.stereotype.Service;
 
@@ -277,5 +279,46 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		byte[] bytes = excelManager.makeExcel();
 		
 		return bytes;
+	}
+
+	/**
+	 * 통계 정보 읽어오기
+	 */
+	@Override
+	public List<?> selectStattList(Ord020SearchVO ord020SearchVO) throws Exception {
+		// TODO Auto-generated method stub
+		return ord020DAO.selectStattList(ord020SearchVO);
+	}
+	
+	@Override
+	public List<?> selectCompList(Ord020SearchVO ord020SearchVO) throws Exception {
+		return ord020DAO.selectCompList(ord020SearchVO);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public String selectProdList(Ord020SearchVO ord020SearchVO) throws Exception {
+		// TODO Auto-generated method stub
+		
+		List<Ismodo020ProdVO> resultList = (List<Ismodo020ProdVO>)ord020DAO.selectProdList(ord020SearchVO);
+		JSONArray dataList = new JSONArray();
+		for(Ismodo020ProdVO vo : resultList){
+			JSONObject dataInfo = new JSONObject();
+			dataInfo.put("orderitemid", vo.getByc010id());
+			dataInfo.put("itemname", vo.getItemname());
+			dataInfo.put("bycname", vo.getBycname());
+			dataInfo.put("itemcode", vo.getItemcode());
+			dataInfo.put("itemopt", (vo.getItemopt() ==null ? "" : vo.getItemopt()));
+			dataList.add(dataInfo);
+		}
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("prodList", dataList);
+		return jsonObject.toJSONString();
+	}
+
+	@Override
+	public void ord020InsertProd(Ismodm010VO ismodm010vo) {
+		// TODO Auto-generated method stub
+		ord020DAO.ord020InsertProd(ismodm010vo);
 	}
 }

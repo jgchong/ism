@@ -62,4 +62,8 @@ public class Po010DAO extends EgovAbstractDAO {
 	public void insertPol010(Ismpol010VO ismpol010vo) {
 		insert("po010DAO.insertPol010", ismpol010vo);
 	}
+	
+	public void updatePom010(HashMap hm) {
+		update("po010DAO.updatePom010", hm);
+	}
 }

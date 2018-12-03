@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -83,6 +84,7 @@ public class Ord020Controller {
 			if (!"".equals(ord020SearchVO.getSearch_key1())) {
 				pageUnit = 100000;
 			}
+			model.addAttribute("resultstatList", ord020Service.selectStattList(ord020SearchVO));
 		}
 		
 		/** EgovPropertyService */
@@ -219,4 +221,77 @@ public class Ord020Controller {
 
 		return bytes;
 	}
+	
+	@RequestMapping(value = "/ism/ord/odo020SelectOrderDetailCompPopUp.do")
+	public String odo020SelectOrderDetailCompPopUp(@ModelAttribute("ord020SearchVO") Ord020SearchVO ord020SearchVO, ModelMap model) throws Exception {
+		// 미인증 사용자에 대한 보안처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+    	if(!isAuthenticated) {
+    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	return "uat/uia/EgovLoginUsr";
+    	}
+
+		//공통코드 전달
+		ComDefaultCodeVO vo = new ComDefaultCodeVO();
+		vo.setCodeId("ISM050");	//주문상태필드
+		model.addAttribute("ISM050", egovCmmUseService.selectCmmCodeDetail(vo));
+		vo.setCodeId("ISM060");	//클레임상태필드
+		model.addAttribute("ISM060", egovCmmUseService.selectCmmCodeDetail(vo));
+		vo.setCodeId("ISM070");	//클레임 사유 필드
+		model.addAttribute("ISM070", egovCmmUseService.selectCmmCodeDetail(vo));
+		vo.setCodeId("ISM080");	//반품상태필드
+		model.addAttribute("ISM080", egovCmmUseService.selectCmmCodeDetail(vo));
+		
+    	model.addAttribute("result", ord020Service.selectList(ord020SearchVO));
+    	model.addAttribute("memoListHtml", ord020Service.selectListMemo(ord020SearchVO));
+    	// 비교 대상 알아오기.
+    	model.addAttribute("resultComp", ord020Service.selectCompList(ord020SearchVO));
+
+	    return "ism/ord/ord020CompPopUp";
+	}
+	
+	/**
+	 * 주문 상품 등록 팝업
+	 * @param ord020SearchVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ism/ord/odo020SelectOrderProdPopUp.do")
+	public String odo020SelectOrderProdPopUp(@ModelAttribute("ord020SearchVO") Ord020SearchVO ord020SearchVO, ModelMap model) throws Exception {
+		// 미인증 사용자에 대한 보안처리
+		Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
+    	if(!isAuthenticated) {
+    		model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
+        	return "uat/uia/EgovLoginUsr";
+    	}
+	
+    	model.addAttribute("result", ord020Service.selectList(ord020SearchVO));
+    	
+	    return "ism/ord/ord020ProdPopUp";
+	}
+	
+	/**
+	 * 상품 검색
+	 * @param ord020SearchVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@ResponseBody
+    @RequestMapping(value = "/ism/ord/odo020SelectProdList.do", method = RequestMethod.POST, produces = "application/json; charset=utf8")
+	public String odo020SelectProdList(@ModelAttribute("ord020SearchVO") Ord020SearchVO ord020SearchVO, ModelMap model) throws Exception {
+
+		return ord020Service.selectProdList(ord020SearchVO);
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ism/ord/saveOrderItemData.do")
+	public String saveOrderItemData(@ModelAttribute("ismodm010VO") Ismodm010VO ismodm010VO, ModelMap model) throws Exception {
+		
+		ord020Service.ord020InsertProd(ismodm010VO);
+		
+		return "SUCCESS";
+	}
+	
 }

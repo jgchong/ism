@@ -156,19 +156,20 @@
     
     <!-- 매출처 상품코드 목록 select -->
     <select id="cum020DAO.selectListCumProdList" parameterClass="int" resultClass="ismcum040VO">
-	select a.itemcode, a.itemname, ifnull(b.cumprodcode,'')
+	select a.itemcode, a.itemname, ifnull(b.cumprodcode,''), 
+		   a.itembuyprice, ifnull(b.cumprodoptnm1,'') cumprodoptnm1, ifnull(b.cumprodoptnm2,'') cumprodoptnm2
 	  from ismprd010 a left outer join ismcum040 b on a.itemcode = b.orderitemid
     </select>
 
 	<!-- 매출처 상품코드 등록 -->
     <insert id="cum020DAO.insertCum040" parameterClass="ismcum040VO">
-    insert into ismcum040 (cum030id, orderitemid, cumprodcode)
-                   values (#cum030id#, #itemcode#, #cumprodcode#)
+    insert into ismcum040 (cum030id, orderitemid, accountprice, cumprodcode, cumprodoptnm1, cumprodoptnm2)
+                   values (#cum030id#, #itemcode#, #accountPrice#, #cumprodcode#, #cumprodoptnm1#, #cumprodoptnm2#)
     </insert>
     
     <!-- 매출처 상품코드 목록 select -->
     <select id="cum020DAO.selectList040" parameterClass="java.util.HashMap" resultClass="ismcum040VO">
-	select c.coname, b.shopmallname, d.itemcode, d.itemname, a.cumprodcode
+	select c.coname, b.shopmallname, d.itemcode, d.itemname, a.cumprodcode, a.accountprice, cumprodoptnm1, cumprodoptnm2
 	  from ismcum040 a,  ismcum030 b, ismcum010 c, ismprd010 d
 	 where a.cum030id = b.cum030id
      and b.cum010id = c.cum010id

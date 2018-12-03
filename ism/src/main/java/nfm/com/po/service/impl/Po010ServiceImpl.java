@@ -148,7 +148,20 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 
 		int setOrder = 1;
 		for (String item : savedataArray ){
-			ismpoo010VO.setOrderfield(item);
+			int addItemTag = item.indexOf("@");
+			if(addItemTag > 0) {
+				String[] addItem = item.split("@");
+				ismpoo010VO.setOrderfield(addItem[0]);
+				ismpoo010VO.setFieldname(addItem[1]);
+				if(addItem.length > 2) {
+					ismpoo010VO.setFieldvalue(addItem[2]);
+				} else {
+					ismpoo010VO.setFieldvalue("");
+				}
+			} else {
+				ismpoo010VO.setOrderfield(item);
+				ismpoo010VO.setFieldvalue(null);
+			}
 			ismpoo010VO.setIsassign("Y");
 			ismpoo010VO.setFieldorder(setOrder++);
 	    	
@@ -419,6 +432,12 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		        lFileOutputStream.close();
 		    }
 		    // 발주 정보 엑셀 저장[e]
+		    
+		    //발주정보 테이블에 파일명 업데이트
+		    hm.put("uploadfilename", poNum + ".xlsx");
+		    hm.put("rcvuseremail", userList);
+		    hm.put("receiveType", receiveType);
+		    po010DAO.updatePom010(hm);
 		    
 	
 		    if ("X".equals(receiveType)) {

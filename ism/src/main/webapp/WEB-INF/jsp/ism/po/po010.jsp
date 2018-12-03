@@ -20,68 +20,160 @@
 	<link href="/css/custom/common.css" type="text/css" rel="stylesheet"  />
 	
 	<style type="text/css">
-.topBt.leng3 li {
-    width: 50%;
-}
-.connectedSortable li {
-    margin: 5px;
-}
-.connectedSortable {
-    min-height: 68px;
-}
-.listTit li {
-    float: left;
-    width: 200px;
-    border-top: 1px solid #ccc;
-    /*border-right: 1px solid #ccc;*/
-    border-bottom: 2px solid #ccc;
-	text-align: center;
-    font-size: 14px;
-    font-weight: 700;
-}
-/*
-.listTit li:first-child {
-    border-left: 1px solid #ccc;
-}
-*/
-.listData {
-	clear: both;
-	text-align: center;
-	cursor: pointer;
-	display: inline-block;
-}
-.listData:hover   { background-color:#b0bde2 }
-
-.listData li {
-	float: left;
-	width: 200px;
-}
-li.orderitemname {
-	width: 250px;
-}
-li.orderitemqty {
-	width: 50px;
-}
-li.delbtn {
-	width: 50px;
-}
-input.orderitemqty {
-	width: 48px;
-	text-align: right;
-}
-
-	.muploadbtn {
-		margin: 5px;
-	    padding: 3px 12px;
-	    border: 0;
-	    background: #45b6b6;
-	    color: #fff;
-	    font-size: 14px;
-	}
-	.layerTit { margin: 0 0 0; }
-	.upload { top: 31%; }
+		.topBt.leng3 li {
+		    width: 50%;
+		}
+		.connectedSortable li {
+		    margin: 5px;
+		}
+		.connectedSortable {
+		    min-height: 68px;
+		}
+		.listTit li {
+		    float: left;
+		    width: 200px;
+		    border-top: 1px solid #ccc;
+		    /*border-right: 1px solid #ccc;*/
+		    border-bottom: 2px solid #ccc;
+			text-align: center;
+		    font-size: 14px;
+		    font-weight: 700;
+		}
+		/*
+		.listTit li:first-child {
+		    border-left: 1px solid #ccc;
+		}
+		*/
+		.listData {
+			clear: both;
+			text-align: center;
+			cursor: pointer;
+			display: inline-block;
+		}
+		.listData:hover   { background-color:#b0bde2 }
+		
+		.listData li {
+			float: left;
+			width: 200px;
+		}
+		li.orderitemname {
+			width: 250px;
+		}
+		li.orderitemqty {
+			width: 50px;
+		}
+		li.delbtn {
+			width: 50px;
+		}
+		input.orderitemqty {
+			width: 48px;
+			text-align: right;
+		}
+	
+		.muploadbtn {
+			margin: 5px;
+		    padding: 3px 12px;
+		    border: 0;
+		    background: #45b6b6;
+		    color: #fff;
+		    font-size: 14px;
+		}
+		.layerTit { margin: 0 0 0; }
+		.upload { top: 31%; }
+		
+/* 		.addItemUl { */
+/* 			position:absolute; */
+/* 			left:735px; */
+/* 			padding:0; */
+/* 			border:0; */
+/* 			top:66px; */
+/* 		} */
+		
+		 .addItemA {
+		 	padding:0 4px 0 4px;
+		 	color:#fff;
+		 }
+		 .removeAddItem {
+		 	cursor:pointer;
+		 }
 	
 	</style>
+	
+	<script>
+		$(document).ready(function() {
+
+		});
+		function addItem(addType) {	
+			var dup = 0;
+			
+			if(addType=="1") {
+				$('#sortable1 li').each(function(index) {
+					var splitStr = $(this).attr("dataid").split("@");
+					if(splitStr[0] == $("#addItemSet1Code option:selected").val()){
+						alert("추가 아이템에 중복된 항목이 있습니다.\n확인 후 다시 시도하세요!");
+						dup = 1;
+					}
+				});
+				
+				$('#sortable2 li').each(function(index) {
+					var splitStr = $(this).attr("dataid").split("@");
+					if(splitStr[0] == $("#addItemSet1Code option:selected").val()){
+						alert("발주항목에 중복된 항목이 있습니다.\n확인 후 다시 시도하세요!");
+						dup = 1;
+					}
+				});
+				
+				if(dup == 0) { //중복이 없을 경우
+					if($("#addItemSet1Code option:selected").val() == "") {
+						alert("추가 항목을 선택해주세요");
+						return;
+					}
+					if($("#addItemText").val() == "") {
+						alert("추가할 명칭을 입력해주세요");
+						return;
+					}
+					if($("#addItemValue").val() == "") {
+						alert("추가할 값을 입력해주세요");
+						return;
+					}
+					$("#sortable1").append("<li style='color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet1Code option:selected").val()+"@"+$("#addItemText").val()+"@"+$("#addItemValue").val()+"'>"+$("#addItemText").val()+"("+$("#addItemValue").val()+") <a href='#' style='color:#fff;' id='"+$("#addItemSet1Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
+				}
+			} else if(addType=="2") {
+				$('#sortable1 li').each(function(index) {
+					var splitStr = $(this).attr("dataid").split("@");
+					if(splitStr[0] == $("#addItemSet2Code option:selected").val()){
+						alert("추가 아이템에 중복된 항목이 있습니다.\n확인 후 다시 시도하세요!");
+						dup = 1;
+					}
+				});
+				$('#sortable2 li').each(function(index) {
+					var splitStr = $(this).attr("dataid").split("@");
+					if(splitStr[0] == $("#addItemSet2Code option:selected").val()){
+						alert("발주항목에 중복된 항목이 있습니다.\n확인 후 다시 시도하세요!");
+						dup = 1;
+					}
+				});
+				
+				if(dup == 0) { //중복이 없을 경우
+					if($("#addItemSet2Code option:selected").val() == "") {
+						alert("추가 항목을 선택해주세요");
+						return;
+					}
+					if($("#addItem2Text").val() == "") {
+						alert("추가할 명칭을 입력해주세요");
+						return;
+					}
+					$("#sortable1").append("<li style='color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet2Code option:selected").val()+"@"+$("#addItem2Text").val()+"@"+""+"'>"+$("#addItem2Text").val()+" <a href='#' style='color:#fff;' id='"+$("#addItemSet2Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
+				}
+			}
+			return; 
+		} 
+		
+		function removeItem(e) {
+			$("#"+e).parent().remove();
+		}
+		
+	</script>
 </head>
 <body>
 <!-- 전체 레이어 시작 -->
@@ -143,11 +235,37 @@ input.orderitemqty {
 	<div class="layerCont layerCont_w2 poSetting">
 		<div class="inner">
 			<p class="layerTit">발주주문양식 환경설정</p>
+			<ul id="addItemUl" class="connectedSortable addItemUl">
+				<li class="ui-state-default" style="width:390px;">
+					<select name="addItemSet1Code" id="addItemSet1Code" style="width:90px;margin-bottom:2px;">
+						<option value="">선택</option>
+                        <c:forEach var="item" items="${ISM0B0}" varStatus="status">
+						<option value="${item.code}">${item.codeNm}</option>
+	                    </c:forEach>
+					</select>
+					<span style="color:#fff;margin-right:4px;">(명칭/값)</span>
+					<input type="text" name="addItemText" id="addItemText" style="width:90px;height:24px;">/
+					<input type="text" name="addItemValue" id="addItemValue" style="width:90px;height:24px;">
+					<a href="javascript:addItem(1);" class="addItemA"> (+) </a>
+				</li>
+				<li class="ui-state-default" style="width:290px;">
+					<select name="addItemSet2Code" id="addItemSet2Code" style="width:90px;margin-bottom:2px;">
+						<option value="">선택</option>
+                        <c:forEach var="item" items="${ISM0B0}" varStatus="status">
+						<option value="${item.code}">${item.codeNm}</option>
+	                    </c:forEach>
+					</select>
+					<span style="color:#fff;margin-right:4px;">(명칭)</span>
+					<input type="text" name="addItem2Text" id="addItem2Text" style="width:90px;height:24px;">
+					<a href="javascript:addItem(2);" class="addItemA"> (+) </a>
+				</li>
+			</ul>
 			<div class="layerContents">
-				<div id="layerPoCoName" class="lfl">창고-1</div>
-
 				<div class="sortableDrag">
+				    <p id="layerPoCoName" class="lfl" style="padding-top:20px;">창고-1</p>
 					<ul id="sortable1" class="connectedSortable"></ul>
+					
+					<p>발주항목</p>
 					<ul id="sortable2" class="connectedSortable"></ul>
 					<script>
 						$(function(){
@@ -173,38 +291,58 @@ input.orderitemqty {
 	
 	<!-- 발주목록[s] -->
 	<form id="formpo" name="formpo" method="post" action="/ism/po/po010SavePoList.do">
-	<div class="layerCont layerCont_w2 poList">
+	<div class="layerCont poList">
 		<div class="inner">
 			<p class="layerTit">발주목록 및 전송</p>
 			<div class="layerContents">
-				<div id="layerPoListPoCoName" class="lfl">창고-1</div>
-				<div id="poEmailSend">
-					<div style="padding:5px;">
-						담당자 : <select id="userList" name="userList"></select>
-					</div>
-					<div style="padding:5px;">
-						참조 : <input type="text" name="ccUserList" value="" style="width:70%;">
-					</div>
-					<div style="padding:5px;">
-						제목 : <input type="text" id="mailSubject" name="mailSubject" value="" style="width:70%;">
-					</div>
-					<div style="padding:5px;">
-						<span style="vertical-align:top;">내용 : </span><textarea id="mailText" name="mailText" rows="3" style="width:70%;"></textarea>
-					</div>
-				</div>
-				<div style="padding:5px;">
-					주문메모 : <input type="text" id="ordermemo" name="ordermemo" value="" style="width:50%;">
-					수령자에 주문자 포함 <input type="checkbox" id="addorderuser" name="addorderuser" value="Y" />
-				</div>
-
+			    <div id="layerPoListPoCoName" class="lfl" style="padding:20px 0 10px; font-size:18px;">창고-1</div>
+			    <div class="layerTb">
+                    <table cellpadding="0" cellspacing="0" class="" summary="" id="poEmailSend" >
+                        <caption></caption>
+                        <colgroup>
+                            <col width="20%"/><col width="80%"/>
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row">담당자</th>
+                                <td style="text-align:left;"><select id="userList" name="userList"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">참조</th>
+                                <td style="text-align:left;"><input type="text" class="it" name="ccUserList" value=""></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">제목</th>
+                                <td style="text-align:left;"><input type="text" class="it" id="mailSubject" name="mailSubject" value=""></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">내용</th>
+                                <td style="text-align:left;"><textarea id="mailText" name="mailText" rows="0" style="width:100%; height:140px; border:1px solid #ddd;"></textarea></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">주문메모</th>
+                                <td style="text-align:left;">
+                                    <div style="position:relative; padding-right:130px;">
+                                        <input type="text" id="ordermemo" name="ordermemo" class="it" value="">
+                                        <p style="position:absolute; top:0; right:0; line-height:28px;">
+                                            <input type="checkbox" id="addorderuser" name="addorderuser" value="Y" /> <lable for="addorderuser">수령자에 주문자 포함</label>
+                                        </p>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
 				<div>
 					<ul id="listTit" class="listTit"></ul>
 					<div id="listData" class="listTb"></div>
 				</div>
+				
 			</div>
 			<p class="layerFootBt">
 				<a href="javascript://" class="confirm" onclick="confirmpo()" id="posendbtn">발주전송</a>
-				<a href="javascript://" class="layerClose cancel">취소</a>
+				<a href="javascript://" class="layerClose cancel">닫기</a>
 			</p>
 			<a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
 		</div>
@@ -522,21 +660,21 @@ function mfileonchange(files) {
 	//}
 }
 </script>
-	<div class="layerCont upload">
+    <div class="layerCont upload">
 		<div class="inner">
 			<p class="layerTit">송장 데이터 등록</p>
 			<div class="layerContents">
-				<div style="float:right;margin:10px 0;">
-    				<label for="mfile" class="muploadbtn">업로드</label>
+				<div style="text-align:left; height:26px; padding:10px 0;">
+    				<label for="mfile" class="muploadbtn" style="margin:0;">파일찾기</label>
         			<input multiple="multiple" type="file" id="mfile" name="mfile" onchange="javascript:mfileonchange(this.files);" style="display:none;"/>
         		</div>
 			
-			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post" style="display:block;">
 				    <div id="dropZone">
 				        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
 				            <tbody id="fileTableTbody">
 				                <tr>
-				                    <td colspan="2">
+				                    <td colspan="2" style="padding:20px;">
 				                        파일을 선택 하세요
 				                    </td>
 				                </tr>

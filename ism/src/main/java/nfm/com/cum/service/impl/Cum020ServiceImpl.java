@@ -37,19 +37,25 @@ public class Cum020ServiceImpl extends EgovAbstractServiceImpl implements Cum020
 
 	    header.add("운영상품코드");
 	    header.add("운영상품명");
+	    header.add("정산가"); //add by asciilee
 	    header.add("매출처상품코드");
+	    header.add("매출처상품옵션1");
+	    header.add("매출처상품옵션2");
 		
 	    for(Ismcum040VO vo : listData){
 	    	List<Object> obj = new ArrayList<Object>();
 	    
 	    	obj.add(vo.getItemcode());
 	    	obj.add(vo.getItemname());
+	    	obj.add(vo.getItembuyprice()); //add by asciilee
 	    	obj.add(vo.getCumprodcode());
+	    	obj.add(vo.getCumprodoptnm1());
+	    	obj.add(vo.getCumprodoptnm2());
 
 	    	data.add(obj);
 	    }
 		
-	    String[] excelCellType = {"S","S","S"};
+	    String[] excelCellType = {"S","S","S","S","S","S"};
 		
 	    ExcelManager excelManager = new ExcelManager(header, data);
 	    excelManager.setSheetName("매출처상품List");
@@ -72,14 +78,14 @@ public class Cum020ServiceImpl extends EgovAbstractServiceImpl implements Cum020
 
         ExcelReadOption excelReadOption = new ExcelReadOption();
         excelReadOption.setFilePath(convFile.getAbsolutePath());
-        excelReadOption.setOutputColumns("A","B","C");
+        excelReadOption.setOutputColumns("A","B","C","D","E","F");
         excelReadOption.setStartRow(2);
 
         List<Map<String, String>>excelContent1 =ExcelRead.read(excelReadOption);
         Iterator excelItem1 = excelContent1.iterator();
 
-        cum020DAO.deleteCum040(cum030id);
-        
+		cum020DAO.deleteCum040(cum030id);
+		
         while (excelItem1.hasNext()) {
         	Map<String, String> excelItemInfo = (Map<String, String>) excelItem1.next();
 
@@ -87,14 +93,23 @@ public class Cum020ServiceImpl extends EgovAbstractServiceImpl implements Cum020
         	System.out.println("excel A = " + excelItemInfo.get("A"));
         	System.out.println("excel B = " + excelItemInfo.get("B"));
         	System.out.println("excel C = " + excelItemInfo.get("C"));
+        	System.out.println("excel D = " + excelItemInfo.get("D"));
+        	System.out.println("excel E = " + excelItemInfo.get("E"));
+        	System.out.println("excel F = " + excelItemInfo.get("F"));
 
-        	if ( (excelItemInfo.get("A") != null) && (!"".equals(excelItemInfo.get("A"))) ) {
+        	String acntPrc = excelItemInfo.get("C").replaceAll(",", "");
+        	acntPrc = (acntPrc != null) ? acntPrc : "0";
+
+			if ( (excelItemInfo.get("A") != null) && (!"".equals(excelItemInfo.get("A"))) ) {
 	        	Ismcum040VO ismcum040VO = new Ismcum040VO();
 	        	ismcum040VO.setCum030id(cum030id);
 	        	ismcum040VO.setItemcode(excelItemInfo.get("A"));
-	        	ismcum040VO.setCumprodcode(excelItemInfo.get("C"));
-	
-	        	cum020DAO.insertCum040(ismcum040VO);
+	        	ismcum040VO.setAccountPrice(Integer.parseInt(acntPrc));
+	        	ismcum040VO.setCumprodcode(excelItemInfo.get("D"));
+	        	ismcum040VO.setCumprodoptnm1(excelItemInfo.get("E"));
+	        	ismcum040VO.setCumprodoptnm2(excelItemInfo.get("F"));
+
+        		cum020DAO.insertCum040(ismcum040VO);
         	}
         }
 	    

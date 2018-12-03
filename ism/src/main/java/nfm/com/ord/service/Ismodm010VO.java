@@ -65,8 +65,20 @@ public class Ismodm010VO implements Serializable {
     private String retstatusnm = "";
     private String rcvusercontacthp = "";
     private String rcvuseremail = "";
+    
+    
+    // LDC  없어서 추가함 & 신규 추가 
     private String chkprod = "";
-
+    private String chkoverlap = "";
+    private String updatedt = "";
+    private String totcnt = "";
+    private String succcnt = "";
+    private String prodfailcnt = "";
+    private String overlapcnt = "";
+    private String itemcode = "";
+    private String cumprodoptnm1 = "";
+    private String cumprodoptnm2 = "";
+    
 	public int getOdm010id() {
 		return odm010id;
 	}
@@ -497,6 +509,78 @@ public class Ismodm010VO implements Serializable {
 
 	public void setChkprod(String chkprod) {
 		this.chkprod = chkprod;
+	}
+
+	public String getUpdatedt() {
+		return updatedt;
+	}
+
+	public void setUpdatedt(String updatedt) {
+		this.updatedt = updatedt;
+	}
+
+	public String getTotcnt() {
+		return totcnt;
+	}
+
+	public void setTotcnt(String totcnt) {
+		this.totcnt = totcnt;
+	}
+
+	public String getSucccnt() {
+		return succcnt;
+	}
+
+	public void setSucccnt(String succcnt) {
+		this.succcnt = succcnt;
+	}
+
+	public String getProdfailcnt() {
+		return prodfailcnt;
+	}
+
+	public void setProdfailcnt(String prodfailcnt) {
+		this.prodfailcnt = prodfailcnt;
+	}
+
+	public String getOverlapcnt() {
+		return overlapcnt;
+	}
+
+	public void setOverlapcnt(String overlapcnt) {
+		this.overlapcnt = overlapcnt;
+	}
+
+	public String getChkoverlap() {
+		return chkoverlap;
+	}
+
+	public void setChkoverlap(String chkoverlap) {
+		this.chkoverlap = chkoverlap;
+	}
+
+	public String getItemcode() {
+		return itemcode;
+	}
+
+	public void setItemcode(String itemcode) {
+		this.itemcode = itemcode;
+	}
+	
+	public String getCumprodoptnm1() {
+		return cumprodoptnm1;
+	}
+
+	public void setCumprodoptnm1(String cumprodoptnm1) {
+		this.cumprodoptnm1 = cumprodoptnm1;
+	}
+
+	public String getCumprodoptnm2() {
+		return cumprodoptnm2;
+	}
+
+	public void setCumprodoptnm2(String cumprodoptnm2) {
+		this.cumprodoptnm2 = cumprodoptnm2;
 	}
 
 	/**

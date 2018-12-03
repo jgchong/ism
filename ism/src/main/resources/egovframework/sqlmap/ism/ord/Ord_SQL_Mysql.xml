@@ -10,6 +10,7 @@
     <typeAlias  alias="ismodo020VO" type = "nfm.com.ord.service.Ismodo020VO"/>
     <typeAlias  alias="ismodm010VO" type = "nfm.com.ord.service.Ismodm010VO"/>
     <typeAlias  alias="adj020VO" type = "nfm.com.ord.service.Adj020VO"/>
+    <typeAlias  alias="ismodo020ProdVO" type = "nfm.com.ord.service.Ismodo020ProdVO"/>
 
 	<!-- 주문수집 목록 select cnt -->
     <select id="ord010DAO.selectListTotCnt" parameterClass="ord010SearchVO" resultClass="int">
@@ -26,6 +27,7 @@
 	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
 	      (select count(distinct uploaddate) from ismodl010 where uploaddate >= SUBDATE(NOW(), INTERVAL 24 HOUR) and cum030id = a.cum030id) as uploadCnt,
 	      (select max(uploaddate) from ismodl010 where cum030id = a.cum030id) as lastUploadDate
+	      , b.account2
       from ismcum030 a, ismcum010 b
      where a.cum010id = b.cum010id
        and a.useyn = 'Y'
@@ -41,7 +43,7 @@
     </select>
     
     <select id="ord010DAO.selectManualDataDetail" parameterClass="String" resultClass="ismodo010VO">
-	select a.cum030id, a.additem, a.isassign, a.orderfield
+	select a.cum030id, a.additem, a.isassign, a.orderfield, a.additemopt1, a.additemopt2
       from ismodo010 a
      where a.cum030id = #cum030id#
     </select>
@@ -68,7 +70,9 @@
     </delete>
     
     <insert id="ord010DAO.insertManualDetailData" parameterClass="ismodo010VO">
-	insert into ismodo010 (cum030id, additem, isassign, orderfield) values (#cum030id#, #additem#, #isassign#, #orderfield#)
+    /*ord010DAO.insertManualDetailData*/
+	insert into ismodo010 (cum030id, additem, isassign, orderfield, additemopt1, additemopt2 ) 
+	values (#cum030id#, #additem#, #isassign#, #orderfield#, #additemopt1#, #additemopt2#)
     </insert>
     
     <insert id="ord010DAO.insertOrderMainData" parameterClass="ismodm010VO">
@@ -106,7 +110,7 @@
     <select id="ord010DAO.selectCntNoItem" parameterClass="String" resultClass="int">
 	select count(*)
       from ismodm010 a
-           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode
+           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
            left outer join ismprd010 d on bb.orderitemid = d.itemcode
 	 where uploadviewkey = #orderTempKey# and d.orderitemid is null;
     </select>
@@ -115,14 +119,24 @@
     <select id="ord020DAO.selectListTotCnt" parameterClass="ord020SearchVO" resultClass="int">
 	select count(1) totcnt
       from ismodm010 a
-           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode
+           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
            left outer join ismprd010 d on bb.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
            
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
-           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080'
+           left outer join (SELECT orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+				, COUNT(1) chkcnt, sum(case when status = '' then 0 else 1 end ) chksum
+			FROM ismodm010
+			GROUP BY orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+			HAVING COUNT(1) > 1
+            ) x  on a.orderno           = x.orderno           and a.orderdate         = x.orderdate         and a.cum010id          = x.cum010id          
+				and a.cum030id          = x.cum030id          and a.byc010id          = x.byc010id          and a.orderuser         = x.orderuser         and a.orderusercontact  = x.orderusercontact  
+				and a.rcvuser           = x.rcvuser           and a.rcvusercontact    = x.rcvusercontact    and a.orderitemid       = x.orderitemid       and a.orderitemopt      = x.orderitemopt      
+				and a.orderitemqty      = x.orderitemqty      and a.orderitembyprice  = x.orderitembyprice  and a.orderitemprice    = x.orderitemprice    and a.postno            = x.postno            
+				and a.address           = x.address           and a.orderitemname     = x.orderitemname,
            
            ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
                        left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
@@ -140,6 +154,18 @@
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
+        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
+        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="S">
+        			d.orderitemid is not null and IFNULL(x.chksum, 0) = 0 
+        		</isEqual>
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
+        			d.orderitemid is null
+        		</isEqual>
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
+        			x.chkcnt is not null
+        		</isEqual>
+        	</isNotEmpty>
         	</isEqual>
         	<isNotEqual property="search_status" compareValue="TEMP">
         	a.status = #search_status#
@@ -210,7 +236,7 @@
            a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
            a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
            a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
-           IFNULL(d.itemname, '') as orderitemname,
+           IFNULL(d.itemname, a.orderitemname) as orderitemname,
            IFNULL(d.itemprice,'') as orderitemprice,
            IFNULL(d.itemdlvprice, '') as dlvprice,
            a.rcvusercontacthp, a.rcvuseremail,
@@ -226,17 +252,27 @@
            IFNULL(j.code_nm,'') as claimstatusnm,
            IFNULL(k.code_nm,'') as claimreasonnm,
            IFNULL(l.code_nm,'') as retstatusnm,
-           IFNULL(d.orderitemid,'NOITEM') as chkprod
+           IFNULL(d.orderitemid,'NOITEM') as chkprod,
+           case when IFNULL(chksum, 0) = 0 then 'NEW' else 'OVER' end  chkoverlap
       from ismodm010 a
-           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode
+           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
            left outer join ismprd010 d on bb.orderitemid = d.itemcode
            left outer join ismbyc010 e on d.byc010id = e.byc010id
            left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
            
            left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
            left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
-           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080',
-           
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080'
+           left outer join (SELECT orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+				, COUNT(1) chkcnt, sum(case when status = '' then 0 else 1 end ) chksum
+			FROM ismodm010
+			GROUP BY orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+			HAVING COUNT(1) > 1
+            ) x  on a.orderno           = x.orderno           and a.orderdate         = x.orderdate         and a.cum010id          = x.cum010id          
+				and a.cum030id          = x.cum030id          and a.byc010id          = x.byc010id          and a.orderuser         = x.orderuser         and a.orderusercontact  = x.orderusercontact  
+				and a.rcvuser           = x.rcvuser           and a.rcvusercontact    = x.rcvusercontact    and a.orderitemid       = x.orderitemid       and a.orderitemopt      = x.orderitemopt      
+				and a.orderitemqty      = x.orderitemqty      and a.orderitembyprice  = x.orderitembyprice  and a.orderitemprice    = x.orderitemprice    and a.postno            = x.postno            
+				and a.address           = x.address           and a.orderitemname     = x.orderitemname,
            ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
                        left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
            LETTCCMMNDETAILCODE c, ismcum030 g
@@ -253,6 +289,18 @@
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
+        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
+        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="S">
+        			d.orderitemid is not null and IFNULL(x.chksum, 0) = 0 
+        		</isEqual>
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
+        			d.orderitemid is null
+        		</isEqual>
+        		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
+        			x.chkcnt is not null
+        		</isEqual>
+        	</isNotEmpty>
         	</isEqual>
         	<isNotEqual property="search_status" compareValue="TEMP">
         	a.status = #search_status#
@@ -424,7 +472,6 @@
 
     <select id="adj020DAO.selectList" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
         o1.cum010id as cum010id,
         c1.coname as cum010name,
         o1.cum030id as cum030id,
@@ -432,8 +479,7 @@
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.closedt as closedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
@@ -450,12 +496,10 @@
 
     <select id="adj020DAO.selectListAll" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.closedt as closedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -468,11 +512,8 @@
 
     <select id="adj020DAO.selectListAllNull" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
-        o1.orderdate as orderdate,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.orderdate as closedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -484,7 +525,6 @@
 
     <select id="adj020DAO.selectListBYC" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
         o1.cum010id as cum010id,
         c1.coname as cum010name,
         o1.cum030id as cum030id,
@@ -492,8 +532,7 @@
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.bycclosedt as bycclosedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
@@ -510,12 +549,10 @@
 
     <select id="adj020DAO.selectListBYCAll" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
         b.byc010id as byc010id,
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.bycclosedt as bycclosedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -528,10 +565,8 @@
 
     <select id="adj020DAO.selectListBYCAllNull" parameterClass="String" resultClass="adj020VO">
         select
-        o1.odm010id as odm010id,
         sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice,
-        o1.orderdate as bycclosedt
+        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
         left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
@@ -556,5 +591,240 @@
         order by itemprice desc
         limit 10
     </select>
+    
+    <!-- 임시 주문 통계 목록 select -->
+    <select id="ord020DAO.selectStattList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
+    /*ord020DAO.selectStattList*/
+    SELECT t1.uploadviewkey
+		 , t1.updatedt
+		 , t1.uploadfilename
+		 , t1.cum010id
+		 , t1.coname
+		 , t1.cum030id
+		 , t1.shopmallname
+		 , t1.totcnt
+		 , t1.succcnt
+		 , t1.prodfailcnt
+		 , t1.overlapcnt
+	from (
+	select a.uploadviewkey
+		, a.uploadfilename
+		, CONCAT_WS('.', substring(a.uploadviewkey, 1, 4) , substring(a.uploadviewkey, 5, 2), substring(a.uploadviewkey, 7, 2) ) updatedt
+		, a.cum010id
+		, b.coname
+		, a.cum030id
+		, g.shopmallname
+		, count(*) totcnt
+		, sum(case when d.itemcode is not null and IFNULL(chksum, 0) = 0  then 1 else 0 end) succcnt
+		, sum(case when d.itemcode is null then 1 else 0 end) prodfailcnt
+		, sum(case when IFNULL(chksum, 0) = 0 then 0 else 1 end) overlapcnt
+      from ismodm010 a
+           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
+           left outer join ismprd010 d on bb.orderitemid = d.itemcode
+           left outer join ismbyc010 e on d.byc010id = e.byc010id
+           left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
+           
+           left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
+           left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080'
+           left outer join (SELECT orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+				, COUNT(1) chkcnt, sum(case when status = '' then 0 else 1 end ) chksum
+			FROM ismodm010
+			GROUP BY orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+			HAVING COUNT(1) > 1
+            ) x  on a.orderno           = x.orderno           and a.orderdate         = x.orderdate         and a.cum010id          = x.cum010id          
+				and a.cum030id          = x.cum030id          and a.byc010id          = x.byc010id          and a.orderuser         = x.orderuser         and a.orderusercontact  = x.orderusercontact  
+				and a.rcvuser           = x.rcvuser           and a.rcvusercontact    = x.rcvusercontact    and a.orderitemid       = x.orderitemid       and a.orderitemopt      = x.orderitemopt      
+				and a.orderitemqty      = x.orderitemqty      and a.orderitembyprice  = x.orderitembyprice  and a.orderitemprice    = x.orderitemprice    and a.postno            = x.postno            
+				and a.address           = x.address           and a.orderitemname     = x.orderitemname,
+           ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
+                       left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
+           LETTCCMMNDETAILCODE c, ismcum030 g
+     where a.cum010id = b.cum010id
+       and a.cum030id = g.cum030id
+       and b.cotype1 = c.CODE
+       and c.CODE_ID = 'ISM020'
+		<isNotEmpty prepend="AND" property="search_key1">
+           a.uploadviewkey LIKE '%' #search_key1# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="odm010id" compareValue="0">
+        	a.odm010id = #odm010id#
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
+        	<isEqual property="search_status" compareValue="TEMP">
+        	a.status = ''
+        	</isEqual>
+        	<isNotEqual property="search_status" compareValue="TEMP">
+        	a.status = #search_status#
+        	</isNotEqual>
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="search_cstype" compareValue="0">
+        	a.cstype = #search_cstype#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+		<![CDATA[
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+        ]]>
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+		<![CDATA[
+        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+        ]]>
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
+        	b.cotype1 = #dtSearch_cumType1#
+        </isNotEqual>
+		<isNotEmpty prepend="AND" property="dtSearch_bycNm">
+        	e.bycname LIKE '%' #dtSearch_bycNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_cumNm">
+        	b.coname LIKE '%' #dtSearch_cumNm# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvNo">
+        	a.dlvno LIKE '%' #dtSearch_dlvNo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_dlvCo">
+        	a.dlvco LIKE '%' #dtSearch_dlvCo# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderno">
+        	a.orderno LIKE '%' #dtSearch_orderno# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
+        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
+        	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvUser">
+        	a.rcvuser LIKE '%' #dtSearch_rcvUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_rcvuserContact">
+        	a.rcvusercontact LIKE '%' #dtSearch_rcvuserContact# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_orderUser">
+        	a.orderuser LIKE '%' #dtSearch_orderUser# '%'
+        </isNotEmpty>
+		<isNotEmpty prepend="AND" property="dtSearch_all">
+        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(a.orderitemid,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
+        </isNotEmpty>
+        <isNotEqual prepend="AND" property="poSearch_pristock" compareValue="0">
+        	d.pristock = #poSearch_pristock# and IFNULL(d.itemgubun,'1') in ('2')
+        </isNotEqual>
+        <isNotEqual prepend="AND" property="poSearch_byc010id" compareValue="0">
+        	d.byc010id = #poSearch_byc010id# and IFNULL(d.itemgubun,'1') in ('1','3')
+        </isNotEqual>
+        group by a.uploadviewkey
+				, a.uploadfilename
+				, a.cum010id
+				, b.coname
+				, a.cum030id
+				, g.shopmallname
+		) T1
+		order by t1.updatedt, t1.cum010id
+    </select>
+    
+    <!-- 주문 비교대상 정보 select -->
+    <select id="ord020DAO.selectCompList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
+    /*ord020DAO.selectCompList*/
+	select a.odm010id,         a.orderno,       DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY) , '%Y-%m-%d') as orderdate,
+           a.cum010id,         a.cum030id,      a.byc010id,       a.orderuser,
+           a.orderusercontact, a.rcvuser,       a.rcvusercontact, a.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitembyprice,
+           a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
+           a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
+           a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
+           IFNULL(IF(IFNULL(a.orderitemname,'') = '', d.itemname, a.orderitemname),'') as orderitemname,
+           IFNULL(IF(IFNULL(a.orderitemprice,'') = '', d.itemprice, a.orderitemprice),'') as orderitemprice,
+           IFNULL(IF(IFNULL(a.dlvprice,'') = '', d.itemdlvprice, a.dlvprice),'') as dlvprice,
+           a.rcvusercontacthp, a.rcvuseremail,
+           b.coname,
+           c.code_nm,
+           IFNULL(d.itemname,'') as itemname, IFNULL(d.itemprice,'0') as itemprice, IFNULL(d.itembuyprice,'0') as itembuyprice,
+           IFNULL(d.itemdlvprice,'0') as itemdlvprice, IFNULL(d.itembuydlvprice,'0') as itembuydlvprice,
+           IFNULL(e.bycname,'') as bycname,
+           f.CODE_NM as ststusNm,
+           g.shopmallname,
+           h.code_nm as cotype2nm,
+           i.code_nm as cotype3nm,
+           IFNULL(j.code_nm,'') as claimstatusnm,
+           IFNULL(k.code_nm,'') as claimreasonnm,
+           IFNULL(l.code_nm,'') as retstatusnm,
+           IFNULL(d.orderitemid,'NOITEM') as chkprod
+      from ismodm010 a
+           left outer join (select t1.*, t2.cumprodcode, t2.cum030id from ismprd010 t1 inner join ismcum040 t2 on  t1.itemcode = t2.orderitemid) d ON a.orderitemid = d.cumprodcode and  a.cum030id = d.cum030id
+           left outer join ismbyc010 e on d.byc010id = e.byc010id
+           left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
+           
+           left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
+           left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
+           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080'
+           inner join (SELECT orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+			FROM ismodm010
+			where 1=1
+			<isNotEqual prepend="AND" property="odm010id" compareValue="0">
+        		odm010id = #odm010id#
+        	</isNotEqual>
+            ) x  on a.orderno           = x.orderno           and a.orderdate         = x.orderdate         and a.cum010id          = x.cum010id          
+				and a.cum030id          = x.cum030id          and a.byc010id          = x.byc010id          and a.orderuser         = x.orderuser         and a.orderusercontact  = x.orderusercontact  
+				and a.rcvuser           = x.rcvuser           and a.rcvusercontact    = x.rcvusercontact    and a.orderitemid       = x.orderitemid       and a.orderitemopt      = x.orderitemopt      
+				and a.orderitemqty      = x.orderitemqty      and a.orderitembyprice  = x.orderitembyprice  and a.orderitemprice    = x.orderitemprice    and a.postno            = x.postno            
+				and a.address           = x.address           and a.orderitemname     = x.orderitemname,
+           ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
+                       left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
+           LETTCCMMNDETAILCODE c, ismcum030 g
+     where a.cum010id = b.cum010id
+       and a.cum030id = g.cum030id
+       and b.cotype1 = c.CODE
+       and c.CODE_ID = 'ISM020'
+       and a.status != ''
+     order by b.coname, a.orderno, a.orderitemid
+     limit 1 OFFSET 0
+    </select>
+    
+    <!-- 상품 목록 select -->
+    <select id="ord020DAO.selectProdList" parameterClass="ord020SearchVO" resultClass="ismodo020ProdVO">
+        select /*ord020DAO.selectProdList*/
+        p.orderitemid,
+        p.itemcat1,
+        p.itemname,
+        p.byc010id,
+        p.itemcrosstype,
+        p.itemopt,
+        p.itemea,
+        p.itemprice,
+        p.itembuyprice,
+        p.taxtype,
+        p.itemdlvprice,
+        p.itembuydlvprice,
+        p.itemgubun,
+        p.createdate,
+        p.byccode,
+        p.itemcode,
+        p.pristock,
+        p.itemsize,
+        p.cartonqty,
+        p.palletqty,
+        b.bycname,
+        w.whsname
+        from ismprd010 p
+        left outer join ismbyc010 b on p.byc010id = b.byc010id
+        left outer join ismwhs010 w on p.pristock = w.whs010id
+        where
+            p.orderitemid > 0
+        and b.byc010id is not null
+        <isNotEmpty prepend="AND" property="dtSearch_bycNm">
+            b.bycname LIKE '%' #dtSearch_bycNm# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dtSearch_orderItemid">
+            p.itemcode LIKE '%' #dtSearch_orderItemid# '%'
+        </isNotEmpty>
+        <isNotEmpty prepend="AND" property="dtSearch_orderItemName">
+            p.itemname LIKE '%' #dtSearch_orderItemName# '%'
+        </isNotEmpty>
+        order by p.orderitemid desc
+    </select>
 
+	<insert id="ord020DAO.ord020InsertProd" parameterClass="ismodm010VO">
+		/*ord020DAO.ord020InsertProd*/
+		insert into ismcum040 (cum030id, orderitemid, cumprodcode, cumprodoptnm1) values (#cum030id#, #itemcode#, #orderitemid#, #cumprodoptnm1#)
+    </insert>
 </sqlMap>

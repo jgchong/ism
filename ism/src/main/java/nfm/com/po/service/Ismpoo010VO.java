@@ -17,6 +17,8 @@ public class Ismpoo010VO implements Serializable {
 	private String orderfield = "";
 	private String orderfieldnm = "";
 	private int fieldorder = 0;
+	private String fieldvalue = "";
+	private String fieldname = "";
 
 	public int getPoo010id() {
 		return poo010id;
@@ -64,6 +66,22 @@ public class Ismpoo010VO implements Serializable {
 
 	public void setFieldorder(int fieldorder) {
 		this.fieldorder = fieldorder;
+	}
+	
+	public String getFieldvalue() {
+		return fieldvalue;
+	}
+
+	public void setFieldvalue(String fieldvalue) {
+		this.fieldvalue = fieldvalue;
+	}
+	
+	public String getFieldname() {
+		return fieldname;
+	}
+
+	public void setFieldname(String fieldname) {
+		this.fieldname = fieldname;
 	}
 
 	/**

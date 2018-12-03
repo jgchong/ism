@@ -6,7 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface Ord010Service  {
 
-	public String readExcelFile(List<MultipartFile> mf) throws Exception;
+	// 2018-11 LDC 상단에서 정보 받아오기.
+	public String readExcelFile(List<MultipartFile> mf, List<String> dataInfoList) throws Exception;
 
 	public int selectListTotCnt(Ord010SearchVO ord010SearchVO) throws Exception;
 
@@ -18,7 +19,7 @@ public interface Ord010Service  {
 
 	public String readExcelFile(MultipartFile mf) throws Exception;
 
-	public void saveManualDetailData(String cum030id, String userTitleNames, String sysmTitleNames, String assgTitleNames) throws Exception;
+	public void saveManualDetailData(String cum030id, String userTitleNames, String sysmTitleNames, String assgTitleNames, String priceopts) throws Exception;
 
 	public String selectManualDataDetail(String cum030id) throws Exception;
 

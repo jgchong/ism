@@ -16,6 +16,9 @@ public class Ismodo010VO implements Serializable {
     private String additem = "";
     private String isassign = "";
     private String orderfield = "";
+    // LDC 추가 정산가 속성.
+    private String additemopt1 = "";
+    private String additemopt2 = "";
 
 	public int getCum030id() {
 		return cum030id;
@@ -47,6 +50,22 @@ public class Ismodo010VO implements Serializable {
 
 	public void setOrderfield(String orderfield) {
 		this.orderfield = orderfield;
+	}
+	
+	public String getAdditemopt1() {
+		return additemopt1;
+	}
+
+	public void setAdditemopt1(String additemopt1) {
+		this.additemopt1 = additemopt1;
+	}
+
+	public String getAdditemopt2() {
+		return additemopt2;
+	}
+
+	public void setAdditemopt2(String additemopt2) {
+		this.additemopt2 = additemopt2;
 	}
 
 	/**

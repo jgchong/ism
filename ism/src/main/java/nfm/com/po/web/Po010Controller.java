@@ -68,6 +68,8 @@ public class Po010Controller {
 		model.addAttribute("ISM070", egovCmmUseService.selectCmmCodeDetail(vo));
 		vo.setCodeId("ISM080");	//반품상태필드
 		model.addAttribute("ISM080", egovCmmUseService.selectCmmCodeDetail(vo));
+		vo.setCodeId("ISM0B0");	//항목입력코드
+		model.addAttribute("ISM0B0", egovCmmUseService.selectCmmCodeDetail(vo));//add by asciilee 항목입력코드
 
 		return "ism/po/po010";
 	}

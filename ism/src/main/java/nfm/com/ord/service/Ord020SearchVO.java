@@ -38,8 +38,48 @@ public class Ord020SearchVO implements Serializable {
     private int poSearch_byc010id = 0;
     private int poSearch_pristock = 0;
     //private String orderbyclause = "a.shopmallname";
+    
+    // LDC 추가
+    private String search_tempdiv = "";
+    private String search_uploadviewkey = "";
+    private String search_cum010id = "";
+    private String search_cum030id = "";
+    
+    public String getSearch_uploadviewkey() {
+		return search_uploadviewkey;
+	}
 
-    /** 현재페이지 */
+	public void setSearch_uploadviewkey(String search_uploadviewkey) {
+		this.search_uploadviewkey = search_uploadviewkey;
+	}
+
+	public String getSearch_cum010id() {
+		return search_cum010id;
+	}
+
+	public void setSearch_cum010id(String search_cum010id) {
+		this.search_cum010id = search_cum010id;
+	}
+
+	public String getSearch_cum030id() {
+		return search_cum030id;
+	}
+
+	public void setSearch_cum030id(String search_cum030id) {
+		this.search_cum030id = search_cum030id;
+	}
+
+	public String getSearch_tempdiv() {
+		return search_tempdiv;
+	}
+
+	public void setSearch_tempdiv(String search_tempdiv) {
+		this.search_tempdiv = search_tempdiv;
+	}
+
+
+
+	/** 현재페이지 */
     private int pageIndex = 1;
     /** 페이지갯수 */
     private int pageUnit = 50;

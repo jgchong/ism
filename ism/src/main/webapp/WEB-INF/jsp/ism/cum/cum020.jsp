@@ -120,7 +120,8 @@ label.upload1 {
 								<col width="3%"/>
 								<col width="13%"/><col width="13%"/>
 								<col width="13%"/><col width="*"/>
-								<col width="13%"/>
+								<col width="13%"/><col width="13%"/>
+								<col width="13%"/><col width="13%"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -130,6 +131,9 @@ label.upload1 {
 									<th scope="col">운영상품코드</th>
 									<th scope="col">운영상품명</th>
 									<th scope="col">매출처상품명</th>
+									<th scope="col">정산가</th>
+									<th scope="col">옵션1</th>
+									<th scope="col">옵션2</th>
 								</tr>
 							</thead>
 							<tbody>
@@ -141,6 +145,9 @@ label.upload1 {
 									<td><c:out value="${result.itemcode}"/></td>
 									<td><c:out value="${result.itemname}"/></td>
 									<td><c:out value="${result.cumprodcode}"/></td>
+									<td><c:out value="${result.accountPrice}"/></td>
+									<td><c:out value="${result.cumprodoptnm1}"/></td>
+									<td><c:out value="${result.cumprodoptnm2}"/></td>
 								</tr>
 </c:forEach>
 							</tbody>
