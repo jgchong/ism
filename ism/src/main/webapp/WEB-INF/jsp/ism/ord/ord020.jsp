@@ -83,6 +83,20 @@ form.searchArea .searchMore li select {
 .rowPointer {
 	cursor: pointer;
 }
+.compbtn {
+	padding:3px;
+	color:#fff;
+	font-size:10px;
+	text-decoration:none;
+	background:rgba(150,0,29,1) !important;
+}
+.regPrd {
+	padding:3px;
+	color:#fff;
+	font-size:10px;
+	text-decoration:none;
+	background:#457cac;
+}
 </style>
 
 </head>
@@ -117,26 +131,29 @@ form.searchArea .searchMore li select {
                                         </c:forEach>
 									</select>
 								</li>
+								<%--
 								<li>
 									<select name="dtSearch_bycNm">
 										<option value="">매입처</option>
-                                        <c:forEach var="item" items="${ISM020}" varStatus="status">
-										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_cumType1 eq item.code}">selected</c:if> >${item.codeNm}</option>
+                                        c:forEach var="item" items="${ISM020}" varStatus="status">
+										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_bycNm eq item.code}">selected</c:if> >${item.codeNm}</option>
                                         </c:forEach>
 									</select>
 								</li>
+                                
 								<li>
 									<select name="dtSearch_cumNm">
 										<option value="">매출처</option>
                                         <c:forEach var="item" items="${ISM020}" varStatus="status">
-										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_cumType1 eq item.code}">selected</c:if> >${item.codeNm}</option>
+										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_cumNm eq item.code}">selected</c:if> >${item.codeNm}</option>
                                         </c:forEach>
 									</select>
-								</li>
-								<%--
+								</li>			
+                                --%>
+
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_bycNm}" name="dtSearch_bycNm" placeHolder="매입처"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_cumNm}" name="dtSearch_cumNm" placeHolder="매출처"/></li>
-								--%>
+								
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_dlvNo}" name="dtSearch_dlvNo" placeHolder="송장번호"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_dlvCo}" name="dtSearch_dlvCo" placeHolder="택배사"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_orderno}" name="dtSearch_orderno" placeHolder="주문번호"/></li>
@@ -150,9 +167,9 @@ form.searchArea .searchMore li select {
 								<li>
 									<select name="dtSearch_status">
 										<option value="0">주문상태 선택</option>
-<c:forEach var="item" items="${ISM050}" varStatus="status">
+                                        <c:forEach var="item" items="${ISM050}" varStatus="status">
 										<option value="${item.code}">${item.codeNm}</option>
-</c:forEach>
+                                        </c:forEach>
 									</select>
 								</li>
 								<li><select name="dtSearch_crtype"><option value="0">클레임/반품 선택</option><option value="C">클레임</option><option value="R">반품</option></select></li>
@@ -163,22 +180,22 @@ form.searchArea .searchMore li select {
 						
                         <div style="width:100%; display:inline-block;">
                             <div style="float:left;">
-                                <a id="excelDownbtn" href="javascript:;" style="width:78px; display:inline-block;">엑셀다운로드</a>
-                                <a id="" href="javascript:;" style="width:78px; display:inline-block; text-align:center;">엑셀업로드</a>
+                                <a id="excelDownbtn" href="javascript:;" style="display:inline-block; text-align:center;">엑셀다운로드</a>
+                                <a id="" href="javascript:;" style="display:inline-block; text-align:center;">엑셀업로드(개발중)</a>
                             </div>
                             <div style="float:right;">
                                 <select id="chgOrderStatus" name="chgOrderStatus" title="">
                                     <option value="0">상태값</option>
-        <c:forEach var="item" items="${ISM050}" varStatus="status">
+                                    <c:forEach var="item" items="${ISM050}" varStatus="status">
                                     <option value="${item.code}">${item.codeNm}</option>
-        </c:forEach>
+                                   </c:forEach>
                                 </select>
                                 <a href="javascript:selectChgOrderStatus();" style="margin-left:-4px;">선택수정</a>
                                 <a href="javascript:selectDel();" class="selDel">선택삭제</a>
                                 <select id="pageUnit" name="pageUnit" title="" class="ml30">
-                                    <option value="50" <c:if test="${ord020SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
+									<option value="50" <c:if test="${ord020SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
                                     <option value="100" <c:if test="${ord020SearchVO.pageUnit eq '100'}"><c:out value="selected"/></c:if>>100개</option>
-                                    <option value="500" <c:if test="${ord020SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
+									<option value="500" <c:if test="${ord020SearchVO.pageUnit eq '500'}"><c:out value="selected"/></c:if>>500개</option>
                                 </select>
                                 <button style="margin-left:-4px;">정렬</button>
                                 <%--<a id="excelDownbtn" href="javascript:;">엑셀저장</a>--%>
@@ -186,12 +203,17 @@ form.searchArea .searchMore li select {
                         </div>
 						<input type="hidden" id="search_status" name="search_status" value="${ord020SearchVO.search_status}" />
 						<input type="hidden" id="search_cstype" name="search_cstype" value="${ord020SearchVO.search_cstype}" />
-						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" /><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
+						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" />
+						<input type="hidden" id="search_tempdiv" name="search_tempdiv" value="">
+						<input type="hidden" id="search_uploadviewkey" name="search_uploadviewkey" value="">
+						<input type="hidden" id="search_cum010id" name="search_cum010id" value="">
+						<input type="hidden" id="search_cum030id" name="search_cum030id" value="">
+						<!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
 					</form>
 
 					<ul class="tbTab">
-						<li><a href="javascript:search_status('ALL');" <c:if test="${ord020SearchVO.search_status eq 'ALL'}"><c:out value="class=on"/></c:if>>전체</a></li>
 						<li><a href="javascript:search_status('TEMP');" <c:if test="${ord020SearchVO.search_status eq 'TEMP'}"><c:out value="class=on"/></c:if>>임시</a></li>
+						<li><a href="javascript:search_status('ALL');" <c:if test="${ord020SearchVO.search_status eq 'ALL'}"><c:out value="class=on"/></c:if>>전체</a></li>
 						<li><a href="javascript:search_status('1');" <c:if test="${ord020SearchVO.search_status eq '1'}"><c:out value="class=on"/></c:if>>출고전</a></li>
 						<li><a href="javascript:search_status('2');" <c:if test="${ord020SearchVO.search_status eq '2'}"><c:out value="class=on"/></c:if>>출고대기</a></li>
 						<li><a href="javascript:search_status('3');" <c:if test="${ord020SearchVO.search_status eq '3'}"><c:out value="class=on"/></c:if>>출고완료</a></li>
@@ -201,18 +223,53 @@ form.searchArea .searchMore li select {
 						<li><a href="javascript:search_cstype('R');" <c:if test="${ord020SearchVO.search_cstype eq 'R'}"><c:out value="class=on"/></c:if>>반품관리</a></li>
 					</ul>
 					<div class="listTb">
+<c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
+							<table id="mainListTable" cellpadding="0" cellspacing="0" style="margin:4px 0;" summary="" >
+								<caption></caption>
+								<colgroup>
+									<col width="10%"/><col width="30%"/><col width="20%"/>
+									<col width="10%"/><col width="10%"/><col width="10%"/><col width="10%"/>
+								</colgroup>
+								<thead>
+								<tr>
+									<th scope="col">업로드일</th>
+									<th scope="col">업로드파일명</th>
+									<th scope="col">매출처</th>
+									<th scope="col">정상등록</th>
+									<th scope="col">상품코드오류</th>
+									<th scope="col">중복자료</th>
+									<th scope="col">합계</th>
+								</tr>
+								<tbody>
+<c:forEach var="resultstat" items="${resultstatList}" varStatus="status">
+								<tr>
+									<td class="rowPointer" ><c:out value="${resultstat.updatedt}"/></td>
+									<td class="rowPointer" ><c:out value="${resultstat.uploadfilename}"/></td>
+									<td class="rowPointer" ><c:out value="${resultstat.coname}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('S', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.succcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('P', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.prodfailcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('O', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.overlapcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('T', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.totcnt}"/></td>
+								</tr>
+</c:forEach>
+								</tbody>
+							</thead>
+							</table>
+</c:if>
+<c:if test="${!(ord020SearchVO.search_status == 'TEMP' && ord020SearchVO.search_tempdiv == '')}">
 						<table id="mainListTable" cellpadding="0" cellspacing="0" class="" summary="" >
 							<caption></caption>
 							<colgroup>
-								<col width="2%"/><col width="2%"/><col width="4%"/><col width="4%"/><col width="5%"/>
+								<col width="2%"/><col width="2%"/><col width="8%"/><col width="4%"/><col width="4%"/><col width="5%"/>
 								<col width="5%"/><col width="4%"/><col width="8%"/><col width="8%"/><col width="*"/>
 								<col width="5%"/><col width="3%"/><col width="5%"/><col width="10%"/><col width="5%"/>
-								<col width="8%"/><col width="4%"/>
+								<col width="4%"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th scope="col"><a href="javascript:chkall();">V</a></th>
 									<th scope="col">NO.</th>
+									<th scope="col">주문일자</th>
 									<th scope="col">구분</th>
 									<th scope="col">매입처</th>
 									<th scope="col">매출처</th>
@@ -226,7 +283,7 @@ form.searchArea .searchMore li select {
 									<th scope="col">수령자</th>
 									<th scope="col">수령자연락처</th>
 									<th scope="col">주문자</th>
-									<th scope="col">주문일자</th>
+									
 									<th scope="col">상태</th>
 								</tr>
 							</thead>
@@ -251,24 +308,36 @@ form.searchArea .searchMore li select {
 		<c:if test="${result.chkprod eq 'NOITEM'}">
 			<c:set var = "rowClass" value = "class='red'"/>
 		</c:if>
+		<c:if test="${result.chkoverlap ne 'NEW'}">
+			<c:set var = "rowClass" value = "class='blue'"/>
+		</c:if>
 	</c:if>
 								<tr ${rowClass}>
 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
 									<td><strong><c:out value="${(ord020SearchVO.pageIndex - 1) * ord020SearchVO.pageUnit + status.count}"/></strong></td>
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">${result.code_nm}</td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.bycname}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.coname}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.dlvno}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.dlvco}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderno}"/></td>
-									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemid}"/></td>
+									<c:if test="${ord020SearchVO.search_status ne 'TEMP'}">
+										<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemid}"/></td>
+									</c:if>
+									<c:if test="${ord020SearchVO.search_status eq 'TEMP' && result.chkprod ne 'NOITEM'}">
+										<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemid}"/></td>
+									</c:if>
+									<c:if test="${ord020SearchVO.search_status eq 'TEMP' && result.chkprod eq 'NOITEM'}">
+										<td class="rowPointer"><c:out value="${result.orderitemid}"/><button type="button" onclick="fnCreateProd('<c:out value="${result.odm010id}"/>')" class="regPrd">상품등록 </button></td>
+									</c:if>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemname}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemopt}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderitemqty}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.rcvuser}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.rcvusercontacthp}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderuser}"/></td>
-									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
+<c:if test="${ord020SearchVO.search_status ne 'TEMP'}">									
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">
 	<c:choose>
     	<c:when test="${result.cstype eq 'C'}">
@@ -281,6 +350,15 @@ form.searchArea .searchMore li select {
 									<c:out value="${result.ststusNm}"/></td>
 		</c:otherwise>
 	</c:choose>
+</c:if>
+<c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
+	<c:if test="${result.chkoverlap eq 'NEW'}">
+									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"> </td>
+	</c:if>
+	<c:if test="${result.chkoverlap ne 'NEW'}">
+									<td class="rowPointer" onclick="orderDetailCompView('<c:out value="${result.odm010id}"/>')"><button type="button" class="compbtn" >자료비교</button></td>
+	</c:if>
+</c:if>
 								</tr>
 </c:forEach>
 <c:if test="${fn:length(resultList) eq 0}">
@@ -290,9 +368,10 @@ form.searchArea .searchMore li select {
 </c:if>
 							</tbody>
 						</table>
+</c:if>
 					</div>
 
-<c:if test="${ord020SearchVO.search_key1 eq ''}">
+<c:if test="${!(ord020SearchVO.search_status eq 'TEMP' && ord020SearchVO.search_tempdiv ne '')}">
 					<div class="paging">
 						<ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
 					</div>
@@ -534,6 +613,38 @@ function search_cstype(cstype) {
 
 function opener_search() {
 	$('#form1').submit();	
+}
+
+//LDC 추가
+//리스트 상세.
+function orderTempDetailList(search_tempdiv, search_uploadviewkey, search_cum010id, search_cum030id)
+{
+	document.form1.search_tempdiv.value = search_tempdiv;
+	document.form1.search_uploadviewkey.value = search_uploadviewkey;
+	document.form1.search_cum010id.value = search_cum010id;
+	document.form1.search_cum030id.value = search_cum030id;
+	document.form1.action = "<c:url value='/ism/ord/ord020.do'/>";
+	document.form1.submit();
+}
+//상품 등록
+function fnCreateProd(odm010id){
+	window.open("<c:url value='/ism/ord/odo020SelectOrderProdPopUp.do'/>?odm010id="+odm010id, "", "width=810, height=700, status=1");
+}
+//
+function opener_tempsearch() {
+	
+	document.form1.search_tempdiv.value = "${ord020SearchVO.search_tempdiv}";
+	document.form1.search_uploadviewkey.value = "${ord020SearchVO.search_uploadviewkey}";
+	document.form1.search_cum010id.value = "${ord020SearchVO.search_cum010id}";
+	document.form1.search_cum030id.value = "${ord020SearchVO.search_cum030id}";
+ document.form1.action = "<c:url value='/ism/ord/ord020.do'/>";
+ document.form1.submit();
+	$('#form1').submit();
+	
+}
+//자료비교 팝업..
+function orderDetailCompView(odm010id) {
+	window.open("<c:url value='/ism/ord/odo020SelectOrderDetailCompPopUp.do'/>?odm010id="+odm010id, "", "width=1500, height=700, status=1");
 }
 </script>
 

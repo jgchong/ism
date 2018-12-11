@@ -18,6 +18,24 @@
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/common.css" type="text/css" rel="stylesheet"  />
+	<link href="/css/custom/common.css" type="text/css" rel="stylesheet"  />
+	<!--select2 스크립트-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/custom/select2.min.css">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+	<script type="text/javascript">
+    $(document).ready(function () {
+	$(".js-example-basic-single").select2();
+
+
+	$(".js-example-tokenizer").select2({
+		tags: true,
+		tokenSeparators: [',', ' ']
+	})
+
+    });
+
+    </script>
 	<style type="text/css">
 	#sortable2 li.ui-state-default {background:#3a5199;}
 	#sortable1 li.ui-state-highlight {background:#333;}
@@ -52,19 +70,40 @@
 				</ul>
 				<div class="contents">
 					<h2 class="pageTit">주문수집목록</h2>
+					
+					<div style="float:left;">
+					<form id="orderfileform_1" name="orderfileform_1" action='/ism/ord/odo010orderupfile.do' enctype='multipart/form-data' method='post' >
+						<input type="hidden" id="filecum010id" name="filecum010id" value="">
+						<input type="hidden" id="filecum030id" name="filecum030id" value="">
+							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" multiple="multiple" title="" style="width:300px;height:35px;">
+								<option value="0"></option>
+							<c:forEach var="result" items="${resultList}" varStatus="status">
+								<option value="${result.cum030id}" val2="${result.cum010id}" >${result.coname}/${result.shopmallname}</option>
+							</c:forEach>
+							</select>
+						<input type="file" id="file_1" name="file1" class="hidden" style="width:200px;"/>
+						<button type="button" onclick="javascript:orderFileUpload_select();" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:15px; vertical-align:bottom;">선택 업로드</button>
+					</form>
+					</div>
+					
+					<div>
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
 						<a href="javascript:;" class="layerBt" style="background:#45b6b6;" name="upload">데이터 일괄 업로드</a>
+
 						<input type="text" class="it ml30" title="" value="${ord010SearchVO.search_key1}" id="search_key1" name="search_key1"/>
+					
+						<!--select style="margin:0 -4px 0 10px;"></select-->
 						<button>검색</button>
 					</form>
-
+					</div>
+					
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
 							<caption></caption>
 							<colgroup>
 								<col width="5%"/><col width="15%"/><col width="*"/>
 								<col width="10%"/><col width="10%"/><col width="10%"/>
-								<col width="8%"/><col width="10%"/><col width="12%"/>
+								<col width="12%"/><col width="15%"/><col width="12%"/>
 							</colgroup>
 							<thead>
 								<tr>
@@ -133,40 +172,68 @@
 		<div class="inner">
 			<p class="layerTit">수동수집 환경설정</p>
 			<div class="layerContents">
-				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm">
+				<form id="titfileform" name="titfileform" action='/ism/ord/odo010upfile.do' enctype='multipart/form-data' method='post' class="layerForm" style="padding:10px 0 0;">
 					<div class="lfl">
 						<select id="shopmallidmanual" name="shopmallidmanual" title="">
 							<option value="0" dataid="">쇼핑몰선택</option>
 <c:forEach var="result" items="${resultList}" varStatus="status">
 	<c:if test="${result.uploadgubun eq 'M'}">
-							<option value="${result.cum030id}" dataid="${result.uploadtype}">${result.shopmallname}</option>
+							<option value="${result.cum030id}" dataid="${result.uploadtype}" acctype="${result.account2}">${result.shopmallname}</option>
 	</c:if>
 </c:forEach>
 						</select>
-						<span id="uploadtypeinfo" style="margin-left:20px;"></span>
+						<span id="uploadtypeinfo" style="margin-left:20px; padding:8px 5px; background:#3a5199; margin:0 5px; color:#fff; text-align:center; font-size:14px;display:inline-block;">
+						    <span class="tit" style="padding:0px 5px; background:#3a5199; margin:0 5px; color:#fff; text-align:center; font-size:14px;display:inline-block;">주문수집 파일 명 :</span>
+						    <!--span class="txt" style="padding:7px 5px; border:1px solid #ccc; font-size:14px; margin-left:-9px; display:inline-block;">_파일명표시*</span--!>
+						</span>
 						<!-- <button>매출처 선택</button> -->
 					</div>
 					<div id="titfile" class="lfr">
-						<label for="file" class="file">+</label>
+						<label for="file" class="file" style="background:#3a5199; float:left; margin:0 5px; color:#fff; text-align:center; cursor:pointer; font-size:14px;">엑셀파일선택해주세요.</label>
 						<input type="file" id="file" name="file" onchange="titfileUpload()" class="hidden"/>
 					</div>
 				</form>
 
 				<div class="sortableDrag">
 					<ul id="sortable1" class="connectedSortable">
-						<li class="ui-state-default" style="width:200px;">엑셀파일을 선택해주세요.</li>
+						
 					</ul>
 <c:forEach var="result" items="${orderField}" varStatus="status">
-	<c:set var="maxheightval" value="max-height:69px;"/>
+	<c:set var="maxheightval" value="max-height:45px;"/>
 	<c:if test="${result.code eq 'postno'}">
 		<c:set var="maxheightval" value=""/>
 	</c:if>
 	<c:if test="${result.code eq 'address'}">
 		<c:set var="maxheightval" value=""/>
 	</c:if>
-					<div class="targetField" style="float:left;">
-						<span style="position:absolute;" dataid="${result.code}">${result.codeNm}</span>
-						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:133px;min-height:69px;${maxheightval}height:100%;margin:15px 3px;"></ul>
+	<c:if test="${result.code eq 'orderitemopt'}">
+		<c:set var="maxheightval" value=""/>
+	</c:if>
+					<div class="targetField" style="float:left; position:relative;">
+					
+						
+						<span style="position:absolute; font-size:12px; background:#fff; display:inline-block; top:6px; left:10px; padding:0 4px;" dataid="${result.code}">${result.codeNm}
+<!--LDC 추가  -->
+<c:if test="${result.code eq 'orderitemprice'}">
+							<span id="addSign"></span>
+</c:if>
+						</span>
+<c:if test="${result.code eq 'orderitemprice'}">
+	<div style="position:absolute;top:73px;margin-left:14px;font-size:12px;">
+		<ul>
+			<li style="float:left;width:60px;margin-bottom:4px;"><input type="radio" id="chkprice1" name="chkprice" value="1">단가</input></li>
+			<li style="float:left;width:60px;margin-bottom:4px;"><input type="radio" id="chkprice2" name="chkprice" value="2">총액</input></li>
+			<li style="float:left;width:60px;"><input type="radio" id="chkvat1" name="chkvat" value="1">VAT포함</input></li>
+			<li style="float:left;width:60px;"><input type="radio" id="chkvat2" name="chkvat" value="2">VAT별도</input></li>
+		</ul>
+	</div>
+						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:140px;height:85px;margin:15px 3px;box-sizing:content-box;"></ul>
+</c:if>
+<c:if test="${result.code != 'orderitemprice'}">
+						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:140px;min-height:45px;${maxheightval}height:100%;margin:15px 3px;box-sizing:content-box;"></ul>
+</c:if>
+<%-- 						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:133px;min-height:69px;${maxheightval}height:100%;margin:15px 3px;"></ul> --%>
+<%-- 						<ul id="sortable2" class="connectedSortable ${result.code} sortable2" style="width:133px;height:110px;margin:15px 3px;"></ul> --%>
 					</div>
 </c:forEach>
 					<script>
@@ -362,10 +429,23 @@ function selectFile(fileObject){
 
 // 업로드 파일 목록 생성
 function addFileList(fIndex, fileName, fileSize){
+	
+	var fileNameArr = fileName.split("\.");
     var html = "";
     html += "<tr id='fileTr_" + fIndex + "'>";
     html += "    <td class='left' >";
     html +=         fileName;
+    html += "    </td>";
+    // LDC 2018-11 수정 해야 할곳
+    html += "    <td class='center' align='center'>";
+    html += "       <select id='fileShop_"+fIndex + "'name='fileShop_"+fIndex + "'title=''>";
+    html += "       <option value='0' dataid=''>쇼핑몰선택</option>";
+    <c:forEach var="result" items="${resultList}" varStatus="status">
+	    <c:if test="${result.uploadgubun eq 'M'}">
+	    	html += "<option value='${result.cum030id}' val2='${result.cum010id}' dataid='${result.uploadtype}'" + (fileNameArr[0] == "${result.coname}" ? "selected" : "")+">${result.shopmallname}</option>";
+		</c:if>
+	</c:forEach>
+    html += "     </select>";
     html += "    </td>";
     html += "    <td class='left' >";
     html +=         "<a href='#' onclick='deleteFile(" + fIndex + "); return false;' class='btn small bg_02'>삭제</a>";
@@ -421,6 +501,16 @@ function uploadFile(){
         alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
         return;
     }
+    
+    for(var i = 0; i< uploadFileList.length; i++ ){
+		if($("#fileShop_"+i+" option:selected").val() == "0"){
+			alert("소핑몰을 선택해주세요.");
+	        return;
+		}
+		//valList.push($("#fileShop_"+i+" option:selected").val());
+		//dataIdList.push($("#fileShop_"+i+" option:selected").attr('dataid'));
+	}
+    
         
     if(confirm("등록 하시겠습니까?")){
         // 등록할 파일 리스트를 formData로 데이터 입력
@@ -428,6 +518,7 @@ function uploadFile(){
         var formData = new FormData(form);
         for(var i = 0; i < uploadFileList.length; i++){
             formData.append('files', fileList[uploadFileList[i]]);
+            formData.append('dataInfo', $("#fileShop_"+i+" option:selected").val() + ";" +$("#fileShop_"+i+" option:selected").attr('val2')+";"+$("#fileShop_"+i+" option:selected").text() + ";" +$("#fileShop_"+i+" option:selected").attr('dataid'));
         }
         
         loadingBarOpen();
@@ -455,7 +546,8 @@ function uploadFile(){
 		            if (parseInt(result.split("^")[2]) > 0) {
 		            	alert(result.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
 		            }else{
-			            alert("성공");
+		            	// LDC - 제거.
+			            //alert("성공");
 		            }	            	
 	            }
 	            location.href="/ism/ord/ord020.do?search_key1="+result.split("^")[0]+"&search_status=TEMP";
@@ -496,17 +588,17 @@ function mfileonchange(files) {
 		<div class="inner">
 			<p class="layerTit">데이터 일괄 업로드</p>
 			<div class="layerContents">
-				<div style="float:right;margin:10px 0;">
-    				<label for="mfile" class="muploadbtn">업로드</label>
+				<div style="text-align:left; height:26px; padding:10px 0;">
+    				<label for="mfile" class="muploadbtn" style="margin:0;">파일찾기</label>
         			<input multiple="multiple" type="file" id="mfile" name="mfile" onchange="javascript:mfileonchange(this.files);" style="display:none;"/>
         		</div>
-			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post">
+			    <form name="uploadForm" id="uploadForm" enctype="multipart/form-data" method="post" style="display:block;">
 				    <div id="dropZone">
-				        <table id="mfilelisttable" class="table" width="100%" border="1px" class="connectedSortableLeft js-multiselect">
+				        <table id="mfilelisttable" class="table" width="100%" height="100" border="1px" class="connectedSortableLeft js-multiselect">
 				            <tbody id="fileTableTbody">
 				                <tr>
-				                    <td colspan="2">
-				                        파일을 선택 하세요
+				                    <td colspan="3" style="padding:20px;">
+				                        + 주문업로드파일을 이곳에 끌어다 놓으세요
 				                    </td>
 				                </tr>
 				            </tbody>
@@ -539,6 +631,16 @@ $(document).ready(function() {
 	$('#shopmallidmanual').change(function() { //매출처/쇼핑몰 변경시 처리
 		$('.targetField').children('ul').css("background-color","");
 		$('#uploadtypeinfo').text("주문수집 파일 명 : "+$('option:selected', this).attr('dataid'));
+		// LDC 추가
+		if($('option:selected', this).attr('acctype') == '1'){
+			$('#addSign').text('(공급)');
+		}
+		else if($('option:selected', this).attr('acctype') == '2'){
+			$('#addSign').text('(판매)');
+		}
+		else {
+			$('#addSign').text('');
+		}
 		selectManualDetailData($(this).val());
 	});
 	$('#shopmallid').change(function() { //매출처/쇼핑몰 변경시 처리
@@ -660,7 +762,8 @@ function orderFileUpload(cum010id, cum030id) {
 	            if (parseInt(data.split("^")[2]) > 0) {
 	            	alert(data.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
 	            }else{
-		            alert("성공");
+	            	// LDC - 제거.
+		            // alert("성공");
 	            }	            	
             }
         	//$("#formMain").submit();
@@ -672,8 +775,57 @@ function orderFileUpload(cum010id, cum030id) {
         },
         type : "POST"
     };
+    $("#orderfileform"+cum030id).ajaxSubmit(options);
+}
+// 2018-11 LDC 추가
+function orderFileUpload_select() {
 	
-	$("#orderfileform"+cum030id).ajaxSubmit(options);
+	if($("#shopOrderList option:selected").val() == "0"){
+		alert("쇼핑몰을 선택하세요");
+		return false;
+	}
+	
+	if($("#file_1").val() == ""){
+		alert("파일을 선택하세요");
+		return false;
+	}
+	// 값넣기
+	$('#orderfileform_1 [name="filecum030id"]').val($("#shopOrderList option:selected").val());
+	$('#orderfileform_1 [name="filecum010id"]').val($("#shopOrderList option:selected").attr('val2'));
+	
+	loadingBarOpen();
+    var options = {
+    	success : function(data) {
+            console.log(data.split("^")[0]);
+            console.log(data.split("^")[1]);
+            console.log(data.split("^")[2]);
+
+            if (data.split("^")[1] == "-1") {
+            	loadingBarClose();
+	            alert("업로드 타입이 맞지 않는 파일입니다.");
+	            return;
+            }else if (data.split("^")[1] == "0") {
+            	loadingBarClose();
+	            alert("수동수집환경 설정이 안되어 있습니다.\n설정 후 다시 업로드해주시기 바랍니다.");
+	            return;
+            }else{
+	            if (parseInt(data.split("^")[2]) > 0) {
+	            	alert(data.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");
+	            }else{
+	            	// LDC - 제거.
+		            // alert("성공");
+	            }	            	
+            }
+        	//$("#formMain").submit();
+            location.href="/ism/ord/ord020.do?search_key1="+data.split("^")[0]+"&search_status=TEMP";
+        },
+        error : function(xhr, status, error) {
+        	loadingBarClose();
+        	console.log(error);
+        },
+        type : "POST"
+    };
+    $("#orderfileform_1").ajaxSubmit(options);
 }
 function selectManualDetailData(cum030id) {
     $.ajax({
@@ -691,10 +843,14 @@ function selectManualDetailData(cum030id) {
             	var additem = "";
             	var isassign = "";
             	var orderfield = "";
+            	var additemopt1 = "";
+            	var additemopt2 = "";
                 $.each(item, function(index, element){
                 	if (index == "additem") additem = element;
             		else if (index == "isassign") isassign = element;
             		else if (index == "orderfield") orderfield = element;
+            		else if (index == "additemopt1") additemopt1 = element;
+            		else if (index == "additemopt2") additemopt2 = element;
                 });
                 additem = decodeURIComponent(additem.replace(Ca, " "));
             	if ((additem != "NONE") && (isassign == "N") ) {
@@ -705,14 +861,20 @@ function selectManualDetailData(cum030id) {
             	    console.log("additems = " + additems);
                 	for ( var i in additems ) {
                 	    console.log(i + "/" + additems[i]);
-                		$('.'+orderfield).append('<li class="ui-state-default" style="margin:5px;">'+additems[i]+'</li>');
+                	    
+                	    $('.'+orderfield).append('<li class="ui-state-default" style="margin:5px;">'+additems[i]+'</li>');	
+                	    
+                		if(orderfield == 'orderitemprice'){
+                	    	$('input[name="chkprice"]').val([((additemopt1==''||additemopt1==null)?'1':additemopt1)]);
+                	    	$('input[name="chkvat"]').val(  [((additemopt2==''||additemopt2==null)?'1':additemopt2)]);
+                	    }
             	    }
             	}
             	cnt++;
             });
             //조회 데이터 없는 경우 사용자필드 초기화
             if (cnt == 0) {
-            	$('#sortable1').append('<li class="ui-state-default ui-sortable-handle" style="width:200px;">엑셀파일을 선택해주세요.</li>');
+            	$('#sortable1').append('');
             }
             $('#msgareamanual').text("");
         },
@@ -796,6 +958,7 @@ function saveManualDetail() {
 	var userTitleNames = "";
 	var sysmTitleNames = "";
 	var assgTitleNames = "";
+	var priceopts  = "";
 	var cum030id = $("#shopmallidmanual option:selected").val();
 
 	$('#sortable1 li').each(function(index) {
@@ -813,7 +976,7 @@ function saveManualDetail() {
 				setItemCnt += 1;
 			});
 		}
-		if ( (sysmTitleNames != "postno") && (sysmTitleNames != "address")  ) {
+		if ( (sysmTitleNames != "postno") && (sysmTitleNames != "address")  && (sysmTitleNames != "orderitemopt" )) {
 			if (setItemCnt > 1) {
 				$(this).children('ul').css("background-color","#fdfd82");
 				isCorrect = 0;
@@ -827,7 +990,7 @@ function saveManualDetail() {
 	
 	if (isCorrect == 0) {
 		//$('#msgareamanual').text("우편번호와 주소이외에는 2개의 필드를 설정할수 없습니다.");
-		alert("우편번호와 주소이외에는 2개의 필드를 설정할수 없습니다.");
+		alert("우편번호와 주소, 옵션 이외에는 2개의 필드를 설정할수 없습니다.");
 		return;
 	}
 	
@@ -847,15 +1010,18 @@ function saveManualDetail() {
 		}
 		assgTitleNames += (setItem + "^");
 	});
-
+	
+	priceopts = $(":input:radio[name=chkprice]:checked").val()+"^" + $(":input:radio[name=chkvat]:checked").val();
+	
 	console.log('userTitleNames : ' + userTitleNames);
 	console.log('sysmTitleNames : ' + sysmTitleNames);
 	console.log('assgTitleNames : ' + assgTitleNames);
-
+	console.log('priceopts : ' + priceopts);
+	
 	$.ajax({
         url : "/ism/ord/odo010Save.do",
         type: "post",
-        data : { "cum030id" : cum030id, "userTitleNames" : userTitleNames, "sysmTitleNames" : sysmTitleNames, "assgTitleNames" : assgTitleNames },
+        data : { "cum030id" : cum030id, "userTitleNames" : userTitleNames, "sysmTitleNames" : sysmTitleNames, "assgTitleNames" : assgTitleNames, "priceopts" : priceopts },
         success : function(data){
             if (data == "SUCCESS") {
             	//$('#msgareamanual').text("정상적으로 저장되었습니다.");
