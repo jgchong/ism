@@ -130,7 +130,7 @@
                         <ul>
                             <li style="width:100%; text-align:left;">
                                 <strong style="font-size:12px;">상품등록일</strong>
-                                <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_frCreateDt}" name="dtSearch_frCreateDt" placeHolder="시작등록일자" style="width:120px; float:none;"/> ~ <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_toCreateDt}" name="dtSearch_toCreateDt" placeHolder="종료등록일자" style="width:120px; float:none;"/>
+                                <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_frCreateDt}" id="dtSearch_frCreateDt" name="dtSearch_frCreateDt" placeHolder="시작등록일자" style="width:120px; float:none;"/> ~ <input type="text" class="it datepicker" title="" value="${prd010SearchVO.dtSearch_toCreateDt}" id="dtSearch_toCreateDt" name="dtSearch_toCreateDt" placeHolder="종료등록일자" style="width:120px; float:none;"/>
                             </li>
                             <li style="width:25%;">
                                 <select name="dfSearch_itemcat1" title="">
@@ -178,7 +178,7 @@
                                 </select>
                             </li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>
                             <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_whsname}" name="dfSearch_whsname" placeHolder="우선창고명"/></li>
                         </ul>
@@ -205,6 +205,7 @@
                     <input type="hidden" id="search_isdetail" name="search_isdetail" value="0"/><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
                     <input type="hidden" id="dfChange_whs010id" name="dfChange_whs010id" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
                     <input type="hidden" id="dfChange_orderitemid" name="dfChange_orderitemid" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
+                    <input name="pageIndex" type="hidden" value="<c:out value='${prd010SearchVO.pageIndex}'/>"/>
                 </form>
                 <!-- 상단 버튼과 검색 end-->
                 <div class="listTb">
@@ -653,6 +654,8 @@
         <%--<c:if test="${prd010SearchVO.search_isdetail eq 1}">--%>
         <%--$('.searchMore').slideToggle();--%>
         <%--</c:if>--%>
+
+        $('.paging').children().removeAttr('href');
 
         $.ajax({
             url: "/ism/cum/prd010selectAll.do",
@@ -1163,6 +1166,21 @@
                 alert("Error : " + msg);
             }
         });
+    }
+
+    function fnLinkPage(pageNo){
+        // alert("test!"+$('#dtSearch_frCreateDt').val())
+        document.form1.pageIndex.value = pageNo;
+        // document.form1.dtSearch_frCreateDt.value = $('#dtSearch_frCreateDt').val();
+        // document.form1.dtSearch_toCreateDt.value = $('#dtSearch_toCreateDt').val();
+        <%--document.form1.action = "<c:url value='/ism/prd/prd010.do'/>";--%>
+        // document.form1.dfSearch_itemcat1.value = pageNo;
+        // document.form1.dfSearch_itemcrosstype.value = pageNo;
+        // document.form1.dfSearch_itemgubun.value = pageNo;
+        // document.form1.dfSearch_bycname.value = pageNo;
+        // document.form1.dfSearch_itemname.value = pageNo;
+        // document.form1.dfSearch_itemopt.value = pageNo;
+        $('#form1').submit();
     }
 
 

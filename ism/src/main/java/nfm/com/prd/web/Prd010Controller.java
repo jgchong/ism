@@ -295,7 +295,7 @@ public class Prd010Controller {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
             Calendar calender = Calendar.getInstance();
             calender.add(Calendar.DATE, -30);
-            prd010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+            prd010SearchVO.setDtSearch_frCreateDt("2015-01-01");
         }
         if (StringUtils.isBlank(prd010SearchVO.getDtSearch_toCreateDt())) {
             SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
