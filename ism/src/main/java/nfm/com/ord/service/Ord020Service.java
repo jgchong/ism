@@ -25,4 +25,10 @@ public interface Ord020Service  {
 	public String selectProdList(Ord020SearchVO ord020SearchVO) throws Exception;
 
 	public void ord020InsertProd(Ismodm010VO ismodm010vo) ;
+	
+	// 매입처
+	public Object selectBycList() throws Exception;
+	
+	// 매출처
+	public Object selectCumList() throws Exception;
 }
