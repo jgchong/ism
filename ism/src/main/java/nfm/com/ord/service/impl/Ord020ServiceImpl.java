@@ -321,4 +321,16 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		// TODO Auto-generated method stub
 		ord020DAO.ord020InsertProd(ismodm010vo);
 	}
+
+	@Override
+	public  List<?> selectBycList() throws Exception {
+		// TODO Auto-generated method stub
+		return ord020DAO.selectBycList();
+	}
+
+	@Override
+	public  List<?> selectCumList() throws Exception {
+		// TODO Auto-generated method stub
+		return ord020DAO.selectCumList();
+	}
 }

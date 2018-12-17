@@ -79,5 +79,13 @@ public class Ord020DAO extends EgovAbstractDAO {
 	public void ord020InsertProd(Ismodm010VO ismodm010vo) {
 		insert("ord020DAO.ord020InsertProd", ismodm010vo);
 	}
+	
+	public List<?> selectBycList() {
+		return list("ord020DAO.selectBycList", null);
+	}
+	
+	public List<?> selectCumList() {
+		return list("ord020DAO.selectCumList", null);
+	}
 
 }
