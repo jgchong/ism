@@ -107,6 +107,13 @@ public class Ord020Controller {
 		/** pageing [e]*/
 		
 		model.addAttribute("resultList", ord020Service.selectList(ord020SearchVO));
+		
+		// 매입처/매출처
+		model.addAttribute("BycList",ord020Service.selectBycList());
+		model.addAttribute("CumList",ord020Service.selectCumList());
+		
+		
+		
 		//공통코드 전달
 		ComDefaultCodeVO vo = new ComDefaultCodeVO();
 		vo.setCodeId("ISM050");	//주문상태필드
