@@ -739,6 +739,17 @@ public class Skd010Controller {
                 skd010DAO.insertSkd030(param);
             }
         } else {
+
+            if (StringUtils.isBlank(whs010id)) {
+                Prd010VO prd010VO = (Prd010VO) prd010DAO.selectPrd010VO(itemcode);
+                Integer pristock = prd010VO.getPristock();
+                if (pristock == null) {
+                    JSONObject resultMessage = new JSONObject();
+                    resultMessage.put("failed", "failed");
+                    return resultMessage.toJSONString();
+                }
+                whs010id = String.valueOf(pristock);
+            }
             //일반 상품은 다음과 같이 빠지게 된다.
             Map<String, Object> param = new HashMap<>();
             param.put("itemcode", itemcode);

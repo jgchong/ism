@@ -177,12 +177,12 @@
                                     </c:forEach>
                                 </select>
                             </li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
-                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="${prd010SearchVO.dfSearch_whsname}" name="dfSearch_whsname" placeHolder="우선창고명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_itemcode}" name="dfSearch_itemcode" placeHolder="상품코드"/></li>
+                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_itemopt}" name="dfSearch_itemopt" placeHolder="옵션"/></li>
+                            <li style="width:25%;"><input type="text" class="it" onkeypress="if( event.keyCode==13 ){$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();}" title="" value="${prd010SearchVO.dfSearch_whsname}" name="dfSearch_whsname" placeHolder="우선창고명"/></li>
                         </ul>
-                        <p><a href="javascript:$('#search_isdetail').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
+                        <p><a href="javascript:$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
                     </div>
                     
                     <div style="width:100%; display:inline-block;">
@@ -205,7 +205,7 @@
                     <input type="hidden" id="search_isdetail" name="search_isdetail" value="0"/><!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
                     <input type="hidden" id="dfChange_whs010id" name="dfChange_whs010id" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
                     <input type="hidden" id="dfChange_orderitemid" name="dfChange_orderitemid" value="${prd010SearchVO.dfChange_whs010id}"/><!-- 우선창고 변경시 입력된다. -->
-                    <input name="pageIndex" type="hidden" value="<c:out value='${prd010SearchVO.pageIndex}'/>"/>
+                    <input name="pageIndex" id="pageIndex" type="hidden" value="<c:out value='${prd010SearchVO.pageIndex}'/>"/>
                 </form>
                 <!-- 상단 버튼과 검색 end-->
                 <div class="listTb">
