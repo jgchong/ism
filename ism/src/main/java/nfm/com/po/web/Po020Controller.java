@@ -1,11 +1,13 @@
 package nfm.com.po.web;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
 import nfm.com.po.service.Po020Service;
+import nfm.com.byc.service.Ismbyc020VO;
 import nfm.com.cmm.util.MailHandler;
 import nfm.com.ord.service.Ord020SearchVO;
 import nfm.com.po.service.Ismpomsearch020VO;
@@ -17,6 +19,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 
@@ -77,7 +81,6 @@ public class Po020Controller {
     	int pageUnit = ismpomsearch020VO.getPageUnit();
     	
 		/** EgovPropertyService.sample */
-    	//ismpomsearch020VO.setPageUnit(propertiesService.getInt("pageUnit"));
     	ismpomsearch020VO.setPageSize(propertiesService.getInt("pageSize"));
 
 		/** pageing */
@@ -99,6 +102,7 @@ public class Po020Controller {
 		model.addAttribute("resultMsg", resultMsg);
     	model.addAttribute("resultPoList", po020Service.selectPoList(ismpomsearch020VO));
     	model.addAttribute("bycList", prd010Service.selectBycAll());
+    	model.addAttribute("bycNmList", po020Service.selectByc020List(ismpomsearch020VO.getDtSearch_bycNm()));
 
 		return "ism/po/po020";
 	}
@@ -134,5 +138,47 @@ public class Po020Controller {
 	    }
 		
 		return retVal;
+	}
+	
+	/**
+	 * 매입처 담당자 가져요기
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/ism/po/po020SelectSndNm.do")
+	public String po020SelectSndNm(@RequestParam("bycId") String bycId,
+								  ModelMap model,
+								  HttpSession session) throws Exception {
+		
+		JSONObject jsonObject = new JSONObject();
+		
+    	//매입처 담당자 목록 정보 가져옴.[s]
+		List<Ismbyc020VO> listIsmbyc020VO = (List<Ismbyc020VO>) po020Service.selectByc020List(bycId); //bycId로 조회
+
+		JSONArray jsonArray020 = new JSONArray();
+
+	    for(Ismbyc020VO vo : listIsmbyc020VO){
+	    	JSONObject jsonObject020 = new JSONObject();
+	    	jsonObject020.put("byc010id", vo.getByc010id());
+	    	jsonObject020.put("byc020id", vo.getByc020id());
+
+	    	if (vo.getBycusername() == null) {
+	    		jsonObject020.put("username", "");
+	    	}else{
+	    		jsonObject020.put("username", URLEncoder.encode(vo.getBycusername(), "UTF-8"));
+	    	}
+
+	    	if (vo.getBycusertel() == null) {
+	    		jsonObject020.put("byc020id", "");
+	    	}else{
+	    		jsonObject020.put("byc020id", vo.getByc020id());
+	    	}
+
+	    	jsonArray020.add(jsonObject020);
+	    }
+	    jsonObject.put("userlist", jsonArray020);
+	    //발주처 담당자 목록 정보 가져옴.[e]
+		
+		
+		return jsonObject.toString();
 	}
 }
