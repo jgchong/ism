@@ -121,12 +121,8 @@
             <div class="contents">
                 <h2 class="pageTit">재고관리</h2>
 
-                <form id="form1" name="form1" method="post" action="/ism/skd/skd010.do" class="searchArea">
-                    <!--
-                    <a href="javascript:selectDel();" class="ml30">선택삭제</a>
-                    -->
-                    <input type="text" class="it ml30" title="" value="${skd010SearchVO.dfSearch_itemname}" name="dfSearch_itemname" placeHolder="상품명"/>
-                    <button style="margin-left:-4px;">검색</button>
+                <form id="form1" name="form1" method="post" action="/ism/adj/adj050.do" class="searchArea" style="text-align:left; margin-top:-20px;">
+                    <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${skd010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
                 </form>
                 <div class="listTb">
                     <table cellpadding="0" cellspacing="0" class="" summary="">
@@ -271,14 +267,27 @@
 </script>
 <script type="text/javascript">
     $(function () {
-        $(".datepicker").datepicker({
-            dateFormat: "yy-mm-dd",
-            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-            dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+        $(".monthPicker").datepicker({
+            dateFormat: 'yy-mm',
             changeMonth: true,
             changeYear: true,
-            yearRange: "c-70:c+70",
-            showMonthAfterYear: true
+            showButtonPanel: true,
+            monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+            onClose: function (dateText, inst) {
+                var month = $("#ui-datepicker-div .ui-datepicker-month :selected").val();
+                var year = $("#ui-datepicker-div .ui-datepicker-year :selected").val();
+                $(this).val($.datepicker.formatDate('yy-mm', new Date(year, month, 1)));
+                $('#form1').submit();
+            }
+        });
+
+        $(".monthPicker").focus(function () {
+            $(".ui-datepicker-calendar").hide();
+            $("#ui-datepicker-div").position({
+                my: "center top",
+                at: "center bottom",
+                of: $(this)
+            });
         });
     });
 </script>

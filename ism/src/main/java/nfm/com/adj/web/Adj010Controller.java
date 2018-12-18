@@ -456,7 +456,7 @@ public class Adj010Controller {
     private Skd010DAO skd010DAO;
 
     @RequestMapping(value = "/ism/adj/adj050.do")
-    public String mainList(@ModelAttribute("skd010SearchVO") Skd010SearchVO skd010SearchVO, ModelMap model) throws Exception {
+    public String mainList(@ModelAttribute("skd010SearchVO") Skd010SearchVO skd010SearchVO, ModelMap model, String closedt) throws Exception {
         // 미인증 사용자에 대한 보안처리
         // 미인증 사용자에 대한 보안처리
         Boolean isAuthenticated = EgovUserDetailsHelper.isAuthenticated();
@@ -464,6 +464,16 @@ public class Adj010Controller {
             model.addAttribute("message", egovMessageSource.getMessage("fail.common.login"));
             return "uat/uia/EgovLoginUsr";
         }
+
+        if (StringUtils.isBlank(skd010SearchVO.getDtSearch_frCreateDt())) {
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMM");
+            Calendar calender = Calendar.getInstance();
+            calender.add(Calendar.MONTH, -1);
+            skd010SearchVO.setDtSearch_frCreateDt(formatter.format(calender.getTime()));
+        } else {
+            skd010SearchVO.setDtSearch_frCreateDt(skd010SearchVO.getDtSearch_frCreateDt().replaceAll("-", ""));
+        }
+        String yyyymm = skd010SearchVO.getDtSearch_frCreateDt();
 
         if (StringUtils.isBlank(skd010SearchVO.getDfSearch_itemname())) {
             skd010SearchVO.setDfSearch_itemname(null);
@@ -550,10 +560,14 @@ public class Adj010Controller {
             }
         }
 
+
+        SimpleDateFormat parser = new SimpleDateFormat("yyyyMM");
+        Date yyyymmDate = parser.parse(yyyymm);
+
         // 전달 구하기
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Calendar calender = Calendar.getInstance();
-        calender.add(Calendar.MONTH, -1);
+        calender.setTime(yyyymmDate);
         calender.set(calender.get(Calendar.YEAR), calender.get(Calendar.MONTH), calender.getActualMaximum(Calendar.DAY_OF_MONTH));
         String lastMonth = formatter.format(calender.getTime());
 

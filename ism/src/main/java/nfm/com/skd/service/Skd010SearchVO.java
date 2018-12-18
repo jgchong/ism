@@ -40,6 +40,16 @@ public class Skd010SearchVO implements Serializable {
     //search 조건
     private String dfSearch_itemname;
 
+    public String getDtSearch_frCreateDt() {
+        return dtSearch_frCreateDt;
+    }
+
+    public void setDtSearch_frCreateDt(String dtSearch_frCreateDt) {
+        this.dtSearch_frCreateDt = dtSearch_frCreateDt;
+    }
+
+    private String dtSearch_frCreateDt;
+
 
     public String getDfSearch_itemname() {
         return dfSearch_itemname;
