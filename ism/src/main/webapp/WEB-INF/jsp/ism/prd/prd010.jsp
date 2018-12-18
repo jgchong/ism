@@ -185,10 +185,10 @@
                         <p><a href="javascript:$('#search_isdetail').val(1);$('#pageIndex').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
                     </div>
                     
-                    <div style="width:100%; display:inline-block;">
+                       <div style="width:100%; display:inline-block;">
                         <div style="float:left; height:34px;">
-                            <a href="#">엑셀예시(향후반영예정)</a>
-                            <a id="excelDownbtn" href="javascript:;" style="margin-top: 30px;">엑셀 다운로드</a>
+                            <!--a href="#">엑셀예시(향후반영예정)</a-->
+                            <a id="excelDownbtn" href="javascript:;" style="display:inline-block; text-align:center;">엑셀 다운로드</a>
                         </div>
                         <div style="float:right; height:34px;">
                             <label for="filePrd" class="muploadbtn" style="display:inline-block; padding:7px 12px; margin:0;">운영상품 일괄 등록</label>
