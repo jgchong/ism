@@ -15,6 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="/css/custom/base.css" type="text/css" rel="stylesheet"/>
     <link href="/css/custom/layout.css" type="text/css" rel="stylesheet"/>
@@ -46,6 +47,9 @@
     </style>
 </head>
 
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/jquery.form.js"></script>
+<script src="/js/custom/ism.js" type="text/javascript" charset="utf-8"></script>
 <script type="text/javascript">
 var Ca = /\+/g;
 $(document).ready(function() {
@@ -63,6 +67,46 @@ $(document).ready(function() {
 		document.form1.pageIndex.value = 1;
         document.form1.submit();
 	});
+	
+	$("#dtSearch_bycNm").on('change', function(ret) {  
+        var bycId = ret.target.value;
+        $.ajax({
+            url : "/ism/po/po020SelectSndNm.do",
+            type: "post",
+            data : { "bycId" : bycId },
+            dataType:'json',
+            contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+            success : function(data){
+            	console.log(data.userlist.length);
+                if (data.userlist.length > 0) {
+					$("#dtSearch_sndNm option").remove();
+					$("#dtSearch_sndNm").append("<option value=''>선택</option>");
+       				$.each(data.userlist,function(index, item) {
+       					$("#dtSearch_sndNm").append("<option value='"+decodeURIComponent(item.username.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"</option>");
+       				});
+                }
+            },
+            error: function (jqXHR, exception) {
+                var msg = '';
+                if (jqXHR.status === 0) {
+                    msg = 'Not connect.\n Verify Network.';
+                } else if (jqXHR.status == 404) {
+                    msg = 'Requested page not found. [404]';
+                } else if (jqXHR.status == 500) {
+                    msg = 'Internal Server Error [500].';
+                } else if (exception === 'parsererror') {
+                    msg = 'Requested JSON parse failed.';
+                } else if (exception === 'timeout') {
+                    msg = 'Time out error.';
+                } else if (exception === 'abort') {
+                    msg = 'Ajax request aborted.';
+                } else {
+                    msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+                }
+                $('#msgareamanual').text("Error : "+msg);
+            }
+        });
+    });
 });
 
 function fnLinkPage(pageNo){
@@ -96,17 +140,17 @@ function fnLinkPage(pageNo){
 					<input type="text" class="it datepicker" title="" value="${ismpomsearch020VO.dtSearch_frPoDt}" id="dtSearch_frPoDt" name="dtSearch_frPoDt" placeHolder="발송시작일자" style="width:120px; float:none;"/> ~ 
 					<input type="text" class="it datepicker" title="" value="${ismpomsearch020VO.dtSearch_toPoDt}" id="dtSearch_toPoDt" name="dtSearch_toPoDt" placeHolder="발송종료일자" style="width:120px; float:none;"/>
                     <strong style="font-size:12px;margin-left:20px;">매입처</strong>
-                    <select name="dtSearch_bycNm">
+                    <select name="dtSearch_bycNm" id="dtSearch_bycNm">
 						<option value="">선택</option>
                         <c:forEach var="item" items="${bycList}" varStatus="status">
 						<option value="${item.byc010id}" <c:if test="${ismpomsearch020VO.dtSearch_bycNm eq item.byc010id}">selected</c:if> >${item.bycname}</option>
 	                    </c:forEach>
 					</select>
 					<strong style="font-size:12px;margin-left:20px;">발신인</strong>
-                    <select name="dtSearch_sndNm">
+                    <select name="dtSearch_sndNm" id="dtSearch_sndNm">
 						<option value="">선택</option>
-                        <c:forEach var="item" items="${ISM020}" varStatus="status">
-						<option value="${item.code}" <c:if test="${ismpomsearch020VO.dtSearch_sndNm eq item.code}">selected</c:if> >${item.codeNm}</option>
+                        <c:forEach var="item" items="${bycNmList}" varStatus="status">
+						<option value="${item.bycusername}" <c:if test="${ismpomsearch020VO.dtSearch_sndNm eq item.bycusername}">selected</c:if> >${item.bycusername}</option>
 	                    </c:forEach>
 					</select>
                     <button style="margin-left:4px;">검색</button>
@@ -139,9 +183,9 @@ function fnLinkPage(pageNo){
                             <tr>
                                 <td><c:out value="${result.sortNo}"/></td>
                                 <td><c:out value="${result.processdate}"/></td>
-                                <td><c:out value="${result.byc010id}"/></td>
-                                <td><c:out value="${result.rcvuser}"/></td>
-                                <td><c:out value="${result.orderuser}"/></td>
+                                <td><c:out value="${result.bycname}"/></td>
+                                <td><c:out value="${result.bycusername}"/>(<c:out value="${result.rcvuseremail}"/>)</td>
+                                <td><c:out value="${result.regid}"/></td>
                                 <td>
                                 	<c:choose>
 									    <c:when test="${result.uploadfilename eq 'NO_FILE'}">
@@ -156,7 +200,18 @@ function fnLinkPage(pageNo){
 									</c:choose> 
                                 	
                                 </td>
-                                <td>성공&nbsp;<a href="#contents" onclick="javascript:reSendMail('<c:out value="${result.rcvuseremail}"/>', '<c:out value="${result.uploadfilename}"/>', '<c:out value="${result.receiveType}"/>')"><img src="/images/resend.png" /></a>
+                                <td>성공&nbsp;
+                                	<c:choose>
+									    <c:when test="${result.uploadfilename eq 'NO_FILE'}">
+									    (No File)
+									    </c:when>
+									    <c:when test="${result.uploadfilename ne 'NO_FILE'}">
+									    <a href="#contents" onclick="javascript:reSendMail('<c:out value="${result.rcvuseremail}"/>', '<c:out value="${result.uploadfilename}"/>', '<c:out value="${result.receiveType}"/>')"><img src="/images/resend.png" /></a>
+									    </c:when>
+									    <c:otherwise>
+									        error
+									    </c:otherwise>
+									</c:choose> 
                                 </td>
                             </tr>
                         </c:forEach>
@@ -240,4 +295,5 @@ function fnLinkPage(pageNo){
     	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+filename;
     	T.submit();
     }
+    
 </script>
