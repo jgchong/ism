@@ -9,6 +9,7 @@
     <typeAlias  alias="ismodo010VO" type = "nfm.com.ord.service.Ismodo010VO"/>
     <typeAlias  alias="ismodo020VO" type = "nfm.com.ord.service.Ismodo020VO"/>
     <typeAlias  alias="ismodm010VO" type = "nfm.com.ord.service.Ismodm010VO"/>
+    <typeAlias  alias="ismodmCommVO" type = "nfm.com.ord.service.IsmodmCommVO"/>
     <typeAlias  alias="adj020VO" type = "nfm.com.ord.service.Adj020VO"/>
     <typeAlias  alias="ismodo020ProdVO" type = "nfm.com.ord.service.Ismodo020ProdVO"/>
 
@@ -151,6 +152,13 @@
         <isNotEqual prepend="AND" property="odm010id" compareValue="0">
         	a.odm010id = #odm010id#
         </isNotEqual>
+        
+        <isEqual property="search_status" compareValue="ALL">
+	        <isEqual prepend="AND" property="odm010id" compareValue="0">
+	        	a.status != ''
+	        </isEqual>
+        </isEqual>
+        
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
@@ -237,7 +245,7 @@
            a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
            a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
            IFNULL(d.itemname, a.orderitemname) as orderitemname,
-           IFNULL(d.itemprice,'') as orderitemprice,
+           IFNULL(a.orderitemprice,'') as orderitemprice,
            IFNULL(d.itemdlvprice, '') as dlvprice,
            a.rcvusercontacthp, a.rcvuseremail,
            b.coname,
@@ -252,6 +260,7 @@
            IFNULL(j.code_nm,'') as claimstatusnm,
            IFNULL(k.code_nm,'') as claimreasonnm,
            IFNULL(l.code_nm,'') as retstatusnm,
+           b.account2,
            IFNULL(d.orderitemid,'NOITEM') as chkprod,
            case when IFNULL(chksum, 0) = 0 then 'NEW' else 'OVER' end  chkoverlap
       from ismodm010 a
@@ -286,6 +295,11 @@
         <isNotEqual prepend="AND" property="odm010id" compareValue="0">
         	a.odm010id = #odm010id#
         </isNotEqual>
+        <isEqual property="search_status" compareValue="ALL">
+	        <isEqual prepend="AND" property="odm010id" compareValue="0">
+	        	a.status != ''
+	        </isEqual>
+        </isEqual>
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
@@ -650,6 +664,11 @@
         <isNotEqual prepend="AND" property="odm010id" compareValue="0">
         	a.odm010id = #odm010id#
         </isNotEqual>
+        <isEqual property="search_status" compareValue="ALL">
+	        <isEqual prepend="AND" property="odm010id" compareValue="0">
+	        	a.status != ''
+	        </isEqual>
+        </isEqual>
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
@@ -719,7 +738,7 @@
 				, b.coname
 				, a.cum030id
 				, g.shopmallname
-		) T1
+		) t1
 		order by t1.updatedt, t1.cum010id
     </select>
     
@@ -827,4 +846,16 @@
 		/*ord020DAO.ord020InsertProd*/
 		insert into ismcum040 (cum030id, orderitemid, cumprodcode, cumprodoptnm1) values (#cum030id#, #itemcode#, #orderitemid#, #cumprodoptnm1#)
     </insert>
+    <!-- 매입처 조회 -->
+    <select id="ord020DAO.selectBycList" resultClass="ismodmCommVO">
+    	select byc010id code, bycname value 
+    	from ismbyc010
+    	where useyn = 'Y'
+    </select>
+    <!-- 매출처 조회 -->
+    <select id="ord020DAO.selectCumList" resultClass="ismodmCommVO">
+    	select cum010id code, coname value 
+    	from ismcum010
+    	where useyn = 'Y'
+    </select>
 </sqlMap>
