@@ -131,29 +131,29 @@ form.searchArea .searchMore li select {
                                         </c:forEach>
 									</select>
 								</li>
-								<%--
+								
 								<li>
 									<select name="dtSearch_bycNm">
-										<option value="">매입처</option>
-                                        c:forEach var="item" items="${ISM020}" varStatus="status">
-										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_bycNm eq item.code}">selected</c:if> >${item.codeNm}</option>
+										<option value="">매입처 선택</option>
+                                        <c:forEach var="item" items="${BycList}" varStatus="status">
+										    <option value="${item.value}" <c:if test="${ord020SearchVO.dtSearch_bycNm eq item.value}">selected</c:if> >${item.value}</option>
                                         </c:forEach>
 									</select>
 								</li>
                                 
 								<li>
 									<select name="dtSearch_cumNm">
-										<option value="">매출처</option>
-                                        <c:forEach var="item" items="${ISM020}" varStatus="status">
-										    <option value="${item.code}" <c:if test="${ord020SearchVO.dtSearch_cumNm eq item.code}">selected</c:if> >${item.codeNm}</option>
+										<option value="">매출처선택</option>
+                                        <c:forEach var="item" items="${CumList}" varStatus="status">
+										    <option value="${item.value}" <c:if test="${ord020SearchVO.dtSearch_cumNm eq item.value}">selected</c:if> >${item.value}</option>
                                         </c:forEach>
 									</select>
 								</li>			
-                                --%>
-
+                                
+								<%--
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_bycNm}" name="dtSearch_bycNm" placeHolder="매입처"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_cumNm}" name="dtSearch_cumNm" placeHolder="매출처"/></li>
-								
+								--%>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_dlvNo}" name="dtSearch_dlvNo" placeHolder="송장번호"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_dlvCo}" name="dtSearch_dlvCo" placeHolder="택배사"/></li>
 								<li><input type="text" class="it" title="" value="${ord020SearchVO.dtSearch_orderno}" name="dtSearch_orderno" placeHolder="주문번호"/></li>
@@ -290,7 +290,7 @@ form.searchArea .searchMore li select {
 							<tbody>
 <c:forEach var="result" items="${resultList}" varStatus="status">
 	<c:set var = "rowClass" value = ""/>
-	<c:if test="${result.cstype eq 'C'}">
+	<c:if test="${result.cstype eq 'C' && ord020SearchVO.search_status ne 'TEMP'}">
 		<!-- 클레임 접수의 경우 레드 -->
 		<c:if test="${result.claimstatus eq 1}">
 			<c:set var = "rowClass" value = "class='red'"/>
