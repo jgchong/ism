@@ -13,6 +13,7 @@
 
     <typeAlias  alias="ismpomsearch020VO"	type = "nfm.com.po.service.Ismpomsearch020VO"/>
     <typeAlias  alias="ismpom020VO"			type = "nfm.com.po.service.Ismpom020VO"/>
+    <typeAlias  alias="ismbyc020VO" 		type = "nfm.com.byc.service.Ismbyc020VO"/>
 
     <!-- 창고 목록 select -->
     <select id="po010DAO.selectWhsList" resultClass="ismwhs010VO">
@@ -89,15 +90,15 @@
 		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail, ordermemo
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, ordermemo, regid
 	) (select
 		#poNum#,
-		odm010id, orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact,
+		odm010id, orderno, orderdate, cum010id, cum030id, #byc010id#, orderuser, orderusercontact,
 		IF(#addorderuser# = 'Y', concat(rcvuser, '(보내는 사람 : ',orderuser,')'),rcvuser),
 		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail, #ordermemo#
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, #ordermemo#, #regid#
 	     from ismodm010
 	    where odm010id in
 		<iterate  property="odm010idArr" open="(" close=")" conjunction=",">
@@ -136,9 +137,9 @@
 			SELECT 
 				@ROWNUM := @ROWNUM + 1 AS SORTNO
 				, DATE_FORMAT(A.PROCESSDATE, '%Y-%m-%d %H:%i' ) AS PROCESSDATE
-				, A.BYC010ID
-				, A.RCVUSER
-				, A.ORDERUSER
+				, (select bycname from ismbyc010 where byc010id =A.BYC010ID ) bycname
+				, A.bycusername
+				, A.regid
 				, IF(A.UPLOADFILENAME='', 'NO_FILE', A.UPLOADFILENAME) UPLOADFILENAME
 				, CASE A.STATUS
 					WHEN 1 THEN '출고전'
@@ -149,7 +150,7 @@
 				END STATUS
 				, A.RCVUSEREMAIL
 				, A.RECEIVETYPE
-			FROM ISMPOM010 A, (SELECT @ROWNUM := 0) R
+			FROM ismpom010 A, (SELECT @ROWNUM := 0) R
 			WHERE 1 = 1
 	        <isNotEmpty prepend="AND" property="dtSearch_frPoDt">
 			<![CDATA[
@@ -168,7 +169,7 @@
 			</isNotEmpty>
 	        
 	        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
-	           a.byc010id = #dtSearch_sndNm#
+	           a.regid = #dtSearch_sndNm#
 	        </isNotEmpty>
 			ORDER BY A.PROCESSDATE ASC
 		) PO
@@ -191,10 +192,27 @@
         	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
         ]]>
         </isNotEmpty>
+        
+        <isNotEmpty prepend="AND" property="dtSearch_bycNm">
+           a.byc010id = #dtSearch_bycNm# 
+		</isNotEmpty>
+        
+        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
+           a.regid = #dtSearch_sndNm#
+        </isNotEmpty>
 	</select>
 	
 	<update id="po010DAO.updatePom010" parameterClass="java.util.HashMap">
-	update ismpom010 set uploadfilename = #uploadfilename#, rcvuseremail = #rcvuseremail#, receiveType = #receiveType#
+	update ismpom010 set uploadfilename = #uploadfilename#, rcvuseremail = #rcvuseremail#, receiveType = #receiveType#,
+		bycusername = (select bycusername from ismbyc020 where byc010id = #byc010id# and bycuseremail = #rcvuseremail# )
 	 where pom010id = #poNum#
 	</update>
+	
+	    <!-- 매입처 담당자 목록 select -->
+    <select id="po020DAO.selectByc020List" parameterClass="String" resultClass="ismbyc020VO">
+	select byc020id, byc010id, bycusername, bycusertel, bycuseremail, bycmemo
+      from ismbyc020
+     where byc010id = #bycId#
+    </select>
+	
 </sqlMap>
