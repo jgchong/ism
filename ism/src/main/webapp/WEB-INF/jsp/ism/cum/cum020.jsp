@@ -97,7 +97,7 @@ label.upload1 {
 				<div class="contents">
 					<h2 class="pageTit">매출처 상품코드관리</h2>
 					<form id="formMain" name="formMain" method="post" action="/ism/cum/cum020.do" class="searchArea">
-						<a href="javascript://" id="excelDownbtn" style="background:#45b6b6;">매출처 상품코드 등록 양식 다운로드</a>
+						
 						
 						<select id="search_cum030id" name="search_cum030id">
 							<option value="0">매출처 쇼핑몰 선택</option>
@@ -107,6 +107,7 @@ label.upload1 {
 						</select>
 						<button type="submit" style="margin-left:-4px;">검색</button>
 						<input type="hidden" id="search_shopmallname" name="search_shopmallname" value="" />
+						<a href="javascript://" id="excelDownbtn" style="background:#45b6b6;">매출처 상품코드등록 다운로드</a>
 					</form>
 					<form id="formMainUp" name="formMainUp" method="post" enctype='multipart/form-data' action="/ism/cum/cum020ExcelUpload.do" class="searchArea">
 						<label id="fileupxlsbtn" for="fileupxls" class="upload1">매출처 상품코드 업로드</label>
@@ -129,8 +130,8 @@ label.upload1 {
 									<th scope="col">매출처명</th>
 									<th scope="col">쇼핑몰명</th>
 									<th scope="col">운영상품코드</th>
-									<th scope="col">운영상품명</th>
-									<th scope="col">매출처상품명</th>
+									<th scope="col">상품명</th>
+									<th scope="col">매출처상품코드</th>
 									<th scope="col">정산가</th>
 									<th scope="col">옵션1</th>
 									<th scope="col">옵션2</th>

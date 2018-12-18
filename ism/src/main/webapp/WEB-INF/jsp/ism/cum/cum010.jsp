@@ -94,7 +94,7 @@ li img {
 				<div class="contents">
 					<h2 class="pageTit">매출처관리</h2>
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
-						<a href="javascript:;" class="" style="background:#45b6b6;">매출처 다운로드</a>
+						<!--a href="javascript:;" class="" style="background:#45b6b6;">매출처 다운로드</a-->
 						<input type="text" class="it ml30" title="" value="${cum010SearchVO.search_coname}" id="search_coname" name="search_coname"/>
 						<button style="margin-left:-4px;">검색</button>
 					</form>
