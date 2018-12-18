@@ -181,7 +181,7 @@ form.searchArea .searchMore li select {
                         <div style="width:100%; display:inline-block;">
                             <div style="float:left;">
                                 <a id="excelDownbtn" href="javascript:;" style="display:inline-block; text-align:center;">엑셀다운로드</a>
-                                <a id="" href="javascript:;" style="display:inline-block; text-align:center;">엑셀업로드(개발중)</a>
+                                <!--a id="" href="javascript:;" style="display:inline-block; text-align:center;">엑셀업로드(개발중)</a-->
                             </div>
                             <div style="float:right;">
                                 <select id="chgOrderStatus" name="chgOrderStatus" title="">
