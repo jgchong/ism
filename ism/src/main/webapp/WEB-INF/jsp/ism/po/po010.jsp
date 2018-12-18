@@ -1428,6 +1428,11 @@ function confirmpo() {
 	var userList = $("#userList").val().trim();
 	var mailSubject = $("#mailSubject").val().trim();
 	var mailText = $("#mailText").val().trim();
+	
+	if(userList == "0") {
+		alert("발주목록을 수신할 담당자를 선택하세요!");
+		return;		
+	}
 
 	if ($("#listData").find("ul").length == 0) {
 		alert("발주 전송 목록이 없습니다.");

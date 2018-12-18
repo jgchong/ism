@@ -167,14 +167,14 @@ label.upload1 {
 <script type="text/javascript">
 $(document).ready(function() {
     $("#excelDownbtn").click(function () {
-    	//if ($("#search_cum030id").val() == "0") {
-    	//	alert("매출처 쇼핑몰을 선택해주시기 바랍니다.")
-    	//}else{
-    	//	$("#search_shopmallname").val($("#search_cum030id option:selected").text());
+    	if ($("#search_cum030id").val() == "0") {
+    		alert("매출처 쇼핑몰을 선택해주시기 바랍니다.")
+    	}else{
+    		$("#search_shopmallname").val($("#search_cum030id option:selected").text());
             document.formMain.action = "<c:url value='/ism/cum/cum020ExcelDownload.do'/>";
             document.formMain.submit();
             document.formMain.action = "<c:url value='/ism/cum/cum020.do'/>";    		
-    	//}
+    	}
     });
     
     $("#fileupxlsbtn").click(function () {

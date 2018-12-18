@@ -312,6 +312,13 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			hm.put("odm010idArr", odm010idArr);
 			hm.put("ordermemo", po010SaveVO.getOrdermemo()); //발주시 사용자가 입력한 발주메모로 현재 발주에 모든 주문에 적용
 			hm.put("addorderuser", po010SaveVO.getAddorderuser()); //발주시 사용자가 선택으로 수령자에 주문자명 포함여부 Y인 경우 포함
+			hm.put("byc010id", poo010id); //매입처ID
+			//hm.put("bycusername", userList); //매입처ID
+			hm.put("regid", loginVO.getName()); //매입처ID
+			
+			System.out.println("############################"+poo010id);
+			//System.out.println("############################"+userList);
+			System.out.println("############################"+loginVO.getName());
 			
 		    po010DAO.insertPom010Arr(hm);
 		    //발주 정보 저장[e]
@@ -437,8 +444,8 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    hm.put("uploadfilename", poNum + ".xlsx");
 		    hm.put("rcvuseremail", userList);
 		    hm.put("receiveType", receiveType);
+		    hm.put("byc010id", poo010id);
 		    po010DAO.updatePom010(hm);
-		    
 	
 		    if ("X".equals(receiveType)) {
 		    	retVal = filefullname;

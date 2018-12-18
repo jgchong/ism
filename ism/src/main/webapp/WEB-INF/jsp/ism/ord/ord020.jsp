@@ -341,10 +341,10 @@ form.searchArea .searchMore li select {
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">
 	<c:choose>
     	<c:when test="${result.cstype eq 'C'}">
-									<c:out value="${result.claimstatusnm}"/></td>
+									<c:out value="${result.ststusNm}"/></td>
 		</c:when>
 		<c:when test="${result.cstype eq 'R'}">
-									<c:out value="${result.retstatusnm}"/></td>
+									<c:out value="${result.ststusNm}"/></td>
 		</c:when>
 		<c:otherwise>
 									<c:out value="${result.ststusNm}"/></td>

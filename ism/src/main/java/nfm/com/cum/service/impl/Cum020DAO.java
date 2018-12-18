@@ -23,7 +23,7 @@ public class Cum020DAO extends EgovAbstractDAO {
 	public List<?> selectList040(HashMap hm) {
 		return list("cum020DAO.selectList040", hm);
 	}
-
+	
 	public void deleteCum040(int cum030id) {
 		delete("cum020DAO.deleteCum040", cum030id);
 	}

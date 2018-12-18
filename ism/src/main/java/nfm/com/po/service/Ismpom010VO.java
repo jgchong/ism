@@ -50,6 +50,8 @@ public class Ismpom010VO implements Serializable {
 	private String coname = "";
 	private String shopmallname = "";
 	private String ordermemo = "";
+	private String bycusername = "";
+	private String regid = "";
 
 	public String getPom010id() {
 		return pom010id;
@@ -362,6 +364,23 @@ public class Ismpom010VO implements Serializable {
 	public void setOrdermemo(String ordermemo) {
 		this.ordermemo = ordermemo;
 	}
+	
+	public String getBycusername() {
+		return bycusername;
+	}
+
+	public void setBycusername(String bycusername) {
+		this.bycusername = bycusername;
+	}
+	
+	public String getRegid() {
+		return regid;
+	}
+
+	public void setRegid(String regid) {
+		this.regid = regid;
+	}
+	
 
 	/**
      * toString 메소드를 대치한다.
