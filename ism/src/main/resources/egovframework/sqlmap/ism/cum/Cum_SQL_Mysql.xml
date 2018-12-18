@@ -156,9 +156,10 @@
     
     <!-- 매출처 상품코드 목록 select -->
     <select id="cum020DAO.selectListCumProdList" parameterClass="int" resultClass="ismcum040VO">
-	select a.itemcode, a.itemname, ifnull(b.cumprodcode,''), 
+	select a.itemcode, a.itemname, ifnull(b.cumprodcode,'') cumprodcode, 
 		   a.itembuyprice, ifnull(b.cumprodoptnm1,'') cumprodoptnm1, ifnull(b.cumprodoptnm2,'') cumprodoptnm2
-	  from ismprd010 a left outer join ismcum040 b on a.itemcode = b.orderitemid
+	  from ismprd010 a left outer join ismcum040 b on a.itemcode = b.orderitemid 
+	  where b.cum030id = #search_cum030id#
     </select>
 
 	<!-- 매출처 상품코드 등록 -->
