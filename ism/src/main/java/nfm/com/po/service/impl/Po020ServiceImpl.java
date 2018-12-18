@@ -1,5 +1,7 @@
 package nfm.com.po.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
@@ -15,7 +17,7 @@ public class Po020ServiceImpl extends EgovAbstractServiceImpl implements Po020Se
 	/** ord020DAO */
 	@Resource(name="po020DAO")
 	private Po020DAO po020DAO;
-
+	
 	public Object selectPoList(Ismpomsearch020VO ismpomsearch020VO) throws Exception {
 		return po020DAO.selectPoList(ismpomsearch020VO);
 	}
@@ -23,6 +25,10 @@ public class Po020ServiceImpl extends EgovAbstractServiceImpl implements Po020Se
 	@Override
 	public int selectPoListTotCnt(Ismpomsearch020VO ismpomsearch020VO) throws Exception {
 		return po020DAO.selectPoListTotCnt(ismpomsearch020VO);
+	}
+	
+	public Object selectByc020List(String bycId) throws Exception {
+		return po020DAO.selectByc020List(bycId); //byc010id로 조회
 	}
 
 }

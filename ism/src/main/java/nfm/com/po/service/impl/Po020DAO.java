@@ -16,4 +16,8 @@ public class Po020DAO extends EgovAbstractDAO {
 	public int selectPoListTotCnt(Ismpomsearch020VO ismpomsearch020VO) {
         return (Integer)select("po020DAO.selectPoListTotCnt", ismpomsearch020VO);
     }
+	
+	public List<?> selectByc020List(String bycId) {
+		return list("po020DAO.selectByc020List", bycId);
+	}
 }
