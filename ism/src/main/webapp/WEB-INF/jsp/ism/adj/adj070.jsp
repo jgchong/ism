@@ -128,7 +128,7 @@
                 <form id="form1" name="form1" method="post" action="/ism/adj/adj070.do" class="searchArea" style="text-align:left; margin-top:-20px;">
                     <input id="dtSearch_frCreateDt" type="text" name="dtSearch_frCreateDt" value="${adj010SearchVO.dtSearch_frCreateDt}" class="it monthPicker"/>
                 </form>
-                <div style="display:inline-block; width:100%; height:260px;" class="listTb">
+                <div style="display:inline-block; width:100%; height:200px;" class="listTb">
                     <div style="float:left; width:calc(50% - 10px);">
                         <table cellpadding="0" cellspacing="0" class="" summary="">
                             <caption></caption>
@@ -318,13 +318,13 @@
                             </tbody>
                         </table>
                     </div>
+                 </div>
 
 
 
+                 <div style="display:inline-block; width:100%;" class="listTb">
 
-
-
-                    <div style="float:right; width:calc(50% - 10px);">
+                    <div style="float:left; width:calc(50% - 10px);">
                         <table cellpadding="0" cellspacing="0" class="" summary="">
                             <caption></caption>
                             <colgroup>
@@ -376,13 +376,6 @@
                             </tbody>
                         </table>
                     </div>
-
-
-
-
-
-
-
 
                 </div>
             </div>
