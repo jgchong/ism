@@ -312,13 +312,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			hm.put("odm010idArr", odm010idArr);
 			hm.put("ordermemo", po010SaveVO.getOrdermemo()); //발주시 사용자가 입력한 발주메모로 현재 발주에 모든 주문에 적용
 			hm.put("addorderuser", po010SaveVO.getAddorderuser()); //발주시 사용자가 선택으로 수령자에 주문자명 포함여부 Y인 경우 포함
-			hm.put("byc010id", poo010id); //매입처ID
+			hm.put("byc010id", Integer.valueOf(poo010id)); //매입처ID
 			//hm.put("bycusername", userList); //매입처ID
 			hm.put("regid", loginVO.getName()); //매입처ID
-			
-			System.out.println("############################"+poo010id);
-			//System.out.println("############################"+userList);
-			System.out.println("############################"+loginVO.getName());
 			
 		    po010DAO.insertPom010Arr(hm);
 		    //발주 정보 저장[e]
@@ -341,15 +337,22 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 			List<Object> header = new ArrayList<Object>();
 		    List<List<Object>> data = new ArrayList<List<Object>>();
+		    
+		    String[] fVal = new String[50];
+		    int fixValueIdx = 0;
 	
 			header.add("key Value");
 			header.add("송장번호");
-	
+			
 		    for(Ismpoo010VO vo : listIsmpoo010VO){
 		    	if ("Y".equals(vo.getIsassign())) {
 		    		header.add(vo.getOrderfieldnm());
+			    	if(vo.getOrderfield().indexOf("additem") >= 0) {
+			    		fVal[fixValueIdx++] = vo.getOrderfield();
+			    	}
 		    	}
 		    }
+		    
 			header.add("주문메모");
 		    
 		    Ismpom010VO ismpom010VO = new Ismpom010VO();
@@ -358,7 +361,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    List<Ismpom010VO> listIsmpom010VO = (List<Ismpom010VO>) po010DAO.selectPom010List(ismpom010VO);
 		    
 		    for(Ismpom010VO vo : listIsmpom010VO){
+		    	
 		    	HashMap listKetValueHm = new HashMap();
+		    	
 		    	listKetValueHm.put("pom010id", vo.getPom010id());
 		    	listKetValueHm.put("odm010id", vo.getOdm010id());
 		    	listKetValueHm.put("orderno", vo.getOrderno());
@@ -395,6 +400,18 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	listKetValueHm.put("retqty", vo.getRetqty());
 		    	listKetValueHm.put("retprice", vo.getRetprice());
 		    	listKetValueHm.put("orderitemname", vo.getOrderitemname());
+		    	
+	    		int fValCnt = fVal.length;
+		    	if(fValCnt > 0) {
+			    	for(int j=0;j<fixValueIdx;j++) {
+			    		String[] fValTemp = fVal[j].split("@");
+			    		if(fValTemp.length > 2) {
+			    			listKetValueHm.put(""+fValTemp[0]+"", fValTemp[2]);
+			    		} else if(fValTemp.length >= 1 && fValTemp.length <= 2 ) {
+			    			listKetValueHm.put(""+fValTemp[0]+"", " ");
+			    		}
+			    	}
+		    	}
 	
 		    	List<Object> obj = new ArrayList<Object>();
 			    
@@ -403,11 +420,16 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {
-			    		obj.add(listKetValueHm.get(vosub.getOrderfield()));
+			    		if(vosub.getOrderfield().indexOf("additem") >= 0) {
+			    			String[] fValTemp = vosub.getOrderfield().split("@");
+			    			obj.add(listKetValueHm.get(fValTemp[0]));
+				    	} else {
+				    		obj.add(listKetValueHm.get(vosub.getOrderfield()));
+				    	}
 			    	}
 			    }
-	    		obj.add(vo.getOrdermemo()); //주문메모
 	    		
+	    		obj.add(vo.getOrdermemo()); //주문메모
 			    data.add(obj);
 		    }
 	
@@ -446,7 +468,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    hm.put("receiveType", receiveType);
 		    hm.put("byc010id", poo010id);
 		    po010DAO.updatePom010(hm);
-	
+		    
 		    if ("X".equals(receiveType)) {
 		    	retVal = filefullname;
 		    }else{
