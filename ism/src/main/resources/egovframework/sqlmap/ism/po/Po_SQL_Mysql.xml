@@ -41,20 +41,37 @@
 
     <!-- 발주처 발주환경 설정 목록 select -->
     <select id="po010DAO.selectPoo010List" parameterClass="ismpoo010SearchVO" resultClass="ismpoo010VO">
-	    select IFNULL(b.poo010id,0) as poo010id, b.pocotype, IFNULL(b.isassign,'N') as isassign, IFNULL(b.orderfield, a.CODE) as orderfield, a.CODE_NM as orderfieldnm
-	      from LETTCCMMNDETAILCODE a left outer join ismpoo010 b
-	           on a.CODE = b.orderfield and  b.poo010id = #poo010id# and b.pocotype = #pocotype#
-	     where a.CODE_ID = 'ISM010'
-	     	and a.use_at = 'Y'
-	     union
-	     select IFNULL(b.poo010id,0) as poo010id, b.pocotype, IFNULL(b.isassign,'N') as isassign, IFNULL(b.orderfield, a.CODE) as orderfield, a.CODE_NM as orderfieldnm
-	      from LETTCCMMNDETAILCODE a left outer join ismpoo010 b
-	           on a.CODE = b.orderfield and  b.poo010id = #poo010id# and b.pocotype = #pocotype#
-	     where a.CODE_ID = 'ISM0B0'
-	     	and a.use_at = 'Y'
-	     	and b.isassign = 'Y' 
+    	select poo010id, pocotype, isassign, orderfield, orderfieldnm, fieldorder
+    	from (
+		    select IFNULL(b.poo010id,0) as poo010id
+		    		, b.pocotype, IFNULL(b.isassign,'N') as isassign
+		    		,CASE POSITION('additem' IN IFNULL(b.orderfield, a.CODE))
+					 	WHEN 0 THEN IFNULL(b.orderfield, a.CODE)
+						WHEN 1 THEN CONCAT_WS('@', orderfield, fieldname, fieldvalue)
+					 END as orderfield
+		    		, a.CODE_NM as orderfieldnm
+		    		, IFNULL(fieldorder, 1000) as fieldorder
+		      from LETTCCMMNDETAILCODE a left outer join ismpoo010 b
+		           on a.CODE = b.orderfield and  b.poo010id = #poo010id# and b.pocotype = #pocotype#
+		     where a.CODE_ID = 'ISM010'
+		     	and a.use_at = 'Y'
+		     union
+		     select IFNULL(b.poo010id,0) as poo010id
+		     		, b.pocotype, IFNULL(b.isassign,'N') as isassign
+		     		,CASE POSITION('additem' IN IFNULL(b.orderfield, a.CODE))
+					 	WHEN 0 THEN IFNULL(b.orderfield, a.CODE)
+						WHEN 1 THEN CONCAT_WS('@', orderfield, fieldname, fieldvalue)
+					 END as orderfield
+		     		, b.fieldname as orderfieldnm
+		     		, IFNULL(fieldorder, 1000) as fieldorder
+		      from LETTCCMMNDETAILCODE a left outer join ismpoo010 b
+		           on a.CODE = b.orderfield and  b.poo010id = #poo010id# and b.pocotype = #pocotype#
+		     where a.CODE_ID = 'ISM0B0'
+		     	and a.use_at = 'Y'
+		     	and b.isassign = 'Y'
+		 ) a order by fieldorder asc 
     </select>
-
+    
 	<delete id="po010DAO.deletePoo010" parameterClass="ismpoo010VO">
 	delete from ismpoo010
 	 where poo010id = #poo010id#
@@ -154,25 +171,26 @@
 			WHERE 1 = 1
 	        <isNotEmpty prepend="AND" property="dtSearch_frPoDt">
 			<![CDATA[
-	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
+	        	DATE_FORMAT(IF(A.PROCESSDATE = '', curdate(), DATE_ADD(A.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
 	        ]]>
 	        </isNotEmpty>
 	        
 			<isNotEmpty prepend="AND" property="dtSearch_toPoDt">
 			<![CDATA[
-	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
+	        	DATE_FORMAT(IF(A.PROCESSDATE = '', curdate(), DATE_ADD(A.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
 	        ]]>
 	        </isNotEmpty>
 	        
 	        <isNotEmpty prepend="AND" property="dtSearch_bycNm">
-	           a.byc010id = #dtSearch_bycNm# 
+	           A.BYC010ID = #dtSearch_bycNm# 
 			</isNotEmpty>
 	        
 	        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
-	           a.regid = #dtSearch_sndNm#
+	           A.bycusername = #dtSearch_sndNm#
 	        </isNotEmpty>
 			ORDER BY A.PROCESSDATE ASC
 		) PO
+	GROUP BY PROCESSDATE, BYCNAME, BYCUSERNAME, REGID, UPLOADFILENAME, STATUS, RCVUSEREMAIL, RECEIVETYPE
 	ORDER BY PO.SORTNO DESC, PO.PROCESSDATE  DESC
 	LIMIT #recordCountPerPage# OFFSET #firstIndex#
     </select>
