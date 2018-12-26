@@ -21,6 +21,8 @@ public class Ismpom020VO implements Serializable {
 	private String status;
 	private String rcvuseremail;
 	private String receiveType;
+	private String bycusername;
+	private String regid;
 
 	public int getSortNo() {
 		return sortNo;
@@ -100,6 +102,22 @@ public class Ismpom020VO implements Serializable {
 
 	public void setReceiveType(String receiveType) {
 		this.receiveType = receiveType;
+	}
+	
+	public String getBycusername() {
+		return this.bycusername;
+	}
+	  
+	public void setBycusername(String bycusername) {
+		this.bycusername = bycusername;
+	}
+	  
+	public String getRegid() {
+		return this.regid;
+	}
+	  
+	public void setRegid(String regid) {
+		this.regid = regid;
 	}
 	
 	/**
