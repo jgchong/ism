@@ -21,6 +21,9 @@
         <isNotEmpty prepend="AND" property="search_key1">
            a.shopmallname LIKE '%' #search_key1# '%'
         </isNotEmpty>
+        <isNotEmpty prepend="AND" property="search_filename">
+           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M' and a.uploadtype != ''
+        </isNotEmpty>
     </select>
     
     <!-- 주문수집 목록 select -->
@@ -239,7 +242,7 @@
     <!-- 주문 목록 select -->
     <select id="ord020DAO.selectList" parameterClass="ord020SearchVO" resultClass="ismodm010VO">
 	select a.odm010id,         a.orderno,       DATE_FORMAT(DATE_ADD(a.orderdate, INTERVAL 0 DAY) , '%Y-%m-%d') as orderdate,
-           a.cum010id,         a.cum030id,      a.byc010id,       a.orderuser,
+           a.cum010id,         a.cum030id,      a.byc010id,       a.orderuser,   a.orderitemid as cumprodcode,
            a.orderusercontact, a.rcvuser,       a.rcvusercontact, IFNULL(d.itemcode,'') orderitemid, a.orderitemopt, a.orderitemqty, a.orderitembyprice,
            a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
            a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
