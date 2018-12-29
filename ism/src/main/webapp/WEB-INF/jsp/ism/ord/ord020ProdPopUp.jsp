@@ -80,7 +80,7 @@ li img {
 <form id="formprod" name="formprod" method="post" action="/ism/ord/saveOrderItemData.do">
 <c:forEach var="item" items="${result}" varStatus="status">
 <input type="hidden" id="coname" name="cum030id" value="${item.cum030id}" />
-<input type="hidden" id="orderitemid" name="orderitemid" value="${item.orderitemid}" />
+<input type="hidden" id="orderitemid" name="orderitemid" value="${item.cumprodcode}" />
 <input type="hidden" id="itemcode" name="itemcode" value="${item.odm010id}" />
 <input type="hidden" id="cumprodoptnm1" name="cumprodoptnm1" value="${item.orderitemopt}" />
 			<div class='layerTb'>
@@ -95,7 +95,7 @@ li img {
 							<th scope='row'>매출처</th>
 							<td>${item.coname}</td>
 						    <th scope='row'>매출상품코드</th>
-							<td>${item.orderitemid}</td>
+							<td>${item.cumprodcode}</td>
 						</tr>
 						<tr>
 							<th scope='row'>매출상품명</th>
