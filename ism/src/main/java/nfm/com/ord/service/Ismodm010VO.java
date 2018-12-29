@@ -79,6 +79,7 @@ public class Ismodm010VO implements Serializable {
     private String cumprodoptnm1 = "";
     private String cumprodoptnm2 = "";
     private String account2 = "";
+    private String cumprodcode = "";
     
 	public int getOdm010id() {
 		return odm010id;
@@ -590,6 +591,14 @@ public class Ismodm010VO implements Serializable {
 
 	public void setAccount2(String account2) {
 		this.account2 = account2;
+	}
+	
+	public String getCumprodcode() {
+		return cumprodcode;
+	}
+
+	public void setCumprodcode(String cumprodcode) {
+		this.cumprodcode = cumprodcode;
 	}
 
 	/**
