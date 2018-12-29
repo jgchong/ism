@@ -148,9 +148,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 		ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
 		ord010SearchVO.setRecordCountPerPage(1);
-		
 		List<?> result = ord010DAO.selectList(ord010SearchVO);
-		
 		if (result.size() <= 0) {
 			retInt = -1;
 		}else{
@@ -161,10 +159,8 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 	    	if (dbcum030id != filecum030id) retInt = -1;
 		}
 		//파일명으로 매출처/쇼핑몰 정보 get [e]
-
 		//저장 후 조회를 위한 임시 key 발급
 	    String orderTempKey = Ord010ServiceUtil.getOrderTempKey();
-
 		//파일명 패턴으로 조회 안되는 skip
 		if (retInt == 0) {
 			List<Ismodl010VO> listIsmodl010VO = new ArrayList<Ismodl010VO>();
@@ -585,8 +581,8 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
         	}
 
         	if (orderitemqty != null) {
-        		nQty = Integer.parseInt(excelItemInfo.get(orderitemqty));
-        		ismodm010VO.setOrderitemqty(excelItemInfo.get(orderitemqty));
+        		nQty = Integer.parseInt(excelItemInfo.get(orderitemqty).replaceAll(" ", "").replaceAll(",", ""));
+        		ismodm010VO.setOrderitemqty(excelItemInfo.get(orderitemqty).replaceAll(" ", "").replaceAll(",", ""));
         	}
 
         	if (orderno != null) {
@@ -622,7 +618,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 
         	if (orderitemprice != null) {
         		// LDC 추가
-        		int nOrdPrice = Integer.parseInt(excelItemInfo.get(orderitemprice));
+        		int nOrdPrice = Integer.parseInt(excelItemInfo.get(orderitemprice).replaceAll(" ", "").replaceAll(",", ""));
 
         		if("2".equals(strPriceOpt)){
         			nOrdPrice = nOrdPrice/nQty;
