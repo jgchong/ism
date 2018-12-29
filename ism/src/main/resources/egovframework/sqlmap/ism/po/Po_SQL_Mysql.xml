@@ -125,9 +125,9 @@
 	</insert>
 	
     <select id="po010DAO.selectPom010List" parameterClass="ismpom010VO" resultClass="ismpom010VO">
-	select a.pom010id, a.odm010id, a.orderno, a.orderdate, a.cum010id, a.cum030id, a.byc010id, a.orderuser, a.orderusercontact,
+	select a.pom010id, a.odm010id, a.orderno, DATE_FORMAT(a.orderdate,'%Y-%m-%d') as orderdate, a.cum010id, a.cum030id, a.byc010id, a.orderuser, a.orderusercontact,
            a.rcvuser, a.rcvusercontact, a.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitemprice, a.postno, a.address,
-           a.dlvmemo, a.dlvprice, a.dlvno, a.dlvco, a.dlvstatus, a.processdate, a.accountcum, a.accountbuy, a.status, a.cstype, 
+           a.dlvmemo, a.dlvprice, a.dlvno, a.dlvco, a.dlvstatus, DATE_FORMAT(a.processdate,'%Y-%m-%d') as processdate, a.accountcum, a.accountbuy, a.status, a.cstype, 
            a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, a.orderitemname, a.rcvusercontacthp,
 		   a.rcvuseremail, a.ordermemo,
            b.coname,
@@ -148,58 +148,38 @@
     
     <!-- 발주 목록 select -->
     <select id="po020DAO.selectPoList" resultClass="ismpom020VO">
-    SELECT 
-		PO.*
+    SELECT
+		@ROWNUM := @ROWNUM + 1 AS SORTNO
+		, a.processdate
+		, a.bycname
+		, a.bycusername
+		, a.regid
+		, a.uploadfilename
+		, a.status
+		, a.rcvuseremail
+		, a.receivetype
 	FROM (
-			SELECT 
-				@ROWNUM := @ROWNUM + 1 AS SORTNO
-				, DATE_FORMAT(A.PROCESSDATE, '%Y-%m-%d %H:%i' ) AS PROCESSDATE
-				, (select bycname from ismbyc010 where byc010id =A.BYC010ID ) bycname
-				, A.bycusername
-				, A.regid
-				, IF(A.UPLOADFILENAME='', 'NO_FILE', A.UPLOADFILENAME) UPLOADFILENAME
-				, CASE A.STATUS
-					WHEN 1 THEN '출고전'
-					WHEN 2 THEN '출고대기'
-					WHEN 3 THEN '출고완료'
-					WHEN 4 THEN '출고지연'
-					ELSE '반품취소'
-				END STATUS
-				, A.RCVUSEREMAIL
-				, A.RECEIVETYPE
-			FROM ismpom010 A, (SELECT @ROWNUM := 0) R
-			WHERE 1 = 1
-	        <isNotEmpty prepend="AND" property="dtSearch_frPoDt">
-			<![CDATA[
-	        	DATE_FORMAT(IF(A.PROCESSDATE = '', curdate(), DATE_ADD(A.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
-	        ]]>
-	        </isNotEmpty>
-	        
-			<isNotEmpty prepend="AND" property="dtSearch_toPoDt">
-			<![CDATA[
-	        	DATE_FORMAT(IF(A.PROCESSDATE = '', curdate(), DATE_ADD(A.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
-	        ]]>
-	        </isNotEmpty>
-	        
-	        <isNotEmpty prepend="AND" property="dtSearch_bycNm">
-	           A.BYC010ID = #dtSearch_bycNm# 
-			</isNotEmpty>
-	        
-	        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
-	           A.bycusername = #dtSearch_sndNm#
-	        </isNotEmpty>
-			ORDER BY A.PROCESSDATE ASC
-		) PO
-	GROUP BY PROCESSDATE, BYCNAME, BYCUSERNAME, REGID, UPLOADFILENAME, STATUS, RCVUSEREMAIL, RECEIVETYPE
-	ORDER BY PO.SORTNO DESC, PO.PROCESSDATE  DESC
-	LIMIT #recordCountPerPage# OFFSET #firstIndex#
-    </select>
-
-	<select id="po020DAO.selectPoListTotCnt" parameterClass="ismpomsearch020VO" resultClass="int">
-		SELECT COUNT(a.processdate) AS totcnt
-		  FROM ismpom010 a
-		WHERE 1 = 1
-        <isNotEmpty prepend="AND" property="dtSearch_frPoDt">
+		SELECT 
+			processdate
+			, (select bycname from ismbyc010 where byc010id =a.byc010id ) bycname
+			, bycusername
+			, regid
+			, IF(uploadfilename='', 'NO_FILE', uploadfilename) uploadfilename
+			, CASE a.status
+				WHEN 1 THEN '출고전'
+				WHEN 2 THEN '출고대기'
+				WHEN 3 THEN '출고완료'
+				WHEN 4 THEN '출고지연'
+				ELSE '반품취소'
+			END status
+			, rcvuseremail
+			, receivetype
+		FROM  ismpom010 a
+		GROUP BY processdate, bycname, bycusername, regid, uploadfilename, status, rcvuseremail, receivetype
+		ORDER BY uploadfilename ASC
+	) a, (SELECT @ROWNUM := 0) R
+	WHERE 1 = 1
+	<isNotEmpty prepend="AND" property="dtSearch_frPoDt">
 		<![CDATA[
         	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
         ]]>
@@ -216,8 +196,45 @@
 		</isNotEmpty>
         
         <isNotEmpty prepend="AND" property="dtSearch_sndNm">
-           a.regid = #dtSearch_sndNm#
+           a.bycusername = #dtSearch_sndNm#
         </isNotEmpty>
+	ORDER BY SORTNO DESC
+	LIMIT #recordCountPerPage# OFFSET #firstIndex#
+    </select>
+
+	<select id="po020DAO.selectPoListTotCnt" parameterClass="ismpomsearch020VO" resultClass="int">
+	SELECT 
+		count(*)
+	FROM (
+			SELECT 
+				@ROWNUM := @ROWNUM + 1 AS SORTNO
+				, DATE_FORMAT(a.PROCESSDATE, '%Y-%m-%d %H:%i' ) AS PROCESSDATE
+				, (select bycname from ismbyc010 where byc010id =a.byc010id ) bycname
+				, a.bycusername
+				, a.regid
+			FROM ismpom010 a, (SELECT @ROWNUM := 0) R
+			WHERE 1 = 1
+	        <isNotEmpty prepend="AND" property="dtSearch_frPoDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.PROCESSDATE = '', curdate(), DATE_ADD(a.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
+	        ]]>
+	        </isNotEmpty>
+	        
+			<isNotEmpty prepend="AND" property="dtSearch_toPoDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.PROCESSDATE = '', curdate(), DATE_ADD(a.PROCESSDATE, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
+	        ]]>
+	        </isNotEmpty>
+	        
+	        <isNotEmpty prepend="AND" property="dtSearch_bycNm">
+	           a.byc010id = #dtSearch_bycNm# 
+			</isNotEmpty>
+	        
+	        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
+	           a.bycusername = #dtSearch_sndNm#
+	        </isNotEmpty>
+			GROUP BY PROCESSDATE, bycname, a.bycusername, a.regid
+		) PO
 	</select>
 	
 	<update id="po010DAO.updatePom010" parameterClass="java.util.HashMap">
