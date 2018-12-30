@@ -627,7 +627,7 @@ function uploadFile(){
             contentType:false,
             cache:false,
             success:function(result){
-	            alert("성공");
+	            alert("송장번호가 입력되었습니다");
 	            location.href="/ism/po/po010.do";
             },
             error: function (jqXHR, exception) {
