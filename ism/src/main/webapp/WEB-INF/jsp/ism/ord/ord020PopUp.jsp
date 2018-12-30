@@ -162,14 +162,14 @@ li img {
 							<th scope='row'>배송비</th>
 							<td><input type='text' style='text-align:right;' name='dlvprice' value='${item.dlvprice}' /> 원</td>
 						</tr>
-						<tr>
+						<!--tr>
 							<th scope='row'>판매단가</th>
 							<td></td>
 							<th scope='row'>창고선택</th>
 							<td>
 							    <select></select>
 							</td>
-						</tr>
+						</tr-->
 						<tr>
 							<th scope='row'>주문일자</th>
 							<td>${item.orderdate}</td>
