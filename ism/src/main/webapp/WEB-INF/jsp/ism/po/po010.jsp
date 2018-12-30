@@ -31,12 +31,12 @@
 		}
 		.listTit li {
 		    float: left;
-		    width: 200px;
-		    border-top: 1px solid #ccc;
+		    width: 0px;
+		    border-top: 0px solid #ccc;
 		    /*border-right: 1px solid #ccc;*/
-		    border-bottom: 2px solid #ccc;
+		    border-bottom: 0px solid #ccc;
 			text-align: center;
-		    font-size: 14px;
+		    font-size: 0px;
 		    font-weight: 700;
 		}
 		/*
@@ -53,8 +53,10 @@
 		.listData:hover   { background-color:#b0bde2 }
 		
 		.listData li {
-			float: left;
-			width: 200px;
+			width: 0px;
+	        text-align: center;
+            font-size: 0px;
+            font-weight: 0px;
 		}
 		li.orderitemname {
 			width: 250px;
@@ -136,7 +138,7 @@
 						alert("추가할 값을 입력해주세요");
 						return;
 					}
-					$("#sortable1").append("<li style='color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet1Code option:selected").val()+"@"+$("#addItemText").val()+"@"+$("#addItemValue").val()+"'>"+$("#addItemText").val()+"("+$("#addItemValue").val()+") <a href='#' style='color:#fff;' id='"+$("#addItemSet1Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
+					$("#sortable1").append("<li style='height:20px;color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet1Code option:selected").val()+"@"+$("#addItemText").val()+"@"+$("#addItemValue").val()+"'>"+$("#addItemText").val()+"("+$("#addItemValue").val()+") <a href='#' style='color:#fff;' id='"+$("#addItemSet1Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
 				}
 			} else if(addType=="2") {
 				$('#sortable1 li').each(function(index) {
@@ -160,10 +162,9 @@
 						return;
 					}
 					if($("#addItem2Text").val() == "") {
-						alert("추가할 명칭을 입력해주세요");
-						return;
+						$("#addItem2Text").val(" ");
 					}
-					$("#sortable1").append("<li style='color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet2Code option:selected").val()+"@"+$("#addItem2Text").val()+"@"+""+"'>"+$("#addItem2Text").val()+" <a href='#' style='color:#fff;' id='"+$("#addItemSet2Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
+					$("#sortable1").append("<li style='height:20px;color:#fff;' class='ui-state-default' dataid='"+$("#addItemSet2Code option:selected").val()+"@"+$("#addItem2Text").val()+"@"+""+"'>"+$("#addItem2Text").val()+" <a href='#' style='color:#fff;' id='"+$("#addItemSet2Code option:selected").val()+"_A' onclick='javascript:removeItem(this.id);'>(-)</a></li>");
 				}
 			}
 			return; 
@@ -197,8 +198,8 @@
 						<li>
 							<strong>${result.whsname}</strong>
 							<p>
-								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
 								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W','${result.receivetype}')" name="poList">발주</a>
+								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
 							</p>
 						</li>
 </c:forEach>
@@ -841,9 +842,9 @@ function openLayerPOSet(poconame, keyId, PoType) {
             $('#sortable2').text(''); //필드 clear
             $.each(data, function(index, item){
             	if (item.isassign == "Y") {
-            		$('#sortable2').append("<li class='ui-state-highlight' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
+            		$('#sortable2').append("<li style='height:20px;' class='ui-state-highlight' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
             	}else{
-            		$('#sortable1').append("<li class='ui-state-default' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
+            		$('#sortable1').append("<li style='height:20px;' class='ui-state-default' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
             	}
             });
         },
