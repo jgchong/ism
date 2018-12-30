@@ -343,6 +343,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 			header.add("key Value");
 			header.add("송장번호");
+			header.add("택배사");
 			
 		    for(Ismpoo010VO vo : listIsmpoo010VO){
 		    	if ("Y".equals(vo.getIsassign())) {
@@ -417,6 +418,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			    
 		    	obj.add(vo.getOdm010id()); //key value
 	    		obj.add("");               //송장번호
+	    		obj.add("");			   //택배사
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {
@@ -527,7 +529,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 
         ExcelReadOption excelReadOption = new ExcelReadOption();
         excelReadOption.setFilePath(convFile.getAbsolutePath());
-        excelReadOption.setOutputColumns("A","B");
+        excelReadOption.setOutputColumns("A","B","C");
         excelReadOption.setStartRow(2);
 
 	    // 송장 데이터 읽어 저장 
@@ -535,14 +537,20 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
         Iterator excelItem2 = excelContent2.iterator();
 
         while (excelItem2.hasNext()) {
+        	
         	Ismodm010VO ismodm010VO = new Ismodm010VO();
         	Map<String, String> excelItemInfo = (Map<String, String>) excelItem2.next();
-
-        	ismodm010VO.setOdm010id(Integer.parseInt(excelItemInfo.get("A")));
-        	ismodm010VO.setDlvno(excelItemInfo.get("B"));
-        	ismodm010VO.setStatus("3");
-        	
-        	ord020DAO.updateOrderDetailData(ismodm010VO);
+        	if(excelItemInfo.get("A") != null) {
+	        	ismodm010VO.setOdm010id(Integer.parseInt(excelItemInfo.get("A")));
+	        	ismodm010VO.setDlvno(excelItemInfo.get("B"));
+	        	ismodm010VO.setStatus("3");
+	        	ismodm010VO.setDlvco(excelItemInfo.get("C"));
+	        	
+	        	System.out.println("##################"+excelItemInfo.get("C"));
+	        	System.out.println("##################"+ismodm010VO.getDlvco());
+	        	
+	        	ord020DAO.updateOrderDetailData(ismodm010VO);
+        	}
         }
         return 0;
     }
