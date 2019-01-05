@@ -1,16 +1,19 @@
 package nfm.com.skd.service.impl;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
+import nfm.com.prd.service.Prd010VO;
+import nfm.com.prd.service.impl.Prd010DAO;
 import nfm.com.skd.service.*;
 import nfm.com.whs.service.Ismwhs010VO;
 import nfm.com.whs.service.impl.Whs010DAO;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +26,9 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
 
     @Resource(name = "whs010DAO")
     private Whs010DAO ismwhs010DAO;
+
+    @Resource(name = "prd010DAO")
+    private Prd010DAO prd010DAO;
 
     @Override
     public String selectWithSkd010id(String currentId) {
@@ -171,6 +177,76 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
         hm.put("skd010ids", skd010idsArr);
         skd010DAO.skd010SelectDel(hm);
         skd010DAO.skd020SelectDel(hm);
+    }
+
+    /**
+     * 상품 출고를 담당합니다.
+     *
+     * whs010id가 따로 정해지지않았으면 "" or NULL 을 넣어주세요.
+     *
+     * @return
+     * @throws Exception
+     */
+    @Override
+    public String skd010Add(String itemcode, String whs010id, String itemea) throws Exception {
+        Integer itemeaParent = 0;
+        // 숫자가 아닌 경우, 전부 실패처리한다.
+        try {
+            itemeaParent = Integer.parseInt(itemea);
+        } catch (Exception e) {
+            JSONObject resultMessage = new JSONObject();
+            resultMessage.put("failed", "failed");
+            return resultMessage.toJSONString();
+        }
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Calendar calender = Calendar.getInstance();
+        calender.add(Calendar.MONTH, 0);
+        String today = formatter.format(calender.getTime());
+
+        if ('F' == (itemcode.charAt(0))) {
+            //결합상품의 경우 우선창고에 있는 창고에서 빠지게 된다.
+            List<Prd010VO> prd010VOFusionList = (List<Prd010VO>) prd010DAO.selectFusionList(itemcode);
+            for (Prd010VO prd010VO : prd010VOFusionList) {
+                if (prd010VO.getPristock() == null) {
+                    continue;
+                }
+                Map<String, Object> param = new HashMap<>();
+                param.put("itemcode", prd010VO.getItemcode());
+                param.put("skd010type", 3);
+                param.put("sourcewhs010id", prd010VO.getPristock());
+                param.put("destinationwhs010id", -1);
+                Integer itemeaChild = Integer.valueOf(prd010VO.getChildItemea());
+                param.put("itemea", itemeaChild * itemeaParent);
+                param.put("createdate", today);
+                skd010DAO.insertSkd030(param);
+            }
+        } else {
+
+            if (StringUtils.isBlank(whs010id)) {
+                Prd010VO prd010VO = (Prd010VO) prd010DAO.selectPrd010VO(itemcode);
+                Integer pristock = prd010VO.getPristock();
+                if (pristock == null) {
+                    JSONObject resultMessage = new JSONObject();
+                    resultMessage.put("failed", "failed");
+                    return resultMessage.toJSONString();
+                }
+                whs010id = String.valueOf(pristock);
+            }
+            //일반 상품은 다음과 같이 빠지게 된다.
+            Map<String, Object> param = new HashMap<>();
+            param.put("itemcode", itemcode);
+            param.put("skd010type", 3);
+            param.put("sourcewhs010id", whs010id);
+            param.put("destinationwhs010id", -1);
+            param.put("itemea", itemea);
+            param.put("createdate", today);
+            skd010DAO.insertSkd030(param);
+        }
+
+        JSONObject resultMessage = new JSONObject();
+        resultMessage.put("success", "success");
+        return resultMessage.toJSONString();
     }
 
 
