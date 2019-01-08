@@ -347,7 +347,7 @@ public class Skd010Controller {
     private Skd010DAO skd010DAO;
 
     /**
-     * 상품 상세 저장
+     * 이관처리
      *
      * @param model
      * @return
@@ -399,6 +399,12 @@ public class Skd010Controller {
                 itemea = itemea - itemea_update;
                 skd020save_itemeaList.add(itemea);
                 skd020save_itemea_updateList.add(itemea_update);
+
+                //재고 찾기
+                int myItemEa = skd010DAO.selectSkd030itemeaAtWhs010id(skd010DAO.selectSkd010Itemcode(skd020save_skd010idsArr[i]), Integer.parseInt(skd020save_whs010id_updatesArr[i]));
+                if (myItemEa - itemea_update < 0) {
+                    return "재고가 없습니다.";
+                }
             }
         }
         catch (Exception e) {

@@ -177,6 +177,14 @@
         and p.itemcode is not null
     </select>
 
+    <!-- itemcode, 창고의 총 개수 -->
+    <select id="skd010DAO.skd030itemeaAtWhs010id" parameterClass="java.util.HashMap" resultClass="int">
+        select ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 1 and destinationwhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
+        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and sourcewhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
+        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 3 and itemcode = #itemcode# group by itemcode),0)
+        as itemea
+    </select>
+
     <insert id="skd010DAO.insertSkd010" parameterClass="java.util.HashMap">
         insert into ismskd010 (itemcode, itemea, createdate, expirationdate, itemdlprice)
         values (#skd010save_itemcode#, #skd010save_itemea#, #skd010save_createdate#, #skd010save_expirationdate#, #skd010save_itemdlprice#)

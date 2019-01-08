@@ -11,8 +11,11 @@ import java.util.Map;
 
 @Repository("skd010DAO")
 public class Skd010DAO extends EgovAbstractDAO {
-    public int selectListTotCnt(Skd010SearchVO skd010SearchVO) {
-        return (Integer) select("skd010DAO.selectListTotCnt", skd010SearchVO);
+    public int selectSkd030itemeaAtWhs010id(String itemcode, int whs010id) {
+        Map<String, String> param = new HashMap<>();
+        param.put("itemcode", itemcode);
+        param.put("whs010id", String.valueOf(whs010id));
+        return (Integer) select("skd010DAO.skd030itemeaAtWhs010id", param);
     }
 
     public List<?> selectList(Skd010SearchVO skd010SearchVO) {
