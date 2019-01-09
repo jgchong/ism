@@ -110,7 +110,7 @@ function fnInit() {
                             <input type="hidden" name="userSe"  value="USR"/>
                             <input name="j_username" type="hidden"/>
 		</form:form>
-		<div id="msg" style="text-align:center;margin-top:10px;">${message}</div>
+		<!--<div id="msg" style="text-align:center;margin-top:10px;">${message}</div>-->
 	</div>
 </body>
 </html>
@@ -134,11 +134,13 @@ function sendMail() {
 		url: "/emailCheck.do",
 		data: params,
 		success: function(data) {
-			$('#msg').text(data);
+			//$('#msg').text(data);
+			alert(data)
 		},
 		error: function(xhr, option, error) {
 			alert(xhr.status);
-			$('#msg').text(error);
+			alert(error)
+			//$('#msg').text(error);
 		}
 	});
 }
