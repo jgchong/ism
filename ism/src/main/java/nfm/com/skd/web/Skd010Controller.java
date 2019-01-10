@@ -400,7 +400,7 @@ public class Skd010Controller {
                 skd020save_itemeaList.add(itemea);
                 skd020save_itemea_updateList.add(itemea_update);
 
-                //재고 찾기
+                //재고 찾
                 int myItemEa = skd010DAO.selectSkd030itemeaAtWhs010id(skd010DAO.selectSkd010Itemcode(skd020save_skd010idsArr[i]), Integer.parseInt(skd020save_whs010id_updatesArr[i]));
                 if (myItemEa - itemea_update < 0) {
                     return "재고가 없습니다.";

@@ -302,13 +302,9 @@
                             <input type="hidden" id="skd020save_autosearch_value"/>
                             <input type="hidden" id="skd020save_autosearch_itemea"/>
                         </td>
-                        <!--
-
                         <td>
-                            <input id="skd020save_autosearch_itemea" type="text" class="it c" title="" value="" name="" placeholder="재고 수량" readonly/>
+                            <input id="skd020save_autosearch_itemea_real" type="text" class="it c" title="" value="" name="" placeholder="재고 수량" readonly/>
                         </td>
-                        -->
-
                         <td>
                             <input id="skd020save_autosearch_itemea_update" type="number" class="it c" title="" value="" name="" placeholder="이관 수량"/>
                         </td>
@@ -757,6 +753,7 @@
         $('#skd020save_autosearch_input').val('');
         $('#skd020save_autosearch_name').val('');
         $('#skd020save_autosearch_itemea').val('');
+        $('#skd020save_autosearch_itemea_real').val('');
         $('#skd020save_autosearch_whs010id').val('');
         $('#skd020save_autosearch_itemea_update').val('');
         $('#skd020save_autosearch_value').val('');
@@ -879,6 +876,7 @@
                             $('#skd020save_autosearch_name').val(ui.item.label);
                             $('#skd020save_autosearch_value').val(ui.item.skd010id);
                             $('#skd020save_autosearch_itemea').val(ui.item.itemea);
+                            $('#skd020save_autosearch_itemea_real').val(ui.item.realItemea);
                             return false;
                         },
                         open: function () {
@@ -942,6 +940,7 @@
                 $('#skd020save_autosearch_input').val('');
                 $('#skd020save_autosearch_name').val('');
                 $('#skd020save_autosearch_itemea').val('');
+                $('#skd020save_autosearch_itemea_real').val('');
                 $('#skd020save_autosearch_whs010id').val('');
                 $('#skd020save_autosearch_itemea_update').val('');
                 createSearchResult(searchValue, searchName, itemea_update, whs010id, whsname, itemea);

@@ -55,8 +55,17 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
             } else if (skd030VO.getSkd010type() == 2) {
                 jsonTempObject.put("gubun", "이관");
             } else if (skd030VO.getSkd010type() == 3) {
-                jsonTempObject.put("gubun", "출고");
+                int tempea = skd030VO.getItemea();
+                if (skd030VO.getItemea() < 0) {
+                    skd030VO.setItemea(-tempea);
+                    jsonTempObject.put("gubun", "반품");
+                } else {
+                    jsonTempObject.put("gubun", "출고");
+                }
             }
+
+
+
             jsonTempObject.put("createdate", getResult(skd030VO.getCreatedate()));
             jsonTempObject.put("sourcewhsname", getResult(skd030VO.getSourcewhsname()));
             jsonTempObject.put("destinationwhsname", getResult(skd030VO.getDestinationwhsname()));
@@ -165,6 +174,8 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
             jsonObject.put("skd010id", skd020VO.getSkd010id());
             jsonObject.put("label", skd020VO.getItemname() + " (" + skd020VO.getCreatedate() + ")");
             jsonObject.put("itemea", skd020VO.getItemea());
+            int myItemEa = skd010DAO.selectSkd030itemeaAtWhs010id(skd010DAO.selectSkd010Itemcode(String.valueOf(skd020VO.getSkd010id())), Integer.parseInt(whs010id));
+            jsonObject.put("realItemea", myItemEa);
             jsonArray.add(jsonObject);
         }
         return jsonArray.toJSONString();
