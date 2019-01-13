@@ -8,7 +8,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
+<head> 
 	<title> KTI NMS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -20,6 +20,13 @@
 	<link href="/css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/common.css" type="text/css" rel="stylesheet"  />
 <style type="text/css">
+.paging a {
+	margin : 0 3px 0 3px;
+}
+.paging a.on {
+    background: #666;
+    color: #fff;
+}
 li img {
     top: 16px;
     left: 15px;
@@ -370,7 +377,8 @@ function viewCumData(cum010id) {
 						
 					}
 					addhtml = addhtml +
-					"					<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
+					"					<td><a href='javascript://' onclick='delrow(this, 1)'>del</a>"+
+					"					<input type='hidden' name='cum030id' value='"+item.cum030id+"'/></td>"+
 					"			</tr>";
 				});
 			}else{
@@ -383,7 +391,7 @@ function viewCumData(cum010id) {
 				"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
 				"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
 				"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"+
-				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
+				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value=''/></td>"+
 				"			</tr>";
 			}
 			
@@ -521,7 +529,7 @@ function addShop() {
 		"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
 		"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
 		"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"+
-		"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a></td>"+
+		"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value=''/></td>"+
 		"			</tr>";
 	$('#shoplist > tbody:last').append(addRow);
 }
