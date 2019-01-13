@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class CumAllVO implements Serializable {
 	
-	/**
+	/** 
 	 * serialVersionUID
 	 */
 	private static final long serialVersionUID = 1L;
@@ -32,6 +32,7 @@ public class CumAllVO implements Serializable {
     private String[] cumusertel;
     private String[] cumuseremail;
     private String[] cummemo;
+    private String[] cum030id;
     private String[] shopmallname;
     private String[] shopurl;
     private String[] shopuid;
@@ -248,6 +249,16 @@ public class CumAllVO implements Serializable {
 
 	public void setCummemo(String[] cummemo) {
 		this.cummemo = cummemo;
+	}
+
+
+	public String[] getCum030id() {
+		return cum030id;
+	}
+
+
+	public void setCum030id(String[] cum030id) {
+		this.cum030id = cum030id;
 	}
 
 
