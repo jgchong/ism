@@ -8,7 +8,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
+<head> 
 	<title> KTI NMS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -281,6 +281,9 @@ li img {
 <c:set var="retstatus" value="${item.retstatus}" />
 <c:set var="retqty" value="${item.retqty}" />
 <c:set var="retprice" value="${item.retprice}" />
+<c:set var="ordstatus" value="${item.status}" />
+<c:set var="orderitemqty" value="${item.orderitemqty}" />
+<c:set var="orderitemid" value="${item.orderitemid}" />
 </c:forEach>
 </form>
 </body>
@@ -429,20 +432,20 @@ function saveDetail() {
             	
             	
             	var statusVal = $('input[name="status"]:checked').val();
-            	if ("${item.status}" != statusVal) {
+            	if ("${ordstatus}" != statusVal) {
             		if (statusVal == "3") {
-            			callStockAdd("${item.orderitemid}","","-${item.orderitemqty}");
+            			callStockAdd("${orderitemid}","","-${orderitemqty}");
             		}
             	}
             	var cstypeVal = $('input[name="cstype"]:checked').val();
-            	if ("${item.cstype}" != cstypeVal) {
+            	if ("${cstype}" != cstypeVal) {
             		if (cstypeVal == "R") {
 
                     	var retstatusVal = $('input[name="retstatus"]:checked').val();
-                    	if ("${item.retstatus}" != retstatusVal) {
-                    		if (retstatusVal == "5") {
+                    	if ("${retstatus}" != retstatusVal) {
+                    		if (retstatusVal == "4") {
                     			//call + 1
-                    			callStockAdd("${item.orderitemid}","",$("#retqty").val());
+                    			callStockAdd("${orderitemid}","",$("#retqty").val());
                     		}
                     	}
             		}
@@ -468,17 +471,22 @@ function saveDetail() {
 }
 
 function callStockAdd(itemid, whsid, qty) {
+	console.log("==================");
+	console.log("itemid="+itemid);
+	console.log("whsid="+whsid);
+	console.log("qty="+qty);
+	console.log("==================");
 	$.ajax({
         url : "/ism/skd/skd010Add.do",
         type: "post",
         data : { "itemcode" : itemid, "whs010id" : whsid, "itemea" : qty },
-        dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
+        	console.log(data);
         },
         error: function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 0) {
+            	console.log(data);
                 msg = 'Not connect.\n Verify Network.';
             } else if (jqXHR.status == 404) {
                 msg = 'Requested page not found. [404]';
