@@ -9,7 +9,7 @@
     <typeAlias  alias="ismcum030VO" type = "nfm.com.cum.service.Ismcum030VO"/>
     <typeAlias  alias="ismcum040VO" type = "nfm.com.cum.service.Ismcum040VO"/>
 
-	<!-- 매출처 목록 select cnt -->
+	<!-- 매출처 목록 select cnt  -->
     <select id="cum010DAO.selectListTotCnt" parameterClass="cum010SearchVO" resultClass="int">
 	select count(1) totcnt
       from ismcum010 a, ismcum030 b
@@ -89,6 +89,12 @@
     insert into ismcum030 (cum010id,   shopmallname,   shopurl,   shopuid,   shoppwd,   uploadtype,   uploadgubun,   useyn)
                    values (#cum010id#, #shopmallname#, #shopurl#, #shopuid#, #shoppwd#, #uploadtype#, #uploadgubun#, #useyn#)
     </insert>
+
+    <insert id="cum010DAO.updateCum030" parameterClass="ismcum030VO">
+    update ismcum030 set shopmallname = #shopmallname#, shopurl=#shopurl#, shopuid = #shopuid#, shoppwd = #shoppwd#,
+                                        uploadtype = #uploadtype#, uploadgubun = #uploadgubun#, useyn = #useyn#
+     where cum030id = #cum030id#
+    </insert>
     
     <update id="cum010DAO.updateCum010" parameterClass="ismcum010VO">
 	update ismcum010
@@ -151,6 +157,12 @@
     
     <delete id="cum010DAO.deleteCum030" parameterClass="ismcum010VO">
 	delete from ismcum030
+     where cum010id = #cum010id#
+       and useyn not like '%T%'
+    </delete>
+    
+    <delete id="cum010DAO.updateAllCum030" parameterClass="ismcum010VO">
+	update ismcum030 set useyn = replace(useyn, 'T','')
      where cum010id = #cum010id#
     </delete>
     
