@@ -87,8 +87,13 @@ form .listTb table th       { text-align:center; }
 .depot li:hover			{ background:#feffe6; }
 .depot li:nth-child(4n+1)		{ margin-left:0; width:25%; }
 .depot li strong		{ font-size:20px; color:#707070; }
-.depot li p					{ text-align:right; padding:20px 0 0; }
-.depot li p a				{ padding:54px 0 0; font-size:11px; color:#707070; margin-left:10px; display:inline-block; min-width:49px; text-align:center; }
+.depot li .tit							{ font-size:20px; color:#707070; font-weight:bold; }
+.depot li .date						{ font-size:11px; height:30px; line-height:13px; color:#707070; padding:10px 0 0; }
+.depot li .num						{ text-align:center; }
+.depot li .num strong			{ font-size:80px; color:#707070; color:#0089ff; line-height:100%; }
+.depot li .num span			{ font-size:20px; color:#707070; }
+.depot li p.icoBt					{ text-align:right; padding:20px 0 0; }
+.depot li p.icoBt a				{ padding:54px 0 0; font-size:11px; color:#707070; margin-left:10px; display:inline-block; min-width:49px; text-align:center; position:relative; }
 .depot li p a.ico1		{ background:url(/images/custom/ico1.png) 50% 0 no-repeat; }
 .depot li p a.ico2		{ background:url(/images/custom/ico2.png) 50% 0 no-repeat; }
 .depot li p a.ico3		{ background:url(/images/custom/ico3.png) 50% 0 no-repeat; }
