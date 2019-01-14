@@ -196,8 +196,12 @@
 					<ul class="depot">
 <c:forEach var="result" items="${resultListWhs}" varStatus="status">
 						<li>
-							<strong>${result.whsname}</strong>
-							<p>
+							<p class="tit">${result.whsname}</p>
+							<p class="date">데이터반영시점 &nbsp; ${result.uploaddate}</p>
+								<p class="num">
+									<strong>${result.pocnt}</strong><span>건</span>
+							</p>
+							<p class="icoBt">
 								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W','${result.receivetype}')" name="poList">발주</a>
 								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
 							</p>
@@ -298,7 +302,7 @@
 			<div class="layerContents">
 			    <div id="layerPoListPoCoName" class="lfl" style="padding:20px 0 10px; font-size:18px;">창고-1</div>
 			    <div class="layerTb">
-                    <table cellpadding="0" cellspacing="0" class="" summary="" id="poEmailSend" >
+                    <table cellpadding="0" cellspacing="0" style="" summary="" id="poEmailSend" >
                         <caption></caption>
                         <colgroup>
                             <col width="20%"/><col width="80%"/>
@@ -306,28 +310,26 @@
                         <tbody>
                             <tr>
                                 <th scope="row">담당자</th>
-                                <td style="text-align:left;"><select id="userList" name="userList"></select></td>
+                                <td style="text-align:left;"><select id="userList" name="userList" style="width:600px;"></select></td>
                             </tr>
-                            <tr>
+                            <tr id="ccUserListTr">
                                 <th scope="row">참조</th>
-                                <td style="text-align:left;"><input type="text" class="it" name="ccUserList" value=""></td>
+                                <td style="text-align:left;"><input type="text" class="it" id="ccUserList" name="ccUserList" value=""></td>
                             </tr>
-                            <tr>
+                            <tr id="mailSubjectTr">
                                 <th scope="row">제목</th>
                                 <td style="text-align:left;"><input type="text" class="it" id="mailSubject" name="mailSubject" value=""></td>
                             </tr>
-                            <tr>
+                            <tr id="mailTextTr">
                                 <th scope="row">내용</th>
-                                <td style="text-align:left;"><textarea id="mailText" name="mailText" rows="0" style="width:100%; height:140px; border:1px solid #ddd;"></textarea></td>
+                                <td style="text-align:left;"><textarea id="mailText" name="mailText" rows="0" style="width:600px; height:140px; border:1px solid #ddd;"></textarea></td>
                             </tr>
                             <tr>
-                                <th scope="row">주문메모</th>
+                                <th scope="row">옵션</th>
                                 <td style="text-align:left;">
                                     <div style="position:relative; padding-right:130px;">
-                                        <input type="text" id="ordermemo" name="ordermemo" class="it" value="">
-                                        <p style="position:absolute; top:0; right:0; line-height:28px;">
-                                            <input type="checkbox" id="addorderuser" name="addorderuser" value="Y" /> <lable for="addorderuser">수령자에 주문자 포함</label>
-                                        </p>
+<!--                                         <input type="text" id="ordermemo" name="ordermemo" class="it" value="" style="display:none;"> -->
+                                    	<input type="checkbox" id="addorderuser" name="addorderuser" value="Y" /> <lable for="addorderuser">수령자에 주문자 포함</label>
                                     </div>
                                 </td>
                             </tr>
@@ -627,7 +629,7 @@ function uploadFile(){
             contentType:false,
             cache:false,
             success:function(result){
-	            alert("송장번호가 입력되었습니다");
+	            alert("성공");
 	            location.href="/ism/po/po010.do";
             },
             error: function (jqXHR, exception) {
@@ -823,12 +825,29 @@ $(document).ready(function() {
 	});
 });
 
+//옵션항목을 초기화하고 새로 구성한다.
+function initItemSelect() {
+	$("select#addItemSet1Code option").remove();
+	$("select#addItemSet2Code option").remove();
+	
+	$("select#addItemSet1Code").append("<option value=''>선택</option>");
+	$("select#addItemSet2Code").append("<option value=''>선택</option>");
+	
+	<c:forEach var="item" items="${ISM0B0}" varStatus="status">
+		$("select#addItemSet1Code").append("<option value='<c:out value="${item.code}"/>'><c:out value="${item.codeNm}"/></option>");
+		$("select#addItemSet2Code").append("<option value='<c:out value="${item.code}"/>'><c:out value="${item.codeNm}"/></option>");
+    </c:forEach>
+    
+}
+
 function openLayerPOSet(poconame, keyId, PoType) {
 	//저장시 사용위해 현재 레이어 팝업 발주처 정보저장
 	$('#poo010id').val(keyId);
 	$('#poconame').val(poconame);
 	$('#pocotype').val(PoType);
 	$('#layerPoCoName').text(poconame);
+	
+	initItemSelect();
 
 	//발주처의 발주환경 정보 읽기
 	$.ajax({
@@ -842,8 +861,19 @@ function openLayerPOSet(poconame, keyId, PoType) {
             $('#sortable2').text(''); //필드 clear
             $.each(data, function(index, item){
             	if (item.isassign == "Y") {
+            		if(item.orderfield.indexOf("@") > 0) {
+            			var splitStr1 = item.orderfield.split("@");
+            			$("select[name='addItemSet1Code'] option[value='"+splitStr1[0]+"']").remove();
+            			$("select[name='addItemSet2Code'] option[value='"+splitStr1[0]+"']").remove();
+            		}
+            		//var splitStr = $(this).attr("dataid").split("@");
             		$('#sortable2').append("<li style='height:20px;' class='ui-state-highlight' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
             	}else{
+            		if(item.orderfield.indexOf("@") > 0) {
+            			var splitStr2 = item.orderfield.split("@");
+            			$("select[name='addItemSet1Code'] option[value='"+splitStr2[0]+"']").remove();
+            			$("select[name='addItemSet2Code'] option[value='"+splitStr2[0]+"']").remove();
+            		}
             		$('#sortable1').append("<li style='height:20px;' class='ui-state-default' dataid='"+item.orderfield+"'>"+decodeURIComponent(item.orderfieldnm.replace(Ca, " "))+"</li>");
             	}
             });
@@ -930,9 +960,17 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
 	$('#list_receivetype').val(receivetype);
 
 	if (receivetype == "X") {
+		$('#ccUserListTr').attr('style', "display:none;");
+		$('#mailSubjectTr').attr('style', "display:none;");
+		$('#mailTextTr').attr('style', "display:none;");
+		
 		$('#poEmailSend').css("display","none");
 		$('#posendbtn').text("발주저장");
 	}else{
+		$('#ccUserListTr').attr('style', "display:'';");
+		$('#mailSubjectTr').attr('style', "display:'';");
+		$('#mailTextTr').attr('style', "display:'';");
+		
 		$('#poEmailSend').css("display","block");
 		$('#posendbtn').text("발주전송");
 	}
