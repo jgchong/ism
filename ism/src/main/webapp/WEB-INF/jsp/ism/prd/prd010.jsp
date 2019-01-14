@@ -173,7 +173,8 @@
                                 <select name="dfSearch_bycname" title="">
                                     <option value="">매입처 선택</option>
                                     <c:forEach var="item" items="${bycList}" varStatus="status">
-                                        <option value="${item.bycname}">${item.bycname}</option>
+                                        <option value="${item.bycname}"
+                                                <c:if test="${prd010SearchVO.dfSearch_bycname eq item.bycname}">selected</c:if> >${item.bycname}</option>
                                     </c:forEach>
                                 </select>
                             </li>

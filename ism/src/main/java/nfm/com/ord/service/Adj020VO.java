@@ -12,6 +12,15 @@ public class Adj020VO {
     private String odm010id;
     private String closedt;
     private String bycclosedt;
+    private String itemcode;
+
+    public String getItemcode() {
+        return itemcode;
+    }
+
+    public void setItemcode(String itemcode) {
+        this.itemcode = itemcode;
+    }
 
     public int getCum010id() {
         return cum010id;

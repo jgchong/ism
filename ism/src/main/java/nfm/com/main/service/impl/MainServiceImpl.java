@@ -284,7 +284,7 @@ public class MainServiceImpl extends EgovAbstractServiceImpl implements MainServ
 
 	@Override
 	public void accountCloseAct(Ismadj090VO ismadj090vo) throws Exception {
-//		mainDAO.accountCloseActSP(ismadj090vo);
+		mainDAO.accountCloseActSP(ismadj090vo);
 		List<Adj020VO> adj020VOList = (List<Adj020VO>) ord020DAO.adj020selectList(ismadj090vo.getClosemonth());
 		for (Adj020VO adj020VO : adj020VOList) {
 			adj010DAO.insertadj0201(adj020VO);
