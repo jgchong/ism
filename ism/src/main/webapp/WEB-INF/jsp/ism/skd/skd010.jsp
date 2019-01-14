@@ -363,7 +363,7 @@
     <div class="inner">
         <p class="layerTit">재고상세</p>
         <div class="layerContents">
-            <div class="layerTb">
+            <div class="layerTb" style="overflow:auto; width:100%; height:400px;">
                 <table cellpadding="0" cellspacing="0" class="" summary="">
                     <caption></caption>
                     <colgroup>
@@ -977,7 +977,7 @@
         $('body').append('<div class="fade" style="position:fixed; top:0; left:0; width:100%; height:100%; background:#000; opacity:0.8; z-index:100; display:none;"></div>')
         $('.fade').fadeIn();
         $('#skd010Detail').css({
-            'margin': '-' + ($('#skd010Detail').height() / 1.5) + 'px 0 0 -' + ($('#skd010Detail').width() / 2) + 'px'
+            'margin': '-' + ($('#skd010Detail').height() / 2) + 'px 0 0 -' + ($('#skd010Detail').width() / 2) + 'px'
         })
         $('#skd010Detail').fadeIn();
         return false;
