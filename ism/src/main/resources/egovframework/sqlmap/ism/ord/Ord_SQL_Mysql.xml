@@ -165,18 +165,21 @@
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
-        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
-        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="S">
-        			d.orderitemid is not null and IFNULL(x.chksum, 0) = 0 
-        		</isEqual>
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
-        			d.orderitemid is null
-        		</isEqual>
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
-        			x.chkcnt is not null
-        		</isEqual>
-        	</isNotEmpty>
+	        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
+	        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
+	        	</isNotEmpty>
+	        	<isNotEmpty prepend="AND" property="search_uploadfilename">
+		        	a.uploadfilename = #search_uploadfilename# 
+		        </isNotEmpty>
+		        <isEqual prepend="AND" property="search_tempdiv" compareValue="S">
+	       			d.orderitemid is not null and IFNULL(x.chkcnt, 0) = 0 
+	       		</isEqual>
+	       		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
+	       			d.orderitemid is null
+	       		</isEqual>
+	       		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
+	       			x.chkcnt is not null
+	       		</isEqual>
         	</isEqual>
         	<isNotEqual property="search_status" compareValue="TEMP">
         	a.status = #search_status#
@@ -214,7 +217,7 @@
         	a.orderno LIKE '%' #dtSearch_orderno# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
-        	IFNULL(d.itemcode,'') LIKE '%' #dtSearch_orderItemid# '%'
+        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
         	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
@@ -225,11 +228,12 @@
 		<isNotEmpty prepend="AND" property="dtSearch_rcvuserContact">
         	a.rcvusercontact LIKE '%' #dtSearch_rcvuserContact# '%'
         </isNotEmpty>
+        
 		<isNotEmpty prepend="AND" property="dtSearch_orderUser">
         	a.orderuser LIKE '%' #dtSearch_orderUser# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_all">
-        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(d.itemcode,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
+        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(a.orderitemid,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
         </isNotEmpty>
         <isNotEqual prepend="AND" property="poSearch_pristock" compareValue="0">
         	d.pristock = #poSearch_pristock# and IFNULL(d.itemgubun,'1') in ('2')
@@ -265,7 +269,7 @@
            IFNULL(l.code_nm,'') as retstatusnm,
            b.account2,
            IFNULL(d.orderitemid,'NOITEM') as chkprod,
-           case when IFNULL(chksum, 0) = 0 then 'NEW' else 'OVER' end  chkoverlap
+           case when IFNULL(chkcnt, 0) = 0 then 'NEW' else 'OVER' end  chkoverlap
       from ismodm010 a
            left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
            left outer join ismprd010 d on bb.orderitemid = d.itemcode
@@ -306,18 +310,21 @@
         <isNotEqual prepend="AND" property="search_status" compareValue="ALL">
         	<isEqual property="search_status" compareValue="TEMP">
         	a.status = ''
-        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
-        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="S">
-        			d.orderitemid is not null and IFNULL(x.chksum, 0) = 0 
-        		</isEqual>
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
-        			d.orderitemid is null
-        		</isEqual>
-        		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
-        			x.chkcnt is not null
-        		</isEqual>
-        	</isNotEmpty>
+	        	<isNotEmpty prepend="AND" property="search_uploadviewkey">
+	        		a.uploadviewkey = #search_uploadviewkey# and a.cum010id = #search_cum010id# and a.cum030id = #search_cum030id#
+	        	</isNotEmpty>
+	        	<isNotEmpty prepend="AND" property="search_uploadfilename">
+		        	a.uploadfilename = #search_uploadfilename# 
+		        </isNotEmpty>
+		        <isEqual prepend="AND" property="search_tempdiv" compareValue="S">
+	       			d.orderitemid is not null and IFNULL(x.chkcnt, 0) = 0 
+	       		</isEqual>
+	       		<isEqual prepend="AND" property="search_tempdiv" compareValue="P">
+	       			d.orderitemid is null
+	       		</isEqual>
+	       		<isEqual prepend="AND" property="search_tempdiv" compareValue="O">
+	       			x.chkcnt is not null
+	       		</isEqual>
         	</isEqual>
         	<isNotEqual property="search_status" compareValue="TEMP">
         	a.status = #search_status#
@@ -355,7 +362,7 @@
         	a.orderno LIKE '%' #dtSearch_orderno# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
-        	IFNULL(d.itemcode,'') LIKE '%' #dtSearch_orderItemid# '%'
+        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
         	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
@@ -370,7 +377,7 @@
         	a.orderuser LIKE '%' #dtSearch_orderUser# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_all">
-        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(d.itemcode,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
+        	concat(IFNULL(c.code_nm,''),IFNULL(e.bycname,''),b.coname,IFNULL(a.dlvno,''),IFNULL(a.dlvco,''),IFNULL(a.orderno,''),IFNULL(a.orderitemid,''),IFNULL(a.orderitemname,''),IFNULL(a.rcvuser,''),IFNULL(a.rcvusercontact,''),IFNULL(a.orderuser,''),IFNULL(f.CODE_NM,'')) LIKE '%' #dtSearch_all# '%'
         </isNotEmpty>
         <isNotEqual prepend="AND" property="poSearch_pristock" compareValue="0">
         	d.pristock = #poSearch_pristock# and IFNULL(d.itemgubun,'1') in ('2')
@@ -632,9 +639,9 @@
 		, a.cum030id
 		, g.shopmallname
 		, count(*) totcnt
-		, sum(case when d.itemcode is not null and IFNULL(chksum, 0) = 0  then 1 else 0 end) succcnt
+		, sum(case when d.itemcode is not null and IFNULL(chkcnt, 0) = 0  then 1 else 0 end) succcnt
 		, sum(case when d.itemcode is null then 1 else 0 end) prodfailcnt
-		, sum(case when IFNULL(chksum, 0) = 0 then 0 else 1 end) overlapcnt
+		, sum(case when IFNULL(chkcnt, 0) = 0 then 0 else 1 end) overlapcnt
       from ismodm010 a
            left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
            left outer join ismprd010 d on bb.orderitemid = d.itemcode
@@ -661,9 +668,6 @@
        and a.cum030id = g.cum030id
        and b.cotype1 = c.CODE
        and c.CODE_ID = 'ISM020'
-		<isNotEmpty prepend="AND" property="search_key1">
-           a.uploadviewkey LIKE '%' #search_key1# '%'
-        </isNotEmpty>
         <isNotEqual prepend="AND" property="odm010id" compareValue="0">
         	a.odm010id = #odm010id#
         </isNotEqual>
@@ -742,7 +746,7 @@
 				, a.cum030id
 				, g.shopmallname
 		) t1
-		order by t1.updatedt, t1.cum010id
+		order by t1.updatedt desc, t1.cum010id
     </select>
     
     <!-- 주문 비교대상 정보 select -->
@@ -797,7 +801,7 @@
        and a.cum030id = g.cum030id
        and b.cotype1 = c.CODE
        and c.CODE_ID = 'ISM020'
-       and a.status != ''
+       and a.odm010id = #odm010id#
      order by b.coname, a.orderno, a.orderitemid
      limit 1 OFFSET 0
     </select>
