@@ -44,6 +44,7 @@ public class Ord020SearchVO implements Serializable {
     private String search_uploadviewkey = "";
     private String search_cum010id = "";
     private String search_cum030id = "";
+    private String search_uploadfilename = "";
     
     public String getSearch_uploadviewkey() {
 		return search_uploadviewkey;
@@ -75,6 +76,14 @@ public class Ord020SearchVO implements Serializable {
 
 	public void setSearch_tempdiv(String search_tempdiv) {
 		this.search_tempdiv = search_tempdiv;
+	}
+
+	public String getSearch_uploadfilename() {
+		return search_uploadfilename;
+	}
+
+	public void setSearch_uploadfilename(String search_uploadfilename) {
+		this.search_uploadfilename = search_uploadfilename;
 	}
 
 
