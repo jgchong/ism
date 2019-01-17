@@ -51,13 +51,13 @@ public class Skd010ServiceImpl extends EgovAbstractServiceImpl implements Skd010
                 jsonTempObject.put("gubun", "입고");
                 jsonTempObject.put("itembuyprice", getResult(skd030VO.getItembuyprice()));
                 jsonTempObject.put("itembuyAllprice", getResult(skd030VO.getItembuyprice() * skd030VO.getItemea()));
-                jsonTempObject.put("expirationdate", getResult(skd030VO.getItembuyprice()));
+                jsonTempObject.put("expirationdate", getResult(skd030VO.getExpirationdate()));
             } else if (skd030VO.getSkd010type() == 2) {
                 jsonTempObject.put("gubun", "이관");
             } else if (skd030VO.getSkd010type() == 3) {
                 int tempea = skd030VO.getItemea();
                 if (skd030VO.getItemea() < 0) {
-                    skd030VO.setItemea(-tempea);
+                    skd030VO.setItemea(tempea * -1);
                     jsonTempObject.put("gubun", "반품");
                 } else {
                     jsonTempObject.put("gubun", "출고");
