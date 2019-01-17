@@ -8,7 +8,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head> 
+<head>
 	<title> KTI NMS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -100,10 +100,11 @@ li img {
 				</ul>
 				<div class="contents">
 					<h2 class="pageTit">매출처관리</h2>
-					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
+					<form id="formMain" name="formMain" method="post" action="/ism/cum/cum010.do" class="searchArea">
 						<!--a href="javascript:;" class="" style="background:#45b6b6;">매출처 다운로드</a-->
+		        		<input name="pageIndex" type="hidden" value="<c:out value='${cum010SearchVO.pageIndex}'/>"/>
 						<input type="text" class="it ml30" title="" value="${cum010SearchVO.search_coname}" id="search_coname" name="search_coname"/>
-						<button style="margin-left:-4px;">검색</button>
+						<button style="margin-left:-4px;" onclick="document.formMain.pageIndex.value = 1;$('#formMain').submit();">검색</button>
 					</form>
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
