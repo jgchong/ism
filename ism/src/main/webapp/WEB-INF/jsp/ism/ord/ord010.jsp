@@ -32,6 +32,39 @@
 	.layerTit { margin: 0 0 0; }
 	.upload { top: 31%; }
 	</style>
+	<!--select2 스크립트-->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="/css/custom/select2.min.css">
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/select2.min.js"></script>
+	<script type="text/javascript">
+    $(document).ready(function () {
+	$(".js-example-basic-single").select2();
+
+
+	$(".js-example-tokenizer").select2({
+		tags: true,
+		tokenSeparators: [',', ' ']
+	})
+
+    });
+
+    </script>
+	<style type="text/css">
+	#sortable2 li.ui-state-default {background:#3a5199;}
+	#sortable1 li.ui-state-highlight {background:#333;}
+	.muploadbtn {
+		margin: 5px;
+	    padding: 3px 12px;
+	    border: 0;
+	    background: #45b6b6;
+	    color: #fff;
+	    font-size: 14px;
+	}
+	.layerTit { margin: 0 0 0; }
+	.upload { top: 31%; }
+	</style>
+</head>
+<body>
 </head>
 <body>
 <!-- 전체 레이어 시작 -->
@@ -57,14 +90,14 @@
 					<form id="orderfileform_1" name="orderfileform_1" action='/ism/ord/odo010orderupfile.do' enctype='multipart/form-data' method='post' >
 						<input type="hidden" id="filecum010id" name="filecum010id" value="">
 						<input type="hidden" id="filecum030id" name="filecum030id" value="">
-							<select id="shopOrderList" name="shopOrderList" title="쇼핑몰선택" style="width:250px;height:35px;">
-								<option value="0">쇼핑몰선택</option>
+							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" multiple="multiple" title="" style="width:300px;height:35px;">
+								<option value="0"></option>
 							<c:forEach var="result" items="${resultList}" varStatus="status">
 								<option value="${result.cum030id}" val2="${result.cum010id}" >${result.coname}/${result.shopmallname}</option>
 							</c:forEach>
 							</select>
-						<input type="file" id="file_1" name="file1" class="hidden" style="width:350px;height:35px;"/>
-						<button type="button" onclick="javascript:orderFileUpload_select();" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom;">선택 업로드</button>
+						<input type="file" id="file_1" name="file1" class="hidden" style="width:200px;"/>
+						<button type="button" onclick="javascript:orderFileUpload_select();" style="padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:15px; vertical-align:bottom;">선택 업로드</button>
 					</form>
 					</div>
 					
@@ -360,7 +393,6 @@ function selectFile(fileObject){
         // 직접 파일 등록시
         files = $('#multipaartFileList_' + fileIndex)[0].files;
     }
-    
     // 다중파일 등록
     if(files != null){
         for(var i = 0; i < files.length; i++){
@@ -397,9 +429,8 @@ function selectFile(fileObject){
     			if (chkFileExistVal == "F") {
                     console.log("jgc debug======OK");
                 	// 업로드 파일 목록 생성
-                    addFileList(fileIndex, fileName, fileSize);
+                    addFileList(fileIndex, fileName, fileSize);                		
                 }
-                
                 // 파일 번호 증가
                 fileIndex++;
             }
@@ -424,7 +455,7 @@ function addFileList(fIndex, fileName, fileSize){
     html += "       <option value='0' dataid=''>쇼핑몰선택</option>";
     <c:forEach var="result" items="${resultList}" varStatus="status">
 	    <c:if test="${result.uploadgubun eq 'M'}">
-	    	html += "<option value='${result.cum030id}' val2='${result.cum010id}' dataid='${result.uploadtype}'" + (fileNameArr[0] == "${result.coname}" ? "selected" : "")+">${result.shopmallname}</option>";
+	    	html += "<option value='${result.cum030id}' val2='${result.cum010id}' dataid='${result.uploadtype}'" + ( fileNameArr[0].indexOf("${result.uploadtype}") != -1 ? "selected" : "")+">${result.shopmallname}</option>";
 		</c:if>
 	</c:forEach>
     html += "     </select>";
@@ -448,6 +479,18 @@ function chkFileExist(fileName) {
 	    	retVal = "F";
 	    }
 	});
+	return retVal;
+}
+// Update type 파일 체크
+function chkFileUpdateType(fileName) {
+	var retVal = "F";
+	<c:forEach var="result" items="${resultList}" varStatus="status">
+	    <c:if test="${result.uploadgubun eq 'M'}">
+			if(fileName.indexOf("${result.uploadtype}") != -1){
+				retVal = "T";
+			}
+		</c:if>
+	</c:forEach>
 	return retVal;
 }
 // 업로드 파일 삭제
@@ -483,7 +526,8 @@ function uploadFile(){
         alert("총 용량 초과\n총 업로드 가능 용량 : " + maxUploadSize + " MB");
         return;
     }
-    
+	var strMsg = "";
+	var chkCnt = 0;
     for(var i = 0; i< uploadFileList.length; i++ ){
 		if($("#fileShop_"+i+" option:selected").val() == "0"){
 			alert("소핑몰을 선택해주세요.");
@@ -491,16 +535,29 @@ function uploadFile(){
 		}
 		//valList.push($("#fileShop_"+i+" option:selected").val());
 		//dataIdList.push($("#fileShop_"+i+" option:selected").attr('dataid'));
+		if(fileList[uploadFileList[i]].name.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) == -1){
+    		strMsg += fileList[uploadFileList[i]].name + " / ";
+    		chkCnt++;
+    	}    	
 	}
+    strMsg = strMsg.substr(0, strMsg.length-3);
     
+    if(uploadFileList.length == chkCnt){
+        // 파일등록 경고창
+        alert("Upload Type이 틀려 등록 대상 파일이 없습니다.");
+        return;
+    }
         
-    if(confirm("등록 하시겠습니까?")){
+    if(confirm(strMsg == "" ? "등록 하시겠습니까?" : strMsg + "파일이 틀립니다. 제외하고 등록 하시겠습니까?")){
         // 등록할 파일 리스트를 formData로 데이터 입력
         var form = $('#uploadForm');
         var formData = new FormData(form);
         for(var i = 0; i < uploadFileList.length; i++){
-            formData.append('files', fileList[uploadFileList[i]]);
-            formData.append('dataInfo', $("#fileShop_"+i+" option:selected").val() + ";" +$("#fileShop_"+i+" option:selected").attr('val2')+";"+$("#fileShop_"+i+" option:selected").text() + ";" +$("#fileShop_"+i+" option:selected").attr('dataid'));
+        	// LDC 2019-01-15
+        	if(fileList[uploadFileList[i]].name.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) != -1){
+	            formData.append('files', fileList[uploadFileList[i]]);
+	            formData.append('dataInfo', $("#fileShop_"+i+" option:selected").val() + ";" +$("#fileShop_"+i+" option:selected").attr('val2')+";"+$("#fileShop_"+i+" option:selected").text() + ";" +$("#fileShop_"+i+" option:selected").attr('dataid'));
+        	}
         }
         
         loadingBarOpen();

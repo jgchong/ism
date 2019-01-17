@@ -8,7 +8,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head> 
+<head>
 	<title> KTI NMS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -175,7 +175,7 @@ form.searchArea .searchMore li select {
 								<li><select name="dtSearch_crtype"><option value="0">클레임/반품 선택</option><option value="C">클레임</option><option value="R">반품</option></select></li>
 								 -->
 							</ul>
-							<p><a href="javascript:$('#search_isdetail').val(1);document.form1.pageIndex.value = 1;$('#form1').submit();" style="padding:7px 40px">검색</a></p>
+							<p><a href="javascript:$('#search_isdetail').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
 						</div>
 						
                         <div style="width:100%; display:inline-block;">
@@ -204,10 +204,11 @@ form.searchArea .searchMore li select {
 						<input type="hidden" id="search_status" name="search_status" value="${ord020SearchVO.search_status}" />
 						<input type="hidden" id="search_cstype" name="search_cstype" value="${ord020SearchVO.search_cstype}" />
 						<input type="hidden" id="search_isdetail" name="search_isdetail" value="${ord020SearchVO.search_isdetail}" />
-						<input type="hidden" id="search_tempdiv" name="search_tempdiv" value="">
-						<input type="hidden" id="search_uploadviewkey" name="search_uploadviewkey" value="">
-						<input type="hidden" id="search_cum010id" name="search_cum010id" value="">
-						<input type="hidden" id="search_cum030id" name="search_cum030id" value="">
+						<input type="hidden" id="search_tempdiv" name="search_tempdiv" value="${ord020SearchVO.search_tempdiv}">
+						<input type="hidden" id="search_uploadviewkey" name="search_uploadviewkey" value="${ord020SearchVO.search_uploadviewkey}">
+						<input type="hidden" id="search_cum010id" name="search_cum010id" value="${ord020SearchVO.search_cum010id}">
+						<input type="hidden" id="search_cum030id" name="search_cum030id" value="${ord020SearchVO.search_cum030id}">
+						<input type="hidden" id="search_uploadfilename" name="search_uploadfilename" value="${ord020SearchVO.search_uploadfilename}">
 						<!-- 상세 검색으로 검색 했는지 여부 가지고가서 그럴경우 상세검색 토글료 open -->
 					</form>
 
@@ -235,10 +236,10 @@ form.searchArea .searchMore li select {
 									<th scope="col">업로드일</th>
 									<th scope="col">업로드파일명</th>
 									<th scope="col">매출처</th>
-									<th scope="col">정상등록</th>
-									<th scope="col">상품코드오류</th>
-									<th scope="col">중복자료</th>
-									<th scope="col">합계</th>
+									<th scope="col" class="rowPointer" onclick="orderTempDetailList('S', '', '', '', '')">정상등록</th>
+									<th scope="col" class="rowPointer" onclick="orderTempDetailList('P', '', '', '', '')">상품코드오류</th>
+									<th scope="col" class="rowPointer" onclick="orderTempDetailList('O', '', '', '', '')">중복자료</th>
+									<th scope="col" class="rowPointer" onclick="orderTempDetailList('T', '', '', '', '')">합계</th>
 								</tr>
 								<tbody>
 <c:forEach var="resultstat" items="${resultstatList}" varStatus="status">
@@ -246,10 +247,10 @@ form.searchArea .searchMore li select {
 									<td class="rowPointer" ><c:out value="${resultstat.updatedt}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.uploadfilename}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.coname}"/></td>
-									<td class="rowPointer" onclick="orderTempDetailList('S', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.succcnt}"/></td>
-									<td class="rowPointer" onclick="orderTempDetailList('P', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.prodfailcnt}"/></td>
-									<td class="rowPointer" onclick="orderTempDetailList('O', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.overlapcnt}"/></td>
-									<td class="rowPointer" onclick="orderTempDetailList('T', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>')"><c:out value="${resultstat.totcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('S', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>','<c:out value="${resultstat.uploadfilename}"/>')"><c:out value="${resultstat.succcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('P', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>','<c:out value="${resultstat.uploadfilename}"/>')"><c:out value="${resultstat.prodfailcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('O', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>','<c:out value="${resultstat.uploadfilename}"/>')"><c:out value="${resultstat.overlapcnt}"/></td>
+									<td class="rowPointer" onclick="orderTempDetailList('T', '<c:out value="${resultstat.uploadviewkey}"/>','<c:out value="${resultstat.cum010id}"/>','<c:out value="${resultstat.cum030id}"/>','<c:out value="${resultstat.uploadfilename}"/>')"><c:out value="${resultstat.totcnt}"/></td>
 								</tr>
 </c:forEach>
 								</tbody>
@@ -371,7 +372,7 @@ form.searchArea .searchMore li select {
 </c:if>
 					</div>
 
-<c:if test="${!(ord020SearchVO.search_status eq 'TEMP' && ord020SearchVO.search_tempdiv ne '')}">
+<c:if test="${!(ord020SearchVO.search_status eq 'TEMP' && ord020SearchVO.search_tempdiv eq '')}">
 					<div class="paging">
 						<ui:pagination paginationInfo = "${paginationInfo}"  type="image" jsFunction="fnLinkPage" />
 					</div>
@@ -617,12 +618,15 @@ function opener_search() {
 
 //LDC 추가
 //리스트 상세.
-function orderTempDetailList(search_tempdiv, search_uploadviewkey, search_cum010id, search_cum030id)
+function orderTempDetailList(search_tempdiv, search_uploadviewkey, search_cum010id, search_cum030id, search_uploadfilename)
 {
+	document.form1.reset();
 	document.form1.search_tempdiv.value = search_tempdiv;
 	document.form1.search_uploadviewkey.value = search_uploadviewkey;
 	document.form1.search_cum010id.value = search_cum010id;
 	document.form1.search_cum030id.value = search_cum030id;
+	document.form1.search_uploadfilename.value = search_uploadfilename;
+	document.form1.pageIndex.value = 1;
 	document.form1.action = "<c:url value='/ism/ord/ord020.do'/>";
 	document.form1.submit();
 }

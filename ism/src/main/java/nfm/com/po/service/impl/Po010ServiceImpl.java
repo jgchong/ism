@@ -346,9 +346,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    String[] fVal = new String[50];
 		    int fixValueIdx = 0;
 	
-			header.add("key Value");
-			header.add("송장번호");
-			header.add("택배사");
+//			header.add("key Value");
+//			header.add("송장번호");
+//			header.add("택배사");
 			
 		    for(Ismpoo010VO vo : listIsmpoo010VO){
 		    	if ("Y".equals(vo.getIsassign())) {
@@ -370,6 +370,10 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	
 		    	HashMap listKetValueHm = new HashMap();
 		    	
+		    	System.out.println("##########################"+vo.getOrderitemid());
+		    	System.out.println("##########################"+vo.getOrderitemname());
+		    	
+		    	listKetValueHm.put("keyvalue", vo.getOdm010id());		    	
 		    	listKetValueHm.put("pom010id", vo.getPom010id());
 		    	listKetValueHm.put("odm010id", vo.getOdm010id());
 		    	listKetValueHm.put("orderno", vo.getOrderno());
@@ -421,9 +425,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 		    	List<Object> obj = new ArrayList<Object>();
 			    
-		    	obj.add(vo.getOdm010id()); //key value
-	    		obj.add("");               //송장번호
-	    		obj.add("");			   //택배사
+//		    	obj.add(vo.getOdm010id()); //key value
+//	    		obj.add("");               //송장번호
+//	    		obj.add("");			   //택배사
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {

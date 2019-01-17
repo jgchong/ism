@@ -8,7 +8,7 @@
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head> 
+<head>
 	<title> KTI NMS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
@@ -434,7 +434,7 @@ function saveDetail() {
             	var statusVal = $('input[name="status"]:checked').val();
             	if ("${ordstatus}" != statusVal) {
             		if (statusVal == "3") {
-            			callStockAdd("${orderitemid}","","-${orderitemqty}");
+            			callStockAdd("${orderitemid}","","${orderitemqty}");
             		}
             	}
             	var cstypeVal = $('input[name="cstype"]:checked').val();
@@ -445,7 +445,7 @@ function saveDetail() {
                     	if ("${retstatus}" != retstatusVal) {
                     		if (retstatusVal == "4") {
                     			//call + 1
-                    			callStockAdd("${orderitemid}","",$("#retqty").val());
+                    			callStockAdd("${orderitemid}","","-" + $("#retqty").val());
                     		}
                     	}
             		}

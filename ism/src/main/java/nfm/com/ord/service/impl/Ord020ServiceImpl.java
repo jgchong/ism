@@ -165,6 +165,9 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		List<Object> header = new ArrayList<Object>();
 	    List<List<Object>> data = new ArrayList<List<Object>>();
 
+	    header.add("발주번호");
+	    header.add("송장번호");
+	    header.add("택배사");
 	    header.add("사업자구분");
 	    header.add("매출처");
 	    header.add("쇼핑몰명");
@@ -172,10 +175,10 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    header.add("주문번호");
 	    header.add("주문일자");
 	    header.add("상품코드");
+	    
 	    header.add("상품명");
 	    header.add("상품옵션");
 	    header.add("수량");
-	    
 	    header.add("매입배송비");
 	    header.add("공급배송비");
 	    header.add("매입가");
@@ -183,23 +186,21 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    header.add("주문자");
 	    header.add("주문자연락처");
 	    header.add("수령자");
+	    
 	    header.add("수령자연락처");
 	    header.add("수령자핸드폰");
 	    header.add("수령자이메일");
 	    header.add("우편번호");
 	    header.add("주소");
-	    
 	    header.add("배송메모");
-	    header.add("송장번호");
-	    header.add("택배사");
 	    header.add("처리일자");
 	    header.add("정산(매출처)");
 	    header.add("정산(매입처)");
 	    header.add("상태");
+	    
 	    header.add("CS구분");
 	    header.add("클레임상태");
 	    header.add("클레임사유");
-	    
 	    header.add("반품상태");
 	    header.add("반품수량");
 	    header.add("반품비");
@@ -207,6 +208,9 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    for(Ismodm010VO vo : listData){
 	    	List<Object> obj = new ArrayList<Object>();
 	    	
+	    	obj.add(vo.getOdm010id());
+	    	obj.add(vo.getDlvno());
+	    	obj.add(vo.getDlvco());
 	    	obj.add(vo.getCode_nm() + "/" + vo.getCotype2nm() + "/" + vo.getCotype3nm());
 	    	obj.add(vo.getConame());
 	    	obj.add(vo.getShopmallname());
@@ -214,10 +218,10 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    	obj.add(vo.getOrderno());
 	    	obj.add(vo.getOrderdate());
 	    	obj.add(vo.getOrderitemid());
+	    	
 	    	obj.add(vo.getOrderitemname());
 	    	obj.add(vo.getOrderitemopt());
 	    	obj.add(vo.getOrderitemqty());
-
 	    	obj.add(vo.getItembuydlvprice());
 	    	obj.add(vo.getDlvprice());
 	    	obj.add(vo.getItembuyprice());
@@ -225,15 +229,13 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    	obj.add(vo.getOrderuser());
 	    	obj.add(vo.getOrderusercontact());
 	    	obj.add(vo.getRcvuser());
+	    	
 	    	obj.add(vo.getRcvusercontact());
 	    	obj.add(vo.getRcvusercontacthp());
 	    	obj.add(vo.getRcvuseremail());
 	    	obj.add(vo.getPostno());
 	    	obj.add(vo.getAddress());
-	    	
 	    	obj.add(vo.getDlvmemo());
-	    	obj.add(vo.getDlvno());
-	    	obj.add(vo.getDlvco());
 	    	obj.add(vo.getProcessdate());
 	    	if ("1".equals(vo.getAccountcum())) {
 	    		obj.add("정산확정대기");
@@ -246,6 +248,7 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    		obj.add("매입이월");
 	    	}
 	    	obj.add(vo.getStstusNm());
+	    	
 	    	if ("C".equals(vo.getAccountcum())) {
 	    		obj.add("클레임접수");
 	    	}else if ("R".equals(vo.getAccountcum())){
@@ -255,7 +258,6 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    	}
 	    	obj.add(vo.getClaimstatusnm());
 	    	obj.add(vo.getClaimreasonnm());
-	    	
 	    	obj.add(vo.getRetstatusnm());
 	    	obj.add(vo.getRetqty());
 	    	obj.add(vo.getRetprice());
@@ -263,10 +265,10 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	    	data.add(obj);
 	    }
 		
-	    String[] excelCellType = {"S","S","S","S","S","S","S","S","S","N",
-	    		                  "N","N","N","N","S","S","S","S","S","S","S","S",
-	    		                  "S","S","S","S","S","S","S","S","S","S",
-	    		                  "S","S","S"};
+	    String[] excelCellType = {"S","S","S","S","S","S","S","S","S","S",
+	    						  "N","N","N","N","N","S","S","S","S","S",
+	    						  "S","S","S","S","S","S","S","S","S","S",
+	    						  "S","S","S","S","S","S"};
 		
 	    ExcelManager excelManager = new ExcelManager(header, data);
 	    excelManager.setSheetName("주문List");
