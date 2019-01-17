@@ -27,6 +27,8 @@ public class Ismwhs010VO implements Serializable {
 	private String savefilename = "";
 	private String useyn = "";
 	private String receivetype = "";
+	private String uploaddate = "";
+	private int pocnt = 0;
 
 	public int getWhs010id() {
 		return whs010id;
@@ -154,6 +156,22 @@ public class Ismwhs010VO implements Serializable {
 
 	public void setReceivetype(String receivetype) {
 		this.receivetype = receivetype;
+	}
+	
+	public String getUploaddate() {
+		return uploaddate;
+	}
+
+	public void setUploaddate(String uploaddate) {
+		this.uploaddate = uploaddate;
+	}
+
+	public int getPocnt() {
+		return pocnt;
+	}
+
+	public void setPocnt(int pocnt) {
+		this.pocnt = pocnt;
 	}
 
 	/**
