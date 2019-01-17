@@ -91,7 +91,7 @@ public class Ord020SearchVO implements Serializable {
 	/** 현재페이지 */
     private int pageIndex = 1;
     /** 페이지갯수 */
-    private int pageUnit = 50;
+    private int pageUnit = 100;
     /** 페이지사이즈 */
     private int pageSize = 10;
     /** firstIndex */
