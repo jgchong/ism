@@ -32,6 +32,7 @@ import nfm.com.po.service.Ismpoo010VO;
 import nfm.com.po.service.Ismpoo020VO;
 import nfm.com.po.service.Po010SaveVO;
 import nfm.com.po.service.Po010Service;
+import nfm.com.skd.service.Skd010Service;
 import nfm.com.whs.service.Whs010SearchVO;
 import nfm.com.whs.service.Whs010Service;
 
@@ -74,6 +75,10 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	/** whs010Service */
 	@Resource(name = "whs010Service")
 	private Whs010Service whs010Service;
+
+	/** Skd010Service */
+	@Resource(name = "skd010Service")
+	private Skd010Service skd010Service;
 	
 	/** po010DAO */
 	@Resource(name="po010DAO")
@@ -341,9 +346,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    String[] fVal = new String[50];
 		    int fixValueIdx = 0;
 	
-			//header.add("key Value");
-			//header.add("송장번호");
-			//header.add("택배사");
+//			header.add("key Value");
+//			header.add("송장번호");
+//			header.add("택배사");
 			
 		    for(Ismpoo010VO vo : listIsmpoo010VO){
 		    	if ("Y".equals(vo.getIsassign())) {
@@ -368,7 +373,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	System.out.println("##########################"+vo.getOrderitemid());
 		    	System.out.println("##########################"+vo.getOrderitemname());
 		    	
-		    	listKetValueHm.put("keyvalue", vo.getOdm010id());
+		    	listKetValueHm.put("keyvalue", vo.getOdm010id());		    	
 		    	listKetValueHm.put("pom010id", vo.getPom010id());
 		    	listKetValueHm.put("odm010id", vo.getOdm010id());
 		    	listKetValueHm.put("orderno", vo.getOrderno());
@@ -420,9 +425,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 		    	List<Object> obj = new ArrayList<Object>();
 			    
-		    	//obj.add(vo.getOdm010id()); //key value
-	    		//obj.add("");               //송장번호
-	    		//obj.add("");			   //택배사
+//		    	obj.add(vo.getOdm010id()); //key value
+//	    		obj.add("");               //송장번호
+//	    		obj.add("");			   //택배사
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {
@@ -529,7 +534,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public int setOrderDataFile(File convFile) {
+	public int setOrderDataFile(File convFile) throws Exception {
 
         ExcelReadOption excelReadOption = new ExcelReadOption();
         excelReadOption.setFilePath(convFile.getAbsolutePath());
@@ -554,6 +559,18 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	        	System.out.println("##################"+ismodm010VO.getDlvco());
 	        	
 	        	ord020DAO.updateOrderDetailData(ismodm010VO);
+	        	
+	        	Ord020SearchVO ord020SearchVO = new Ord020SearchVO();
+	        	ord020SearchVO.setOdm010id(Integer.parseInt(excelItemInfo.get("A")));
+	        	List<Ismodm010VO> listIsmodm010VO = (List<Ismodm010VO>) ord020Service.selectList(ord020SearchVO);
+	        	String itemcode = "0000000000";
+	        	String itemea = "0";
+
+	    		for (Ismodm010VO item : listIsmodm010VO) {
+	    			itemcode = item.getOrderitemid();
+	    			itemea = item.getOrderitemqty();
+	    		}
+	        	skd010Service.skd010Add(itemcode, null, itemea);
         	}
         }
         return 0;
