@@ -7,6 +7,7 @@ import nfm.com.adj.model.Adj030Result;
 import nfm.com.ord.service.Adj020VO;
 import nfm.com.ord.service.impl.Ord020DAO;
 import nfm.com.prd.service.impl.Prd010DAO;
+import nfm.com.skd.service.impl.Skd010DAO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -271,6 +272,8 @@ public class Adj010Service {
     @Resource(name = "prd010DAO")
     private Prd010DAO prd010DAO;
     private Adj030AllResult adj030AllResult;
+    @Resource(name = "skd010DAO")
+    private Skd010DAO skd010DAO;
 
     public List<Adj030Result> adj030selectList(Adj010SearchVO adj010SearchVO) {
         List<Adj030Result> adj030ResultList = (List<Adj030Result>) prd010DAO.adj030selectList(adj010SearchVO);
@@ -289,6 +292,11 @@ public class Adj010Service {
             }
             if (adj030Result.getItemeaOut() == null) {
                 adj030Result.setItemeaOut(0);
+            } else {
+                if ("skd".equals(adj030Result.getGubun())) {
+                    Integer tempea = skd010DAO.selectSkd030type3(adj030Result.getItemcode(), adj010SearchVO.getDtSearch_frCreateDt());
+                    adj030Result.setItemeaOut(tempea == null ? 0 : tempea);
+                }
             }
             adj030Result.setItemeaNamuge(adj030Result.getItemeaAll() - adj030Result.getItemeaOut() - adj030Result.getItemeaBroken());
             adj030AllResult.a = adj030AllResult.a + adj030Result.getItemeaEx();

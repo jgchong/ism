@@ -24,6 +24,13 @@ public class Adj040DAO extends EgovAbstractDAO {
         }
     }
 
+    public void deleteAll(String yyyymm) {
+        try {
+            delete("adj040DAO.deleteAll", yyyymm);
+        } catch (Exception ignored) {
+        }
+    }
+
     public void updateItem(Map param) {
         update("adj040DAO.updateItem", param);
     }

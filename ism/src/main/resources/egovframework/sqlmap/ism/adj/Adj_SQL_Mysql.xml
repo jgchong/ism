@@ -56,7 +56,7 @@
         (select
         sum(oo.orderitemprice) as orderitemprice
         from ismodm010 oo
-        left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
+        left outer join ismprd010 pp on pp.itemcode = oo.orderitemcode
         where pp.taxfree = 0
         and pp.itemcode is not null
         and oo.closedt = #yyyymm#
@@ -66,7 +66,7 @@
         (select
         sum(oo.orderitemprice) as orderitemprice
         from ismodm010 oo
-        left outer join ismprd010 pp on pp.itemcode = oo.orderitemid
+        left outer join ismprd010 pp on pp.itemcode = oo.orderitemcode
         where pp.taxfree = 1
         and pp.itemcode is not null
         and oo.closedt = #yyyymm#
@@ -81,6 +81,11 @@
         and c.account in ('1', '2')
         group by o.cum010id)
     </insert>
+
+    <delete id="adj040DAO.deleteAll" parameterClass="String">
+        delete from ismadj040
+        where closedt = #yyyymm#
+    </delete>
 
     <select id="adj040DAO.selectList" parameterClass="String" resultClass="adj040Result">
         select

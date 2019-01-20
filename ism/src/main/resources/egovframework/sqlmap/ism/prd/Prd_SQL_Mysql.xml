@@ -305,11 +305,12 @@
     <!-- 결합용 부모가 아닌 모든 상품 목록 select -->
     <select id="adj030DAO.selectAll" parameterClass="adj010SearchVO" resultClass="adj030Result">
         select
+        'skd' as gubun,
         p.itemname as itemname,
         p.itemcode as itemcode,
         sum(s.itemea) as itemeaAll,
-        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaOut,
-        (select sum(i.retqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaBroken
+        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemcode = p.itemcode group by i.orderitemcode limit 1) as itemeaOut,
+        (select sum(i.retqty) from ismodm010 i where i.orderitemcode = p.itemcode group by i.orderitemcode limit 1) as itemeaBroken
         from ismprd010 p
         left outer join ismskd010 s on s.itemcode = p.itemcode
         where s.createdate LIKE '%' #dtSearch_frCreateDt# '%'
@@ -318,17 +319,18 @@
         group by itemcode
         union
         select
+        'noskd' as gubun,
         p.itemname as itemname,
         p.itemcode as itemcode,
-        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaAll,
-        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaOut,
-        (select sum(i.retqty) from ismodm010 i where i.orderitemid = p.itemcode group by i.orderitemid limit 1) as itemeaBroken
+        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemcode = p.itemcode group by i.orderitemcode limit 1) as itemeaAll,
+        (select sum(i.orderitemqty) from ismodm010 i where i.orderitemcode = p.itemcode group by i.orderitemcode limit 1) as itemeaOut,
+        (select sum(i.retqty) from ismodm010 i where i.orderitemcode = p.itemcode group by i.orderitemcode limit 1) as itemeaBroken
         from ismprd010 p
-        left outer join ismodm010 o on o.orderitemid = p.itemcode
+        left outer join ismodm010 o on o.orderitemcode = p.itemcode
         where o.closedt = REPLACE(#dtSearch_frCreateDt#,'-','')
         and p.itemgubun = 1
         and p.byc010id = #dtSearch_adj030_byc#
-        and o.orderitemid is not null
+        and o.orderitemcode is not null
         group by itemcode
         order by itemeaAll desc
         limit #recordCountPerPage# OFFSET #firstIndex#

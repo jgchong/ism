@@ -507,7 +507,7 @@
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -525,7 +525,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -539,7 +539,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt is NULL
         and p.itemcode is not null
@@ -560,7 +560,7 @@
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -578,7 +578,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -592,7 +592,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt is null
         and p.itemcode is not null
@@ -606,7 +606,7 @@
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemid
+        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where
         p.itemcode is not null

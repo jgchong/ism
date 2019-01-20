@@ -383,10 +383,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅲ-Ⅰ.매출총이익율</th>
                                 <td>(Ⅲ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price3_2}%</td>
-                                <td class="redBold">${adj010Result01.price3_2}%</td>
+                                <td class="redBold">${adj010Result00.price3_2}</td>
+                                <td class="redBold">${adj010Result01.price3_2}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price3_2}%</td>
+                                    <td>${adj010ResultList[status.index].price3_2}</td>
                                 </c:forEach>
                             </tr>
                             <tr class="col1">
@@ -458,10 +458,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅴ-Ⅰ.영업손익율</th>
                                 <td>(Ⅴ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price5_2}%</td>
-                                <td class="redBold">${adj010Result01.price5_2}%</td>
+                                <td class="redBold">${adj010Result00.price5_2}</td>
+                                <td class="redBold">${adj010Result01.price5_2}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price5_2}%</td>
+                                    <td>${adj010ResultList[status.index].price5_2}</td>
                                 </c:forEach>
                             </tr>
                             <tr>
@@ -494,10 +494,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅷ-Ⅰ. 순손익율</th>
                                 <td>(Ⅷ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price9}%</td>
-                                <td class="redBold">${adj010Result01.price9}%</td>
+                                <td class="redBold">${adj010Result00.price9}</td>
+                                <td class="redBold">${adj010Result01.price9}</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price9}%</td>
+                                    <td>${adj010ResultList[status.index].price9}</td>
                                 </c:forEach>
                             </tr>
                         </tbody>

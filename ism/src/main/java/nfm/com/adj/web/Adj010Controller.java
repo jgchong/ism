@@ -114,9 +114,13 @@ public class Adj010Controller {
 
             adj010Result00.price3_1 = adj020ResultCUM.getPriceAll() - adj020Result.getPriceAll();
             try {
-                adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM.getPriceAll();
+                if (adj020ResultCUM.getPriceAll().doubleValue() == 0D) {
+                    adj010Result00.price3_2 = 0D;
+                } else {
+                    adj010Result00.price3_2 = adj010Result00.price3_1.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
+                }
             } catch (Exception e) {
-                adj010Result00.price3_2 = 9999999L;
+                adj010Result00.price3_2 = 0D;
             }
 
             adj010Result00.price4_2 = adj040Result00.getGivesusuprice();
@@ -128,17 +132,25 @@ public class Adj010Controller {
             adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
             adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
             try {
-                adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
+                if (adj020ResultCUM.getPriceAll().doubleValue() == 0D) {
+                    adj010Result00.price5_2 = 0D;
+                } else {
+                    adj010Result00.price5_2 = adj010Result00.price5_1.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
+                }
             } catch (Exception e) {
-                adj010Result00.price5_2 = 9999999L;
+                adj010Result00.price5_2 = 9999999D;
             }
             adj010Result00.price6 = adj040Result00.getExprice();
             adj010Result00.price7 = adj070Result00.getPrice33();
             adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
             try {
-                adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM.getPriceAll();
+                if (adj020ResultCUM.getPriceAll().doubleValue() == 0D) {
+                    adj010Result00.price9 = 0D;
+                } else {
+                    adj010Result00.price9 = adj010Result00.price8.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
+                }
             } catch (Exception e) {
-                adj010Result00.price9 = 9999999L;
+                adj010Result00.price9 = 9999999D;
             }
             adj010ResultList.add(adj010Result00);
         }
@@ -165,9 +177,9 @@ public class Adj010Controller {
 
         adj010Result00.price3_1 = adj020ResultCUM0.getPriceAll() - adj020ResultBYC0.getPriceAll();
         try {
-            adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM0.priceAll;
+            adj010Result00.price3_2 = adj010Result00.price3_1.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price3_2 = 9999999L;
+            adj010Result00.price3_2 = 9999999D;
         }
 
         Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
@@ -182,17 +194,17 @@ public class Adj010Controller {
         adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
         adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
         try {
-            adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
+            adj010Result00.price5_2 = adj010Result00.price5_1.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price5_2 = 9999999L;
+            adj010Result00.price5_2 = 9999999D;
         }
         adj010Result00.price6 = adj040Result00.getExprice();//영업외수익(잡이익)
         adj010Result00.price7 = adj070Result00.getPrice33();//파손,망실,분실
         adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
         try {
-            adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM0.priceAll;
+            adj010Result00.price9 = adj010Result00.price8.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price9 = 9999999L;
+            adj010Result00.price9 = 9999999D;
         }
 
 
@@ -200,9 +212,9 @@ public class Adj010Controller {
 
         adj010Result01.price3_1 = adj020ResultCUM1.getPriceAll() - adj020ResultBYC1.getPriceAll();
         try {
-            adj010Result01.price3_2 = adj010Result01.price3_1 / adj020ResultCUM1.priceAll;
+            adj010Result01.price3_2 = adj010Result01.price3_1.doubleValue() / adj020ResultCUM1.priceAll.doubleValue() ;
         } catch (Exception e) {
-            adj010Result01.price3_2 = 9999999L;
+            adj010Result01.price3_2 = Double.valueOf("9999999");
         }
 
         Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
@@ -217,17 +229,17 @@ public class Adj010Controller {
         adj010Result01.price4_sum = adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
         adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
         try {
-            adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
+            adj010Result01.price5_2 = adj010Result01.price5_1.doubleValue() / adj020ResultCUM1.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result01.price5_2 = 9999999L;
+            adj010Result01.price5_2 = Double.valueOf("9999999");
         }
         adj010Result01.price6 = adj040Result01.getExprice();
         adj010Result01.price7 = adj070Result01.getPrice33();
         adj010Result01.price8 = adj010Result01.price5_1 + adj010Result01.price6 - adj010Result01.price7;
         try {
-            adj010Result01.price9 = adj010Result01.price8 / adj020ResultCUM1.priceAll;
+            adj010Result01.price9 = adj010Result01.price8.doubleValue() / adj020ResultCUM1.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result01.price9 = 9999999L;
+            adj010Result01.price9 = 9999999D;
         }
 
         model.addAttribute("adj010Result00", adj010Result00);
@@ -402,6 +414,7 @@ public class Adj010Controller {
         }
         String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
 
+        adj040DAO.deleteAll(yyyymm);
         adj040DAO.insertInit(yyyymm);
 
         model.addAttribute("resultList", adj040DAO.selectList(yyyymm));
@@ -953,6 +966,7 @@ public class Adj010Controller {
         String yyyymm = adj010SearchVO.getDtSearch_frCreateDt();
 
         adj070DAO.insertInit(yyyymm);
+        adj040DAO.deleteAll(yyyymm);
         adj040DAO.insertInit(yyyymm);
         List<Adj040Result> adj040Results = (List<Adj040Result>) adj040DAO.selectList(yyyymm);
         model.addAttribute("resultObject", adj070DAO.selectObject(yyyymm));
@@ -1243,9 +1257,9 @@ public class Adj010Controller {
 
             adj010Result00.price3_1 = adj020ResultCUM.getPriceAll() - adj020Result.getPriceAll();
             try {
-                adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM.getPriceAll();
+                adj010Result00.price3_2 = adj010Result00.price3_1.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
             } catch (Exception e) {
-                adj010Result00.price3_2 = 9999999L;
+                adj010Result00.price3_2 = 9999999D;
             }
 
 
@@ -1258,17 +1272,17 @@ public class Adj010Controller {
             adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
             adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
             try {
-                adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM.getPriceAll();
+                adj010Result00.price5_2 = adj010Result00.price5_1.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
             } catch (Exception e) {
-                adj010Result00.price5_2 = 9999999L;
+                adj010Result00.price5_2 = Double.valueOf("9999999");
             }
             adj010Result00.price6 = adj040Result00.getExprice();
             adj010Result00.price7 = adj070Result00.getPrice33();
             adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
             try {
-                adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM.getPriceAll();
+                adj010Result00.price9 = adj010Result00.price8.doubleValue() / adj020ResultCUM.getPriceAll().doubleValue();
             } catch (Exception e) {
-                adj010Result00.price9 = 9999999L;
+                adj010Result00.price9 = 9999999D;
             }
             adj010ResultList.add(adj010Result00);
         }
@@ -1286,9 +1300,9 @@ public class Adj010Controller {
 
         adj010Result00.price3_1 = adj020ResultCUM0.getPriceAll() - adj020ResultBYC0.getPriceAll();
         try {
-            adj010Result00.price3_2 = adj010Result00.price3_1 / adj020ResultCUM0.priceAll;
+            adj010Result00.price3_2 = adj010Result00.price3_1.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price3_2 = 9999999L;
+            adj010Result00.price3_2 = Double.valueOf("9999999");;
         }
 
         Adj040Result adj040Result00 = (Adj040Result) adj040DAO.selectListSum(yyyy00);
@@ -1304,17 +1318,17 @@ public class Adj010Controller {
         adj010Result00.price4_sum = adj010Result00.price4_2 + adj010Result00.price4_3 + adj010Result00.price4_4 + adj010Result00.price4_5 + adj010Result00.price4_6 + adj010Result00.price4_7;
         adj010Result00.price5_1 = adj010Result00.price3_1 - adj010Result00.price4_sum;
         try {
-            adj010Result00.price5_2 = adj010Result00.price5_1 / adj020ResultCUM0.priceAll;
+            adj010Result00.price5_2 = adj010Result00.price5_1.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price5_2 = 9999999L;
+            adj010Result00.price5_2 = Double.valueOf("9999999");;
         }
         adj010Result00.price6 = adj040Result00.getExprice();
         adj010Result00.price7 = adj070Result00.getPrice33();
         adj010Result00.price8 = adj010Result00.price5_1 + adj010Result00.price6 - adj010Result00.price7;
         try {
-            adj010Result00.price9 = adj010Result00.price8 / adj020ResultCUM0.priceAll;
+            adj010Result00.price9 = adj010Result00.price8.doubleValue() / adj020ResultCUM0.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result00.price9 = 9999999L;
+            adj010Result00.price9 = 9999999D;
         }
 
 
@@ -1322,9 +1336,9 @@ public class Adj010Controller {
 
         adj010Result01.price3_1 = adj020ResultCUM1.getPriceAll() - adj020ResultBYC1.getPriceAll();
         try {
-            adj010Result01.price3_2 = adj010Result01.price3_1 / adj020ResultCUM1.priceAll;
+            adj010Result01.price3_2 = adj010Result01.price3_1.doubleValue() / adj020ResultCUM1.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result01.price3_2 = 9999999L;
+            adj010Result01.price3_2 = 9999999D;
         }
 
         Adj040Result adj040Result01 = (Adj040Result) adj040DAO.selectListSum(yyyy01);
@@ -1339,17 +1353,17 @@ public class Adj010Controller {
         adj010Result01.price4_sum = adj010Result01.price4_2 + adj010Result01.price4_3 + adj010Result01.price4_4 + adj010Result01.price4_5 + adj010Result01.price4_6 + adj010Result01.price4_7;
         adj010Result01.price5_1 = adj010Result01.price3_1 - adj010Result01.price4_sum;
         try {
-            adj010Result01.price5_2 = adj010Result01.price5_1 / adj020ResultCUM1.priceAll;
+            adj010Result01.price5_2 = adj010Result01.price5_1.doubleValue() / adj020ResultCUM1.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result01.price5_2 = 9999999L;
+            adj010Result01.price5_2 = 9999999D;
         }
         adj010Result01.price6 = adj040Result01.getExprice();
         adj010Result01.price7 = adj070Result01.getPrice33();
         adj010Result01.price8 = adj010Result01.price5_1 + adj010Result01.price6 - adj010Result01.price7;
         try {
-            adj010Result01.price9 = adj010Result01.price8 / adj020ResultCUM1.priceAll;
+            adj010Result01.price9 = adj010Result01.price8.doubleValue() / adj020ResultCUM1.priceAll.doubleValue();
         } catch (Exception e) {
-            adj010Result01.price9 = 9999999L;
+            adj010Result01.price9 = 9999999D;
         }
 
 

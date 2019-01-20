@@ -4,6 +4,7 @@ public class Adj030Result {
 
 
     private String no;
+    private String gubun;
     private String itemcode;
     private String itemname;
     private Integer itemeaEx = 0;
@@ -11,6 +12,14 @@ public class Adj030Result {
     private Integer itemeaOut;
     private Integer itemeaBroken;
     private Integer itemeaNamuge;
+
+    public String getGubun() {
+        return gubun;
+    }
+
+    public void setGubun(String gubun) {
+        this.gubun = gubun;
+    }
 
     public String getItemcode() {
         return itemcode;

@@ -8,6 +8,15 @@
     <typeAlias alias="skd020VO" type="nfm.com.skd.service.Skd020VO"/>
     <typeAlias alias="skd030VO" type="nfm.com.skd.service.Skd030VO"/>
 
+    <select id="skd010DAO.selectSkd030type3" parameterClass="java.util.HashMap" resultClass="int">
+        select
+        sum(itemea) as itemea
+        from ismskd030
+        where skd010type = 3
+        and createdate LIKE '%' #dtSearch_frCreateDt# '%'
+        and itemcode = #itemcode#
+    </select>
+
     <select id="skd010DAO.selectSkd010Itemcode" parameterClass="String" resultClass="String">
         select
         itemcode
