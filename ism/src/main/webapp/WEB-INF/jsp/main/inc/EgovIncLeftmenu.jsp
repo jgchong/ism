@@ -57,7 +57,9 @@ if(loginVO == null){
 <a href="<c:url value='/uat/uia/actionLogout.do'/>" style="background:#3a5199; font-size:14px; color:#fff; display:inline-block; width:80px; height:30px; line-height:30px; text-align:center;">로그아웃</a>
 </div>
 <ul class="menu">
-	<li><a href="<c:url value='/uat/uia/actionMain.do'/>">DASHBOARD</a></li>
+	<li><a href="<c:url value='/uat/uia/actionMain.do'/>">DASHBOARD</a>
+	<!--이 부분은 클릭시 이용자메뉴얼을 보여주는 부분임 -->
+	<!--a href="#" class="qBt"><img src="/images/custom/white_question_mark.jpg" alt=""/></a--></li>
      <script type="text/javascript">
      <!--
          var Tree = new Array;

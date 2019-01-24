@@ -13,5 +13,4 @@
 <%@ page language="java" contentType="text/html; charset=utf-8"
     pageEncoding="utf-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-<div id="mopaslogo"><img src="<c:url value='/'/>images/footer/img_mopas_gray.gif" alt="안전행정부 로고" /></div>
-<div id="copyright">(우)100-775 서울특별시 중구 청계천로 (무교동 77번지) 14 NIA빌딩. COPYRIGHT(C)2011 MINISTRY OF SECURITY AND PUBLIC ADMINISTRATOR. ALL RIGHT RESERVED</div>
+<div id="copyright">E-DAS System @ netKTI Co,. Ltd. ALL RIGHT RESERVED</div>
