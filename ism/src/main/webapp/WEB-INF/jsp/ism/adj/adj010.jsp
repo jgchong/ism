@@ -9,9 +9,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title> KTI NMS </title>
+    <title>E-DAS</title>
     <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -383,10 +382,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅲ-Ⅰ.매출총이익율</th>
                                 <td>(Ⅲ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price3_2}</td>
-                                <td class="redBold">${adj010Result01.price3_2}</td>
+                                <td class="redBold">${adj010Result00.price3_2}%</td>
+                                <td class="redBold">${adj010Result01.price3_2}%</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price3_2}</td>
+                                    <td>${adj010ResultList[status.index].price3_2}%</td>
                                 </c:forEach>
                             </tr>
                             <tr class="col1">
@@ -458,10 +457,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅴ-Ⅰ.영업손익율</th>
                                 <td>(Ⅴ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price5_2}</td>
-                                <td class="redBold">${adj010Result01.price5_2}</td>
+                                <td class="redBold">${adj010Result00.price5_2}%</td>
+                                <td class="redBold">${adj010Result01.price5_2}%</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price5_2}</td>
+                                    <td>${adj010ResultList[status.index].price5_2}%</td>
                                 </c:forEach>
                             </tr>
                             <tr>
@@ -494,10 +493,10 @@
                             <tr class="col3">
                                 <th scope="row">Ⅷ-Ⅰ. 순손익율</th>
                                 <td>(Ⅷ/Ⅰ)</td>
-                                <td class="redBold">${adj010Result00.price9}</td>
-                                <td class="redBold">${adj010Result01.price9}</td>
+                                <td class="redBold">${adj010Result00.price9}%</td>
+                                <td class="redBold">${adj010Result01.price9}%</td>
                                 <c:forEach var="result" items="${yyyymmList}" varStatus="status">
-                                    <td>${adj010ResultList[status.index].price9}</td>
+                                    <td>${adj010ResultList[status.index].price9}%</td>
                                 </c:forEach>
                             </tr>
                         </tbody>

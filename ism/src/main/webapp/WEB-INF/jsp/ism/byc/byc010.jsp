@@ -9,16 +9,22 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>E-DAS</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/layout.css" type="text/css" rel="stylesheet"  />
 	<link href="/css/custom/common.css" type="text/css" rel="stylesheet"  />
 <style type="text/css">
+.paging a {
+	margin : 0 3px 0 3px;
+}
+.paging a.on {
+    background: #666;
+    color: #fff;
+}
 li img {
     top: 16px;
     left: 15px;

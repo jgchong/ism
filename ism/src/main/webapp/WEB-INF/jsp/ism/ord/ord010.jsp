@@ -9,10 +9,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>E-DAS</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -453,9 +452,12 @@ function addFileList(fIndex, fileName, fileSize){
     html += "    <td class='center' align='center'>";
     html += "       <select id='fileShop_"+fIndex + "'name='fileShop_"+fIndex + "'title=''>";
     html += "       <option value='0' dataid=''>쇼핑몰선택</option>";
+    var strFileNm = fileNameArr[0].toUpperCase();
+    var strUploadType = "";
     <c:forEach var="result" items="${resultList}" varStatus="status">
 	    <c:if test="${result.uploadgubun eq 'M'}">
-	    	html += "<option value='${result.cum030id}' val2='${result.cum010id}' dataid='${result.uploadtype}'" + ( fileNameArr[0].indexOf("${result.uploadtype}") != -1 ? "selected" : "")+">${result.shopmallname}</option>";
+	    	strUploadType = "${result.uploadtype}".toUpperCase();
+	    	html += "<option value='${result.cum030id}' val2='${result.cum010id}' dataid='${result.uploadtype}'" + ( (strFileNm.indexOf(strUploadType) != -1 && strUploadType != "" )? "selected" : "")+">${result.shopmallname}</option>";
 		</c:if>
 	</c:forEach>
     html += "     </select>";
@@ -535,10 +537,12 @@ function uploadFile(){
 		}
 		//valList.push($("#fileShop_"+i+" option:selected").val());
 		//dataIdList.push($("#fileShop_"+i+" option:selected").attr('dataid'));
-		if(fileList[uploadFileList[i]].name.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) == -1){
+		var strFileNm = fileList[uploadFileList[i]].name.toUpperCase();
+		var strUploadType = $("#fileShop_"+i+" option:selected").attr('dataid').toUpperCase();
+		if(strFileNm.indexOf(strUploadType) == -1 || strUploadType == ""){
     		strMsg += fileList[uploadFileList[i]].name + " / ";
     		chkCnt++;
-    	}    	
+    	}
 	}
     strMsg = strMsg.substr(0, strMsg.length-3);
     

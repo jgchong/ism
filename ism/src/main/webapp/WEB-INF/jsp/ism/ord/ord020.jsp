@@ -9,10 +9,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>E-DAS</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -175,7 +174,7 @@ form.searchArea .searchMore li select {
 								<li><select name="dtSearch_crtype"><option value="0">클레임/반품 선택</option><option value="C">클레임</option><option value="R">반품</option></select></li>
 								 -->
 							</ul>
-							<p><a href="javascript:$('#search_isdetail').val(1);$('#form1').submit();" style="padding:7px 40px">검색</a></p>
+							<p><a href="javascript:$('#search_isdetail').val(1);document.form1.pageIndex.value = 1;$('#form1').submit();" style="padding:7px 40px">검색</a></p>
 						</div>
 						
                         <div style="width:100%; display:inline-block;">

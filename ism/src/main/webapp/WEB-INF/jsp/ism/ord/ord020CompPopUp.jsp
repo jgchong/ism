@@ -9,10 +9,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>E-DAS</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -21,7 +20,7 @@
 
 <style type="text/css">
 .layerCont {
-	width: 100%;
+	width: 105%;
     top: 0;
     left: 0%;
     z-index: 0;
@@ -159,19 +158,19 @@ li img {
 							<td>${item.itembuydlvprice} 원</td>
 						</tr>
 						<tr>
-							<th scope='row'>공급단가</th>
+							<th scope='row'>정산가<c:if test="${item.account2 eq '1'}">(공급)</c:if><c:if test="${item.account2 eq '2'}">(판매)</c:if></th>
 							<td><input type='text' style='text-align:right;' name='orderitemprice' value='${item.orderitemprice}' /> 원</td>
-							<th scope='row'>공급배송비</th>
+							<th scope='row'>배송비</th>
 							<td><input type='text' style='text-align:right;' name='dlvprice' value='${item.dlvprice}' /> 원</td>
 						</tr>
-						<tr>
+						<!--tr>
 							<th scope='row'>판매단가</th>
 							<td></td>
 							<th scope='row'>창고선택</th>
 							<td>
 							    <select></select>
 							</td>
-						</tr>
+						</tr-->
 						<tr>
 							<th scope='row'>주문일자</th>
 							<td>${item.orderdate}</td>
@@ -274,19 +273,19 @@ li img {
 							<td>${item.itembuydlvprice} 원</td>
 						</tr>
 						<tr>
-							<th scope='row'>공급단가</th>
+							<th scope='row'>정산가<c:if test="${item.account2 eq '1'}">(공급)</c:if><c:if test="${item.account2 eq '2'}">(판매)</c:if></th>
 							<td><input type='text' style='text-align:right;' name='comporderitemprice' value='${item.orderitemprice}' /> 원</td>
-							<th scope='row'>공급배송비</th>
+							<th scope='row'>배송비</th>
 							<td><input type='text' style='text-align:right;' name='compdlvprice' value='${item.dlvprice}' /> 원</td>
 						</tr>
-						<tr>
+						<!--tr>
 							<th scope='row'>판매단가</th>
 							<td></td>
 							<th scope='row'>창고선택</th>
 							<td>
 							    <select></select>
 							</td>
-						</tr>
+						</tr-->
 						<tr>
 							<th scope='row'>주문일자</th>
 							<td>${item.orderdate}</td>

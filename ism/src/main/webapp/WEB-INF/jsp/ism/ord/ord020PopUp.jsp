@@ -9,10 +9,9 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
-	<meta charset="utf-8"/>
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<title>E-DAS</title>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -434,7 +433,7 @@ function saveDetail() {
             	var statusVal = $('input[name="status"]:checked').val();
             	if ("${ordstatus}" != statusVal) {
             		if (statusVal == "3") {
-            			callStockAdd("${orderitemid}","","${orderitemqty}");
+            			callStockAdd("${orderitemid}","","-${orderitemqty}");
             		}
             	}
             	var cstypeVal = $('input[name="cstype"]:checked').val();
@@ -445,7 +444,7 @@ function saveDetail() {
                     	if ("${retstatus}" != retstatusVal) {
                     		if (retstatusVal == "4") {
                     			//call + 1
-                    			callStockAdd("${orderitemid}","","-" + $("#retqty").val());
+                    			callStockAdd("${orderitemid}","",$("#retqty").val());
                     		}
                     	}
             		}
