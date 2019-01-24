@@ -23,6 +23,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 <meta http-equiv="content-language" content="ko">
 <link rel="stylesheet" href="<c:url value='/css/common.css'/>" type="text/css">
+<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
 <base target="_self">
 <script type="text/javascript" src="<c:url value='/js/showModalDialogCallee.js'/>" ></script>
 <script type="text/javaScript">
@@ -75,56 +76,56 @@ function fnCheckNotKorean(koreanStr){
 </script>
 
 <style type="text/css">
-    body {
-        margin-left: 5px;
-        }
+   	a.bt	{ display:inline-block; width:80px; padding:10px 0; font-size:14px; text-align:center; text-decoration:none; background:#45b6b6; color:#fff; float:right; }
+   	.buttons        { width:100%; text-align:center; padding:30px 0 0; overflow:hidden; }
+   	.buttons a      { width:80px; height:20px; float:none; display:inline-block; line-height:22px; border:0; }
+    .buttons a.cancel		{ background:#666; color:#fff; }
+    .buttons a.confirm		{ background:#457cac; color:#fff; }
+
 </style>
 
 </head>
 <body>
-    <form name="checkForm" action ="<c:url value='/uss/umt/cmm/EgovIdDplctCnfirm.do'/>">
+<div class="layerTb">
+    <form name="checkForm" action ="<c:url value='/uss/umt/cmm/EgovIdDplctCnfirm.do'/>" style="width:290px; margin:0 auto;">
     <input type="submit" id="invisible" class="invisible"/>
 
-    <table border="0" cellspacing="0" cellpadding="0" width="300">
-        <tr><td height="20" colspan="2"></td></tr>
+    <table border="0" cellspacing="0" cellpadding="0" style="width:100%;">
         <tr>
-            <td colspan="2" ><img alt="아이디중복확인" src="<c:url value='/images/tit_icon.gif'/>" width="16" height="16" hspace="3" align="middle">
-            &nbsp;아이디 중복확인</td>
+            <td style="font-size:14px; font-weight:bold;">아이디 중복확인</td>
         </tr>
-        <tr><td height="20" colspan="2"></td></tr>
-        <tr>     
-            <td>사용할아이디&nbsp;&nbsp;</td>
-            <td>
-                <input type="hidden" name="resultId" value="<c:out value="${checkId}"/>" />
-	            <input type="hidden" name="usedCnt" value="<c:out value="${usedCnt}"/>" />
-	            <input type="text" name="checkId" title="선택여부" value="<c:out value="${checkId}"/>" maxlength="20"  />
+        <tr>
+            <td style="padding:10px 0;">
+                <div style="width:205px; float:left;">
+                    <input type="hidden" name="resultId" value="<c:out value="${checkId}"/>" />
+                    <input type="hidden" name="usedCnt" value="<c:out value="${usedCnt}"/>" />
+                    <input type="text" name="checkId" title="선택여부" value="<c:out value="${checkId}"/>" maxlength="20" style="width:calc(100% - 2px); border:1px solid #999; height:34px; line-height:34px; text-indent:10px;" />
+                </div>
+                <a href="#LINK" onclick="javascript:fnCheckId(); return false;" class="bt"><spring:message code="button.inquire" /></a>
 	        </td>
 	    </tr>
-	    <tr><td height="10" colspan="2"></td></tr>
 	    <tr>     
-            <td colspan="2">결과&nbsp;&nbsp;:&nbsp;
+            <td>
                 <c:choose>
                 <c:when test="${usedCnt eq -1}">
-                    &nbsp; 중복확인을 실행하십시오
+                    중복확인을 실행하십시오
                 </c:when>
                 <c:when test="${usedCnt eq 0}">
-                    ${checkId} 는 사용가능한 아이디입니다.
+                    <span style="color:green;">${checkId} 는 사용가능한 아이디입니다.</span>
                 </c:when>
                 <c:otherwise>
-                    ${checkId} 는 사용할수 없는 아이디입니다.
+                    <span style="color:red;">${checkId} 는 사용할수 없는 아이디입니다.</span>
                 </c:otherwise>
                 </c:choose>
             </td>
         </tr>
-	    <tr><td height="15" colspan="2"></td></tr>
     </table>
     <!-- 버튼 시작(상세지정 style로 div에 지정) -->
-    <div class="buttons" style="padding-top:10px;padding-bottom:10px;">
-	    <a href="#LINK" onclick="javascript:fnCheckId(); return false;"><spring:message code="button.inquire" /></a>
-	    <a href="#LINK" onclick="javascript:fnReturnId(); return false;"><spring:message code="button.use" /></a>
-	    <a href="#LINK" onclick="javascript:fnClose(); return false;"><spring:message code="button.close" /></a>
+    <div class="buttons">
+	    <a href="#LINK" onclick="javascript:fnReturnId(); return false;" class="confirm"><spring:message code="button.use" /></a>
+	    <a href="#LINK" onclick="javascript:fnClose(); return false;" class="cancel"><spring:message code="button.close" /></a>
     </div>
     </form>
-    
+</div>
 </body>
 </html>

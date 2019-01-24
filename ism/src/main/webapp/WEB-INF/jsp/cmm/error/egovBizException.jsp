@@ -7,7 +7,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 <meta http-equiv="content-language" content="ko">
-<title>KTI ISM</title>
+<title>E-DAS</title>
 
 <link href="<c:url value='/'/>css/common.css" rel="stylesheet" type="text/css" >
 

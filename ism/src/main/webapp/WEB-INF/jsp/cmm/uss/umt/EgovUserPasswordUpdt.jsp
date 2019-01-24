@@ -11,9 +11,9 @@
 <head>
 
 <meta http-equiv="Content-Language" content="ko" >
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title> KTI NMS </title>
+<title>E-DAS</title>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="<c:url value='/'/>js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />

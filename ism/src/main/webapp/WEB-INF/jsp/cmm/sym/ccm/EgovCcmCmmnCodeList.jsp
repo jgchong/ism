@@ -8,10 +8,9 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
-<meta http-equiv="content-language" content="ko">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title> KTI NMS </title>
+<title>E-DAS</title>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="<c:url value='/'/>js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -19,7 +18,7 @@
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
 	<style type="text/css">
 div.searchArea		{ display:block; text-align:right; margin:0 0 20px; }
-div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; border-radius:4px; text-decoration:none; }
+div.searchArea a	{ background:#457cac; padding:10px 15px; color:#fff; font-size:14px; text-decoration:none; }
 div.searchArea .it	{ width:200px; height:30px; }
 div.searchArea select				{ width:160px; height:34px; font-size:14px; }
 div.searchArea button				{ padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom; border-radius:4px; }
@@ -113,7 +112,7 @@ function fnDelete(){
 			       		
 			       		<input class="it ml30" name="searchKeyword" title="검색어" type="text" size="35" value="${searchVO.searchKeyword}"  maxlength="35" id="searchKeyword">
 
-                        <a href="#noscript" onclick="fnSearch(); return false;">조회 </a>
+                        <a href="#noscript" onclick="fnSearch(); return false;" style="margin-left:-4px;">조회</a>
                         <a href="#noscript" onclick="fnRegist(); return false;">등록</a>
 	                </div>
 	                <!-- //검색 필드 박스 끝 -->
