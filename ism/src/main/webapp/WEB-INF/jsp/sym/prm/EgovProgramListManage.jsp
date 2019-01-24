@@ -14,9 +14,9 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" >
 <meta http-equiv="content-language" content="ko">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+		
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-<title> KTI NMS </title>
+<title>E-DAS</title>
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="<c:url value='/'/>js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="<c:url value='/'/>css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -24,7 +24,7 @@
 	<link href="<c:url value='/'/>css/custom/common.css" type="text/css" rel="stylesheet"  />
 	<style type="text/css">
 div.searchArea		{ display:block; text-align:right; margin:0 0 20px; }
-div.searchArea a	{ background:#457cac; padding:7px 15px; color:#fff; font-size:14px; border-radius:4px; text-decoration:none; }
+div.searchArea a	{ background:#457cac; padding:10px 15px; color:#fff; font-size:14px; text-decoration:none; }
 div.searchArea .it	{ width:200px; height:30px; }
 div.searchArea select				{ width:160px; height:34px; font-size:14px; }
 div.searchArea button				{ padding:7px 15px; border:0; background:#457cac; color:#fff; font-size:14px; vertical-align:bottom; border-radius:4px; }
@@ -172,7 +172,7 @@ function selectUpdtProgramListDetail(progrmFileNm) {
 						<input name="pageIndex" type="hidden" value="<c:out value='${searchVO.pageIndex}'/>"/>
 						<input name="checkedProgrmFileNmForDel" type="hidden" />
 						<input class="it ml30" name="searchKeyword" type="text" size="60" value="<c:out value='${searchVO.searchKeyword}'/>"  maxlength="60" id="F1" placeholder="프로그램 한글명"> 
-                        <a href="#LINK" onclick="javascript:selectProgramListManage(); return false;" >조회 </a>
+                        <a href="#LINK" onclick="javascript:selectProgramListManage(); return false;"style="margin-left:-4px;" >조회</a>
 						<a href="<c:url value='/sym/mpm/EgovProgramListRegist.do'/>" onclick="insertProgramListManage(); return false;"><spring:message code="button.create" /></a>                              
 	                    <a href="#LINK" onclick="fDeleteProgrmManageList(); return false;"><spring:message code="button.delete" /></a>   
 	                </div>
