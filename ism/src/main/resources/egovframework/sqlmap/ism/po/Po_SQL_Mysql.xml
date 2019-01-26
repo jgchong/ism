@@ -17,7 +17,41 @@
 
     <!-- 창고 목록 select -->
     <select id="po010DAO.selectWhsList" resultClass="ismwhs010VO">
-	select *
+	select a.*
+		  , (select max(subb.uploaddate)
+				from ismpol010 subb 
+				where subb.poo010id = a.whs010id 
+					and subb.pocotype = 'W') as uploaddate
+	      , (select count(1) totcnt
+		      from ismodm010 a
+		           left outer join ismcum040 bb on a.cum030id = bb.cum030id and a.orderitemid = bb.cumprodcode and a.orderitemopt = bb.cumprodoptnm1
+		           left outer join ismprd010 d on bb.orderitemid = d.itemcode
+		           left outer join ismbyc010 e on d.byc010id = e.byc010id
+		           left outer join LETTCCMMNDETAILCODE f on a.status = f.CODE and f.CODE_ID = 'ISM050'
+		           
+		           left outer join LETTCCMMNDETAILCODE j on a.claimstatus = j.CODE and j.CODE_ID = 'ISM060'
+		           left outer join LETTCCMMNDETAILCODE k on a.claimreason = k.CODE and k.CODE_ID = 'ISM070'
+		           left outer join LETTCCMMNDETAILCODE l on a.retstatus   = l.CODE and l.CODE_ID = 'ISM080'
+		           left outer join (SELECT orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+						, COUNT(1) chkcnt, sum(case when status = '' then 0 else 1 end ) chksum
+					FROM ismodm010
+					GROUP BY orderno, orderdate, cum010id, cum030id, byc010id, orderuser, orderusercontact, rcvuser, rcvusercontact, orderitemid, orderitemopt, orderitemqty, orderitembyprice, orderitemprice, postno, address, orderitemname
+					HAVING COUNT(1) > 1
+		            ) x  on a.orderno           = x.orderno           and a.orderdate         = x.orderdate         and a.cum010id          = x.cum010id          
+						and a.cum030id          = x.cum030id          and a.byc010id          = x.byc010id          and a.orderuser         = x.orderuser         and a.orderusercontact  = x.orderusercontact  
+						and a.rcvuser           = x.rcvuser           and a.rcvusercontact    = x.rcvusercontact    and a.orderitemid       = x.orderitemid       and a.orderitemopt      = x.orderitemopt      
+						and a.orderitemqty      = x.orderitemqty      and a.orderitembyprice  = x.orderitembyprice  and a.orderitemprice    = x.orderitemprice    and a.postno            = x.postno            
+						and a.address           = x.address           and a.orderitemname     = x.orderitemname,
+		           
+		           ismcum010 b left outer join LETTCCMMNDETAILCODE h on b.cotype2 = h.CODE and h.CODE_ID in ('ISM031','ISM032')
+		                       left outer join LETTCCMMNDETAILCODE i on b.cotype3 = i.CODE and i.CODE_ID in ('ISM041','ISM042','ISM043','ISM044'),
+		           LETTCCMMNDETAILCODE c, ismcum030 g
+		     where a.cum010id = b.cum010id
+		       and a.cum030id = g.cum030id
+		       and b.cotype1 = c.CODE
+		       and c.CODE_ID = 'ISM020'
+			   and a.status = '1'
+			   and d.pristock = a.whs010id and IFNULL(d.itemgubun,'1') in ('2')) as pocnt
       from ismwhs010 a
      where 1 = 1
      order by a.whsgubun, a.whsname
@@ -107,7 +141,7 @@
 		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail, ordermemo, regid
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, ordermemo, regid, poshoptype
 	) (select
 		#poNum#,
 		odm010id, orderno, orderdate, cum010id, cum030id, #byc010id#, orderuser, orderusercontact,
@@ -115,7 +149,7 @@
 		rcvusercontact,
 		orderitemid, orderitemopt, orderitemqty, orderitemprice, postno, address, dlvmemo, dlvprice, dlvno, dlvco,
 		dlvstatus, processdate, accountcum, accountbuy, status, cstype, uploadfilename, claimstatus, claimreason, retstatus, retqty,
-		retprice, orderitemname, rcvusercontacthp, rcvuseremail, #ordermemo#, #regid#
+		retprice, orderitemname, rcvusercontacthp, rcvuseremail, #ordermemo#, #regid#, #pocotype#
 	     from ismodm010
 	    where odm010id in
 		<iterate  property="odm010idArr" open="(" close=")" conjunction=",">
@@ -126,19 +160,22 @@
 	
     <select id="po010DAO.selectPom010List" parameterClass="ismpom010VO" resultClass="ismpom010VO">
 	select a.pom010id, a.odm010id, a.orderno, DATE_FORMAT(a.orderdate,'%Y-%m-%d') as orderdate, a.cum010id, a.cum030id, a.byc010id, a.orderuser, a.orderusercontact,
-           a.rcvuser, a.rcvusercontact, a.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitemprice, a.postno, a.address,
+           a.rcvuser, a.rcvusercontact, d.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitemprice, a.postno, a.address,
            a.dlvmemo, a.dlvprice, a.dlvno, a.dlvco, a.dlvstatus, DATE_FORMAT(a.processdate,'%Y-%m-%d') as processdate, a.accountcum, a.accountbuy, a.status, a.cstype, 
-           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, a.orderitemname, a.rcvusercontacthp,
-		   a.rcvuseremail, a.ordermemo,
-           b.coname,
-           c.shopmallname
-      from ismpom010 a, ismcum010 b, ismcum030 c
-     where a.cum010id = b.cum010id
+           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, f.byccode, g.orderitembyprice, d.cumprodcode, c.shopmallname, a.orderitemname, 
+           a.rcvusercontacthp, a.rcvuseremail, a.ordermemo, b.coname, c.shopmallname, d.orderitemid, e.itemname
+    from ismpom010 a, ismcum010 b, ismcum030 c, ismcum040 d , ismprd010 e, ismbyc010 f, ismodm010 g
+    where a.cum010id = b.cum010id
        and a.cum030id = c.cum030id
+       and d.cumprodcode = a.orderitemid
+	   and a.orderitemopt = d.cumprodoptnm1
+	   and d.orderitemid = e.itemcode
+	   and a.byc010id = f.byc010id
+	   and a.odm010id = g.odm010id
 		<isNotEmpty prepend="AND" property="pom010id">
            a.pom010id = #pom010id#
         </isNotEmpty>
-     order by a.orderdate, a.orderno
+    order by a.orderdate, a.orderno
     </select>
     
     <insert id="po010DAO.insertPol010" parameterClass="ismpol010VO">
@@ -160,12 +197,16 @@
 		, a.receivetype
 	FROM (
 		SELECT 
-			processdate
-			, (select bycname from ismbyc010 where byc010id =a.byc010id ) bycname
+			MAX(processdate) as processdate
+			, CASE b.poshoptype
+				WHEN 'B' THEN (select bycname from ismbyc010 where byc010id = b.byc010id )
+				WHEN 'W' THEN (select whsname from ismwhs010 where whs010id = b.byc010id )
+				ELSE '-'
+			END bycname
 			, bycusername
 			, regid
 			, IF(uploadfilename='', 'NO_FILE', uploadfilename) uploadfilename
-			, CASE a.status
+			, CASE b.status
 				WHEN 1 THEN '출고전'
 				WHEN 2 THEN '출고대기'
 				WHEN 3 THEN '출고완료'
@@ -174,30 +215,30 @@
 			END status
 			, rcvuseremail
 			, receivetype
-		FROM  ismpom010 a
-		GROUP BY processdate, bycname, bycusername, regid, uploadfilename, status, rcvuseremail, receivetype
-		ORDER BY uploadfilename ASC
-	) a, (SELECT @ROWNUM := 0) R
-	WHERE 1 = 1
-	<isNotEmpty prepend="AND" property="dtSearch_frPoDt">
+		FROM  ismpom010 b
+		WHERE 1 = 1
+		<isNotEmpty prepend="AND" property="dtSearch_frPoDt">
 		<![CDATA[
-        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
+        	DATE_FORMAT(IF(b.processdate = '', curdate(), DATE_ADD(b.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frPoDt#
         ]]>
         </isNotEmpty>
         
 		<isNotEmpty prepend="AND" property="dtSearch_toPoDt">
 		<![CDATA[
-        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
+        	DATE_FORMAT(IF(b.processdate = '', curdate(), DATE_ADD(b.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toPoDt#
         ]]>
         </isNotEmpty>
         
         <isNotEmpty prepend="AND" property="dtSearch_bycNm">
-           a.byc010id = #dtSearch_bycNm# 
+           b.byc010id = #dtSearch_bycNm# 
 		</isNotEmpty>
         
         <isNotEmpty prepend="AND" property="dtSearch_sndNm">
-           a.bycusername = #dtSearch_sndNm#
+           b.bycusername = #dtSearch_sndNm#
         </isNotEmpty>
+		GROUP BY uploadfilename, bycname, bycusername, regid, status, rcvuseremail, receivetype
+		ORDER BY uploadfilename ASC
+	) a, (SELECT @ROWNUM := 0) R
 	ORDER BY SORTNO DESC
 	LIMIT #recordCountPerPage# OFFSET #firstIndex#
     </select>
@@ -233,7 +274,7 @@
 	        <isNotEmpty prepend="AND" property="dtSearch_sndNm">
 	           a.bycusername = #dtSearch_sndNm#
 	        </isNotEmpty>
-			GROUP BY PROCESSDATE, bycname, a.bycusername, a.regid
+			GROUP BY uploadfilename, bycname, a.bycusername, a.regid
 		) PO
 	</select>
 	

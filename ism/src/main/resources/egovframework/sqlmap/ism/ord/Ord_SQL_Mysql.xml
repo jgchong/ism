@@ -26,6 +26,12 @@
         </isNotEmpty>
     </select>
     
+    <select id="ord010DAO.selectFileChkCnt" parameterClass="ord010SearchVO" resultClass="int">
+	select count(1) totcnt
+      from ismodm010
+     where uploadfilename = #search_filename#
+    </select>
+    
     <!-- 주문수집 목록 select -->
     <select id="ord010DAO.selectList" parameterClass="ord010SearchVO" resultClass="ismcum030VOOrd">
 	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
