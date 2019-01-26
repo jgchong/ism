@@ -9,9 +9,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>E-DAS</title>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<title> KTI NMS </title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -119,7 +120,12 @@ form.searchArea .searchMore li select {
 						<div class="searchMore">
 							<ul>
 							    <li style="width:40%; text-align:left;">
-							        <strong style="font-size:12px;">주문일</strong>
+<!-- 							        <strong style="font-size:12px;">주문일</strong> -->
+									<select name="dtSearch_datetype" style="width:150px;">
+										<option value="1">주문일</option>
+										<option value="2">처리일</option>
+										<option value="3">등록일</option>
+									</select>
 							        <input type="text" class="it datepicker" title="" value="${ord020SearchVO.dtSearch_frOrderDt}" id="dtSearch_frOrderDt" name="dtSearch_frOrderDt" placeHolder="시작주문일자" style="width:120px; float:none;"/> ~ 						<input type="text" class="it datepicker" title="" value="${ord020SearchVO.dtSearch_toOrderDt}" id="dtSearch_toOrderDt" name="dtSearch_toOrderDt" placeHolder="종료주문일자" style="width:120px; float:none;"/>
 							    </li>
 							    <li>
@@ -224,14 +230,15 @@ form.searchArea .searchMore li select {
 					</ul>
 					<div class="listTb">
 <c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
-							<table id="mainListTable" cellpadding="0" cellspacing="0" style="margin:4px 0;" summary="" >
+							<table id="mainListTable2" cellpadding="0" cellspacing="0" style="margin:4px 0;" summary="" >
 								<caption></caption>
 								<colgroup>
-									<col width="10%"/><col width="30%"/><col width="20%"/>
+									<col width="2%"/><col width="10%"/><col width="28%"/><col width="20%"/>
 									<col width="10%"/><col width="10%"/><col width="10%"/><col width="10%"/>
 								</colgroup>
 								<thead>
 								<tr>
+									<th scope="col"><a href="javascript:chkall2();">V</a></th>
 									<th scope="col">업로드일</th>
 									<th scope="col">업로드파일명</th>
 									<th scope="col">매출처</th>
@@ -243,6 +250,7 @@ form.searchArea .searchMore li select {
 								<tbody>
 <c:forEach var="resultstat" items="${resultstatList}" varStatus="status">
 								<tr>
+									<td class="rowPointer" ><input type="checkbox" id="chk_info2" name="chk_info2" class="chk_info2" keyid="${resultstat.uploadviewkey}" /></td>
 									<td class="rowPointer" ><c:out value="${resultstat.updatedt}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.uploadfilename}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.coname}"/></td>
@@ -488,58 +496,125 @@ function chkall() {
 	}
 }
 
+var chkallval2 = 0;
+function chkall2() {
+	if ( chkallval2 == 0 ) {
+		chkallval2 = 1;
+		$("input:checkbox[id='chk_info2']").prop('checked', true);
+	}else{
+		chkallval2 = 0;
+		$("input:checkbox[id='chk_info2']").prop('checked', false);
+	}
+}
+
 //체크선택된 주문의 상태 일괄 변경
 function selectChgOrderStatus() {
-	var selectoptionval = $("#chgOrderStatus option:selected").val();
-	var chgodm010ids = "";
-	$('.chk_info').each(function() {
-		if ($(this).is(":checked")) {
-			chgodm010ids += ($(this).attr("dataid") + ",");
+	
+	if ($('#mainListTable').length > 0) {
+	    var selectoptionval = $("#chgOrderStatus option:selected").val();
+		var chgodm010ids = "";
+		$('.chk_info').each(function() {
+			if ($(this).is(":checked")) {
+				chgodm010ids += ($(this).attr("dataid") + ",");
+			}
+		});
+		if (selectoptionval == '0') {
+			alert("변경 할 상태값을 선택해주시기 바랍니다.");
+			return;
 		}
-	});
-	if (selectoptionval == '0') {
-		alert("변경 할 상태값을 선택해주시기 바랍니다.");
-		return;
+		if (chgodm010ids == "") {
+			alert("변경 할 주문을 선택해주시기 바랍니다.");
+			return;
+		}else{
+			chgodm010ids = chgodm010ids.substring(0,chgodm010ids.length - 1);
+		}
+		$.ajax({
+	        url : "/ism/ord/ord020SelectChgOrderStatus.do",
+	        type: "post",
+	        data : { "selectoptionval" : selectoptionval, "chgodm010ids" : chgodm010ids },
+	        success : function(data){
+	        	if (data == "SUCCESS") {
+	            	alert("상태 변경되었습니다.");
+	            	document.form1.pageIndex.value = 1;
+	        		$('#form1').submit();	
+	        	}else{
+	            	alert("상태 변경 중 오류가 발생했습니다.");	
+	        	}
+	        },
+	        error: function (jqXHR, exception) {
+	            var msg = '';
+	            if (jqXHR.status === 0) {
+	                msg = 'Not connect.\n Verify Network.';
+	            } else if (jqXHR.status == 404) {
+	                msg = 'Requested page not found. [404]';
+	            } else if (jqXHR.status == 500) {
+	                msg = 'Internal Server Error [500].';
+	            } else if (exception === 'parsererror') {
+	                msg = 'Requested JSON parse failed.';
+	            } else if (exception === 'timeout') {
+	                msg = 'Time out error.';
+	            } else if (exception === 'abort') {
+	                msg = 'Ajax request aborted.';
+	            } else {
+	                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+	            }
+	            alert("Error : "+msg);
+	        }
+	    });    
+	    
+	} else {
+		var selectoptionval = $("#chgOrderStatus option:selected").val();
+		var uploadviewkeys = "";
+		$('.chk_info2').each(function() {
+			if ($(this).is(":checked")) {
+				uploadviewkeys += ($(this).attr("keyid") + ",");
+			}
+		});
+		if (selectoptionval == '0') {
+			alert("변경 할 상태값을 선택해주시기 바랍니다.");
+			return;
+		}
+		if (uploadviewkeys == "") {
+			alert("변경 할 주문을 선택해주시기 바랍니다.");
+			return;
+		}else{
+			uploadviewkeys = uploadviewkeys.substring(0,uploadviewkeys.length - 1);
+		}
+		
+		$.ajax({
+	        url : "/ism/ord/ord020SelectChgGroupOrderStatus.do",
+	        type: "post",
+	        data : { "selectoptionval" : selectoptionval, "uploadviewkeys" : uploadviewkeys },
+	        success : function(data){
+	        	if (data == "SUCCESS") {
+	            	alert("상태 변경되었습니다.");
+	            	document.form1.pageIndex.value = 1;
+	        		$('#form1').submit();	
+	        	}else{
+	            	alert("상태 변경 중 오류가 발생했습니다.");	
+	        	}
+	        },
+	        error: function (jqXHR, exception) {
+	            var msg = '';
+	            if (jqXHR.status === 0) {
+	                msg = 'Not connect.\n Verify Network.';
+	            } else if (jqXHR.status == 404) {
+	                msg = 'Requested page not found. [404]';
+	            } else if (jqXHR.status == 500) {
+	                msg = 'Internal Server Error [500].';
+	            } else if (exception === 'parsererror') {
+	                msg = 'Requested JSON parse failed.';
+	            } else if (exception === 'timeout') {
+	                msg = 'Time out error.';
+	            } else if (exception === 'abort') {
+	                msg = 'Ajax request aborted.';
+	            } else {
+	                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+	            }
+	            alert("Error : "+msg);
+	        }
+	    }); 
 	}
-	if (chgodm010ids == "") {
-		alert("변경 할 주문을 선택해주시기 바랍니다.");
-		return;
-	}else{
-		chgodm010ids = chgodm010ids.substring(0,chgodm010ids.length - 1);
-	}
-	$.ajax({
-        url : "/ism/ord/ord020SelectChgOrderStatus.do",
-        type: "post",
-        data : { "selectoptionval" : selectoptionval, "chgodm010ids" : chgodm010ids },
-        success : function(data){
-        	if (data == "SUCCESS") {
-            	alert("상태 변경되었습니다.");
-            	document.form1.pageIndex.value = 1;
-        		$('#form1').submit();	
-        	}else{
-            	alert("상태 변경 중 오류가 발생했습니다.");	
-        	}
-        },
-        error: function (jqXHR, exception) {
-            var msg = '';
-            if (jqXHR.status === 0) {
-                msg = 'Not connect.\n Verify Network.';
-            } else if (jqXHR.status == 404) {
-                msg = 'Requested page not found. [404]';
-            } else if (jqXHR.status == 500) {
-                msg = 'Internal Server Error [500].';
-            } else if (exception === 'parsererror') {
-                msg = 'Requested JSON parse failed.';
-            } else if (exception === 'timeout') {
-                msg = 'Time out error.';
-            } else if (exception === 'abort') {
-                msg = 'Ajax request aborted.';
-            } else {
-                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
-            }
-            alert("Error : "+msg);
-        }
-    });
 }
 
 //체크박스된 주문 목록 삭제

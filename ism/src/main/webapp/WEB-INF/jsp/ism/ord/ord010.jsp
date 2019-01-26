@@ -9,9 +9,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>E-DAS</title>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<title> KTI NMS </title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -558,7 +559,8 @@ function uploadFile(){
         var formData = new FormData(form);
         for(var i = 0; i < uploadFileList.length; i++){
         	// LDC 2019-01-15
-        	if(fileList[uploadFileList[i]].name.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) != -1){
+        	var tempUploadFileName = fileList[uploadFileList[i]].name.toUpperCase();
+        	if(tempUploadFileName.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) != -1){
 	            formData.append('files', fileList[uploadFileList[i]]);
 	            formData.append('dataInfo', $("#fileShop_"+i+" option:selected").val() + ";" +$("#fileShop_"+i+" option:selected").attr('val2')+";"+$("#fileShop_"+i+" option:selected").text() + ";" +$("#fileShop_"+i+" option:selected").attr('dataid'));
         	}
@@ -793,7 +795,12 @@ function orderFileUpload(cum010id, cum030id) {
             console.log(data.split("^")[1]);
             console.log(data.split("^")[2]);
 
-            if (data.split("^")[1] == "-1") {
+            if(data.split("^")[1] == "-2") {
+				loadingBarClose();
+	            alert("동일한 파일명으로 업로드된 주문건이 있습니다");
+	            //return;
+			}
+			else if (data.split("^")[1] == "-1") {
             	loadingBarClose();
 	            alert("업로드 타입이 맞지 않는 파일입니다.");
 	            return;
@@ -842,8 +849,12 @@ function orderFileUpload_select() {
             console.log(data.split("^")[0]);
             console.log(data.split("^")[1]);
             console.log(data.split("^")[2]);
-
-            if (data.split("^")[1] == "-1") {
+			if(data.split("^")[1] == "-2") {
+				loadingBarClose();
+	            alert("동일한 파일명으로 업로드된 주문건이 있습니다");
+	            //return;
+			}
+			else if (data.split("^")[1] == "-1") {
             	loadingBarClose();
 	            alert("업로드 타입이 맞지 않는 파일입니다.");
 	            return;

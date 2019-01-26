@@ -9,9 +9,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title>E-DAS</title>
-    <meta charset="utf-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+	<title> ISM </title>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<script src="https://code.jquery.com/jquery-1.11.3.js"></script>
 	<script src="/js/custom/common.js" type="text/javascript" charset="utf-8"></script>
 	<link href="/css/custom/base.css" type="text/css" rel="stylesheet"  />
@@ -195,12 +196,12 @@
 					<ul class="depot">
 <c:forEach var="result" items="${resultListWhs}" varStatus="status">
 						<li>
-							<p class="tit">${result.whsname}</p>
+							<strong>${result.whsname}</strong>
 							<p class="date">데이터반영시점 &nbsp; ${result.uploaddate}</p>
 								<p class="num">
 									<strong>${result.pocnt}</strong><span>건</span>
 							</p>
-							<p class="icoBt">
+							<p>
 								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W','${result.receivetype}')" name="poList">발주</a>
 								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
 							</p>
@@ -309,7 +310,7 @@
                         <tbody>
                             <tr>
                                 <th scope="row">담당자</th>
-                                <td style="text-align:left;"><select id="userList" name="userList" style="width:600px;"></select></td>
+                                <td style="text-align:left;"><select id="userList" readonly name="userList" style="width:600px;"></select></td>
                             </tr>
                             <tr id="ccUserListTr">
                                 <th scope="row">참조</th>
@@ -990,13 +991,27 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
 				}else{
 	        		$("#userList").append("<option value='0'>해당 매입처관리에서 담당자를 등록해주시기 바랍니다.</option>");
 				}
-			}else if (data.userlist.length > 1) {
-        		$("#userList").append("<option value='0'>담당자 선택</option>");
+			}else if (data.userlist.length >= 1) {
+        		//$("#userList").append("<option value='0'>담당자 선택</option>");
+        		var selected = "";
+				$.each(data.userlist, function(index, item){
+					if(index == 0) {
+						selected = "selected";
+						$("#userList").append("<option "+selected+" value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
+					} 
+					/* 첫번째만 빼고 나머지 미출력을 위해 주석
+					else {
+						selected = "";
+					}
+	            	console.log(index+"/"+item);
+	        		$("#userList").append("<option "+selected+" value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
+	        		*/
+	        	});
         	}
-        	$.each(data.userlist, function(index, item){
-            	console.log(item);
-        		$("#userList").append("<option value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
-        	});
+//         	$.each(data.userlist, function(index, item){
+//             	console.log(item);
+//         		$("#userList").append("<option value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
+//         	});
         },
         error: function (jqXHR, exception) {
             var msg = '';
