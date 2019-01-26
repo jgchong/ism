@@ -22,6 +22,7 @@ import nfm.com.cmm.util.MailHandler;
 import nfm.com.exl.util.ExcelManager;
 import nfm.com.exl.util.ExcelRead;
 import nfm.com.exl.util.ExcelReadOption;
+import nfm.com.exl.util.ExcelCellRef;
 import nfm.com.ord.service.Ismodm010VO;
 import nfm.com.ord.service.Ord020SearchVO;
 import nfm.com.ord.service.Ord020Service;
@@ -320,6 +321,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			hm.put("byc010id", Integer.valueOf(poo010id)); //매입처ID
 			//hm.put("bycusername", userList); //매입처ID
 			hm.put("regid", loginVO.getName()); //매입처ID
+			hm.put("pocotype", pocotype); //매입처ID
 			
 		    po010DAO.insertPom010Arr(hm);
 		    //발주 정보 저장[e]
@@ -346,9 +348,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    String[] fVal = new String[50];
 		    int fixValueIdx = 0;
 	
-//			header.add("key Value");
-//			header.add("송장번호");
-//			header.add("택배사");
+			//header.add("key Value");
+			//header.add("송장번호");
+			//header.add("택배사");
 			
 		    for(Ismpoo010VO vo : listIsmpoo010VO){
 		    	if ("Y".equals(vo.getIsassign())) {
@@ -359,7 +361,7 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	}
 		    }
 		    
-			header.add("주문메모");
+			//header.add("주문메모");
 		    
 		    Ismpom010VO ismpom010VO = new Ismpom010VO();
 		    ismpom010VO.setPom010id(poNum);
@@ -367,13 +369,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    List<Ismpom010VO> listIsmpom010VO = (List<Ismpom010VO>) po010DAO.selectPom010List(ismpom010VO);
 		    
 		    for(Ismpom010VO vo : listIsmpom010VO){
-		    	
 		    	HashMap listKetValueHm = new HashMap();
 		    	
-		    	System.out.println("##########################"+vo.getOrderitemid());
-		    	System.out.println("##########################"+vo.getOrderitemname());
-		    	
-		    	listKetValueHm.put("keyvalue", vo.getOdm010id());		    	
+		    	listKetValueHm.put("keyvalue", vo.getOdm010id());
 		    	listKetValueHm.put("pom010id", vo.getPom010id());
 		    	listKetValueHm.put("odm010id", vo.getOdm010id());
 		    	listKetValueHm.put("orderno", vo.getOrderno());
@@ -410,6 +408,11 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	listKetValueHm.put("retqty", vo.getRetqty());
 		    	listKetValueHm.put("retprice", vo.getRetprice());
 		    	listKetValueHm.put("orderitemname", vo.getOrderitemname());
+		    	listKetValueHm.put("byccode", vo.getByccode());
+		    	listKetValueHm.put("cumprodcode", vo.getCumprodcode());
+		    	listKetValueHm.put("shopmallname", vo.getShopmallname());
+		    	listKetValueHm.put("orderitembyprice", vo.getOrderitemprice());
+		    	listKetValueHm.put("coname", vo.getConame());
 		    	
 	    		int fValCnt = fVal.length;
 		    	if(fValCnt > 0) {
@@ -425,9 +428,9 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 	
 		    	List<Object> obj = new ArrayList<Object>();
 			    
-//		    	obj.add(vo.getOdm010id()); //key value
-//	    		obj.add("");               //송장번호
-//	    		obj.add("");			   //택배사
+		    	//obj.add(vo.getOdm010id()); //key value
+	    		//obj.add("");               //송장번호
+	    		//obj.add("");			   //택배사
 	    		
 	    		for(Ismpoo010VO vosub : listIsmpoo010VO){
 			    	if ("Y".equals(vosub.getIsassign())) {
@@ -440,14 +443,14 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 			    	}
 			    }
 	    		
-	    		obj.add(vo.getOrdermemo()); //주문메모
+	    		//obj.add(vo.getOrdermemo()); //주문메모
 			    data.add(obj);
 		    }
 	
 		    String[] excelCellType = {"S","S","S","S","S","S","S","S","S","S",
 		    		                  "S","S","S","S","S","S","S","S","S","S",
 		    		                  "S","S","S","S","S","S","S","S","S","S",
-		    		                  "S","S","S"};
+		    		                  "S","S","S","S","S"};
 			
 		    ExcelManager excelManager = new ExcelManager(header, data);
 		    excelManager.setSheetName("발주List");
@@ -538,40 +541,148 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 
         ExcelReadOption excelReadOption = new ExcelReadOption();
         excelReadOption.setFilePath(convFile.getAbsolutePath());
-        excelReadOption.setOutputColumns("A","B","C");
-        excelReadOption.setStartRow(2);
-
+        excelReadOption.setOutputColumns("A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y");
+        excelReadOption.setStartRow(1);
+        
 	    // 송장 데이터 읽어 저장 
 	    List<Map<String, String>>excelContent2 =ExcelRead.read(excelReadOption);
         Iterator excelItem2 = excelContent2.iterator();
-
+        int loopCnt = 0;
+        String strA_Cell = "";
+        String strB_Cell = "";
+        String strC_Cell = "";
+        
         while (excelItem2.hasNext()) {
         	
         	Ismodm010VO ismodm010VO = new Ismodm010VO();
         	Map<String, String> excelItemInfo = (Map<String, String>) excelItem2.next();
-        	if(excelItemInfo.get("A") != null) {
-	        	ismodm010VO.setOdm010id(Integer.parseInt(excelItemInfo.get("A")));
-	        	ismodm010VO.setDlvno(excelItemInfo.get("B"));
-	        	ismodm010VO.setStatus("3");
-	        	ismodm010VO.setDlvco(excelItemInfo.get("C"));
-	        	
-	        	System.out.println("##################"+excelItemInfo.get("C"));
-	        	System.out.println("##################"+ismodm010VO.getDlvco());
-	        	
-	        	ord020DAO.updateOrderDetailData(ismodm010VO);
-	        	
-	        	Ord020SearchVO ord020SearchVO = new Ord020SearchVO();
-	        	ord020SearchVO.setOdm010id(Integer.parseInt(excelItemInfo.get("A")));
-	        	List<Ismodm010VO> listIsmodm010VO = (List<Ismodm010VO>) ord020Service.selectList(ord020SearchVO);
-	        	String itemcode = "0000000000";
-	        	String itemea = "0";
+        	
+        	if(loopCnt == 0) {
+        		if(excelItemInfo.get("A").indexOf("송장번호") == 0 && excelItemInfo.get("A") != null ) {strA_Cell = "A";}
+        		if(excelItemInfo.get("A").indexOf("택배사") == 0 && excelItemInfo.get("A") != null  ) {strB_Cell = "A";}
+        		if(excelItemInfo.get("A").indexOf("발주번호") == 0 && excelItemInfo.get("A") != null  ) {strC_Cell = "A";}
+        		
+        		if(excelItemInfo.get("B").indexOf("송장번호") == 0 && excelItemInfo.get("B") != null ) {strA_Cell = "B";}
+        		if(excelItemInfo.get("B").indexOf("택배사") == 0 && excelItemInfo.get("B") != null  ) {strB_Cell = "B";}
+        		if(excelItemInfo.get("B").indexOf("발주번호") == 0 && excelItemInfo.get("B") != null  ) {strC_Cell = "B";}
+        		
+        		if(excelItemInfo.get("C").indexOf("송장번호") == 0 && excelItemInfo.get("C") != null ) {strA_Cell = "C";}
+        		if(excelItemInfo.get("C").indexOf("택배사") == 0 && excelItemInfo.get("C") != null  ) {strB_Cell = "C";}
+        		if(excelItemInfo.get("C").indexOf("발주번호") == 0 && excelItemInfo.get("C") != null  ) {strC_Cell = "C";}
+        		
+        		if(excelItemInfo.get("D").indexOf("송장번호") == 0 && excelItemInfo.get("D") != null ) {strA_Cell = "D";}
+        		if(excelItemInfo.get("D").indexOf("택배사") == 0 && excelItemInfo.get("D") != null  ) {strB_Cell = "D";}
+        		if(excelItemInfo.get("D").indexOf("발주번호") == 0 && excelItemInfo.get("D") != null  ) {strC_Cell = "D";}
+        		
+        		if(excelItemInfo.get("E").indexOf("송장번호") == 0 && excelItemInfo.get("E") != null ) {strA_Cell = "E";}
+        		if(excelItemInfo.get("E").indexOf("택배사") == 0 && excelItemInfo.get("E") != null  ) {strB_Cell = "E";}
+        		if(excelItemInfo.get("E").indexOf("발주번호") == 0 && excelItemInfo.get("E") != null  ) {strC_Cell = "E";}
+        		
+    			if(excelItemInfo.get("F").indexOf("송장번호") == 0 && excelItemInfo.get("F") != null ) {strA_Cell = "F";}
+        		if(excelItemInfo.get("F").indexOf("택배사") == 0 && excelItemInfo.get("F") != null  ) {strB_Cell = "F";}
+        		if(excelItemInfo.get("F").indexOf("발주번호") == 0 && excelItemInfo.get("F") != null  ) {strC_Cell = "F";}
+        		
+    			if(excelItemInfo.get("G").indexOf("송장번호") == 0 && excelItemInfo.get("G") != null ) {strA_Cell = "G";}
+        		if(excelItemInfo.get("G").indexOf("택배사") == 0 && excelItemInfo.get("G") != null  ) {strB_Cell = "G";}
+        		if(excelItemInfo.get("G").indexOf("발주번호") == 0 && excelItemInfo.get("G") != null  ) {strC_Cell = "G";}
+        		
+        		if(excelItemInfo.get("H").indexOf("송장번호") == 0 && excelItemInfo.get("H") != null ) {strA_Cell = "H";}
+        		if(excelItemInfo.get("H").indexOf("택배사") == 0 && excelItemInfo.get("H") != null  ) {strB_Cell = "H";}
+        		if(excelItemInfo.get("H").indexOf("발주번호") == 0 && excelItemInfo.get("H") != null  ) {strC_Cell = "H";}
 
-	    		for (Ismodm010VO item : listIsmodm010VO) {
-	    			itemcode = item.getOrderitemid();
-	    			itemea = item.getOrderitemqty();
-	    		}
-	        	skd010Service.skd010Add(itemcode, null, itemea);
+        		if(excelItemInfo.get("I").indexOf("송장번호") == 0 && excelItemInfo.get("I") != null ) {strA_Cell = "I";}
+        		if(excelItemInfo.get("I").indexOf("택배사") == 0 && excelItemInfo.get("I") != null  ) {strB_Cell = "I";}
+        		if(excelItemInfo.get("I").indexOf("발주번호") == 0 && excelItemInfo.get("I") != null  ) {strC_Cell = "I";}
+        		
+
+        		if(excelItemInfo.get("J").indexOf("송장번호") == 0 && excelItemInfo.get("J") != null ) {strA_Cell = "J";}
+        		if(excelItemInfo.get("J").indexOf("택배사") == 0 && excelItemInfo.get("J") != null  ) {strB_Cell = "J";}
+        		if(excelItemInfo.get("J").indexOf("발주번호") == 0 && excelItemInfo.get("J") != null  ) {strC_Cell = "J";}
+        		
+        		if(excelItemInfo.get("K").indexOf("송장번호") == 0 && excelItemInfo.get("K") != null ) {strA_Cell = "K";}
+        		if(excelItemInfo.get("K").indexOf("택배사") == 0 && excelItemInfo.get("K") != null  ) {strB_Cell = "K";}
+        		if(excelItemInfo.get("K").indexOf("발주번호") == 0 && excelItemInfo.get("K") != null  ) {strC_Cell = "K";}
+
+        		if(excelItemInfo.get("L").indexOf("송장번호") == 0 && excelItemInfo.get("L") != null ) {strA_Cell = "L";}
+        		if(excelItemInfo.get("L").indexOf("택배사") == 0 && excelItemInfo.get("L") != null  ) {strB_Cell = "L";}
+        		if(excelItemInfo.get("L").indexOf("발주번호") == 0 && excelItemInfo.get("L") != null  ) {strC_Cell = "L";}
+
+        		if(excelItemInfo.get("M").indexOf("송장번호") == 0 && excelItemInfo.get("M") != null ) {strA_Cell = "M";}
+        		if(excelItemInfo.get("M").indexOf("택배사") == 0 && excelItemInfo.get("M") != null  ) {strB_Cell = "M";}
+        		if(excelItemInfo.get("M").indexOf("발주번호") == 0 && excelItemInfo.get("M") != null  ) {strC_Cell = "M";}
+
+        		if(excelItemInfo.get("N").indexOf("송장번호") == 0 && excelItemInfo.get("N") != null ) {strA_Cell = "N";}
+        		if(excelItemInfo.get("N").indexOf("택배사") == 0 && excelItemInfo.get("N") != null  ) {strB_Cell = "N";}
+        		if(excelItemInfo.get("N").indexOf("발주번호") == 0 && excelItemInfo.get("N") != null  ) {strC_Cell = "N";}
+
+        		if(excelItemInfo.get("O").indexOf("송장번호") == 0 && excelItemInfo.get("O") != null ) {strA_Cell = "O";}
+        		if(excelItemInfo.get("O").indexOf("택배사") == 0 && excelItemInfo.get("O") != null  ) {strB_Cell = "O";}
+        		if(excelItemInfo.get("O").indexOf("발주번호") == 0 && excelItemInfo.get("O") != null  ) {strC_Cell = "O";}
+
+        		if(excelItemInfo.get("P").indexOf("송장번호") == 0 && excelItemInfo.get("P") != null ) {strA_Cell = "P";}
+        		if(excelItemInfo.get("P").indexOf("택배사") == 0 && excelItemInfo.get("P") != null  ) {strB_Cell = "P";}
+        		if(excelItemInfo.get("P").indexOf("발주번호") == 0 && excelItemInfo.get("P") != null  ) {strC_Cell = "P";}
+
+        		if(excelItemInfo.get("Q").indexOf("송장번호") == 0 && excelItemInfo.get("Q") != null ) {strA_Cell = "Q";}
+        		if(excelItemInfo.get("Q").indexOf("택배사") == 0 && excelItemInfo.get("Q") != null  ) {strB_Cell = "Q";}
+        		if(excelItemInfo.get("Q").indexOf("발주번호") == 0 && excelItemInfo.get("Q") != null  ) {strC_Cell = "Q";}
+
+        		if(excelItemInfo.get("R").indexOf("송장번호") == 0 && excelItemInfo.get("R") != null ) {strA_Cell = "R";}
+        		if(excelItemInfo.get("R").indexOf("택배사") == 0 && excelItemInfo.get("R") != null  ) {strB_Cell = "R";}
+        		if(excelItemInfo.get("R").indexOf("발주번호") == 0 && excelItemInfo.get("R") != null  ) {strC_Cell = "R";}
+
+        		if(excelItemInfo.get("S").indexOf("송장번호") == 0 && excelItemInfo.get("S") != null ) {strA_Cell = "S";}
+        		if(excelItemInfo.get("S").indexOf("택배사") == 0 && excelItemInfo.get("S") != null  ) {strB_Cell = "S";}
+        		if(excelItemInfo.get("S").indexOf("발주번호") == 0 && excelItemInfo.get("S") != null  ) {strC_Cell = "S";}
+
+        		if(excelItemInfo.get("T").indexOf("송장번호") == 0 && excelItemInfo.get("T") != null ) {strA_Cell = "T";}
+        		if(excelItemInfo.get("T").indexOf("택배사") == 0 && excelItemInfo.get("T") != null  ) {strB_Cell = "T";}
+        		if(excelItemInfo.get("T").indexOf("발주번호") == 0 && excelItemInfo.get("T") != null  ) {strC_Cell = "T";}
+
+        		if(excelItemInfo.get("U").indexOf("송장번호") == 0 && excelItemInfo.get("U") != null ) {strA_Cell = "U";}
+        		if(excelItemInfo.get("U").indexOf("택배사") == 0 && excelItemInfo.get("U") != null  ) {strB_Cell = "U";}
+        		if(excelItemInfo.get("U").indexOf("발주번호") == 0 && excelItemInfo.get("U") != null  ) {strC_Cell = "U";}
+
+        		if(excelItemInfo.get("V").indexOf("송장번호") == 0 && excelItemInfo.get("V") != null ) {strA_Cell = "V";}
+        		if(excelItemInfo.get("V").indexOf("택배사") == 0 && excelItemInfo.get("V") != null  ) {strB_Cell = "V";}
+        		if(excelItemInfo.get("V").indexOf("발주번호") == 0 && excelItemInfo.get("V") != null  ) {strC_Cell = "V";}
+
+        		if(excelItemInfo.get("W").indexOf("송장번호") == 0 && excelItemInfo.get("W") != null ) {strA_Cell = "W";}
+        		if(excelItemInfo.get("W").indexOf("택배사") == 0 && excelItemInfo.get("W") != null  ) {strB_Cell = "W";}
+        		if(excelItemInfo.get("W").indexOf("발주번호") == 0 && excelItemInfo.get("W") != null  ) {strC_Cell = "W";}
+
+        		if(excelItemInfo.get("X").indexOf("송장번호") == 0 && excelItemInfo.get("X") != null ) {strA_Cell = "X";}
+        		if(excelItemInfo.get("X").indexOf("택배사") == 0 && excelItemInfo.get("X") != null  ) {strB_Cell = "X";}
+        		if(excelItemInfo.get("X").indexOf("발주번호") == 0 && excelItemInfo.get("X") != null  ) {strC_Cell = "X";}
+
+        		if(excelItemInfo.get("Y").indexOf("송장번호") == 0 && excelItemInfo.get("Y") != null ) {strA_Cell = "Y";}
+        		if(excelItemInfo.get("Y").indexOf("택배사") == 0 && excelItemInfo.get("Y") != null  ) {strB_Cell = "Y";}
+        		if(excelItemInfo.get("Y").indexOf("발주번호") == 0 && excelItemInfo.get("Y") != null  ) {strC_Cell = "Y";}
+
+        	} else {
+        	
+	        	if(excelItemInfo.get(strA_Cell) != null) {
+		        	ismodm010VO.setOdm010id(Integer.parseInt(excelItemInfo.get(strC_Cell)));
+		        	ismodm010VO.setDlvno(excelItemInfo.get(strA_Cell));
+		        	ismodm010VO.setStatus("3");
+		        	ismodm010VO.setDlvco(excelItemInfo.get(strB_Cell));
+		        	
+		        	ord020DAO.updateOrderDetailData(ismodm010VO);
+		        	
+		        	Ord020SearchVO ord020SearchVO = new Ord020SearchVO();
+		        	ord020SearchVO.setOdm010id(Integer.parseInt(excelItemInfo.get(strC_Cell)));
+		        	List<Ismodm010VO> listIsmodm010VO = (List<Ismodm010VO>) ord020Service.selectList(ord020SearchVO);
+		        	String itemcode = "0000000000";
+		        	String itemea = "0";
+	
+		    		for (Ismodm010VO item : listIsmodm010VO) {
+		    			itemcode = item.getOrderitemid();
+		    			itemea = item.getOrderitemqty();
+		    		}
+		        	skd010Service.skd010Add(itemcode, null, itemea);
+	        	}
         	}
+        	loopCnt++;
         }
         return 0;
     }

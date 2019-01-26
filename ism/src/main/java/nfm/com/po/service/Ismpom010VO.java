@@ -53,6 +53,9 @@ public class Ismpom010VO implements Serializable {
 	private String bycusername = "";
 	private String regid = "";
 	private String keyvalue = "";
+	
+	private String byccode = "";
+	private String cumprodcode = "";
 
 	public String getPom010id() {
 		return pom010id;
@@ -388,6 +391,22 @@ public class Ismpom010VO implements Serializable {
 
 	public void setKeyvalue(String keyvalue) {
 		this.keyvalue = keyvalue;
+	}
+	
+	public String getCumprodcode() {
+		return cumprodcode;
+	}
+
+	public void setCumprodcode(String cumprodcode) {
+		this.cumprodcode = cumprodcode;
+	}
+	
+	public String getByccode() {
+		return byccode;
+	}
+
+	public void setByccode(String byccode) {
+		this.byccode = byccode;
 	}
 	
 

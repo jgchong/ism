@@ -9,6 +9,8 @@ public interface Ord020Service  {
 	public String selectListJson(Ord020SearchVO ord020SearchVO) throws Exception;
 
 	public void ord020SelectChgOrderStatus(String selectoptionval, String chgodm010ids) throws Exception;
+	
+	public void ord020SelectChgGroupOrderStatus(String selectoptionval, String uploadviewkeys) throws Exception;
 
 	public void ord020SelectDel(String chgodm010ids) throws Exception;
 

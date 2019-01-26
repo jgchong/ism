@@ -148,15 +148,22 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 		ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
 		ord010SearchVO.setRecordCountPerPage(1);
-		List<?> result = ord010DAO.selectList(ord010SearchVO);
-		if (result.size() <= 0) {
-			retInt = -1;
-		}else{
-			//파일명 패턴이 있는 경우 cum030id 가져온다.
-			Iterator iterator = result.iterator();
-			Ismcum030VO ismcum030VO = (Ismcum030VO) iterator.next();
-	    	dbcum030id = ismcum030VO.getCum030id();
-	    	if (dbcum030id != filecum030id) retInt = -1;
+		
+		int resultChk = ord010DAO.selectFileChkCnt(ord010SearchVO);
+		if (resultChk> 0) {
+			retInt = -2;
+		}
+		else{
+			List<?> result = ord010DAO.selectList(ord010SearchVO);
+			if (result.size() <= 0) {
+				retInt = -1;
+			}else{
+				//파일명 패턴이 있는 경우 cum030id 가져온다.
+				Iterator iterator = result.iterator();
+				Ismcum030VO ismcum030VO = (Ismcum030VO) iterator.next();
+		    	dbcum030id = ismcum030VO.getCum030id();
+		    	if (dbcum030id != filecum030id) retInt = -1;
+			}
 		}
 		//파일명으로 매출처/쇼핑몰 정보 get [e]
 		//저장 후 조회를 위한 임시 key 발급

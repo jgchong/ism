@@ -81,6 +81,9 @@ public class Ismodm010VO implements Serializable {
     private String account2 = "";
     private String cumprodcode = "";
     
+    private String regdate = "";
+	private String byccode = "";
+    
 	public int getOdm010id() {
 		return odm010id;
 	}
@@ -599,6 +602,22 @@ public class Ismodm010VO implements Serializable {
 
 	public void setCumprodcode(String cumprodcode) {
 		this.cumprodcode = cumprodcode;
+	}
+	
+	public String getRegdate() {
+		return regdate;
+	}
+
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
+	}
+	
+	public String getByccode() {
+		return byccode;
+	}
+
+	public void setByccode(String byccode) {
+		this.byccode = byccode;
 	}
 
 	/**

@@ -33,6 +33,7 @@ public class Ord020SearchVO implements Serializable {
     private String dtSearch_status = "0";
     private String dtSearch_crtype = "0";
     private String dtSearch_all = "";
+    private String dtSearch_datetype = "";
     private int search_isdetail = 0;
     //발주를 위해 추가
     private int poSearch_byc010id = 0;
@@ -351,6 +352,17 @@ public class Ord020SearchVO implements Serializable {
 
 	public void setDtSearch_all(String dtSearch_all) {
 		this.dtSearch_all = dtSearch_all;
+	}
+	
+	
+	public String getDtSearch_datetype() {
+		return dtSearch_datetype;
+	}
+
+
+
+	public void setDtSearch_datetype(String dtSearch_datetype) {
+		this.dtSearch_datetype = dtSearch_datetype;
 	}
 
 

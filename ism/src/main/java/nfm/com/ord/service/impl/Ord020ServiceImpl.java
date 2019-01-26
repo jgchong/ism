@@ -138,6 +138,19 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 
 		ord020DAO.ord020SelectChgOrderStatus(hm);
 	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override
+	public void ord020SelectChgGroupOrderStatus(String selectoptionval, String uploadviewkeys)
+			throws Exception {
+
+		String[] uploadviewkeyArray = uploadviewkeys.split(",");
+		HashMap hm = new HashMap();
+		hm.put("selectoptionval", selectoptionval);
+		hm.put("uploadviewkeys", uploadviewkeyArray);
+
+		ord020DAO.ord020SelectChgGroupOrderStatus(hm);
+	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override

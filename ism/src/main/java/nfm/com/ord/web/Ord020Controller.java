@@ -106,15 +106,6 @@ public class Ord020Controller {
 		model.addAttribute("paginationInfo", paginationInfo);
 		/** pageing [e]*/
 		
-		System.out.println("###################"+ord020SearchVO.getOdm010id());
-		System.out.println("###################"+ord020SearchVO.getSearch_status());
-		System.out.println("###################"+ord020SearchVO.getSearch_uploadviewkey());
-		System.out.println("###################"+ord020SearchVO.getSearch_tempdiv());
-		System.out.println("###################"+ord020SearchVO.getSearch_cum030id());
-		System.out.println("###################"+ord020SearchVO.getDtSearch_crtype());
-		System.out.println("###################"+ord020SearchVO.getDtSearch_cumType1());
-		System.out.println("###################"+ord020SearchVO.getPoSearch_pristock());
-		
 		model.addAttribute("resultList", ord020Service.selectList(ord020SearchVO));
 		
 		// 매입처/매출처
@@ -201,6 +192,17 @@ public class Ord020Controller {
 			ModelMap model) throws Exception {
 		
 		ord020Service.ord020SelectChgOrderStatus(selectoptionval, chgodm010ids);
+		
+		return "SUCCESS";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ism/ord/ord020SelectChgGroupOrderStatus.do")
+	public String ord020SelectChgGroupOrderStatus(@RequestParam("selectoptionval") String selectoptionval,
+			@RequestParam("uploadviewkeys") String uploadviewkeys,
+			ModelMap model) throws Exception {
+		
+		ord020Service.ord020SelectChgGroupOrderStatus(selectoptionval, uploadviewkeys);
 		
 		return "SUCCESS";
 	}
