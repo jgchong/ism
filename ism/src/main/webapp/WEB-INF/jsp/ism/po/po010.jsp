@@ -995,17 +995,16 @@ function openLayerPOList(poconame, keyId, PoType, receivetype) {
         		//$("#userList").append("<option value='0'>담당자 선택</option>");
         		var selected = "";
 				$.each(data.userlist, function(index, item){
-					if(index == 0) {
+					/*if(index == 0) {
 						selected = "selected";
 						$("#userList").append("<option "+selected+" value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
 					} 
-					/* 첫번째만 빼고 나머지 미출력을 위해 주석
+					//첫번째만 빼고 나머지 미출력을 위해 주석
 					else {
 						selected = "";
-					}
-	            	console.log(index+"/"+item);
+					}*/
+	            	//console.log(index+"/"+item);
 	        		$("#userList").append("<option "+selected+" value='"+decodeURIComponent(item.useremail.replace(Ca, " "))+"'>"+decodeURIComponent(item.username.replace(Ca, " "))+"("+decodeURIComponent(item.useremail.replace(Ca, " "))+")</option>");
-	        		*/
 	        	});
         	}
 //         	$.each(data.userlist, function(index, item){

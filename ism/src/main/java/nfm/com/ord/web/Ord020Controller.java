@@ -126,6 +126,8 @@ public class Ord020Controller {
 		model.addAttribute("ISM070", egovCmmUseService.selectCmmCodeDetail(vo));
 		vo.setCodeId("ISM080");	//반품상태필드
 		model.addAttribute("ISM080", egovCmmUseService.selectCmmCodeDetail(vo));
+
+		model.addAttribute("dtSearch_datetype", ord020SearchVO.getDtSearch_datetype());
 	
 		return "ism/ord/ord020";
 	}

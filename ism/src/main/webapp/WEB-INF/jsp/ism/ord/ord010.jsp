@@ -93,7 +93,7 @@
 							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" multiple="multiple" title="" style="width:300px;height:35px;">
 								<option value="0"></option>
 							<c:forEach var="result" items="${resultList}" varStatus="status">
-								<option value="${result.cum030id}" val2="${result.cum010id}" >${result.coname}/${result.shopmallname}</option>
+								<option value="${result.cum030id}" val2="${result.cum010id}" val3="${result.uploadtype}" >${result.coname}/${result.shopmallname}</option>
 							</c:forEach>
 							</select>
 						<input type="file" id="file_1" name="file1" class="hidden" style="width:200px;"/>
@@ -106,7 +106,6 @@
 						<a href="javascript:;" class="layerBt" style="background:#45b6b6;" name="upload">데이터 일괄 업로드</a>
 
 						<input type="text" class="it ml30" title="" value="${ord010SearchVO.search_key1}" id="search_key1" name="search_key1"/>
-					
 						<!--select style="margin:0 -4px 0 10px;"></select-->
 						<button>검색</button>
 					</form>
@@ -839,6 +838,19 @@ function orderFileUpload_select() {
 		alert("파일을 선택하세요");
 		return false;
 	}
+	
+	compValue = $("#file_1").val();
+	optionCount = $("#shopOrderList option").size();
+	uploadTypeText = "";
+
+	for (i=1; i<optionCount; i++) {
+    	uploadTypeText = $("#shopOrderList option:eq("+i+")").attr('val3');
+    	if(compValue.indexOf(uploadTypeText) > -1) {
+    		$("#shopOrderList option:eq("+i+")").attr("selected","selected");
+    		break;
+    	}
+    }
+	
 	// 값넣기
 	$('#orderfileform_1 [name="filecum030id"]').val($("#shopOrderList option:selected").val());
 	$('#orderfileform_1 [name="filecum010id"]').val($("#shopOrderList option:selected").attr('val2'));

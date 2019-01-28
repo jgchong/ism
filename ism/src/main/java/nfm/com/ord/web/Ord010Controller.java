@@ -163,7 +163,7 @@ public class Ord010Controller {
 			@RequestParam("filecum010id") int filecum010id, @RequestParam("filecum030id") int filecum030id) throws Exception {
 
 		MultipartFile mf = mtfrequest.getFile("file1");
-
+		
 		return ord010Service.readOrderExcelFile(mf, filecum010id, filecum030id);
 	}
 	

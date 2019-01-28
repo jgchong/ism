@@ -92,7 +92,10 @@
 		postno,	        address,           dlvmemo,       dlvbyprice,     dlvno,              dlvco,
 		dlvstatus,      processdate,       accountcum,    accountbuy,     status,         cstype,             uploadfilename,
 		uploadviewkey,  claimstatus,       claimreason,   retstatus,      retqty,         retprice,
-		orderitemname,	orderitemprice,	   dlvprice,      rcvusercontacthp, rcvuseremail, regdate, orderitemcode
+		orderitemname,
+		orderitemprice,
+		dlvprice,
+		rcvusercontacthp, rcvuseremail
 		) values (
 		#orderno#,      ifnull(#orderdate#, curdate()),   #cum010id#,    #cum030id#,     #byc010id#,     #orderuser#,        #orderusercontact#,
 		#rcvuser#,      #rcvusercontact#,  #orderitemid#, #orderitemopt#, #orderitemqty#, #orderitembyprice#,
@@ -102,7 +105,7 @@
 		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.itemcode = #orderitemid#), #orderitemname#),''),
 		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
 		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
-		#rcvusercontacthp#, #rcvuseremail#, now(), IFNULL((select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt#),'')
+		#rcvusercontacthp#, #rcvuseremail#
 		)
     </insert>
 
@@ -410,24 +413,6 @@
     	</iterate>
     </update>
     
-    <update id="ord020DAO.ord020SelectChgGroupOrderStatus" parameterClass="java.util.HashMap">
-	update ismodm010
-       set processdate = now()
-		<isNotEmpty prepend="," property="selectoptionval">
-           status = #selectoptionval#
-        </isNotEmpty>
-		<isNotEmpty prepend="," property="selectaccountcumval">
-           accountcum = #selectaccountcumval#
-        </isNotEmpty>
-		<isNotEmpty prepend="," property="selectaccountbuyval">
-           accountbuy = #selectaccountbuyval#
-        </isNotEmpty>
-     where uploadviewkey in
-		<iterate  property="uploadviewkeys" open="(" close=")" conjunction=",">
-        #uploadviewkeys[]#
-    	</iterate>
-    </update>
-    
     <delete id="ord020DAO.ord020SelectDel" parameterClass="java.util.HashMap">
 	delete from ismodm010
      where odm010id in
@@ -528,7 +513,7 @@
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -546,7 +531,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -560,7 +545,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt is NULL
         and p.itemcode is not null
@@ -581,7 +566,7 @@
         from ismodm010 o1
         left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
         left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -599,7 +584,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt LIKE '%' #yyyymm# '%'
         and p.itemcode is not null
@@ -613,7 +598,7 @@
         sum(o1.orderitemprice) as itemprice,
         sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.bycclosedt is null
         and p.itemcode is not null
@@ -627,7 +612,7 @@
         b.bycname as byc010name,
         sum(o1.orderitemprice) as itemprice
         from ismodm010 o1
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        left outer join ismprd010 p on p.itemcode = o1.orderitemid
         left outer join ismbyc010 b on b.byc010id = p.byc010id
         where
         p.itemcode is not null

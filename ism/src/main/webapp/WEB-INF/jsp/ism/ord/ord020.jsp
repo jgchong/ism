@@ -5,7 +5,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib uri="http://java.sun.com/jstl/fmt" prefix="fmt" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -269,16 +268,15 @@ form.searchArea .searchMore li select {
 						<table id="mainListTable" cellpadding="0" cellspacing="0" class="" summary="" >
 							<caption></caption>
 							<colgroup>
-								<col width="2%"/><col width="2%"/><col width="8%"/><col width="8%"/><col width="4%"/><col width="4%"/><col width="5%"/>
-								<col width="4%"/><col width="4%"/><col width="7%"/><col width="7%"/><col width="*"/>
-								<col width="4%"/><col width="3%"/><col width="5%"/><col width="8%"/><col width="5%"/>
+								<col width="2%"/><col width="2%"/><col width="8%"/><col width="4%"/><col width="4%"/><col width="5%"/>
+								<col width="5%"/><col width="4%"/><col width="8%"/><col width="8%"/><col width="*"/>
+								<col width="5%"/><col width="3%"/><col width="5%"/><col width="10%"/><col width="5%"/>
 								<col width="4%"/>
 							</colgroup>
 							<thead>
 								<tr>
 									<th scope="col"><a href="javascript:chkall();">V</a></th>
 									<th scope="col">NO.</th>
-									<th scope="col">등록일자</th>
 									<th scope="col">주문일자</th>
 									<th scope="col">구분</th>
 									<th scope="col">매입처</th>
@@ -325,7 +323,6 @@ form.searchArea .searchMore li select {
 								<tr ${rowClass}>
 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
 									<td><strong><c:out value="${(ord020SearchVO.pageIndex - 1) * ord020SearchVO.pageUnit + status.count}"/></strong></td>
-									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${fn:substring(result.regdate,0,10)}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')">${result.code_nm}</td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.bycname}"/></td>

@@ -57,4 +57,8 @@ public class Ord010DAO extends EgovAbstractDAO {
 	public int selectCntNoItem(String orderTempKey) {
 		return (Integer)select("ord010DAO.selectCntNoItem", orderTempKey);
 	}
+	
+	public int selectFileChkCnt(Ord010SearchVO ord010SearchVO) {
+		return (Integer)select("ord010DAO.selectFileChkCnt", ord010SearchVO);
+	}
 }
