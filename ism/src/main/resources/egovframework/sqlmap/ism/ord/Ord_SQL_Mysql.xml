@@ -254,7 +254,7 @@
            a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
            a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
            a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
-           IFNULL(d.itemname, a.orderitemname) as orderitemname,
+           IFNULL(d.itemname, a.orderitemname) as orderitemname, a.regdate, 
            IFNULL(a.orderitemprice,'') as orderitemprice,
            IFNULL(d.itemdlvprice, '') as dlvprice,
            a.rcvusercontacthp, a.rcvuseremail,
