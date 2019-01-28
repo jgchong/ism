@@ -92,10 +92,7 @@
 		postno,	        address,           dlvmemo,       dlvbyprice,     dlvno,              dlvco,
 		dlvstatus,      processdate,       accountcum,    accountbuy,     status,         cstype,             uploadfilename,
 		uploadviewkey,  claimstatus,       claimreason,   retstatus,      retqty,         retprice,
-		orderitemname,
-		orderitemprice,
-		dlvprice,
-		rcvusercontacthp, rcvuseremail
+		orderitemname,	orderitemprice,	   dlvprice,      rcvusercontacthp, rcvuseremail, regdate, orderitemcode
 		) values (
 		#orderno#,      ifnull(#orderdate#, curdate()),   #cum010id#,    #cum030id#,     #byc010id#,     #orderuser#,        #orderusercontact#,
 		#rcvuser#,      #rcvusercontact#,  #orderitemid#, #orderitemopt#, #orderitemqty#, #orderitembyprice#,
@@ -105,7 +102,7 @@
 		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.itemcode = #orderitemid#), #orderitemname#),''),
 		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
 		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
-		#rcvusercontacthp#, #rcvuseremail#
+		#rcvusercontacthp#, #rcvuseremail#, now(), IFNULL((select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt#),'')
 		)
     </insert>
 
@@ -257,7 +254,7 @@
            a.postno,           a.address,       a.dlvmemo,        a.dlvbyprice,  a.dlvno,
            a.dlvco,            a.dlvstatus,     a.processdate,    a.accountcum,  a.accountbuy,   a.status,       a.cstype,
            a.uploadfilename,   a.uploadviewkey, a.claimstatus,    a.claimreason, a.retstatus,    a.retqty,       a.retprice,
-           IFNULL(d.itemname, a.orderitemname) as orderitemname,
+           IFNULL(d.itemname, a.orderitemname) as orderitemname, a.regdate, 
            IFNULL(a.orderitemprice,'') as orderitemprice,
            IFNULL(d.itemdlvprice, '') as dlvprice,
            a.rcvusercontacthp, a.rcvuseremail,
@@ -410,6 +407,24 @@
      where odm010id in
 		<iterate  property="chgodm010ids" open="(" close=")" conjunction=",">
         #chgodm010ids[]#
+    	</iterate>
+    </update>
+    
+    <update id="ord020DAO.ord020SelectChgGroupOrderStatus" parameterClass="java.util.HashMap">
+	update ismodm010
+       set processdate = now()
+		<isNotEmpty prepend="," property="selectoptionval">
+           status = #selectoptionval#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountcumval">
+           accountcum = #selectaccountcumval#
+        </isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountbuyval">
+           accountbuy = #selectaccountbuyval#
+        </isNotEmpty>
+     where uploadviewkey in
+		<iterate  property="uploadviewkeys" open="(" close=")" conjunction=",">
+        #uploadviewkeys[]#
     	</iterate>
     </update>
     
