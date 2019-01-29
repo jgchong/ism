@@ -176,6 +176,12 @@ li img {
 							<th scope='row'>처리일자</th>
 							<td>${item.processdate}</td>
 						</tr>
+						<tr>
+							<th scope='row'>등록일자</th>
+							<td>${item.regdate}</td>
+							<th scope='row'>-</th>
+							<td>-</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -430,22 +436,23 @@ function saveDetail() {
             if (data == 'SUCCESS') {
             	
             	
-            	
-            	var statusVal = $('input[name="status"]:checked').val();
+            		var statusVal = $('input[name="status"]:checked').val();
             	if ("${ordstatus}" != statusVal) {
             		if (statusVal == "3") {
-            			callStockAdd("${item.orderitemid}","","-${item.orderitemqty}");
+            		    //api 요청으로 출고시 플러스	
+                            callStockAdd("${orderitemid}","","${orderitemqty}");
             		}
             	}
             	var cstypeVal = $('input[name="cstype"]:checked').val();
-            	if ("${item.cstype}" != cstypeVal) {
+            	if ("${cstype}" != cstypeVal) {
             		if (cstypeVal == "R") {
 
                     	var retstatusVal = $('input[name="retstatus"]:checked').val();
-                    	if ("${item.retstatus}" != retstatusVal) {
-                    		if (retstatusVal == "5") {
+                    	if ("${retstatus}" != retstatusVal) {
+                    		if (retstatusVal == "4") {
                     			//call + 1
-                    			callStockAdd("${item.orderitemid}","",$("#retqty").val());
+                                        //api 요청으로 반품시 마이너스
+                    			callStockAdd("${orderitemid}","","-"+$("#retqty").val());
                     		}
                     	}
             		}
@@ -471,17 +478,22 @@ function saveDetail() {
 }
 
 function callStockAdd(itemid, whsid, qty) {
+	console.log("==================");
+	console.log("itemid="+itemid);
+	console.log("whsid="+whsid);
+	console.log("qty="+qty);
+	console.log("==================");
 	$.ajax({
         url : "/ism/skd/skd010Add.do",
         type: "post",
         data : { "itemcode" : itemid, "whs010id" : whsid, "itemea" : qty },
-        dataType:'json',
-        contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success : function(data){
+        	console.log(data);
         },
         error: function (jqXHR, exception) {
             var msg = '';
             if (jqXHR.status === 0) {
+            	console.log(data);
                 msg = 'Not connect.\n Verify Network.';
             } else if (jqXHR.status == 404) {
                 msg = 'Requested page not found. [404]';
