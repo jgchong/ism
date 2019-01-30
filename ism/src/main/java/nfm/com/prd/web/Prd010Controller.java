@@ -372,6 +372,7 @@ public class Prd010Controller {
         header.add("상품크기");
         header.add("카톤수량");
         header.add("피렛트수량");
+        header.add("매입사상품코드");
 
         ComDefaultCodeVO vo = new ComDefaultCodeVO();
         vo.setCodeId("ISM090");    //주문상태필드
@@ -405,7 +406,7 @@ public class Prd010Controller {
             if ("0".equals(prd010VO.getTaxfree())) {
                 obj.add("과세");
             } else {
-                obj.add("비과세");
+                obj.add("면세");
             }
 
 
@@ -425,6 +426,7 @@ public class Prd010Controller {
             obj.add(prd010VO.getItemsize());
             obj.add(prd010VO.getCartonqty());
             obj.add(prd010VO.getPalletqty());
+            obj.add(prd010VO.getSalecode());
             data.add(obj);
             index++;
         }
@@ -595,7 +597,7 @@ public class Prd010Controller {
                         continue;
                     } else if ("과세".equals(taxfree)) {
                         param.put("detail_taxfree", "0");
-                    } else if ("비과세".equals(taxfree)) {
+                    } else if ("비과세".equals(taxfree) || "면세".equals(taxfree)) {
                         param.put("detail_taxfree", "1");
                     } else {
                         result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 면세 값 입력(과세 와 비과세 중 하나 입력)>\n";
@@ -606,6 +608,7 @@ public class Prd010Controller {
                     param.put("detail_itemea", emptyStringToNull(getRowStringValue(row, 8)));
                     param.put("detail_itembuyprice", emptyStringToNull(getRowStringValue(row, 9)));
                     param.put("detail_itembuydlvprice", emptyStringToNull(getRowStringValue(row, 10)));
+                    param.put("detail_salecode", emptyStringToNull(getRowStringValue(row, 16)));
                     String itemgubun;
 
                     itemgubun = getRowStringValue(row, 11);
