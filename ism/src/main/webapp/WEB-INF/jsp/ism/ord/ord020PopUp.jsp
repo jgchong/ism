@@ -314,7 +314,7 @@ var claim1Html = ""+
 "				<select id='claimstatus' name='claimstatus' title=''>";
 
 <c:forEach var="item" items="${ISM060}" varStatus="status">
-	claim1Html += "<option value='${item.code}' selected='selected'>${item.codeNm}</option>";
+	claim1Html += "<option value='${item.code}'>${item.codeNm}</option>";
 </c:forEach>
 
 claim1Html +=
@@ -444,7 +444,7 @@ function saveDetail() {
             		}
             	}
             	var cstypeVal = $('input[name="cstype"]:checked').val();
-            	if ("${cstype}" != cstypeVal) {
+            	//if ("${cstype}" != cstypeVal) {
             		if (cstypeVal == "R") {
 
                     	var retstatusVal = $('input[name="retstatus"]:checked').val();
@@ -456,7 +456,7 @@ function saveDetail() {
                     		}
                     	}
             		}
-            	}
+            	//}
             	
             	
             	
