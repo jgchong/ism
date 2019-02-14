@@ -30,26 +30,30 @@
 	select count(1) totcnt
       from ismodm010
      where uploadfilename = #search_filename#
+      and status = ''
     </select>
     
     <!-- 주문수집 목록 select -->
     <select id="ord010DAO.selectList" parameterClass="ord010SearchVO" resultClass="ismcum030VOOrd">
-	select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
-	      (select count(distinct uploaddate) from ismodl010 where uploaddate >= SUBDATE(NOW(), INTERVAL 24 HOUR) and cum030id = a.cum030id) as uploadCnt,
-	      (select max(uploaddate) from ismodl010 where cum030id = a.cum030id) as lastUploadDate
-	      , b.account2
-      from ismcum030 a, ismcum010 b
-     where a.cum010id = b.cum010id
-       and a.useyn = 'Y'
-       and b.useyn = 'Y'
-		<isNotEmpty prepend="AND" property="search_key1">
-           a.shopmallname LIKE '%' #search_key1# '%'
-        </isNotEmpty>
-		<isNotEmpty prepend="AND" property="search_filename">
-           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M' and a.uploadtype != ''
-        </isNotEmpty>
-     order by $orderbyclause$
-     limit #recordCountPerPage# OFFSET #firstIndex#
+    select @ROWNUM := @ROWNUM + 1 AS sortNo, a.* from (
+		select a.cum030id, a.cum010id, b.coname, a.shopmallname, a.shopurl, a.shopuid, a.shoppwd, a.uploadtype, a.uploadgubun,
+		      (select count(distinct uploaddate) from ismodl010 where uploaddate >= SUBDATE(NOW(), INTERVAL 24 HOUR) and cum030id = a.cum030id) as uploadCnt,
+		      (select max(uploaddate) from ismodl010 where cum030id = a.cum030id) as lastUploadDate
+		      , b.account2
+	      from ismcum030 a, ismcum010 b
+	     where a.cum010id = b.cum010id
+	       and a.useyn = 'Y'
+	       and b.useyn = 'Y'
+			<isNotEmpty prepend="AND" property="search_key1">
+	           a.shopmallname LIKE '%' #search_key1# '%'
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="search_filename">
+	           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M' and a.uploadtype != ''
+	        </isNotEmpty>
+	     order by $orderbyclause$ asc
+	     limit #recordCountPerPage# OFFSET #firstIndex#
+	) a, (SELECT @ROWNUM := 0) R
+	ORDER BY SORTNO DESC
     </select>
     
     <select id="ord010DAO.selectManualDataDetail" parameterClass="String" resultClass="ismodo010VO">
@@ -102,7 +106,8 @@
 		IFNULL(IF(#orderitemname# = '', (select a.itemname from ismprd010 a where a.itemcode = #orderitemid#), #orderitemname#),''),
 		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
 		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
-		#rcvusercontacthp#, #rcvuseremail#, now(), IFNULL((select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt#),'')
+		#rcvusercontacthp#, #rcvuseremail#, now(), 
+		IFNULL(IF(#orderitemid# = '', #orderitemid#, (select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt#)),'')
 		)
     </insert>
 
@@ -191,16 +196,46 @@
         <isNotEqual prepend="AND" property="search_cstype" compareValue="0">
         	a.cstype = #search_cstype#
         </isNotEqual>
-		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
-		<![CDATA[
-        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
-        ]]>
-        </isNotEmpty>
-		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
-		<![CDATA[
-        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
-        ]]>
-        </isNotEmpty>
+		
+		<isEqual property="dtSearch_datetype" compareValue="1">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+        
+        <isEqual property="dtSearch_datetype" compareValue="2">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+        
+        <isEqual property="dtSearch_datetype" compareValue="3">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.regdate = '', curdate(), DATE_ADD(a.regdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.regdate = '', curdate(), DATE_ADD(a.regdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+		
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
         	b.cotype1 = #dtSearch_cumType1#
         </isNotEqual>
@@ -336,16 +371,46 @@
         <isNotEqual prepend="AND" property="search_cstype" compareValue="0">
         	a.cstype = #search_cstype#
         </isNotEqual>
-		<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
-		<![CDATA[
-        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
-        ]]>
-        </isNotEmpty>
-		<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
-		<![CDATA[
-        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
-        ]]>
-        </isNotEmpty>
+        
+        <isEqual property="dtSearch_datetype" compareValue="1">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.orderdate = '', curdate(), DATE_ADD(a.orderdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+        
+        <isEqual property="dtSearch_datetype" compareValue="2">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.processdate = '', curdate(), DATE_ADD(a.processdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+        
+        <isEqual property="dtSearch_datetype" compareValue="3">
+			<isNotEmpty prepend="AND" property="dtSearch_frOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.regdate = '', curdate(), DATE_ADD(a.regdate, INTERVAL 0 DAY)),'%Y-%m-%d') >= #dtSearch_frOrderDt#
+	        ]]>
+	        </isNotEmpty>
+			<isNotEmpty prepend="AND" property="dtSearch_toOrderDt">
+			<![CDATA[
+	        	DATE_FORMAT(IF(a.regdate = '', curdate(), DATE_ADD(a.regdate, INTERVAL 0 DAY)),'%Y-%m-%d') <= #dtSearch_toOrderDt#
+	        ]]>
+	        </isNotEmpty>
+        </isEqual>
+        
         <isNotEqual prepend="AND" property="dtSearch_cumType1" compareValue="0">
         	b.cotype1 = #dtSearch_cumType1#
         </isNotEqual>
@@ -428,9 +493,50 @@
     	</iterate>
     </update>
     
+    <update id="ord020DAO.ord020SelectChgGroupOrderStatus2" parameterClass="java.util.HashMap">
+	 update ismodm010
+       set processdate = now()
+		<isNotEmpty prepend="," property="selectoptionval">
+			status = #selectoptionval#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountcumval">
+			accountcum = #selectaccountcumval#
+		</isNotEmpty>
+		<isNotEmpty prepend="," property="selectaccountbuyval">
+			accountbuy = #selectaccountbuyval#
+		</isNotEmpty>
+     where odm010id in (
+     	select odm010id from (
+			select a.odm010id
+			from ismodm010 a, ismcum040 b 
+			where a.uploadviewkey in 
+				<iterate  property="uploadviewkeys" open="(" close=")" conjunction=",">
+		        #uploadviewkeys[]#
+		    	</iterate>
+				and a.status = ''
+				and a.cum030id = b.cum030id
+				and a.orderitemid = b.cumprodcode
+				and a.orderitemopt = b.cumprodoptnm1
+				and a.orderno not in (
+					select c.orderno
+					from ismodm010 c
+					where c.status = '1' 
+				)
+		) k
+	 )
+    </update>
+    
     <delete id="ord020DAO.ord020SelectDel" parameterClass="java.util.HashMap">
 	delete from ismodm010
      where odm010id in
+		<iterate  property="chgodm010ids" open="(" close=")" conjunction=",">
+        #chgodm010ids[]#
+    	</iterate>
+    </delete>
+    
+    <delete id="ord020DAO.ord020SelectDel2" parameterClass="java.util.HashMap">
+	delete from ismodm010
+     where uploadviewkey in
 		<iterate  property="chgodm010ids" open="(" close=")" conjunction=",">
         #chgodm010ids[]#
     	</iterate>
@@ -517,24 +623,24 @@
 
     <select id="adj020DAO.selectList" parameterClass="String" resultClass="adj020VO">
         select
-        o1.cum010id as cum010id,
-        c1.coname as cum010name,
-        o1.cum030id as cum030id,
-        c3.shopmallname as cum030name,
-        b.byc010id as byc010id,
-        b.bycname as byc010name,
-        sum(o1.orderitemprice) as itemprice,
-        sum(p.itembuyprice) as itembuyprice
+	        o1.cum010id as cum010id,
+	        c1.coname as cum010name,
+	        o1.cum030id as cum030id,
+	        c3.shopmallname as cum030name,
+	        b.byc010id as byc010id,
+	        b.bycname as byc010name,
+	        sum(o1.orderitemprice) as itemprice,
+	        sum(p.itembuyprice) as itembuyprice
         from ismodm010 o1
-        left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
-        left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
-        left outer join ismprd010 p on p.itemcode = o1.orderitemcode
-        left outer join ismbyc010 b on b.byc010id = p.byc010id
+        	left outer join ismcum010 c1 on c1.cum010id = o1.cum010id
+        	left outer join ismcum030 c3 on c3.cum030id = o1.cum030id
+        	left outer join ismprd010 p on p.itemcode = o1.orderitemcode
+        	left outer join ismbyc010 b on b.byc010id = p.byc010id
         where o1.closedt LIKE '%' #yyyymm# '%'
-        and p.itemcode is not null
-        and b.byc010id is not null
-        and c1.cum010id is not null
-        and c3.cum030id is not null
+	        and p.itemcode is not null
+	        and b.byc010id is not null
+	        and c1.cum010id is not null
+	        and c3.cum030id is not null
         group by o1.cum030id, b.byc010id
         order by cum030id asc
     </select>
