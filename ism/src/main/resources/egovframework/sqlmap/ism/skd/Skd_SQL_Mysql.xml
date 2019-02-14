@@ -189,7 +189,8 @@
     <!-- itemcode, 창고의 총 개수 -->
     <select id="skd010DAO.skd030itemeaAtWhs010id" parameterClass="java.util.HashMap" resultClass="int">
         select ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 1 and destinationwhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
-        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and sourcewhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
+        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and sourcewhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) +
+        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and destinationwhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
         ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 3 and itemcode = #itemcode# group by itemcode),0)
         as itemea
     </select>
