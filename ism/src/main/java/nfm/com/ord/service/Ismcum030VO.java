@@ -25,7 +25,7 @@ public class Ismcum030VO implements Serializable {
     private String lastUploadDate = ""; //주문수짐목록에 최근 반영일 추가필드
     // LDC 주문 수집 수동 관리에서 정산가 매입가 표시.
     private String account2 = "";
-
+    private int sortNo = 0;
 
 	public int getCum030id() {
 		return cum030id;
@@ -165,6 +165,17 @@ public class Ismcum030VO implements Serializable {
 
 	public void setAccount2(String account2) {
 		this.account2 = account2;
+	}
+	
+	
+	public int getSortNo() {
+		return sortNo;
+	}
+
+
+
+	public void setSortNo(int sortNo) {
+		this.sortNo = sortNo;
 	}
 
 

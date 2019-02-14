@@ -11,8 +11,12 @@ public interface Ord020Service  {
 	public void ord020SelectChgOrderStatus(String selectoptionval, String chgodm010ids) throws Exception;
 	
 	public void ord020SelectChgGroupOrderStatus(String selectoptionval, String uploadviewkeys) throws Exception;
+	
+	public void ord020SelectChgGroupOrderStatus2(String selectoptionval, String uploadviewkeys) throws Exception;
 
 	public void ord020SelectDel(String chgodm010ids) throws Exception;
+	
+	public void ord020SelectDel2(String chgodm010ids) throws Exception;
 
 	public void updateOrderDetailData(Ismodm010VO ismodm010vo) throws Exception;
 
