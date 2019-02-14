@@ -1514,9 +1514,11 @@ function confirmpo() {
             if (data == 'SUCCESS') {
                	alert("발주 전송 되었습니다.");
             	//$('.layerClose').trigger('click');
+            	loadingBarClose();
             	location.href="/ism/po/po010.do";
             }else if (data.indexOf(".xls") >= 0){
                	alert("발주 저장 되었습니다.");
+               	loadingBarClose();
                	downLoadFile(data);
             	location.href="/ism/po/po010.do";
             }else{
@@ -1537,7 +1539,7 @@ function confirmpo() {
 function downLoadFile(filename) {
 	T = document.formatdn;
 	T.target	= "tr";
-	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+filename;
+	T.action	= "/ism/cmm/attachFileDownFileName.do?filename="+encodeURIComponent(filename);
 	T.submit();
 }
 function loadingBarOpen() {
