@@ -332,6 +332,8 @@ public class Po010ServiceImpl extends EgovAbstractServiceImpl implements Po010Se
 		    	odm010idArrStr += (vo + ",");
 		    }
 	
+		    System.out.println("###############################"+odm010idArrStr);
+		    
 		    ord020Service.ord020SelectChgOrderStatus("2",odm010idArrStr);
 			// 발주된 주문 정보 출고대기로 상태 변경[e]
 	
