@@ -208,12 +208,32 @@ public class Ord020Controller {
 		
 		return "SUCCESS";
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ism/ord/ord020SelectChgGroupOrderStatus2.do")
+	public String ord020SelectChgGroupOrderStatus2(@RequestParam("selectoptionval") String selectoptionval,
+			@RequestParam("uploadviewkeys") String uploadviewkeys,
+			ModelMap model) throws Exception {
+		
+		ord020Service.ord020SelectChgGroupOrderStatus2(selectoptionval, uploadviewkeys);
+		
+		return "SUCCESS";
+	}
 
 	@ResponseBody
 	@RequestMapping(value = "/ism/ord/ord020SelectDel.do")
 	public String ord020SelectDel(@RequestParam("chgodm010ids") String chgodm010ids, ModelMap model) throws Exception {
 		
 		ord020Service.ord020SelectDel(chgodm010ids);
+		
+		return "SUCCESS";
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ism/ord/ord020SelectDel2.do")
+	public String ord020SelectDel2(@RequestParam("chgodm010ids") String chgodm010ids, ModelMap model) throws Exception {
+		
+		ord020Service.ord020SelectDel2(chgodm010ids);
 		
 		return "SUCCESS";
 	}
