@@ -29,10 +29,20 @@ public class Ord020DAO extends EgovAbstractDAO {
 	public void ord020SelectChgGroupOrderStatus(HashMap hm) {
 		update("ord020DAO.ord020SelectChgGroupOrderStatus", hm);
 	}
+	
+	@SuppressWarnings("rawtypes")
+	public void ord020SelectChgGroupOrderStatus2(HashMap hm) {
+		update("ord020DAO.ord020SelectChgGroupOrderStatus2", hm);
+	}
 
 	@SuppressWarnings("rawtypes")
 	public void ord020SelectDel(HashMap hm) {
 		delete("ord020DAO.ord020SelectDel", hm);
+	}
+	
+	@SuppressWarnings("rawtypes")
+	public void ord020SelectDel2(HashMap hm) {
+		delete("ord020DAO.ord020SelectDel2", hm);
 	}
 
 	public void updateOrderDetailData(Ismodm010VO ismodm010vo) {
