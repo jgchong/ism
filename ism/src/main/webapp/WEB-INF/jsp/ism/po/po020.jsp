@@ -146,7 +146,7 @@ function fnLinkPage(pageNo){
 						<option value="${item.byc010id}" <c:if test="${ismpomsearch020VO.dtSearch_bycNm eq item.byc010id}">selected</c:if> >${item.bycname}</option>
 	                    </c:forEach>
 					</select>
-					<strong style="font-size:12px;margin-left:20px;">발신인</strong>
+					<strong style="font-size:12px;margin-left:20px;">수신인</strong>
                     <select name="dtSearch_sndNm" id="dtSearch_sndNm">
 						<option value="">선택</option>
                         <c:forEach var="item" items="${bycNmList}" varStatus="status">

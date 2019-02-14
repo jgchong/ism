@@ -196,12 +196,12 @@
 					<ul class="depot">
 <c:forEach var="result" items="${resultListWhs}" varStatus="status">
 						<li>
-							<strong>${result.whsname}</strong>
+							<p class="tit">${result.whsname}</p>
 							<p class="date">데이터반영시점 &nbsp; ${result.uploaddate}</p>
 								<p class="num">
 									<strong>${result.pocnt}</strong><span>건</span>
 							</p>
-							<p>
+							<p class="icoBt">
 								<a href="javascript://" class="layerBt ico3" onclick="openLayerPOList('${result.whsname}','${result.whs010id}','W','${result.receivetype}')" name="poList">발주</a>
 								<a href="javascript://" class="layerBt ico1" onclick="openLayerPOSet('${result.whsname}','${result.whs010id}','W')" name="poSetting">발주환경설정</a>
 							</p>
