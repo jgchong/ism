@@ -136,7 +136,7 @@
 				<!-- loop 시작 -->
                 <c:forEach var="result" items="${resultList}" varStatus="status">
 								<tr>
-									<td><c:out value="${status.count}"/></td>
+									<td><c:out value="${result.sortNo}"/></td>
 									<td><c:out value="${result.shopmallname}"/></td>
 									<td><a href="javascript:window.open('${result.shopurl}','_blank');"><c:out value="${result.shopurl}"/></a></td>
 									<td><c:out value="${result.shopuid}"/></td>

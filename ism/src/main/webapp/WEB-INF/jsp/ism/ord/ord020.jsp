@@ -585,7 +585,7 @@ function selectChgOrderStatus() {
 		}
 		
 		$.ajax({
-	        url : "/ism/ord/ord020SelectChgGroupOrderStatus.do",
+	        url : "/ism/ord/ord020SelectChgGroupOrderStatus2.do",
 	        type: "post",
 	        data : { "selectoptionval" : selectoptionval, "uploadviewkeys" : uploadviewkeys },
 	        success : function(data){
@@ -622,23 +622,74 @@ function selectChgOrderStatus() {
 
 //체크박스된 주문 목록 삭제
 function selectDel() {
-	if (confirm("선택 주문을 삭제하시겠습니까?")) {
-		var chgodm010ids = "";
-		$('.chk_info').each(function() {
+	if ($('#mainListTable').length > 0) {
+		if (confirm("선택 주문을 삭제하시겠습니까?")) {
+			var chgodm010ids = "";
+			$('.chk_info').each(function() {
+				if ($(this).is(":checked")) {
+					chgodm010ids += ($(this).attr("dataid") + ",");
+				}
+			});
+			if (chgodm010ids == "") {
+				alert("삭제 할 주문을 선택해주시기 바랍니다.");
+				return;
+			}else{
+				chgodm010ids = chgodm010ids.substring(0,chgodm010ids.length - 1);
+			}
+			$.ajax({
+		        url : "/ism/ord/ord020SelectDel.do",
+		        type: "post",
+		        data : { "chgodm010ids" : chgodm010ids },
+		        success : function(data){
+		        	if (data == "SUCCESS") {
+		            	alert("삭제 되었습니다.");
+		            	document.form1.pageIndex.value = 1;
+		        		$('#form1').submit();	
+		        	}else{
+		            	alert("삭제 중 오류가 발생했습니다.");	
+		        	}
+		        },
+		        error: function (jqXHR, exception) {
+		            var msg = '';
+		            if (jqXHR.status === 0) {
+		                msg = 'Not connect.\n Verify Network.';
+		            } else if (jqXHR.status == 404) {
+		                msg = 'Requested page not found. [404]';
+		            } else if (jqXHR.status == 500) {
+		                msg = 'Internal Server Error [500].';
+		            } else if (exception === 'parsererror') {
+		                msg = 'Requested JSON parse failed.';
+		            } else if (exception === 'timeout') {
+		                msg = 'Time out error.';
+		            } else if (exception === 'abort') {
+		                msg = 'Ajax request aborted.';
+		            } else {
+		                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+		            }
+		            alert("Error : "+msg);
+		        }
+		    });
+		}
+	} else {
+		var selectoptionval = $("#chgOrderStatus option:selected").val();
+		var uploadviewkeys = "";
+		$('.chk_info2').each(function() {
 			if ($(this).is(":checked")) {
-				chgodm010ids += ($(this).attr("dataid") + ",");
+				uploadviewkeys += ($(this).attr("keyid") + ",");
 			}
 		});
-		if (chgodm010ids == "") {
+
+		if (uploadviewkeys == "") {
 			alert("삭제 할 주문을 선택해주시기 바랍니다.");
 			return;
 		}else{
-			chgodm010ids = chgodm010ids.substring(0,chgodm010ids.length - 1);
+			uploadviewkeys = uploadviewkeys.substring(0,uploadviewkeys.length - 1);
 		}
+		
 		$.ajax({
-	        url : "/ism/ord/ord020SelectDel.do",
+	        url : "/ism/ord/ord020SelectDel2.do",
 	        type: "post",
-	        data : { "chgodm010ids" : chgodm010ids },
+	        data : { "chgodm010ids" : uploadviewkeys },
 	        success : function(data){
 	        	if (data == "SUCCESS") {
 	            	alert("삭제 되었습니다.");
