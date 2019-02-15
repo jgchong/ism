@@ -176,7 +176,7 @@
         s2.itemea,
         s2.itemdlprice,
         s1.itemcode,
-        s1.createdate,
+        max(s1.createdate) as createdate,
         p.itemname
         from ismskd020 s2
         left outer join ismskd010 s1 on s2.skd010id = s1.skd010id
@@ -184,6 +184,7 @@
         where s2.whs010id = #whs010id#
         and s1.skd010id is not null
         and p.itemcode is not null
+        group by s1.itemcode
     </select>
 
     <!-- itemcode, 창고의 총 개수 -->
@@ -191,7 +192,7 @@
         select ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 1 and destinationwhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
         ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and sourcewhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) +
         ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 2 and destinationwhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0) -
-        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 3 and itemcode = #itemcode# group by itemcode),0)
+        ifnull((SELECT sum(itemea) FROM ismskd030 where skd010type = 3 and sourcewhs010id = #whs010id# and itemcode = #itemcode# group by itemcode),0)
         as itemea
     </select>
 
