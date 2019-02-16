@@ -345,7 +345,7 @@
 			</div>
 			<p class="layerFootBt">
 				<a href="javascript://" class="confirm" onclick="confirmpo()" id="posendbtn">발주전송</a>
-				<a href="javascript://" class="layerClose cancel">닫기</a>
+				<a href="javascript:location.reload(true);" style="background: #666; color: #fff;">닫기</a>
 			</p>
 			<a href="javascript:;" class="layerClose layerTopClose"><img src="/images/custom/closePop.png" alt=""/></a>
 		</div>
