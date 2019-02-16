@@ -431,7 +431,7 @@ public class Prd010Controller {
             index++;
         }
 
-        String[] excelCellType = {"S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"};
+        String[] excelCellType = {"S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S", "S"};
 
         List<String> explainText = new ArrayList<>();
         explainText.add("1. 상품명과 매입처를 Key값으로 하여 동시에 중복된 경우, 해당 열은 등록되지 않습니다.");

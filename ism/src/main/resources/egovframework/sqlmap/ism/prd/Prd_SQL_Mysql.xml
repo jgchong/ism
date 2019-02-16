@@ -138,6 +138,7 @@
         p.itemsize,
         p.cartonqty,
         p.palletqty,
+        p.salecode as salecode,
         b.bycname,
         w.whsname
         from ismprd010 p
