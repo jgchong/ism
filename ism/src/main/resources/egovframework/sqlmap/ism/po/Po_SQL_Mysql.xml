@@ -160,9 +160,9 @@
 	
     <select id="po010DAO.selectPom010List" parameterClass="ismpom010VO" resultClass="ismpom010VO">
 	select a.pom010id, a.odm010id, a.orderno, DATE_FORMAT(a.orderdate,'%Y-%m-%d') as orderdate, a.cum010id, a.cum030id, a.byc010id, a.orderuser, a.orderusercontact,
-           a.rcvuser, a.rcvusercontact, d.orderitemid, a.orderitemopt, a.orderitemqty, a.orderitemprice, a.postno, a.address,
+           a.rcvuser, a.rcvusercontact, d.orderitemid, a.orderitemopt, a.orderitemqty, a.postno, a.address,
            a.dlvmemo, a.dlvprice, a.dlvno, a.dlvco, a.dlvstatus, DATE_FORMAT(a.processdate,'%Y-%m-%d') as processdate, a.accountcum, a.accountbuy, a.status, a.cstype, 
-           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, e.salecode as byccode, e.itembuyprice as orderitembyprice, e.itemname as orderitemname, 
+           a.uploadfilename, a.claimstatus, a.claimreason, a.retstatus, a.retqty, a.retprice, e.salecode as byccode, e.itembuyprice as orderitemprice, e.itemname as orderitemname, 
            d.cumprodcode, c.shopmallname, a.rcvusercontacthp, a.rcvuseremail, a.ordermemo, b.coname, e.itemname
     from ismpom010 a, ismcum010 b, ismcum030 c, ismcum040 d , ismprd010 e
     where a.cum010id = b.cum010id
