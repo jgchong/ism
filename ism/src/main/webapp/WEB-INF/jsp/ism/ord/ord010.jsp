@@ -90,10 +90,10 @@
 					<form id="orderfileform_1" name="orderfileform_1" action='/ism/ord/odo010orderupfile.do' enctype='multipart/form-data' method='post' >
 						<input type="hidden" id="filecum010id" name="filecum010id" value="">
 						<input type="hidden" id="filecum030id" name="filecum030id" value="">
-							<select id="shopOrderList" name="shopOrderList" class="js-example-basic-single" title="" style="width:300px;height:35px;">
+							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" multiple="multiple" title="" style="width:300px;height:35px;">
 								<option value="0"></option>
 							<c:forEach var="result" items="${resultList}" varStatus="status">
-								<option value="${result.cum030id}" val2="${result.cum010id}" val3="${result.uploadtype}" >${result.coname}/${result.shopmallname}</option>
+								<option value="${result.cum030id}" val2="${result.cum010id}" val3="${result.uploadtype}" >${result.shopmallname}</option>
 							</c:forEach>
 							</select>
 						<input type="file" id="file_1" name="file1" class="hidden" style="width:200px;"/>
