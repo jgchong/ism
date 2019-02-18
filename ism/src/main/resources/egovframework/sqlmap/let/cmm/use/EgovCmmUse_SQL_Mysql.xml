@@ -22,6 +22,11 @@
 			WHERE
 			USE_AT = 'Y'
 			AND CODE_ID = #codeId#
+		]]>
+			<isEqual prepend="AND" property="codeId" compareValue="ISM010">
+			CODE NOT IN ('shopmallname','coname','orderitembyprice','byccode','cumprodcode','dlvno','dlvco','keyvalue')
+            </isEqual>
+        <![CDATA[
 			ORDER BY ABS(CODE_DC)
 		]]>
 	</select>
