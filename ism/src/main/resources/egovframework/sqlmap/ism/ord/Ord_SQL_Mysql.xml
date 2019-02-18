@@ -50,7 +50,7 @@
 			<isNotEmpty prepend="AND" property="search_filename">
 	           #search_filename# like concat('%',a.uploadtype,'%') and a.uploadgubun = 'M' and a.uploadtype != ''
 	        </isNotEmpty>
-	     order by $orderbyclause$ asc
+	     order by $orderbyclause$ DESC
 	     limit #recordCountPerPage# OFFSET #firstIndex#
 	) a, (SELECT @ROWNUM := 0) R
 	ORDER BY SORTNO DESC
@@ -107,7 +107,7 @@
 		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
 		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
 		#rcvusercontacthp#, #rcvuseremail#, now(), 
-		IFNULL(IF(#orderitemid# = '', #orderitemid#, (select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt#)),'')
+		IFNULL(IF(#orderitemid# = '', #orderitemid#, (select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt# and cum030id = #cum030id#)),'')
 		)
     </insert>
 
@@ -255,7 +255,7 @@
         	a.orderno LIKE '%' #dtSearch_orderno# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
-        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
+        	d.itemcode LIKE '%' #dtSearch_orderItemid# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
         	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
@@ -430,7 +430,7 @@
         	a.orderno LIKE '%' #dtSearch_orderno# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemid">
-        	a.orderitemid LIKE '%' #dtSearch_orderItemid# '%'
+        	d.itemcode LIKE '%' #dtSearch_orderItemid# '%'
         </isNotEmpty>
 		<isNotEmpty prepend="AND" property="dtSearch_orderItemName">
         	a.orderitemname LIKE '%' #dtSearch_orderItemName# '%'
