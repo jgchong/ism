@@ -362,7 +362,7 @@ public class Prd010Controller {
         header.add("상품코드");
         header.add("상품명");
         header.add("상품카테고리");
-        header.add("면세여부");
+        header.add("과세여부");
         header.add("옵션");
         header.add("단위수량");
         header.add("매입단가");
@@ -438,12 +438,12 @@ public class Prd010Controller {
         explainText.add("2. 숫자가 들어가야 하는 자리에 문자가 들어가는 경우, 해당 열은 등록되지 않습니다.");
         explainText.add("3. 매입처가 없거나, 등록된 명칭의 매입처가 아닌경우, 해당 열은 등록되지 않습니다.");
         explainText.add("4. 상품카테고리가 없거나, 등록된 명칭의 상품카테고리가 아닌경우, 해당 열은 등록되지 않습니다.");
-        explainText.add("5. 면세여부가 없거나, 과세 또는 비과세로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
+        explainText.add("5. 과세여부가 없거나, 과세 또는 비과세로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
         explainText.add("6. 구분이 없거나, 제조사출고 또는 당사재고출고 또는 사은품 으로 등록된 단어가 아닐경우, 해당 열은 등록되지 않습니다.");
         explainText.add("7. 당사재고출고 또는 사은품의 경우, 우선창고가 없거나, 등록된 명칭의 창고가 아닌경우, 해당 열은 등록되지 않습니다.");
         explainText.add("8. 상품코드가 존재하는 경우, 해당 매입단가가 수정되도록 등록이 됩니다.");
         explainText.add("EX) 예를들어 매입단가에 null이라는 값이 들어간 경우 해당 열은 등록되지 않습니다.");
-        explainText.add("EX) 예를들어 면세여부에 면세라는 값이 들어간경우 해당 열은 등록되지 않고 비과세라는 값이 들어가야 해당 열은 등록이 됩니다.");
+        explainText.add("EX) 예를들어 과세여부에 과세라는 값이 들어간경우 해당 열은 등록되지 않고 비과세라는 값이 들어가야 해당 열은 등록이 됩니다.");
         explainText.add("해당 규칙을 잘 지켜서 값을 입력해야 제대로 상품이 등록됩니다.");
 
 
@@ -593,14 +593,14 @@ public class Prd010Controller {
 
                     taxfree = getRowStringValue(row, 6);
                     if (StringUtils.isBlank(taxfree)) {
-                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <면세 값 없음>\n";
+                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <과세여부 값 없음>\n";
                         continue;
                     } else if ("과세".equals(taxfree)) {
                         param.put("detail_taxfree", "0");
                     } else if ("비과세".equals(taxfree) || "면세".equals(taxfree)) {
                         param.put("detail_taxfree", "1");
                     } else {
-                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 면세 값 입력(과세 와 비과세 중 하나 입력)>\n";
+                        result = result + row.getRowNum() + "번째 열 입력을 실패하였습니다. <잘못된 과세여부 값 입력(과세 와 비과세 중 하나 입력)>\n";
                         continue;
                     }
 
