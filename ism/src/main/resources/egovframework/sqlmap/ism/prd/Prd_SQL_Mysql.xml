@@ -139,6 +139,7 @@
         p.cartonqty,
         p.palletqty,
         p.salecode as salecode,
+        p.taxfree
         b.bycname,
         w.whsname
         from ismprd010 p
