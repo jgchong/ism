@@ -119,7 +119,7 @@ li img {
 							<th scope='row'>상품명</th>
 							<td><textarea name='orderitemname' style='width:100%;'>${item.orderitemname}</textarea></td>
 							<th scope='row'>수량</th>
-							<td>${item.orderitemqty}</td>
+							<td>${item.orderitemqty}<input type="hidden" id="src_orderitemqty" value="${item.orderitemqty}"></td>
 						</tr>
 						<tr>
 							<th scope='row'>옵션</th>
@@ -429,6 +429,26 @@ function inputmemodata(buss_type, buss_key) {
 
 //action="/ism/ord/updateOrderDetailresult.do"
 function saveDetail() {
+	var src_orderitemqty = $("#src_orderitemqty").val();
+	var chg_type = $("input:radio[name=cstype]:checked").val();
+	var chg_retprice = $("#retprice").val();
+	var chg_orderitemqty = $("#retqty").val();
+	
+	if(chg_type == "R") {
+		if(chg_retprice == "") {
+			alert("반품비를 입력해 주세요.");
+			return;
+		}
+		if(chg_orderitemqty == "") {
+			alert("반품수량을 입력해 주세요.");
+			return;
+		}
+		if(src_orderitemqty < chg_orderitemqty) {
+			alert("주문수량보다 반품수량이 많습니다.\n반품수량을 확인해 주세요.");
+			return;
+		}
+	}
+		
 	console.log($('#formorder').serialize());
     var options = {
     	success : function(data) {
@@ -457,9 +477,6 @@ function saveDetail() {
                     	}
             		}
             	//}
-            	
-            	
-            	
             	
             	alert("저장되었습니다.");
             	opener.opener_search();

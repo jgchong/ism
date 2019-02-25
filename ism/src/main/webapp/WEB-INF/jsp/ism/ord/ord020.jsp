@@ -248,10 +248,11 @@ form.searchArea .searchMore li select {
 									<th scope="col" class="rowPointer" onclick="orderTempDetailList('O', '', '', '', '')">중복자료</th>
 									<th scope="col" class="rowPointer" onclick="orderTempDetailList('T', '', '', '', '')">합계</th>
 								</tr>
+								</thead>
 								<tbody>
 <c:forEach var="resultstat" items="${resultstatList}" varStatus="status">
 								<tr>
-									<td class="rowPointer" ><input type="checkbox" id="chk_info2" name="chk_info2" class="chk_info2" keyid="${resultstat.uploadviewkey}" /></td>
+									<td class="rowPointer" ><input type="checkbox" id="chk_info2" name="chk_info2" class="chk_info2" keyid="${resultstat.uploadviewkey}" succcnt="<c:out value="${resultstat.succcnt}"/>" prodfailcnt="<c:out value="${resultstat.prodfailcnt}"/>" overlapcnt="<c:out value="${resultstat.overlapcnt}"/>" /></td>
 									<td class="rowPointer" ><c:out value="${resultstat.updatedt}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.uploadfilename}"/></td>
 									<td class="rowPointer" ><c:out value="${resultstat.coname}"/></td>
@@ -262,7 +263,6 @@ form.searchArea .searchMore li select {
 								</tr>
 </c:forEach>
 								</tbody>
-							</thead>
 							</table>
 </c:if>
 <c:if test="${!(ord020SearchVO.search_status == 'TEMP' && ord020SearchVO.search_tempdiv == '')}">
@@ -276,7 +276,7 @@ form.searchArea .searchMore li select {
 							</colgroup>
 							<thead>
 								<tr>
-									<th scope="col"><a href="javascript:chkall();">V</a></th>
+<!-- 									<th scope="col"><a href="javascript:chkall();">V</a></th> -->
 									<th scope="col">NO.</th>
 									<th scope="col">등록일자</th>
 									<th scope="col">주문일자</th>
@@ -314,6 +314,14 @@ form.searchArea .searchMore li select {
 			<c:set var = "rowClass" value = "class='blue'"/>
 		</c:if>
 	</c:if>
+	<c:if test="${result.cstype eq 'R' && ord020SearchVO.search_status eq 'ALL'}">
+		<c:if test="${result.retstatus eq '1'}">
+			<c:set var = "rowClass" value = "class='gray'"/>
+		</c:if>
+		<c:if test="${result.retstatus eq '2'}">
+			<c:set var = "rowClass" value = "class='yellowgreen'"/>
+		</c:if>
+	</c:if>
 	<c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
 		<c:if test="${result.chkprod eq 'NOITEM'}">
 			<c:set var = "rowClass" value = "class='red'"/>
@@ -323,7 +331,7 @@ form.searchArea .searchMore li select {
 		</c:if>
 	</c:if>
 								<tr ${rowClass}>
-									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
+<%-- 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td> --%>
 									<td><strong><c:out value="${(ord020SearchVO.pageIndex - 1) * ord020SearchVO.pageUnit + status.count}"/></strong></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${fn:substring(result.regdate,0,10)}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
@@ -510,8 +518,89 @@ function chkall2() {
 	}
 }
 
-//체크선택된 주문의 상태 일괄 변경
 function selectChgOrderStatus() {
+	var succcntAry = [];
+	var prodfailcntAry = [];
+	var overlapcntAry = [];
+	var succcnt = "";
+	var prodfailcnt = "";
+	var overlapcnt = "";
+	
+	$('.chk_info2').each(function() {
+		if ($(this).is(":checked")) {
+			succcnt += ($(this).attr("succcnt") + ",");
+			prodfailcnt += ($(this).attr("prodfailcnt") + ",");
+			overlapcnt += ($(this).attr("overlapcnt") + ",");
+		}
+	});
+	
+	prodfailcnt = prodfailcnt.substring(0,prodfailcnt.length - 1);
+	overlapcnt = overlapcnt.substring(0,overlapcnt.length - 1);
+	prodfailcntAry = prodfailcnt.split(",");
+	overlapcntAry = overlapcnt.split(",");
+	
+	for(i=0;i<prodfailcntAry.length;i++) {
+		if(prodfailcntAry[i] > 0 || overlapcntAry[i] > 0) {
+			alert("상품코드가 잘못되었거나 주문이 중복된 주문이 있습니다.\n주문서를 다시 확인하여 주시기 바랍니다.");
+			return;
+		}
+	}
+	
+	var selectoptionval = $("#chgOrderStatus option:selected").val();
+	var uploadviewkeys = "";
+	$('.chk_info2').each(function() {
+		if ($(this).is(":checked")) {
+			uploadviewkeys += ($(this).attr("keyid") + ",");
+		}
+	});
+	if (selectoptionval == '0') {
+		alert("변경 할 상태값을 선택해주시기 바랍니다.");
+		return;
+	}
+	if (uploadviewkeys == "") {
+		alert("변경 할 주문을 선택해주시기 바랍니다.");
+		return;
+	}else{
+		uploadviewkeys = uploadviewkeys.substring(0,uploadviewkeys.length - 1);
+	}
+	
+	$.ajax({
+        url : "/ism/ord/ord020SelectChgGroupOrderStatus2.do",
+        type: "post",
+        data : { "selectoptionval" : selectoptionval, "uploadviewkeys" : uploadviewkeys },
+        success : function(data){
+        	if (data == "SUCCESS") {
+            	alert("상태 변경되었습니다.");
+            	document.form1.pageIndex.value = 1;
+        		$('#form1').submit();	
+        	}else{
+            	alert("상태 변경 중 오류가 발생했습니다.");	
+        	}
+        },
+        error: function (jqXHR, exception) {
+            var msg = '';
+            if (jqXHR.status === 0) {
+                msg = 'Not connect.\n Verify Network.';
+            } else if (jqXHR.status == 404) {
+                msg = 'Requested page not found. [404]';
+            } else if (jqXHR.status == 500) {
+                msg = 'Internal Server Error [500].';
+            } else if (exception === 'parsererror') {
+                msg = 'Requested JSON parse failed.';
+            } else if (exception === 'timeout') {
+                msg = 'Time out error.';
+            } else if (exception === 'abort') {
+                msg = 'Ajax request aborted.';
+            } else {
+                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+            }
+            alert("Error : "+msg);
+        }
+    }); 
+}
+
+//체크선택된 주문의 상태 일괄 변경
+function selectChgOrderStatus_old() {
 	
 	if ($('#mainListTable').length > 0) {
 	    var selectoptionval = $("#chgOrderStatus option:selected").val();
@@ -622,6 +711,59 @@ function selectChgOrderStatus() {
 
 //체크박스된 주문 목록 삭제
 function selectDel() {
+	if(confirm("선택하신 주문건을 삭제하시겠습니까?")) {
+		var selectoptionval = $("#chgOrderStatus option:selected").val();
+		var uploadviewkeys = "";
+		$('.chk_info2').each(function() {
+			if ($(this).is(":checked")) {
+				uploadviewkeys += ($(this).attr("keyid") + ",");
+			}
+		});
+	
+		if (uploadviewkeys == "") {
+			alert("삭제 할 주문을 선택해주시기 바랍니다.");
+			return;
+		}else{
+			uploadviewkeys = uploadviewkeys.substring(0,uploadviewkeys.length - 1);
+		}
+		
+		$.ajax({
+	        url : "/ism/ord/ord020SelectDel2.do",
+	        type: "post",
+	        data : { "chgodm010ids" : uploadviewkeys },
+	        success : function(data){
+	        	if (data == "SUCCESS") {
+	            	alert("삭제 되었습니다.");
+	            	document.form1.pageIndex.value = 1;
+	        		$('#form1').submit();	
+	        	}else{
+	            	alert("삭제 중 오류가 발생했습니다.");	
+	        	}
+	        },
+	        error: function (jqXHR, exception) {
+	            var msg = '';
+	            if (jqXHR.status === 0) {
+	                msg = 'Not connect.\n Verify Network.';
+	            } else if (jqXHR.status == 404) {
+	                msg = 'Requested page not found. [404]';
+	            } else if (jqXHR.status == 500) {
+	                msg = 'Internal Server Error [500].';
+	            } else if (exception === 'parsererror') {
+	                msg = 'Requested JSON parse failed.';
+	            } else if (exception === 'timeout') {
+	                msg = 'Time out error.';
+	            } else if (exception === 'abort') {
+	                msg = 'Ajax request aborted.';
+	            } else {
+	                msg = 'Uncaught Error.<br>' + jqXHR.responseText;
+	            }
+	            alert("Error : "+msg);
+	        }
+	    });
+	}
+}
+//체크박스된 주문 목록 삭제
+function selectDel_old() {
 	if ($('#mainListTable').length > 0) {
 		if (confirm("선택 주문을 삭제하시겠습니까?")) {
 			var chgodm010ids = "";

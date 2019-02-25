@@ -112,9 +112,9 @@ li img {
 			<form id="form1" name="form1" method="post" class="searchArea">                   
                     <div class="searchMore" style="height:60px;">
                         <ul style="float:left;width:80%;margin:4px 0;">
-                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_bycNm" placeHolder="매입처"/></li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_orderItemid" placeHolder="상품코드"/></li>
-                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_orderItemName" placeHolder="상품명"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_bycNm" id="dtSearch_bycNm" placeHolder="매입처"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_orderItemid" id="dtSearch_orderItemid" placeHolder="상품코드"/></li>
+                            <li style="width:25%;"><input type="text" class="it" title="" value="" name="dtSearch_orderItemName" id="dtSearch_orderItemName" placeHolder="상품명"/></li>
                         </ul>
                         <p style="padding:0;margin-top:16px;"><a href="javascript:fn_prodSearch();" style="padding:7px 40px">검색</a></p>
                     </div>
@@ -169,6 +169,21 @@ $(document).ready(function() {
             $(this).prop('checked', true);
         }
 	}); 
+	$("#dtSearch_bycNm").keydown(function (key){
+		if(key.keyCode == 13){
+			fn_prodSearch();
+		}
+	});
+	$("#dtSearch_orderItemid").keydown(function (key){
+		if(key.keyCode == 13){
+			fn_prodSearch();
+		}
+	});
+	$("#dtSearch_orderItemName").keydown(function (key){
+		if(key.keyCode == 13){
+			fn_prodSearch();
+		}
+	});
 });
 
 function saveOrdProd() {
