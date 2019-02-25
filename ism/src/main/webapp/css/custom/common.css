@@ -61,6 +61,9 @@ form .listTb table th       { text-align:center; }
 .listTb table tr.bd td				{ background:#fbfbfb; }
 .listTb table tr.red				{ background:#fd9c9c; }
 .listTb table tr.yellow			{ background:#fbfb8a; }
+.listTb table tr.gray			{ background:#c0c0c0; }
+.listTb table tr.green			{ background:#228b22; }
+.listTb table tr.yellowgreen			{ background:#7fff00; }
 .listTb table tr.blue				{ background:#bcbce8; }
 .listTb table tr.total				{ background:#ddd; }
 .listTb table td .btn				{ display:inline-block;padding:3px 12px; border:0; background:#45b6b6; color:#fff; font-size:11px; text-decoration:none; }
