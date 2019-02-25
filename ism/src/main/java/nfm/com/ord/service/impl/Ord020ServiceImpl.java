@@ -162,7 +162,7 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 		hm.put("selectoptionval", selectoptionval);
 		hm.put("uploadviewkeys", uploadviewkeyArray);
 
-		ord020DAO.ord020SelectChgGroupOrderStatus2(hm);
+		ord020DAO.ord020SelectChgGroupOrderStatus(hm);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
