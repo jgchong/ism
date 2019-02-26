@@ -122,5 +122,6 @@ $(document).ready(function(){
 
 function saveClose() {
 	document.form1.submit();
+	opener.location.href = "/ism/adj/adj010.do";
 }
 </script>
