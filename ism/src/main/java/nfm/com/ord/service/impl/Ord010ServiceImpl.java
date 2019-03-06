@@ -518,6 +518,11 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
     	
     	String dlvprice = dbHeader.get("dlvprice");
     	if (dlvprice != null) dlvprice = fileHeader.get(dlvprice);
+    	
+    	String salechannel = dbHeader.get("salechannel");
+    	if (salechannel != null) salechannel = fileHeader.get(salechannel);
+    	
+    	
     	//필드 추가시 여기 추가 1/2
     	// LDC  추가
     	int nQty = 1;
@@ -639,14 +644,22 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 
         	if (dlvprice != null) {
         		ismodm010VO.setDlvprice(excelItemInfo.get(dlvprice));
+        	} 
+        	
+        	if (salechannel != null) {
+        		ismodm010VO.setSalechannel(excelItemInfo.get(salechannel));
         	}
+        	
         	//필드 추가시 여기 추가 2/2
         	// LDC 추가 
         	ismodm010VO.setUploadfilename(convFile.getName());
         	ismodm010VO.setUploadviewkey(orderTempKey);
         	ismodm010VO.setCum010id(cum010id);
         	ismodm010VO.setCum030id(cum030id);
-        	ord010DAO.insertOrderMainData(ismodm010VO);
+        	
+        	if(!ismodm010VO.getOrderitemname().equals("합계")) { //합계 row를 걸러내기 위한 하드코딩
+        		ord010DAO.insertOrderMainData(ismodm010VO);
+        	}
         }
         return isHaveSetting;
     }
