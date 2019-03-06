@@ -184,7 +184,6 @@ var Ca = /\+/g;
 var isSave = "F"; //저장처리가 되었는지 확인 화면 리플레시 여부 확인용
 $(document).ready(function() {
 });
-
 function viewCumData(cum010id) {
 	$("#hcum010id").val(cum010id);
 	$.ajax({
@@ -347,7 +346,6 @@ function viewCumData(cum010id) {
 			"			</tr>"+
 			"		</thead>"+
 			"		<tbody>";
-
 			if (Object.keys(data.cum030).length > 0) {
 				$.each(data.cum030,function(index, item) {
 					addhtml = addhtml +
@@ -357,7 +355,6 @@ function viewCumData(cum010id) {
 					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.shopuid.replace(Ca, " "))+"' name='shopuid'/></td>"+
 					"				<td><input type='text' class='it ' title='' value='"+item.shoppwd+"' name='shoppwd'/></td>"+
 					"				<td><input type='text' class='it ' title='' value='"+decodeURIComponent(item.uploadtype.replace(Ca, " "))+"' name='uploadtype'/></td>";
-
 					if (item.useyn == "Y") {
 						addhtml = addhtml +
 						"               <td><select name='shopUseYn'><option value='Y' selected>Y</option><option value='N'>N</option></select></td>"
@@ -390,7 +387,7 @@ function viewCumData(cum010id) {
 				"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
 				"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
 				"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"+
-				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value=''/></td>"+
+				"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value='0'/></td>"+
 				"			</tr>";
 			}
 			
@@ -425,7 +422,6 @@ function viewCumData(cum010id) {
 			"	</table>"+
 			"</div>";
         	$('#cumDetailData').html(addhtml);
-
         	$("#cotype1").val(data.cotype1);
         	
         	if (data.cotype1 == "ISM031") $("#cotype2").append("${ISM031}");
@@ -443,25 +439,21 @@ function viewCumData(cum010id) {
         	}else{
             	$('input:radio[name=cogubun]:input[value=1]').attr("checked", true);
         	}
-
         	if (data.account != "") {
             	$('input:radio[name=account]:input[value=' + data.account + ']').attr("checked", true);
         	}else{
         		//정산 default 값 정발행으로 set
         		$('input:radio[name=account]:input[value=1]').attr("checked", true);
         	}
-
         	if (data.account2 != "") {
             	$('input:radio[name=account2]:input[value=' + data.account2 + ']').attr("checked", true);
         	}else{
         		//정산 default 값 공급가정산으로 set
         		$('input:radio[name=account2]:input[value=1]').attr("checked", true);
         	}
-
         	if (data.uploadgubun != "") {
             	$('input:radio[name=uploadgubun]:input[value=' + data.uploadgubun + ']').attr("checked", true);
         	}
-
         	if (data.useyn != "") {
             	$('input:radio[name=useyn]:input[value=' + data.useyn + ']').attr("checked", true);
         	}
@@ -489,7 +481,6 @@ function viewCumData(cum010id) {
         }
     });
 }
-
 isNewUpload = 0; //첨부파일을 새로 업로드 했는지 여부. 다운로드시 새로 첨부된 경우 alert창 표시
 function FileUpload(obj) {
 	$('#attachfilename').val($(obj).val());
@@ -517,7 +508,6 @@ function addUser() {
 		"			</tr>";
 	$('#userlist > tbody:last').append(addRow);
 }
-
 function addShop() {
 	var addRow = 
 		"			<tr>"+
@@ -528,11 +518,10 @@ function addShop() {
 		"				<td><input type='text' class='it ' title='' value='' name='uploadtype'/></td>"+
 		"               <td><select name='shopUseYn'><option value='Y'>Y</option><option value='N'>N</option></select></td>"+
 		"               <td colspan='1'><select name='uploadgubun'><option value='M'>수동</option><option value='A'>API</option></select></td>"+
-		"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value=''/></td>"+
+		"				<td><a href='javascript://' onclick='delrow(this, 1)'>del</a><input type='hidden' name='cum030id' value='0'/></td>"+
 		"			</tr>";
 	$('#shoplist > tbody:last').append(addRow);
 }
-
 function saveCumAll() {
 	if ($('#coname').val().trim() == "") {
 		alert("상호는 필수 입력 사항입니다.");
@@ -549,7 +538,6 @@ function saveCumAll() {
 	var shoplist = "";
 	var shoplistRet = true;
 	var shoplistCnt = 0;
-
 	//담당자 항목에 한 필드라도 입력했으면 담당자명 체크
 	$('#userlist tbody tr').each(function () {
 	    var td = $(this).children();
@@ -558,7 +546,6 @@ function saveCumAll() {
 	    td.eq(1).find("input").val().trim() +
 	    td.eq(2).find("input").val().trim() +
 	    td.eq(3).find("input").val().trim();
-
 		if (userlist != "") {
 			if (td.eq(0).find("input").val().trim() == "") {
 				userlistRet = false;
@@ -580,7 +567,6 @@ function saveCumAll() {
 	    td.eq(2).find("input").val().trim() +
 	    td.eq(3).find("input").val().trim() +
 	    td.eq(4).find("input").val().trim();
-
 		if (shoplist != "") {
 			if (td.eq(0).find("input").val().trim() == "") {
 				shoplistRet = false;
@@ -600,7 +586,6 @@ function saveCumAll() {
 		alert("1개이상의 쇼핑몰을 등록해야합니다.");
 		return;
 	}
-
 	//대금정산 타입이 보증보험 발행이 3이 아니면 일자 clear
 	if ($("#accountamt").val() != "3") {
 		$("#accountamtdate").val("");
@@ -627,26 +612,21 @@ function saveCumAll() {
     };
 	$("#form1").ajaxSubmit(options);
 }
-
 function cotypeChg(gubun) {
 	var selval = $("#cotype"+gubun+" option:selected").val();
 	var appOption = "";
-
 	if (gubun == 1) {
 		if (selval == "ISM031") appOption = "${ISM031}";
 		else if (selval == "ISM032") appOption = "${ISM032}";
-
 		$("#cotype2").html("<option value=''>중분류</option>" + appOption);
 	}else if (gubun == 2) {
 		if (selval == "ISM041") appOption = "${ISM041}";
 		else if (selval == "ISM042") appOption = "${ISM042}";
 		else if (selval == "ISM043") appOption = "${ISM043}";
 		else if (selval == "ISM044") appOption = "${ISM044}";
-
 		$("#cotype3").html("<option value=''>소분류</option>" + appOption);
 	}
 }
-
 function accountamtChg() {
 	if($("#accountamt").val()=="3") {
 		$("#accountamt").attr("class","selcs1");
@@ -657,7 +637,6 @@ function accountamtChg() {
 		$("#accountamtdate").css("display","none");
 	}
 }
-
 function closeLayerPop() {
 	if (isSave == "T") {
 		location.href="/ism/cum/cum010.do";
@@ -665,7 +644,6 @@ function closeLayerPop() {
 		isSave = "F";
 	}
 }
-
 function delrow(obj, isshop) {
 	if ($(obj).parent().parent().parent().children().length == 1) {
 		if (isshop == 1) {
@@ -677,7 +655,6 @@ function delrow(obj, isshop) {
 		$(obj).parent().parent().remove();
 	}
 }
-
 function downLoadFile(cmm020id) {
 	console.log(cmm020id);
 	if (cmm020id > 0) {
@@ -693,7 +670,6 @@ function downLoadFile(cmm020id) {
 		//T.action	= a;	
 	}
 }
-
 function delAttchFile() {
 	$('#attachfilename').val('');
 	$('#cmm020id').val('0');
