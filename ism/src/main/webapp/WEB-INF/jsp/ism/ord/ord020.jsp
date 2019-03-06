@@ -196,8 +196,15 @@ form.searchArea .searchMore li select {
                                     <option value="${item.code}">${item.codeNm}</option>
                                    </c:forEach>
                                 </select>
+                                <c:if test="${ord020SearchVO.search_status ne 'TEMP'}">
+                                <a href="javascript:selectChgOrderStatus_old();" style="margin-left:-4px;">선택수정</a>
+                                <a href="javascript:selectDel_old();" class="selDel">선택삭제</a>
+                                </c:if>
+                                <c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
                                 <a href="javascript:selectChgOrderStatus();" style="margin-left:-4px;">선택수정</a>
                                 <a href="javascript:selectDel();" class="selDel">선택삭제</a>
+                                </c:if>
+                                
                                 <select id="pageUnit" name="pageUnit" title="" class="ml30">
 									<option value="50" <c:if test="${ord020SearchVO.pageUnit eq '50'}"><c:out value="selected"/></c:if>>50개</option>
                                     <option value="100" <c:if test="${ord020SearchVO.pageUnit eq '100'}"><c:out value="selected"/></c:if>>100개</option>
@@ -276,7 +283,9 @@ form.searchArea .searchMore li select {
 							</colgroup>
 							<thead>
 								<tr>
-<!-- 									<th scope="col"><a href="javascript:chkall();">V</a></th> -->
+								<c:if test="${ord020SearchVO.search_status ne 'TEMP'}">
+									<th scope="col"><a href="javascript:chkall();">V</a></th>
+								</c:if>
 									<th scope="col">NO.</th>
 									<th scope="col">등록일자</th>
 									<th scope="col">주문일자</th>
@@ -315,11 +324,25 @@ form.searchArea .searchMore li select {
 		</c:if>
 	</c:if>
 	<c:if test="${result.cstype eq 'R' && ord020SearchVO.search_status eq 'ALL'}">
+		<!-- 반품접수의 경우 블루 -->
 		<c:if test="${result.retstatus eq '1'}">
 			<c:set var = "rowClass" value = "class='gray'"/>
 		</c:if>
+		<!-- 반품예정의 경우 블루 -->
 		<c:if test="${result.retstatus eq '2'}">
 			<c:set var = "rowClass" value = "class='yellowgreen'"/>
+		</c:if>
+		<!-- 반품취소의 경우 블루 -->
+		<c:if test="${result.retstatus eq '3'}">
+			<c:set var = "rowClass" value = "class='green'"/>
+		</c:if>
+		<!-- 반품완료의 경우 블루 -->
+		<c:if test="${result.retstatus eq '4'}">
+			<c:set var = "rowClass" value = "class='green'"/>
+		</c:if>
+		<!-- 반품파손의 경우 블루 -->
+		<c:if test="${result.retstatus eq '6'}">
+			<c:set var = "rowClass" value = "class='green'"/>
 		</c:if>
 	</c:if>
 	<c:if test="${ord020SearchVO.search_status eq 'TEMP'}">
@@ -331,7 +354,9 @@ form.searchArea .searchMore li select {
 		</c:if>
 	</c:if>
 								<tr ${rowClass}>
-<%-- 									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td> --%>
+								<c:if test="${ord020SearchVO.search_status ne 'TEMP'}">
+									<td><input type="checkbox" id="chk_info" name="chk_info" class="chk_info" dataid="${result.odm010id}" /></td>
+								</c:if>
 									<td><strong><c:out value="${(ord020SearchVO.pageIndex - 1) * ord020SearchVO.pageUnit + status.count}"/></strong></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${fn:substring(result.regdate,0,10)}"/></td>
 									<td class="rowPointer" onclick="orderDetailView('<c:out value="${result.odm010id}"/>')"><c:out value="${result.orderdate}"/></td>
@@ -518,7 +543,9 @@ function chkall2() {
 	}
 }
 
+//임시탭  체크선택된 주문의 상태 일괄 변경
 function selectChgOrderStatus() {
+	
 	var succcntAry = [];
 	var prodfailcntAry = [];
 	var overlapcntAry = [];
@@ -599,7 +626,7 @@ function selectChgOrderStatus() {
     }); 
 }
 
-//체크선택된 주문의 상태 일괄 변경
+//임시탭 외 체크선택된 주문의 상태 일괄 변경
 function selectChgOrderStatus_old() {
 	
 	if ($('#mainListTable').length > 0) {
@@ -711,6 +738,7 @@ function selectChgOrderStatus_old() {
 
 //체크박스된 주문 목록 삭제
 function selectDel() {
+	
 	if(confirm("선택하신 주문건을 삭제하시겠습니까?")) {
 		var selectoptionval = $("#chgOrderStatus option:selected").val();
 		var uploadviewkeys = "";
@@ -764,6 +792,7 @@ function selectDel() {
 }
 //체크박스된 주문 목록 삭제
 function selectDel_old() {
+	
 	if ($('#mainListTable').length > 0) {
 		if (confirm("선택 주문을 삭제하시겠습니까?")) {
 			var chgodm010ids = "";

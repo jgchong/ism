@@ -179,8 +179,8 @@ li img {
 						<tr>
 							<th scope='row'>등록일자</th>
 							<td>${item.regdate}</td>
-							<th scope='row'>-</th>
-							<td>-</td>
+							<th scope='row'>판매채널</th>
+							<td>${item.salechannel}</td>
 						</tr>
 					</tbody>
 				</table>
