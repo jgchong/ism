@@ -29,7 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Service("cum010Service")
 public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010Service {
- 
+
 	/** cum010DAO */
 	@Resource(name="cum010DAO")
 	private Cum010DAO cum010DAO;
@@ -357,7 +357,7 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 			if (uploadgubun.length > 0) ismcum030VO.setUploadgubun(uploadgubun[i]);
 			if (useyn.length > 0) ismcum030VO.setUseyn(useyn[i]+"T");
 
-			if ("".equals(cum030id[i])) {
+			if ("0".equals(cum030id[i])) {
 				ismcum030VO.setCum030id(0);
 				cum010DAO.insertCum030(ismcum030VO);
 			}else{
