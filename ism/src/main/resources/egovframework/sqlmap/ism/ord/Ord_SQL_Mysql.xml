@@ -96,7 +96,7 @@
 		postno,	        address,           dlvmemo,       dlvbyprice,     dlvno,              dlvco,
 		dlvstatus,      processdate,       accountcum,    accountbuy,     status,         cstype,             uploadfilename,
 		uploadviewkey,  claimstatus,       claimreason,   retstatus,      retqty,         retprice,
-		orderitemname,	orderitemprice,	   dlvprice,      rcvusercontacthp, rcvuseremail, regdate, orderitemcode
+		orderitemname,	orderitemprice,	   dlvprice,      rcvusercontacthp, rcvuseremail, regdate, orderitemcode, salechannel
 		) values (
 		#orderno#,      ifnull(#orderdate#, curdate()),   #cum010id#,    #cum030id#,     #byc010id#,     #orderuser#,        #orderusercontact#,
 		#rcvuser#,      #rcvusercontact#,  #orderitemid#, #orderitemopt#, #orderitemqty#, #orderitembyprice#,
@@ -107,7 +107,8 @@
 		IFNULL(IF(#orderitemprice# = '', (select a.itemprice from ismprd010 a where a.itemcode = #orderitemid#), #orderitemprice#),''),
 		IFNULL(IF(#dlvprice# = '', (select a.itemdlvprice from ismprd010 a where a.itemcode = #orderitemid#), #dlvprice#),''),
 		#rcvusercontacthp#, #rcvuseremail#, now(), 
-		IFNULL(IF(#orderitemid# = '', #orderitemid#, (select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt# and cum030id = #cum030id#)),'')
+		IFNULL(IF(#orderitemid# = '', #orderitemid#, (select orderitemid from ismcum040 where cumprodcode = #orderitemid# and cumprodoptnm1 = #orderitemopt# and cum030id = #cum030id#)),''), 
+		#salechannel#
 		)
     </insert>
 
@@ -299,7 +300,7 @@
            IFNULL(a.orderitemprice,'') as orderitemprice,
            IFNULL(d.itemdlvprice, '') as dlvprice,
            a.rcvusercontacthp, a.rcvuseremail,
-           b.coname,
+           b.coname, a.salechannel, 
            c.code_nm,
            IFNULL(d.itemname,'') as itemname, IFNULL(d.itemprice,'0') as itemprice, IFNULL(d.itembuyprice,'0') as itembuyprice,
            IFNULL(d.itemdlvprice,'0') as itemdlvprice, IFNULL(d.itembuydlvprice,'0') as itembuydlvprice,
