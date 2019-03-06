@@ -318,8 +318,9 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 			cum010id = cumAllVO.getCum010id();
 			cum010DAO.updateCum010(ismcum010VO);
 			cum010DAO.deleteCum020(ismcum010VO);
-			cum010DAO.deleteCum030(ismcum010VO);
+			//cum010DAO.deleteCum030(ismcum010VO);
 		}
+		ismcum010VO.setCum010id(cum010id+"");
 		
 		String[] cumusername = cumAllVO.getCumusername();
 		String[] cumusertel = cumAllVO.getCumusertel();
@@ -335,7 +336,8 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 			
 			cum010DAO.insertCum020(ismcum020VO);
 		}
-		
+
+		String[] cum030id = cumAllVO.getCum030id();
 		String[] shopmallname = cumAllVO.getShopmallname();
 		String[] shopurl = cumAllVO.getShopurl();
 		String[] shopuid = cumAllVO.getShopuid();
@@ -353,10 +355,18 @@ public class Cum010ServiceImpl extends EgovAbstractServiceImpl implements Cum010
 			if (shoppwd.length > 0) ismcum030VO.setShoppwd(shoppwd[i]);
 			if (uploadtype.length > 0) ismcum030VO.setUploadtype(uploadtype[i]);
 			if (uploadgubun.length > 0) ismcum030VO.setUploadgubun(uploadgubun[i]);
-			if (useyn.length > 0) ismcum030VO.setUseyn(useyn[i]);
+			if (useyn.length > 0) ismcum030VO.setUseyn(useyn[i]+"T");
 
-			cum010DAO.insertCum030(ismcum030VO);
+			if ("0".equals(cum030id[i])) {
+				ismcum030VO.setCum030id(0);
+				cum010DAO.insertCum030(ismcum030VO);
+			}else{
+				ismcum030VO.setCum030id(Integer.parseInt(cum030id[i]));
+				cum010DAO.updateCum030(ismcum030VO);
+			}
 		}
+		cum010DAO.deleteCum030(ismcum010VO);
+		cum010DAO.updateAllCum030(ismcum010VO);
 		
 		return cum010id;
 	}
