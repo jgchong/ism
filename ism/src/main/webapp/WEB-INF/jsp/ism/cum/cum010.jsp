@@ -102,7 +102,8 @@ li img {
 					<form id="formMain" name="formMain" method="post" action="" class="searchArea">
 						<!--a href="javascript:;" class="" style="background:#45b6b6;">매출처 다운로드</a-->
 						<input type="text" class="it ml30" title="" value="${cum010SearchVO.search_coname}" id="search_coname" name="search_coname"/>
-						<button style="margin-left:-4px;">검색</button>
+						<input name="pageIndex" type="hidden" value="<c:out value='${cum010SearchVO.pageIndex}'/>"/>
+						<button id="btnSearch" style="margin-left:-4px;">검색</button>
 					</form>
 					<div class="listTb">
 						<table cellpadding="0" cellspacing="0" class="" summary="" >
@@ -183,7 +184,18 @@ li img {
 var Ca = /\+/g;
 var isSave = "F"; //저장처리가 되었는지 확인 화면 리플레시 여부 확인용
 $(document).ready(function() {
+	$(document).on("click", "#btnSearch", function() { //검색버튼 클릭
+		document.formMain.pageIndex.value = 1;
+		$('#formMain').submit();
+	});
 });
+
+function fnLinkPage(pageNo){
+    document.formMain.pageIndex.value = pageNo;
+    document.formMain.action = "<c:url value='/ism/cum/cum010.do'/>";
+    document.formMain.submit();
+}
+
 function viewCumData(cum010id) {
 	$("#hcum010id").val(cum010id);
 	$.ajax({
