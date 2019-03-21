@@ -60,7 +60,7 @@ public class Prd010Controller {
     private Prd010Service prd010Service;
 
     /**
-     * 주문수집 목록
+     * 운영상품 목록
      *
      * @param prd010SearchVO
      * @param model
@@ -784,7 +784,8 @@ public class Prd010Controller {
     public String getRowStringValue(Row row, int i) {
         String result = null;
         try {
-            result = String.valueOf(row.getCell(i).getNumericCellValue());
+            Double temp = row.getCell(i).getNumericCellValue();
+            result = String.valueOf(temp.intValue());
         } catch (Exception e) {
 
         }

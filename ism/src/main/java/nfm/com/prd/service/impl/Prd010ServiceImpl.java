@@ -150,6 +150,7 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
                 JSONObject jsonTempObject = new JSONObject();
                 jsonTempObject.put("itemcode", tempPrdVO.getItemcode());
                 jsonTempObject.put("label", tempPrdVO.getItemname() + "["+tempPrdVO.getItemea()+"개/"+tempPrdVO.getItemopt()+"/"+tempPrdVO.getItembuyprice()+"원"+"]");
+                jsonTempObject.put("itembuyprice", tempPrdVO.getItembuyprice());
                 jsonTempObject.put("ea", tempPrdVO.getChildItemea());
                 jsonArray.add(jsonTempObject);
             }

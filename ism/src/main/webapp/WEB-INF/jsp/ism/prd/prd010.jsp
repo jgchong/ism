@@ -285,8 +285,8 @@
                                 </td>
                                 <td><c:out value="${result.itemopt}"/></td>
                                 <td><c:out value="${result.itemea}"/></td>
-                                <td><c:out value="${result.itembuyprice}"/></td>
-                                <td>
+                                <td class="numberWithCommasHtml"><c:out value="${result.itembuyprice}"/></td>
+                                <td class="numberWithCommasHtml">
                                     <c:out value="${result.itembuydlvprice}"/></td>
                                 <td>
                                     <c:choose>
@@ -655,6 +655,11 @@
         <%--$('.searchMore').slideToggle();--%>
         <%--</c:if>--%>
 
+        $('.numberWithCommasHtml').each(function (index, item) {
+            var numberCommas = $(this).text()
+            $(this).text(numberWithCommas(numberCommas))
+        });
+
         $('.paging').children().removeAttr('href');
 
         $.ajax({
@@ -724,6 +729,10 @@
         };
 
         $("#prdfileform").ajaxSubmit(options);
+    }
+
+    function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
 
 
@@ -1033,7 +1042,7 @@
         if (data.itemcrosstype == 'F') {
             $('#detail_sel1_2').trigger('click');
             $.each(data.childItemcode, function (index, item) {
-                createSearchResult(item.itemcode, item.label, item.ea, '');
+                createSearchResult(item.itemcode, item.label, item.ea, '', item.itembuyprice);
             });
         } else {
             $('#detail_sel1_1').trigger('click');
@@ -1225,7 +1234,7 @@
                 myPrice *= 1;
                 myPrice = (myPrice + (searchEa * searchItembuyprice))
                 $('#detail_itembuyprice').val(myPrice);
-                createSearchResult(searchValue, searchName, searchEa, searchExplain);
+                createSearchResult(searchValue, searchName, searchEa, searchExplain, searchItembuyprice);
 
 
             }
@@ -1234,17 +1243,25 @@
         }
     }
 
-    function createSearchResult(searchValue, searchName, searchEa, searchExplain) {
-        $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "' dataid2='" + searchEa + "'><td colspan='1'><a href='javascript:' onclick='openCrossSingleItemDetail(\""+searchValue+"\");'>[" + searchValue + "]" + searchName + searchExplain + "[" + searchEa + "묶음]</a></td><td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td></tr>");
+    function createSearchResult(searchValue, searchName, searchEa, searchExplain, itembuyprice) {
+        $('#detail_autosearch').after("<tr class='detail_autosearch_regist' dataid='" + searchValue + "' dataid2='" + searchEa + "' dataid3='" + itembuyprice + "'><td colspan='1'><a href='javascript:' onclick='openCrossSingleItemDetail(\""+searchValue+"\");'>[" + searchValue + "]" + searchName + searchExplain + "[" + searchEa + "묶음]</a></td><td style=\"text-align: center\"><button class='delbtn' onclick='delRow(this)'>삭제</button></td></tr>");
     }
 
     function delRow(obj) {
         $(obj).parent().parent().remove();
+        tempPrice = 0
+        $('.detail_autosearch_regist').each(function (index, item) {
+            var temp = $(this).attr("dataid3");
+            var temp2 = $(this).attr("dataid2");
+            tempPrice = (tempPrice + (temp2 * temp))
+        });
+        $('#detail_itembuyprice').val(tempPrice);
     }
 
     //결합상품 초기화
     function initCrossitemSearch() {
         $('.detail_autosearch_regist').remove();
+        $('#detail_itembuyprice').val("");
     }
 
 
