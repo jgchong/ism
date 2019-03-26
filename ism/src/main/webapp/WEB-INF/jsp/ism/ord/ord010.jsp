@@ -583,8 +583,14 @@ function uploadFile(){
 	            console.log(result.split("^")[0]);
 	            console.log(result.split("^")[1]);
 	            console.log(result.split("^")[2]);
+	            
 	            if (result.split("^")[1].length > 2) {
-		            alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+	            	
+	            	if(result.split("^")[1] == "dup") {
+	            		alert("동일한 파일명으로 업로드된 주문건이 있습니다");
+	            	} else {	            	
+		            	alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+	            	}
 
 		            if (parseInt(result.split("^")[2]) > 0) {
 		            	alert(result.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");

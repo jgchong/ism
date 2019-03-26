@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
+	<title> E-DAS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -282,13 +282,23 @@ function fn_prodSearch()
         contentType: "application/x-www-form-urlencoded; charset=UTF-8",
         success: function (data) {
         	var addhtml = "";
+        	var bycname = "";
         	
         	if (Object.keys(data.prodList).length > 0) {
 				$.each(data.prodList,function(index, item) {
+
+// 					if(item.itemcrosstype == "S") {
+// 						bycname = item.bycname;
+// 					} else if(item.itemcrosstype == "F") {
+// 						bycname = "결합매입처";
+// 					} else {
+// 						bycname = "-";
+// 					}
+					
 					addhtml = addhtml +
 					"			<tr>"+
 					"               <td><input type='checkbox' id='chk_info' name='chk_info' class='check_class' dataid='"+ item.itemcode +"'/></td>"+
-					"				<td>"+item.bycname+"</td>"+
+					"				<td>"+item.bycname +"</td>"+
 					"				<td>"+item.itemcode+"</td>"+
 					"				<td>"+item.itemname+"</td>"+
 					"				<td>"+item.itemopt +"</td>"+
