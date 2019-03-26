@@ -78,6 +78,18 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 			int cum030id = 0;
 			String shopmallname = "";
 			String uploadtype = ""; //업로드 타입이 없으면 skip
+			
+			//파일명으로 매출처/쇼핑몰 정보 get [s]
+			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
+			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
+			ord010SearchVO.setRecordCountPerPage(1);
+			
+			int resultChk = ord010DAO.selectFileChkCnt(ord010SearchVO);
+			if (resultChk> 0) {
+				noSetShopMallNames = "dup";
+				break;
+			}
+			
 			/* LDC 화면에서 정보를 넘겨서 이부분은 제외 함.
 			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
@@ -126,7 +138,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    idx++;
 		}
 
-		if (listIsmodl010VO.size() > 0) {
+		if (listIsmodl010VO.size() > 0 && noSetShopMallNames != "dup") {
 			ord010DAO.insertOrderLogData(listIsmodl010VO);
 		}
     	
