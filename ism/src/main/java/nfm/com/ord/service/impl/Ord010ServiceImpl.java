@@ -78,6 +78,18 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 			int cum030id = 0;
 			String shopmallname = "";
 			String uploadtype = ""; //업로드 타입이 없으면 skip
+			
+			//파일명으로 매출처/쇼핑몰 정보 get [s]
+			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
+			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
+			ord010SearchVO.setRecordCountPerPage(1);
+			
+			int resultChk = ord010DAO.selectFileChkCnt(ord010SearchVO);
+			if (resultChk> 0) {
+				noSetShopMallNames = "dup";
+				break;
+			}
+			
 			/* LDC 화면에서 정보를 넘겨서 이부분은 제외 함.
 			Ord010SearchVO ord010SearchVO = new Ord010SearchVO();
 			ord010SearchVO.setSearch_filename(mf.getOriginalFilename());
@@ -126,7 +138,7 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		    idx++;
 		}
 
-		if (listIsmodl010VO.size() > 0) {
+		if (listIsmodl010VO.size() > 0 && noSetShopMallNames != "dup") {
 			ord010DAO.insertOrderLogData(listIsmodl010VO);
 		}
     	
@@ -153,18 +165,19 @@ public class Ord010ServiceImpl extends EgovAbstractServiceImpl implements Ord010
 		if (resultChk> 0) {
 			retInt = -2;
 		}
-		else{
-			List<?> result = ord010DAO.selectList(ord010SearchVO);
-			if (result.size() <= 0) {
+		/*else{ //2019.03.25 강제로 등록타입이 달라도 지정된 항목이 있으면 등록되도록 처리함.
+			List<?> result2 = ord010DAO.selectList(ord010SearchVO);
+			System.out.println("########################## result2.size() = "+result2.size());
+			if (result2.size() <= 0) { //
 				retInt = -1;
 			}else{
 				//파일명 패턴이 있는 경우 cum030id 가져온다.
-				Iterator iterator = result.iterator();
+				Iterator iterator = result2.iterator();
 				Ismcum030VO ismcum030VO = (Ismcum030VO) iterator.next();
 		    	dbcum030id = ismcum030VO.getCum030id();
 		    	if (dbcum030id != filecum030id) retInt = -1;
 			}
-		}
+		}*/ //2019.03.25 파일명 수동지정일 경우 파일패턴 체크하는 부분 삭제요청함.
 		//파일명으로 매출처/쇼핑몰 정보 get [e]
 		//저장 후 조회를 위한 임시 key 발급
 	    String orderTempKey = Ord010ServiceUtil.getOrderTempKey();

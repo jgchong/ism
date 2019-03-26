@@ -9,7 +9,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<title> KTI NMS </title>
+	<title> E-DAS </title>
 	<meta charset="utf-8"/>
 	<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -90,7 +90,7 @@
 					<form id="orderfileform_1" name="orderfileform_1" action='/ism/ord/odo010orderupfile.do' enctype='multipart/form-data' method='post' >
 						<input type="hidden" id="filecum010id" name="filecum010id" value="">
 						<input type="hidden" id="filecum030id" name="filecum030id" value="">
-							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" multiple="multiple" title="" style="width:300px;height:35px;">
+							<select id="shopOrderList" name="shopOrderList" class="js-example-tokenizer form-control" title="" style="width:300px;height:35px;">
 								<option value="0"></option>
 							<c:forEach var="result" items="${resultList}" varStatus="status">
 								<option value="${result.cum030id}" val2="${result.cum010id}" val3="${result.uploadtype}" >${result.shopmallname}</option>
@@ -539,18 +539,21 @@ function uploadFile(){
 		//dataIdList.push($("#fileShop_"+i+" option:selected").attr('dataid'));
 		var strFileNm = fileList[uploadFileList[i]].name.toUpperCase();
 		var strUploadType = $("#fileShop_"+i+" option:selected").attr('dataid').toUpperCase();
-		if(strFileNm.indexOf(strUploadType) == -1 || strUploadType == ""){
-    		strMsg += fileList[uploadFileList[i]].name + " / ";
-    		chkCnt++;
-    	}
+
+		//if(strFileNm.indexOf(strUploadType) == -1 || strUploadType == ""){
+    	//	strMsg += fileList[uploadFileList[i]].name + " / ";
+    	//	chkCnt++;
+    	//} //2019.03.25 강제로 등록타입이 달라도 지정된 항목이 있으면 등록되도록 처리함.
 	}
-    strMsg = strMsg.substr(0, strMsg.length-3);
+    //strMsg = strMsg.substr(0, strMsg.length-3);
     
-    if(uploadFileList.length == chkCnt){
+    /*if(uploadFileList.length == chkCnt){
         // 파일등록 경고창
         alert("Upload Type이 틀려 등록 대상 파일이 없습니다.");
         return;
-    }
+    }*/ //2019.03.25 강제로 등록타입이 달라도 지정된 항목이 있으면 등록되도록 처리함.
+    
+    strMsg = ""; //2019.03.25 강제로 등록타입이 달라도 지정된 항목이 있으면 등록되도록 처리함.
         
     if(confirm(strMsg == "" ? "등록 하시겠습니까?" : strMsg + "파일이 틀립니다. 제외하고 등록 하시겠습니까?")){
         // 등록할 파일 리스트를 formData로 데이터 입력
@@ -559,10 +562,10 @@ function uploadFile(){
         for(var i = 0; i < uploadFileList.length; i++){
         	// LDC 2019-01-15
         	var tempUploadFileName = fileList[uploadFileList[i]].name.toUpperCase();
-        	if(tempUploadFileName.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) != -1){
+        	//if(tempUploadFileName.indexOf($("#fileShop_"+i+" option:selected").attr('dataid')) != -1){
 	            formData.append('files', fileList[uploadFileList[i]]);
 	            formData.append('dataInfo', $("#fileShop_"+i+" option:selected").val() + ";" +$("#fileShop_"+i+" option:selected").attr('val2')+";"+$("#fileShop_"+i+" option:selected").text() + ";" +$("#fileShop_"+i+" option:selected").attr('dataid'));
-        	}
+        	//}
         }
         
         loadingBarOpen();
@@ -580,8 +583,14 @@ function uploadFile(){
 	            console.log(result.split("^")[0]);
 	            console.log(result.split("^")[1]);
 	            console.log(result.split("^")[2]);
+	            
 	            if (result.split("^")[1].length > 2) {
-		            alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+	            	
+	            	if(result.split("^")[1] == "dup") {
+	            		alert("동일한 파일명으로 업로드된 주문건이 있습니다");
+	            	} else {	            	
+		            	alert(result.split("^")[1].substring(1,result.split("^")[1].length) + " 가 수동수집환경 설정이 안되어 있습니다.");
+	            	}
 
 		            if (parseInt(result.split("^")[2]) > 0) {
 		            	alert(result.split("^")[2] + "개의 주문상품이 잘못등록 되었습니다.\n주문 목록에서 확인해주시기 바랍니다");

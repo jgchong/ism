@@ -154,15 +154,20 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void ord020SelectChgGroupOrderStatus2(String selectoptionval, String uploadviewkeys)
+	public void ord020SelectChgGroupOrderStatus2(String selectoptionval, String uploadviewkeys, String cum010ids)
 			throws Exception {
 
 		String[] uploadviewkeyArray = uploadviewkeys.split(",");
+		String[] cum010idArray = cum010ids.split(",");
 		HashMap hm = new HashMap();
 		hm.put("selectoptionval", selectoptionval);
 		hm.put("uploadviewkeys", uploadviewkeyArray);
-
-		ord020DAO.ord020SelectChgGroupOrderStatus(hm);
+		hm.put("cum010ids", cum010idArray);
+		
+		System.out.println("################################"+uploadviewkeys);
+		System.out.println("################################"+cum010ids);
+		
+		ord020DAO.ord020SelectChgGroupOrderStatus2(hm);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -178,11 +183,13 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
-	public void ord020SelectDel2(String chgodm010ids) throws Exception {
+	public void ord020SelectDel2(String uploadviewkeys, String cum010ids) throws Exception {
 
-		String[] chgodm010idArray = chgodm010ids.split(",");
+		String[] uploadviewkeysArray = uploadviewkeys.split(",");
+		String[] cum010idsArray = cum010ids.split(",");
 		HashMap hm = new HashMap();
-		hm.put("chgodm010ids", chgodm010idArray);
+		hm.put("uploadviewkeys", uploadviewkeysArray);
+		hm.put("cum010ids", cum010idsArray);
 		
 		ord020DAO.ord020SelectDel2(hm);
 	}
@@ -345,7 +352,13 @@ public class Ord020ServiceImpl extends EgovAbstractServiceImpl implements Ord020
 			JSONObject dataInfo = new JSONObject();
 			dataInfo.put("orderitemid", vo.getByc010id());
 			dataInfo.put("itemname", vo.getItemname());
-			dataInfo.put("bycname", vo.getBycname());
+			if(vo.getItemcrosstype().equals("S")) {
+				dataInfo.put("bycname", vo.getBycname());
+			} else if(vo.getItemcrosstype().equals("F")) {
+				dataInfo.put("bycname", "결합매입처");
+			} else {
+				dataInfo.put("bycname", "-");
+			}
 			dataInfo.put("itemcode", vo.getItemcode());
 			dataInfo.put("itemopt", (vo.getItemopt() ==null ? "" : vo.getItemopt()));
 			dataList.add(dataInfo);
