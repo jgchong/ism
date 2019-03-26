@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,16 @@ public class Prd010ServiceImpl extends EgovAbstractServiceImpl implements Prd010
     @Override
     public Object selectList(Prd010SearchVO prd010SearchVO) throws Exception {
         List<Prd010VO> prd010VOList = (List<Prd010VO>) prd010DAO.selectList(prd010SearchVO);
+        List<Prd010VO> prd010VOListTemp = new ArrayList<>();
+        if (!StringUtils.isBlank(prd010SearchVO.getDfSearch_bycname())) {
+            for (Prd010VO prd010VO : prd010VOList) {
+                if ("S".equals(prd010VO.getItemcrosstype())) {
+                    prd010VOListTemp.add(prd010VO);
+                }
+            }
+        }
+        prd010VOList = prd010VOListTemp;
+
         for (int i = 0; i < prd010VOList.size(); i++) {
             prd010VOList.get(i).setListNo("" + (i + 1 + prd010SearchVO.getFirstIndex()));
         }
