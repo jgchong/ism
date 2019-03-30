@@ -58,7 +58,7 @@ public class NfmLoginController {
 	    	MailHandler sendMail = new MailHandler(mailSender);
 	        sendMail.setSubject("서비스 이메일 인증");
 	        sendMail.setText(content);
-	        sendMail.setFrom("jgchhong@naver.com", "서어비스센터 ");
+	        sendMail.setFrom("MASTER@MYDAS.KR", "서어비스센터 ");
 	        sendMail.setTo(email);
 	        sendMail.send();
 	    	retVal = "인증 메일이 발송됐습니다. 메일 확인 후 인증번호를 입력해주시기 바랍니다.";
